@@ -31,12 +31,12 @@ module.exports = function() {
      * Add our server node extensions
      */
 
+    require.extensions['.server.library.js'] = require.extensions['.js'];
     require.extensions['.server.global.js'] = require.extensions['.js'];
     require.extensions['.server.model.js'] = require.extensions['.js'];
     require.extensions['.server.route.js'] = require.extensions['.js'];
     require.extensions['.server.validator.js'] = require.extensions['.js'];
     require.extensions['.server.service.js'] = require.extensions['.js'];
-    require.extensions['.server.library.js'] = require.extensions['.js'];
     require.extensions['.server.job.js'] = require.extensions['.js'];
     require.extensions['.server.error.js'] = require.extensions['.js'];
     require.extensions['.server.filter.js'] = require.extensions['.js'];

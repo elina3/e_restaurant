@@ -14,12 +14,12 @@ app.listen(config.port);
 // Expose app
 exports = module.exports = app;
 
-console.log('========================JDEMO Server=====================');
-console.log('JDEMO Server!');
+console.log('========================ERestaurant Server=====================');
+console.log('ERestaurant Server!');
 console.log('enviroment:', process.env.NODE_ENV);
 
-console.log('JDEMO application started on address ' + config.serverAddress);
-console.log('JDEMO application started on port ' + config.port);
+console.log('ERestaurant application started on address ' + config.serverAddress);
+console.log('ERestaurant application started on port ' + config.port);
 
 
 

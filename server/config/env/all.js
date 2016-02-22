@@ -1,9 +1,9 @@
 'use strict';
 module.exports = {
     app: {
-        title: 'JDEMO',
-        description: 'JDEMO',
-        keywords: 'jdemo'
+        title: 'ERestaurant',
+        description: 'ERestaurant',
+        keywords: 'ERestaurant'
     },
-    port: process.env.PORT || 6002
+    port: process.env.PORT || 2003
 };

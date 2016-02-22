@@ -1,7 +1,8 @@
 /**
- * Created by elinaguo on 16/2/22.
+ * Created by elinaguo on 16/2/23.
  */
 'use strict';
+
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
@@ -11,22 +12,26 @@ var mongoose = require('mongoose'),
   timestamps = require('mongoose-timestamp'),
   crypto = require('crypto');
 
-var GoodsSchema = new Schema({
+
+var ClientSchema = new Schema({
   object:{
     type:String,
-    default:'Goods'
+    default:'Client'
   },
-  name: {
+  username: {
     type: String,
     trim: true
   },
-  description: {
+  password: {
     type: String,
     default: ''
   },
-  status: {
-    enum: ['none', 'paid', 'cooking', 'transporting', 'complete'],
-    default: 'none',
+  roles: {
+    type: String,
+    enum: ['admin', 'waiter'],
+    default: 'waiter'
+  },
+  nickname: {
     type: String
   },
   sex: {
@@ -49,6 +54,9 @@ var GoodsSchema = new Schema({
   union_id: {
     type: String
   },
+  description: {//描述
+    type: String
+  },
   head_photo: {
     type: String
   },
@@ -62,9 +70,22 @@ var GoodsSchema = new Schema({
   }
 });
 
-GoodsSchema.plugin(timestamps, {
+
+ClientSchema.methods.hashPassword = function (password) {
+  if (this.salt && password) {
+    return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
+  } else {
+    return password;
+  }
+};
+
+ClientSchema.methods.authenticate = function (password) {
+  return this.password === this.hashPassword(password);
+};
+
+ClientSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
 });
 
-appDb.model('Goods', GoodsSchema);
+appDb.model('Client', ClientSchema);
