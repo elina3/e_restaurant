@@ -1,0 +1,22 @@
+{
+  "name": "z",
+  "version": "1.0.0",
+  "authors": [
+    "z"
+  ],
+  "description": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

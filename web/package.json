@@ -1,0 +1,30 @@
+{
+  "name": "z_platform",
+  "description": "z_platform project",
+  "version": "0.0.1",
+  "author": "Z",
+  "dependencies": {
+    "async": "^1.4.2",
+    "bower": "^1.5.2",
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.5.2",
+    "gulp-copy": "0.0.2",
+    "gulp-istanbul": "^0.8.1",
+    "gulp-jshint": "^1.10.0",
+    "gulp-less": "^3.0.3",
+    "gulp-mocha": "2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.6",
+    "hashids": "^1.0.1",
+    "hat": "0.0.3",
+    "lodash": "~2.4.1",
+    "method-override": "~2.1.2",
+    "through": "^2.3.7",
+    "validator": "^3.19.0"
+  },
+  "devDependencies": {
+    "jshint-stylish": "^2.0.1",
+    "gulp-uglify": "^1.2.0"
+  }
+}

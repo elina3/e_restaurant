@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+server/node_modules
+web/node_modules
+web/lib
+web/css
