@@ -25,36 +25,29 @@ var GoodsSchema = new Schema({
     default: ''
   },
   status: {
-    enum: ['none', 'paid', 'cooking', 'transporting', 'complete'],
+    enum: ['none', 'sold_out', 'on_sale'],
     default: 'none',
     type: String
   },
-  sex: {
-    type: String,
-    enum: ['male', 'female', 'unknown'],
-    default: 'unknown'
+  price: {
+    type: Number
   },
-  city: {
+  discount: {
+    type: Number
+  },
+  display_photos: [{
     type: String
-  },
-  province: {
+  }],
+  description_photos: [{
     type: String
+  }],
+  create_user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
-  country: {
-    type: String
-  },
-  mobile_phone: {
-    type: String
-  },
-  union_id: {
-    type: String
-  },
-  head_photo: {
-    type: String
-  },
-  salt: {
-    type: String,
-    default: 'secret'
+  create_group: {
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
   },
   deleted_status: {
     type: Boolean,

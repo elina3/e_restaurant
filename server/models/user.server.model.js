@@ -13,10 +13,10 @@ var mongoose = require('mongoose'),
   crypto = require('crypto');
 
 
-var ClientSchema = new Schema({
+var UserSchema = new Schema({
   object:{
     type:String,
-    default:'Client'
+    default:'User'
   },
   username: {
     type: String,
@@ -26,30 +26,24 @@ var ClientSchema = new Schema({
     type: String,
     default: ''
   },
+  roles: {
+    type: String,
+    enum: ['admin', 'waiter'],
+    default: 'waiter'
+  },
   nickname: {
     type: String
+  },
+  group: {
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
   },
   sex: {
     type: String,
     enum: ['male', 'female', 'unknown'],
     default: 'unknown'
   },
-  city: {
-    type: String
-  },
-  province: {
-    type: String
-  },
-  country: {
-    type: String
-  },
   mobile_phone: {
-    type: String
-  },
-  union_id: {
-    type: String
-  },
-  description: {//描述
     type: String
   },
   head_photo: {
@@ -66,7 +60,7 @@ var ClientSchema = new Schema({
 });
 
 
-ClientSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = function (password) {
   if (this.salt && password) {
     return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
   } else {
@@ -74,13 +68,13 @@ ClientSchema.methods.hashPassword = function (password) {
   }
 };
 
-ClientSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = function (password) {
   return this.password === this.hashPassword(password);
 };
 
-ClientSchema.plugin(timestamps, {
+UserSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
 });
 
-appDb.model('Client', ClientSchema);
+appDb.model('User', UserSchema);
