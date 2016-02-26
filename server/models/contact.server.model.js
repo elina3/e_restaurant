@@ -25,7 +25,8 @@ var ContactSchema = new Schema({
     trim: true
   },
   address: {
-    type: String
+    type: String,
+    trim: true
   },
   mobile: {
     type: String

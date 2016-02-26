@@ -24,6 +24,11 @@ var GoodsOrderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Goods'
   },
+  status: {
+    type: String,
+    enum: ['prepare', 'cooking', 'complete'],
+    default: 'prepare'
+  },
   price: {
     type: Number
   },

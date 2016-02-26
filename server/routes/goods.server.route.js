@@ -10,4 +10,6 @@ module.exports = function (app) {
   app.route('/goods').get(goodsController.getGoodsDetail);
   app.route('/goods').put(goodsController.updateGoods);
   app.route('/goods').delete(goodsController.deleteGoods);
+
+  app.route('/goods_list').get(goodsController.getGoodsList);
 };

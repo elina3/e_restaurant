@@ -20,8 +20,8 @@ var OrderSchema = new Schema({
     type: String
   },
   status: {
-    enum: ['none', 'paid', 'cooking', 'transporting', 'complete'],
-    default: 'none',
+    enum: ['unpaid', 'paid', 'cooking', 'transporting', 'complete'],
+    default: 'unpaid',
     type: String
   },
   goods_orders: [{
