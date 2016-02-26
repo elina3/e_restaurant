@@ -39,5 +39,8 @@ gulp.task('server-test', function (done) {
         });
 });
 
+
+gulp.task('server', ['server-jshint']);
+
 process.env.NODE_ENV = 'test';
 gulp.task('test', ['server-jshint', 'server-test']);

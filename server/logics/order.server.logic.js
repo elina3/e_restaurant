@@ -12,9 +12,11 @@ var Order = appDb.model('Order');
 var GoodsOrder = appDb.model('GoodsOrder');
 var Contact = appDb.model('Contact');
 
-function generateOrderNumber(client){
-  return new Date().Format('yyyyMMdd') + client._id.toString().substr(18,6)
-    + mongooseLib.generateNewObjectId().toString().substring(18, 6);
+function generateOrderNumber(client, order){
+  var nowString = new Date().Format('yyyyMMdd');
+  var clientString = client._id.toString().substr(18,6);
+  var orderIdString = order._id.toString().substring(18, 6);
+  return nowString + clientString + orderIdString;
 }
 
 function createContact(contactInfo, client, callback){
@@ -35,7 +37,7 @@ function createContact(contactInfo, client, callback){
         });
       }
 
-      contact.common = true;
+      contact.common = false;
       contact.save(function(err, newContact){
         if(err || !newContact){
           return callback({err: systemError.database_save_error});
@@ -89,7 +91,7 @@ exports.createOrder = function(orderInfo, client, callback){
         return callback(err);
       }
 
-      order.order_number = generateOrderNumber();
+      order.order_number = generateOrderNumber(client, order);
       order.status = 'unpaid';
       order.contact = contact._id;
       order.name = orderInfo.name;
@@ -267,5 +269,18 @@ exports.deleteOrder = function(orderId, callback){
         return callback(null, newOrder);
       });
 
+    });
+};
+
+exports.getLatestCommonContact = function(clientId, callback){
+  Contact
+    .sort({create_time: 1})
+    .first({client: clientId})
+    .exec(function(err, contact){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, contact);
     });
 };

@@ -110,8 +110,8 @@ module.exports = function () {
   app.use(function (err, req, res, next) {
     async.auto({
       RecordError: function (callback) {
-        if (req.err) {
-          return callback(req.err);
+        if (err) {
+          return callback(err);
         }
         else {
           return callback();

@@ -8,7 +8,38 @@ var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var User = appDb.model('User');
 var Group = appDb.model('Group');
-exports.signUpGroup = function(groupInfo, callback){
+exports.getGroupList = function(currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false
+  };
+  Group.count(query, function(err, groupCount){
+    if(err){
+      return callback({err: systemError.internal_system_error});
+    }
+
+    if (limit === -1) {
+      limit = groupCount;
+    }
+
+    if (skipCount === -1) {
+      skipCount = limit * (currentPage - 1);
+    }
+
+    Group.find(query)
+      .sort({update_time: -1})
+      .skip(skipCount)
+      .limit(limit)
+      .exec(function(err, groupList){
+        if(err){
+          return callback({err: systemError.internal_system_error});
+        }
+
+        return callback(null, groupList);
+      });
+  });
+};
+
+exports.createGroup = function(groupInfo, callback){
   Group.findOne({name: groupInfo.name})
     .exec(function(err, group){
       if(err){
@@ -34,10 +65,8 @@ exports.signUpGroup = function(groupInfo, callback){
     });
 };
 
-expors.signUpUser = function(userInfo, callback){
-  if(!userInfo.group_id || !userInfo.username || !userInfo.password){
-    return callback({err: systemError.param_null_error});
-  }
+exports.signUp = function(userInfo, callback){
+
 
   Group.findOne({_id: userInfo.group_id})
     .exec(function(err, group){
@@ -81,10 +110,6 @@ expors.signUpUser = function(userInfo, callback){
 };
 
 exports.signIn = function(username, password, callback){
-  if(!username || !password){
-    return callback({err: systemError.param_null_error});
-  }
-
   User.findOne({username: username})
     .exec(function(err, user){
       if(err){

@@ -9,7 +9,7 @@ var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var Client = appDb.model('Client');
 
-expors.signUp = function(clientInfo, callback){
+exports.signUp = function(clientInfo, callback){
   Client.findOne({username: clientInfo.username})
     .exec(function(err, client){
       if(err){
