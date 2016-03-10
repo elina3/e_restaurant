@@ -2,5 +2,6 @@
 
 server/node_modules
 web/node_modules
-web/lib
-web/css
+
+web/www/lib
+web/www/dist

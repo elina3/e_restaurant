@@ -1,0 +1,266 @@
+<div class="zz-good-info">
+<div class=" row zz-header">
+    <div class="col-xs-12 title">
+        <span>{{initPage.title}}</span>
+    </div>
+</div>
+<div class="wrap">
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">商品地区</div>
+            <div class="col-xs-10 right">
+                <select class="separate" ng-model="initPage.province" ng-change="updateDistributorList()">
+                    <option
+                            ng-repeat="province in initPage.provinces"
+                            ng-selected="province===initPage.province"
+                            >{{province}}</option>
+                </select>
+                <select class="separate" ng-model="initPage.city" ng-change="updateDistributorList()">
+                    <option
+                            ng-repeat="city in initPage.citys"
+                            ng-selected="city===initPage.city"
+                            >{{city}}</option>
+                </select>
+                <select ng-model="initPage.county" ng-change="updateDistributorList()">
+                    <option
+                            ng-repeat="county in initPage.countys"
+                            ng-selected="county===initPage.county"
+                            >{{county}}</option>
+                </select>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">品类</div>
+            <div class="col-xs-10 right">
+                <select ng-model="goodsObj.category">
+                    <option ng-repeat="ct in initPage.goodsCategories" value="{{ct._id}}"
+                            ng-selected="initPage.goods?ct._id===initPage.goods.categories[0]:$index===0">
+                        {{ct.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">名称</div>
+            <div class="col-xs-10 right">
+                <input type="text" ng-model="goodsObj.name" ng-keyup="getGoodsTemplatesByKeyword()"/>
+                <div class="customer-panel" ng-show="initPage.goodsTemplates.length > 0">
+                    <div class="panel-item" ng-repeat="goodsTemplate in initPage.goodsTemplates" ng-click="getGoodsDetailById(goodsTemplate.goods)">{{goodsTemplate.name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content" ng-show="isCreate">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">价格</div>
+            <div class="col-xs-10 right">
+                <input type="text" ng-model="goodsObj.market_price" zz-validation zz-validation-type="number"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">优惠价</div>
+            <div class="col-xs-10 right">
+                <input type="text" ng-model="goodsObj.price" zz-validation zz-validation-type="number"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">展示图片</div>
+            <div class="col-xs-10 right">
+                <div class="photo" ng-repeat="(k,v) in initPage.display_photos">
+                    <img ng-src="{{v.img}}"/>
+
+                    <div class="closed" ng-click="abort(k,initPage.display_photos)"></div>
+                    <ol ng-show="v.progress && v.progress.p!==100">
+                        <li>
+                            正在上传......{{v.progress.p}}%
+                        </li>
+                    </ol>
+                </div>
+                <div class="photo_select"
+                     zz-file-select="onFileSelect($files,initPage.display_photos)"
+                     data-multiple="true"
+                     title="选择展示图片"
+                        >
+                    <p>点击添加照片</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">商品参数</div>
+            <div class="col-xs-10 right">
+                <textarea rows="5" cols="35" ng-model="goodsObj.goods_parameters"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">商品详情</div>
+            <div class="col-xs-10 right">
+                <textarea rows="5" cols="35" ng-model="goodsObj.description"
+                        ></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">商品图片</div>
+            <div class="col-xs-10 right">
+
+                <div class="photo" ng-repeat="(k,v) in initPage.description_photos">
+                    <img ng-src="{{v.img}}"/>
+
+                    <div class="closed" ng-click="abort(k,initPage.description_photos)"></div>
+                    <ol ng-show="v.progress && v.progress.p!==100">
+                        <li>
+                            正在上传......{{v.progress.p}}%
+                        </li>
+                    </ol>
+                </div>
+                <div class="photo_select"
+                     zz-file-select="onFileSelect($files,initPage.description_photos)"
+                     data-multiple="true"
+                     title="选择商品图片"
+                        >
+                    <p>点击添加照片</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">推荐</div>
+            <div class="col-xs-10 right">
+                <input type="radio" name="recommend" ng-model="goodsObj.recommend" value="true"/>
+                <span>是</span>
+                <input type="radio" name="recommend" ng-model="goodsObj.recommend" value="false"/>
+                <span>否</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-3 left">banner
+                推荐
+            </div>
+            <div class="col-xs-9 right">
+                <input type="radio" name="bannner_recommend" ng-model="goodsObj.banner_recommend" value="true"/>
+                <span>是</span>
+                <input type="radio" name="bannner_recommend" ng-model="goodsObj.banner_recommend"
+                       value="false"/>
+                <span>否</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row content" ng-show='goodsObj.banner_recommend==="true"'>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-3 left">banner
+                照片
+            </div>
+            <div class="col-xs-9 right">
+                <div class="photo" ng-repeat="(k,v) in initPage.banner_photos">
+                    <img ng-src="{{v.img}}"/>
+
+                    <div class="closed" ng-click="abort(k,initPage.banner_photos)"></div>
+                    <ol ng-show="v.progress && v.progress.p!==100">
+                        <li>
+                            正在上传......{{v.progress.p}}%
+                        </li>
+                    </ol>
+                </div>
+                <div class="photo_select"
+                     zz-file-select="onFileSelect($files,initPage.banner_photos)"
+                     data-multiple="true"
+                     title="选择banner图片"
+                        >
+                    <p>点击添加banner照片</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">商品标签</div>
+            <div class="col-xs-10 right">
+
+                <div class="feature" ng-repeat="(k,v) in goodsObj.sku_features[0].value">
+                    <span>{{v}}</span>
+
+                    <div class="closed" ng-click="skuFeaturesRemove(k)"></div>
+                </div>
+                <div class="feature_input">
+                    <input type="text" ng-model="initPage.sku_features_input"/>
+                    <input type="button" value="添加" ng-click="skuFeaturesAdd()"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-3 left">是否自营</div>
+            <div class="col-xs-9 right">
+                <input type="radio" name="self_production" value="true" ng-model="goodsObj.self_production"/>
+                <span>是</span>
+                <input type="radio" name="self_production" value="false" ng-model="goodsObj.self_production"/>
+                <span>否</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content">
+    <div class="col-xs-12 col-sm-6 list">
+        <div class="row info">
+            <div class="col-xs-2 left">合作商</div>
+            <div class="col-xs-10 right">
+                <select ng-model="initPage.distributor">
+                    <option ng-repeat="distributor in initPage.distributorList"
+                            ng-selected="distributor._id === goodsObj.distributor"
+                            value="{{distributor}}">{{distributor.name}}
+
+                    </option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="tab"></div>
+</div>
+<div class="footer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3 handle">
+            <input type="button" value="完成" ng-click="submitNewGoods()"/>
+        </div>
+    </div>
+</div>
+</div>

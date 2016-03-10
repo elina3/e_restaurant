@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/25.
  */
 'use strict';
+var cryptoLib = require('../libraries/crypto');
 var userLogic  = require('../logics/user');
 var systemError = require('../errors/system');
 
@@ -23,9 +24,9 @@ exports.createGroup = function(req, res, next){
 };
 
 exports.getGroups = function(req, res, next){
-  var currentPage = req.query.current_page || req.body.current_page || 1;
-  var limit = req.query.limit || req.body.limit || -1;
-  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
+  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
+  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
   userLogic.getGroupList(currentPage, limit, skipCount, function(err, groups){
     if(err){
       return next(err);
@@ -49,8 +50,13 @@ exports.signIn = function(req, res, next){
       return next(err);
     }
 
+    var accessToken = cryptoLib.encrypToken({_id: user._id, time: new Date()}, 'secret1');
+    delete user._doc.password;
+    delete user._doc.salt;
+    delete user._doc._id;
     req.data = {
-      user: user
+      user: user,
+      access_token: accessToken
     };
     return next();
   });
@@ -58,7 +64,7 @@ exports.signIn = function(req, res, next){
 
 exports.signUp = function(req, res, next){
   var userInfo = req.body.user_info || req.query.user_info || {};
-  if(!userInfo.group_info || !userInfo.username || !userInfo.password){
+  if(!userInfo.group || !userInfo.username || !userInfo.password){
     return next({err: systemError.param_null_error});
   }
 

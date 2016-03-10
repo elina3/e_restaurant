@@ -1,0 +1,75 @@
+/**
+* Created by elinaguo on 16/2/26.
+*/
+
+'use strict';
+angular.module('EWeb').factory('UserService',
+  ['Auth', 'RequestSupport', 'SystemError',
+    function (Auth, RequestSupport, SystemError) {
+      return {
+        getGroups: function(param, callback){
+          RequestSupport.executeGet('/user_groups', {
+            current_page: param.currentPage,
+            limit: param.limit,
+            skip_count: param.skipCount
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        signUp: function (param, callback) {
+          RequestSupport.executePost('/user/sign_up', {
+            user_info: param
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        signIn: function(param, callback){
+          RequestSupport.executePost('/user/sign_in', {
+            username: param.username,
+            password: param.password
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+                Auth.setUser(data.user);
+                Auth.setToken(data.access_token);
+                return callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        }
+      };
+    }]);
+

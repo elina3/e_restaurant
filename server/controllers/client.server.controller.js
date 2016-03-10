@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/26.
  */
 'use strict';
+var cryptoLib = require('../libraries/crypto');
 var systemError = require('../errors/system');
 var clientLogic = require('../logics/client');
 
@@ -16,8 +17,14 @@ exports.signIn = function(req, res, next){
       return next(err);
     }
 
+    var accessToken = cryptoLib.encrypToken({_id: client._id, time: new Date()}, 'secret1');
+    delete client._doc.password;
+    delete client._doc.salt;
+    delete client._doc._id;
+
     req.data = {
-      client: client
+      client: client,
+      access_token: accessToken
     };
     return next();
   });

@@ -47,7 +47,7 @@ exports.createGroup = function(groupInfo, callback){
       }
 
       if(group){
-        return callback({err: systemError.group_exist});
+        return callback({err: userError.group_exist});
       }
 
       group = new Group({
@@ -66,9 +66,7 @@ exports.createGroup = function(groupInfo, callback){
 };
 
 exports.signUp = function(userInfo, callback){
-
-
-  Group.findOne({_id: userInfo.group_id})
+  Group.findOne({_id: userInfo.group})
     .exec(function(err, group){
       if(err){
         return callback({err: systemError.internal_system_error});
@@ -122,6 +120,25 @@ exports.signIn = function(username, password, callback){
 
       if (!user.authenticate(password)) {
         return callback({err: systemError.account_not_match});
+      }
+
+      return callback(null, user);
+    });
+};
+
+exports.getValidUserById = function(userId, callback){
+  User.findOne({_id: userId})
+    .exec(function(err, user){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      if(!user){
+        return callback({err: userError.user_not_exist});
+      }
+
+      if(user.deleted_status){
+        return callback({err: userError.user_deleted});
       }
 
       return callback(null, user);

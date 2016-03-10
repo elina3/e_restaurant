@@ -1,11 +1,12 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var appDb = mongoose.createConnection(process.env.appDb, {server: {poolSize: 20}}, function (err) {
+var config = require('../config/config');
+var appDb = mongoose.createConnection(config.appDb, {server: {poolSize: 20}}, function (err) {
   if (err) {
-    console.log('create app db ' + process.env.appDb + ' connection failed : ' + err.toString());
+    console.log('create app db ' + config.appDb + ' connection failed : ' + err.toString());
   } else {
-    console.log('create app db ' + process.env.appDb + ' connection succeed');
+    console.log('create app db ' + config.appDb + ' connection succeed');
   }
 });
 

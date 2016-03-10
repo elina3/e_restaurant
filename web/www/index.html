@@ -1,0 +1,32 @@
+<!doctype html>
+<html ng-app="EWeb" lang="en">
+<head>
+    <meta name="viewport"
+          content="initial-scale=1, maximum-scale=1,user-scalable=no,width=device-width"/>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="E餐厅">
+    <meta name="description"
+          content="E餐厅！">
+
+    <script type='text/javascript' src="lib/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript' src="lib/angular/angular.min.js"></script>
+    <script type='text/javascript' src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script type='text/javascript' src="lib/angular-messages/angular-messages.min.js"></script>
+    <script type='text/javascript' src="lib/angular-animate/angular-animate.min.js"></script>
+    <script type='text/javascript' src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+    <script type='text/javascript' src="lib/angular-base64/angular-base64.min.js"></script>
+
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <!--custom-->
+    <script src="dist/js/e-restaurant.js"></script>
+    <link rel="stylesheet" href="dist/css/e-restaurant.css">
+    <title>E餐厅</title>
+</head>
+<body ng-controller="IndexController" ng-click="clickBody($event)">
+<zz-alert-dialog page-config="pageConfig.alertConfig"></zz-alert-dialog>
+<zz-alert-confirm-dialog page-config="pageConfig.alertConfirmConfig"></zz-alert-confirm-dialog>
+<div ui-view class="root-ui-wiew"></div>
+</body>
+</html>

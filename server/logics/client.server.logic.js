@@ -54,3 +54,23 @@ exports.signIn = function(username, password, callback){
       return callback(null, client);
     });
 };
+
+
+exports.getValidClientById = function(clientId, callback){
+  Client.findOne({_id: clientId})
+    .exec(function(err, client){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      if(!client){
+        return callback({err: clientError.client_not_exist});
+      }
+
+      if(client.deleted_status){
+        return callback({err: clientError.client_deleted});
+      }
+
+      return callback(null, client);
+    });
+};

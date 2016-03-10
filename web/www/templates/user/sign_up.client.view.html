@@ -1,0 +1,87 @@
+<div class="zz-sign-up">
+    <div class=" row zz-header">
+        <div class="col-xs-12 title">
+            <span>{{pageInfo.title}}</span>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="row content">
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">手机</div>
+                    <div class="col-xs-10 right">
+                        <input type="text"
+                               zz-validation zz-validation-type="mobile"
+                               ng-model="signUpObject.username"
+                                />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">密码</div>
+                    <div class="col-xs-10 right">
+                        <input type="password" ng-model="signUpObject.password"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">姓名</div>
+                    <div class="col-xs-10 right">
+                        <input type="text" ng-model="signUpObject.nickname"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">性别</div>
+                    <div class="col-xs-10 right">
+                        <select ng-model="signUpObject.sex">
+                            <option value="male" ng-selected="signUpObject.sex === 'male'">男</option>
+                            <option value="female" ng-selected="signUpObject.sex === 'female'">女</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">职位</div>
+                    <div class="col-xs-10 right">
+                        <select ng-model="signUpObject.role">
+                            <option  value="{{role}}" ng-repeat="role in pageInfo.roles"
+                                     ng-selected="signUpObject.role === role.key">
+                                {{role.value}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">所属餐厅</div>
+                    <div class="col-xs-10 right">
+                        <select ng-model="signUpObject.group">
+                            <option ng-repeat="group in pageInfo.groupList"
+                                    ng-selected="group._id === signUpObject.group"
+                                    value="{{group._id}}">
+                                {{group.name}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-sm-offset-3 signup">
+                <input type="button" value="完成" ng-click="signUp()"/>
+            </div>
+        </div>
+    </div>
+</div>

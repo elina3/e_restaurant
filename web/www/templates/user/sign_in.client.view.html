@@ -1,0 +1,33 @@
+<div class="zz-sign-in">
+    <div class=" row zz-header">
+        <div class="col-xs-12 title">
+            <span>点餐系统登录</span>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="row content">
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">用户名：</div>
+                    <div class="col-xs-10 right">
+                        <input type="text"
+                               ng-model="signInObject.username"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 list">
+                <div class="row info">
+                    <div class="col-xs-2 left">密码：</div>
+                    <div class="col-xs-10 right">
+                        <input type="password" ng-model="signInObject.password"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3 signin">
+            <input type="button" value="登录" ng-click="signIn()"/>
+        </div>
+    </div>
+</div>

@@ -4,25 +4,44 @@ process.env.NODE_ENV = 'test';
 
 var gulp = require('gulp');
 var less = require('gulp-less');
+var concat = require('gulp-concat');
+var jsconcat = require('gulp-concat');
 var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
 
 var webJsFiles = [
-    './js/*.js'
+    'www/',
+    'www/config/**/*.js',
+    'www/services/**/*.js',
+    'www/supports/**/*.js',
+    'www/errors/**/*.js',
+    'www/events/**/*.js',
+    'www/interceptors/**/*.js',
+    'www/filters/**/*.js',
+    'www/controllers/**/*.js',
+    'www/directives/**/*.js'
 ];
 
-gulp.task('web-less', function () {
-    console.log('less合并');
+gulp.task('app-less', function () {
+    console.log('正在合并并编译less');
     return gulp.src([
-        './lesses/**/*.less'])
-        .pipe(less())
-        .pipe(gulp.dest('./css'));
+        'www/lesses/**/*.less',
+        'www/directive/**/*.less'])
+      .pipe(concat('e-restaurant.less'))
+      .pipe(less())
+      .pipe(gulp.dest('www/dist/css'));
+});
+
+gulp.task('js-concat', function () {
+    console.log('正在合并并编译js');
+    return gulp.src(webJsFiles)
+      .pipe(jsconcat('e-restaurant.js'))
+      .pipe(gulp.dest('www/dist/js'));
 });
 
 gulp.task('web-jshint', function () {
     return gulp.src(webJsFiles)
-        .pipe(jshint('.jshintrc'))
-        .pipe(jshint.reporter('jshint-stylish'));
+      .pipe(jshint('.jshintrc'))
+      .pipe(jshint.reporter('jshint-stylish'));
 });
 
-gulp.task('web', ['web-less', 'web-jshint']);
+gulp.task('web', ['app-less', 'js-concat', 'web-jshint']);

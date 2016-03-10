@@ -1,0 +1,25 @@
+<div class="zz-pagination" ng-show="config.pageCount>0">
+    <div class="pagination_info">
+        <div ng-show="config.isShowTotalInfo" class="base_info">总数: {{config.totalCount}}</div>
+        <div ng-show="config.canSetLimit" class="limit_set"><span>每页显示:</span>
+            <select ng-options="limitItem for limitItem in config.limitArray" ng-change="config.changePageLimit()"
+                    ng-model="config.limit"></select>
+        </div>
+        <div ng-show="config.canSeekPage" class="currentPage_set">
+            <span>跳转至第</span>
+            <input ng-model="config.currentPage" ng-change="config.seekPage(config.currentPage);"/>
+            <span>页</span>
+        </div>
+    </div>
+    <div class="page_list">
+        <ul>
+            <li ng-show="config.currentPage > 1" ng-click="config.changePage(1);"><a>首页</a></li>
+            <li ng-show="config.currentPage > 1" ng-click="config.changePage(config.currentPage - 1);"><a>上一页</a></li>
+            <li ng-repeat="pageNumber in config.pageList" ng-click="config.changePage(pageNumber);" ng-class="(config.currentPage == pageNumber)?'current':''"><a>{{pageNumber}}</a></li>
+            <li ng-show="config.currentPage < config.pageCount" ng-click="config.changePage(config.currentPage + 1);">
+                <a>下一页</a></li>
+            <li ng-show="config.currentPage < config.pageCount" ng-click="config.changePage(config.pageCount)"><a>最后</a>
+            </li>
+        </ul>
+    </div>
+</div>
