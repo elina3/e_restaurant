@@ -8,11 +8,16 @@ angular.module('EWeb').controller('UserManagerController',
 
       $scope.pageConfig = {
         title: '',
+        currentTag: 'platform-user',
         groupList: []
       };
 
       $scope.goBack = function () {
         $window.history.back();
+      };
+
+      $scope.changeTag = function(tagName){
+        $scope.pageConfig.currentTag = tagName;
       };
 
       function init(){

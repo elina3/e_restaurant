@@ -14,14 +14,40 @@
         <div class="ee-wrapper">
             <div class="ee-tag-panel">
                 <ul class="ee-tag-header">
-                    <li class="current">平台用户</li>
-                    <li>客户端用户</li>
-                    <li class="last">饭卡</li>
+                    <li ng-class="{'current': pageConfig.currentTag === 'platform-user'}" ng-click="changeTag('platform-user')">平台用户</li>
+                    <li ng-class="{'current': pageConfig.currentTag === 'client-user'}" ng-click="changeTag('client-user')">客户端用户</li>
+                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
                 </ul>
                 <div class="ee-tag-body">
-
+                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
+                        I am platform users!
+                        <table>
+                            <thead>
+                                <th>
+                                    aaa
+                                </th>
+                                <th>
+                                    bbb
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>fdf</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
+                        I am client users!
+                    </div>
+                    <div class="ee-tag-view">
+                        I am card users!
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div class="ee-footer">
+    <span>茂玥科技  版权所有</span>
 </div>

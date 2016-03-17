@@ -10,4 +10,53 @@
             </div>
         </div>
     </div>
+
+    <div class="ee-goods-manager-body">
+        <div class="ee-wrapper">
+            <div class="ee-tag-panel">
+                <ul class="ee-tag-header">
+                    <li ng-class="{'current': pageConfig.currentTag === 'goods'}" ng-click="changeTag('goods')">{{pageConfig.type === 'restaurant' ? '菜品': '商品'}}管理</li>
+                    <li ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单管理</li>
+                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计图</li>
+                </ul>
+                <div class="ee-tag-body">
+                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'orders' || pageConfig.currentTag === 'statistics' ? 'move-left' : ''">
+
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
+
+                    </div>
+                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                    </div>
+                    <div class="ee-tag-view">
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="ee-footer">
+    <span>茂玥科技  版权所有</span>
 </div>

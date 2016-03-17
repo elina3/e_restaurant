@@ -9,11 +9,17 @@ angular.module('EWeb').controller('GoodsManagerController',
       $scope.pageConfig = {
         title: '',
         type: '',
+        currentTag: 'goods',
         groupList: []
       };
 
       $scope.goBack = function () {
         $window.history.back();
+      };
+
+
+      $scope.changeTag = function(tagName){
+        $scope.pageConfig.currentTag = tagName;
       };
 
       function init(){

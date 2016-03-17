@@ -3,13 +3,32 @@
     .ee-banner{
       background: @task-photos-theme-color;
     }
+    .ee-goods-manager-body {
+      margin-top: 50px;
+      height: 100%;
+
+      .ee-tag-panel .ee-tag-header{
+        li.current,li:hover {
+          color: @task-photos-theme-color;
+        }
+      }
+    }
   }
   &.supermarket{
     .ee-banner{
       background: @task-list-theme-color;
     }
+    .ee-goods-manager-body {
+      margin-top: 50px;
+      height: 100%;
+
+      .ee-tag-panel .ee-tag-header{
+        li.current,li:hover {
+          color: @task-list-theme-color;
+        }
+      }
+    }
   }
-  .ee-banner{
-    background: @task-list-theme-color;
-  }
+
+
 }

@@ -5,12 +5,15 @@
     background: @background-normal-color;
   }
 
+
   .ee-user-manager-body {
     margin-top: 50px;
     height: 100%;
 
-    .ee-tag-panel .ee-tag-header li.current {
-      color: @background-normal-color;
+    .ee-tag-panel .ee-tag-header{
+      li.current,li:hover {
+        color: @background-normal-color;
+      }
     }
   }
 }
