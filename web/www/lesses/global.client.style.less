@@ -2,15 +2,144 @@ body {
   font-family: "微软雅黑","华文细黑";
   margin: 0;
   height: 100%;
+
   background-color: #F2F2F2;
+  color: @font-content-color;
+
+  font-size: 13px;
+  input, button, textarea, a {
+    outline: none;
+  }
 }
 
 html {
   height: 100%;
 }
 
+ul{
+  padding: 0;
+  margin: 0;
+  li{
+    list-style: none;
+  }
+}
+
+
 .zz-view {
   height: 100%;
+}
+
+.ee-wrapper {
+  display: block;
+  overflow: hidden;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.row{
+  padding: 0;
+  margin:0;
+}
+
+.ee-banner {
+  width: 100%;
+  padding-top: @header-bar-height;
+
+  .ee-title {
+    font-size: @font-title-size;
+    color: @font-white-color;
+    padding: 29px 0;
+
+
+
+    div {
+      padding: 0;
+
+      .ee-banner-back, .ee-banner-content{
+        display: inline-block;
+        overflow: hidden;
+        float: left;
+
+        line-height: 40px;
+        text-align: left;
+        color: #fff;
+      }
+
+      .ee-banner-back{
+        cursor: pointer;
+        width: 18px;
+        height: 40px;
+        line-height: 40px;
+
+        :hover{
+          color: #cfcfcf;
+        }
+      }
+      .ee-banner-content{
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.ee-tag-panel{
+  position: relative;
+  display: block;
+  overflow: hidden;
+
+
+  background-color: transparent;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.26);
+
+  width: 100%;
+  height: 600px;
+
+  .ee-tag-header{
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 41px;
+
+    background: transparent;
+
+    li{
+      display: inline-block;
+      overflow: hidden;
+      float: left;;
+
+      width: 100px;
+      height: 41px;
+
+      background: #fff;
+
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+
+      color: #666;
+      text-align: center;
+      line-height: 40px;
+
+      &.last{
+        border-right: 1px solid #ccc;
+      }
+      &.current{
+        color: @task-photos-theme-color-hover;
+        border-bottom-color: #fff;
+      }
+    }
+  }
+
+  .ee-tag-body{
+    overflow: hidden;
+    margin-top: 40px;
+
+    height: 560px;
+    background: #fff;
+    border: 1px solid #ccc;
+  }
 }
 
 .error {

@@ -9,7 +9,7 @@ angular.module('EWeb').controller('UserSignUpController',
     function ($scope, GlobalEvent, UserService) {
       $scope.pageInfo = {
         title: '服务员注册',
-        roles: [{key: 'waiter', value: '男服务员'}, {key: 'waitress', value: '女服务员'}],
+        roles: [{key: 'waiter', value: '餐厅服务员'}, {key: 'cashier', value: '超市收银员'}, {key: 'card_manager', value: '饭卡充值员'}],
         groupList: []
       };
       $scope.signUpObject = {
@@ -17,7 +17,7 @@ angular.module('EWeb').controller('UserSignUpController',
         password: '',
         role: 'waiter',
         nickname: '',
-        group: '',
+        group_id: '',
         sex: 'male',
         mobile_phone: '',
         head_photo: ''
@@ -27,7 +27,7 @@ angular.module('EWeb').controller('UserSignUpController',
         $scope.signUpObject.username = '';
         $scope.signUpObject.password = '';
         $scope.signUpObject.nickname = '';
-        $scope.signUpObject.group = '';
+        $scope.signUpObject.group_id = '';
         $scope.signUpObject.sex = '';
         $scope.signUpObject.role = 'waiter';
       }
@@ -45,8 +45,8 @@ angular.module('EWeb').controller('UserSignUpController',
           return $scope.$emit(GlobalEvent.onShowAlert, '请输入姓名');
         }
 
-        if ($scope.signUpObject.group === '') {
-          return $scope.$emit(GlobalEvent.onShowAlert, '请选择所属餐厅');
+        if ($scope.signUpObject.group_id === '') {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择所属医院');
         }
 
         $scope.$emit(GlobalEvent.onShowLoading, true);

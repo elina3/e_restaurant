@@ -1,8 +1,7 @@
 /**
- * Created by elinaguo on 16/2/23.
+ * Created by elinaguo on 16/3/14.
  */
 'use strict';
-
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
@@ -12,11 +11,10 @@ var mongoose = require('mongoose'),
   timestamps = require('mongoose-timestamp'),
   crypto = require('crypto');
 
-
-var GroupSchema = new Schema({
+var HospitalSchema = new Schema({
   object:{
     type:String,
-    default:'Group'
+    default:'Hospital'
   },
   name: {
     type: String,
@@ -26,13 +24,16 @@ var GroupSchema = new Schema({
     type: String,
     default: ''
   },
-  hospital: {
+  groups: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Group'
+    }
+  ],
+  admins: [{
     type: Schema.Types.ObjectId,
-    ref: 'Hospital'
-  },
-  wechat_app_info: {
-    type: Schema.Types.Mixed
-  },
+    ref: 'User'
+  }],
   deleted_status: {
     type: Boolean,
     default: false
@@ -41,9 +42,9 @@ var GroupSchema = new Schema({
 
 
 
-GroupSchema.plugin(timestamps, {
+HospitalSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
 });
 
-appDb.model('Group', GroupSchema);
+appDb.model('Hospital', HospitalSchema);

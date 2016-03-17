@@ -24,10 +24,14 @@ exports.createGroup = function(req, res, next){
 };
 
 exports.getGroups = function(req, res, next){
+  var user = req.user;
   var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
   var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
   var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
-  userLogic.getGroupList(currentPage, limit, skipCount, function(err, groups){
+  var query = {
+    hospital: user.hospital
+  };
+  userLogic.getGroupList(query, currentPage, limit, skipCount, function(err, groups){
     if(err){
       return next(err);
     }
@@ -63,10 +67,12 @@ exports.signIn = function(req, res, next){
 };
 
 exports.signUp = function(req, res, next){
+  var user = req.user;
   var userInfo = req.body.user_info || req.query.user_info || {};
-  if(!userInfo.group || !userInfo.username || !userInfo.password){
+  if(!userInfo.group_id || !userInfo.username || !userInfo.password){
     return next({err: systemError.param_null_error});
   }
+  userInfo.hospital_id = user.hospital;
 
   userLogic.signUp(userInfo, function(err, user){
     if(err){
@@ -79,3 +85,4 @@ exports.signUp = function(req, res, next){
     return next();
   });
 };
+

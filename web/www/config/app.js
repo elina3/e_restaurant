@@ -33,6 +33,21 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
             templateUrl: '/templates/user/sign_in.client.view.html',
             controller: 'UserSignInController'
         })
+      .state('goods_manager', {
+          url: '/good/manager:goods_type',
+          templateUrl: 'templates/goods/goods_manager.client.view.html',
+          controller: 'GoodsManagerController'
+      })
+      .state('user_manager', {
+          url: '/user/manager',
+          templateUrl: '/templates/user/user_manager.client.view.html',
+          controller: 'UserManagerController'
+      })
+        .state('user_index', {
+          url: '/user/index',
+          templateUrl: '/templates/user/user_index.client.view.html',
+          controller: 'UserIndexController'
+        })
         //.state('client_sign_up', {
         //    url: '/client/client_sign_up',
         //    templateUrl: '/templates/client/sign_up.client.view.html',
@@ -45,7 +60,7 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         //})
     ;
 
-    $urlRouterProvider.otherwise('/user/sign_in');
+    $urlRouterProvider.otherwise('/user/index');
 }]);
 
 eWeb.config(['$httpProvider', function ($httpProvider) {

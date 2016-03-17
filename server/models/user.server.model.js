@@ -26,9 +26,9 @@ var UserSchema = new Schema({
     type: String,
     default: ''
   },
-  roles: {
+  role: {
     type: String,
-    enum: ['admin', 'waiter'],
+    enum: ['admin', 'waiter', 'cashier', 'card_manager'],//管理员，餐厅服务员，超市收银员，饭卡管理员
     default: 'waiter'
   },
   nickname: {
@@ -37,6 +37,10 @@ var UserSchema = new Schema({
   group: {
     type: Schema.Types.ObjectId,
     ref: 'Group'
+  },
+  hospital: {
+    type: Schema.Types.ObjectId,
+    ref: 'Hospital'
   },
   sex: {
     type: String,

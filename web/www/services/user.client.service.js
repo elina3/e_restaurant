@@ -63,12 +63,28 @@ angular.module('EWeb').factory('UserService',
                 }
                 Auth.setUser(data.user);
                 Auth.setToken(data.access_token);
-                return callback(null, data);
+                return callback(null, data.user);
               }
             },
             function (err) {
               return callback(SystemError.network_error);
             });
+        },
+        signOut: function(){},
+        translateUserRole: function(role){
+          switch(role){
+            case 'admin':
+              return '管理员';
+            case 'waiter':
+              return '餐厅服务员';
+            case 'cashier':
+              return '超市收银员';
+            case 'card_manager':
+              return '饭卡管理员';
+            default:
+              return '未知';
+
+          }
         }
       };
     }]);

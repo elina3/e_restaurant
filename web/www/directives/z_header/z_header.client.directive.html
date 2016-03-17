@@ -1,0 +1,49 @@
+<div class="z-header-view {{style}}">
+    <div class="z-header-wrap">
+        <div class="row z-header-content">
+            <div class="left col-xs-6">
+                <span ng-click="backHome()" class="logo">
+
+                    <span>{{user.hospital.name}}</span>
+                    <!--<img ng-src="images/global/header_logo.png"/>-->
+                </span>
+
+                <div class="z-header-menu">
+                    <strong ng-mouseover="toggleMainMenuOpen($event)"
+                            ></strong>
+
+                    <div ng-mouseleave="hideMainMenuOpen($event)"
+                         class="menu-list show-animate"
+                         ng-class="mainMenuOpened ? 'open': ''">
+                        <ul>
+                            <li ng-click="goToView('user_manager')">用户管理</li>
+                            <li ng-click="goToView('restaurant')">餐厅管理</li>
+                            <li ng-click="goToView('supermarket')">超市管理</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="right col-xs-6">
+                <div class="icon">
+                    <img ng-src="images/global/default_user.png"/>
+                </div>
+                <div class="user">
+                    <span ng-bind="user.nickname"></span>
+                    <span>|</span>
+                    <span ng-bind="translateRole(user.role)"></span>
+
+                    <div class="z-header-menu">
+                        <strong ng-mouseover="toggleMenuOpen($event)"></strong>
+
+                        <div ng-mouseleave="hideMenuOpen($event)" class="menu-list show-animate"
+                             ng-class="menuOpened ? 'open': ''">
+                            <ul>
+                                <li ng-click="quit($event)">退出</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

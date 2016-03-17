@@ -20,13 +20,19 @@ angular.module('EWeb').controller('UserSignInController',
           return;
         }
 
-        UserService.signIn($scope.signInObject, function(err, data){
+        UserService.signIn($scope.signInObject, function(err, user){
           if (err) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
             return;
           }
 
-          $state.go('user_sign_up');
+          if(!user){
+            $scope.$emit(GlobalEvent.onShowAlert, '用户获取信息失败');
+            return;
+          }
+
+
+          $state.go('user_index');
         });
       };
     }]);

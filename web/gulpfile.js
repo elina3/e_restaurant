@@ -25,7 +25,7 @@ gulp.task('app-less', function () {
     console.log('正在合并并编译less');
     return gulp.src([
         'www/lesses/**/*.less',
-        'www/directive/**/*.less'])
+        'www/directives/**/*.less'])
       .pipe(concat('e-restaurant.less'))
       .pipe(less())
       .pipe(gulp.dest('www/dist/css'));
