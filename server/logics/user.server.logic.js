@@ -102,7 +102,7 @@ exports.signUpAdmin = function(userInfo, callback){
         return callback({err: userError.hospital_not_exist});
       }
 
-      User.findOne({username: userInfo.username, status: 'admin', hospital: userInfo.hospital_id})
+      User.findOne({username: userInfo.username, role: 'admin', hospital: userInfo.hospital_id})
         .exec(function(err, admin){
           if(err){
             return callback({err: systemError.internal_system_error});
@@ -222,6 +222,17 @@ exports.getValidUserById = function(userId, callback){
       }
 
       return callback(null, user);
+    });
+};
+
+exports.getNormalUsers = function(admin, callback){
+  User.find({deleted_status: false, hospital: admin.hospital, role: {'$ne': 'admin'}})
+    .exec(function(err, users){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, users);
     });
 };
 

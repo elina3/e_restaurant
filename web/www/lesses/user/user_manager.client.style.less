@@ -7,7 +7,7 @@
 
 
   .ee-user-manager-body {
-    margin-top: 50px;
+    margin-top: 20px;
     height: 100%;
 
     .ee-tag-panel .ee-tag-header{
@@ -15,5 +15,74 @@
         color: @background-normal-color;
       }
     }
+    .ee-search-bar{
+      width: 100%;
+      height: 60px;
+
+      .left-panel, .right-panel{
+        display: inline-block;
+        overflow: hidden;
+        float: left;
+
+        &.right-panel{
+          .add-user{
+            display: inline-block;
+            overflow: hidden;
+            float: right;
+
+            margin-top: 10px;
+
+            width: 100px;
+            height: 40px;
+
+            cursor: pointer;
+
+            &:hover{
+              color: @background-normal-color
+            }
+
+            img, span{
+              display: inline-block;
+              overflow: hidden;
+              float: left;
+
+              line-height: 40px;
+              text-align: center;
+            }
+
+            img{
+              margin-left: 5px;
+              margin-top: 12px;
+              margin-right: 5px;
+            }
+
+          }
+        }
+      }
+    }
+
+
   }
+}
+
+.ee-pop-wrapper .ee-pop-body .photo-container{
+
+  margin: 10px 0;
+
+  width: 100%;
+  height: 300px;
+
+  .photo{
+    margin: 10px auto;
+    width: 200px;
+    height: 240px;
+
+    background: #f1f1f1;
+
+    img{
+      width: 200px;
+      height: auto;
+    }
+  }
+
 }

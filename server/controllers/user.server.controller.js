@@ -86,3 +86,17 @@ exports.signUp = function(req, res, next){
   });
 };
 
+exports.getNormalUsers = function(req, res, next){
+  var admin = req.admin;
+  userLogic.getNormalUsers(admin, function(err, users){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      users: users
+    };
+    return next();
+  })
+};
+

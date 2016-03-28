@@ -20,22 +20,85 @@
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
-                        I am platform users!
-                        <table>
-                            <thead>
-                                <th>
-                                    aaa
-                                </th>
-                                <th>
-                                    bbb
-                                </th>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>fdf</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="add-user" ng-click="editUser()">
+                                    <img src="images/user_manager/single_add.png"/>
+                                    <span>添加用户</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-2">
+                                        <span>用户名</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>昵称</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>手机号</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span>状态</span>
+                                    </div>
+
+                                    <div class="col-xs-1">
+                                        <span>性别</span>
+                                    </div>
+
+                                    <div class="col-xs-1">
+                                        <span>组别</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info">
+                                    <div class="col-xs-2">
+                                        <span>E23442579359</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>小平</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>18321740710</span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            服务员
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            女
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <span class="type">
+                                            餐厅
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <div class="handle edit">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+                                        <div class="handle" ng-click="scanUser()">
+                                            <img class="gif" ng-src="images/global/scan.gif"/>
+                                            <img class="normal" ng-src="images/global/scan.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<z-pagination config="pageData.pagination"></z-pagination>-->
+                        </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
                         I am client users!
@@ -47,6 +110,113 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="ee-pop-mask" ng-show="pageConfig.popMaskShow">
+    <div class="ee-pop-wrapper">
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'scan'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>小平</span>
+                    <!--<strong ng-show="pageConfig.currentPOI.is_chain">连锁</strong>-->
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+                <div class="ee-pop-title-detail">
+                    <div class="detail-row">
+
+                        <div class="ee-detail-info-one">
+                            <span>编号</span>
+                            <strong>3123454哦佛尔肌肤</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>手机号</span>
+                            <strong>1234566789</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>性别</span>
+                            <strong>女</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>角色</span>
+                            <strong>餐厅服务员</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>组别</span>
+                            <strong>餐厅</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>证件号</span>
+                            <strong>410825198805177625</strong>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="photo-container">
+                    <div class="photo">
+                        <img src="images/global/default_user.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'edit'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>新增用户</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="user-info">
+                    <div class="info-item">
+                        <span>用户名</span>
+                        <input ng-model="pageConfig.currentUser.username"/>
+                    </div>
+                    <div class="info-item">
+                        <span>密码</span>
+                        <input ng-model="pageConfig.currentUser.username"/>
+                    </div>
+
+                    <div class="info-item">
+                        <span>组别</span>
+                        <z-dropdown z-dropdown-model="pageConfig.currentUser.group"
+                                    z-dropdown-options="pageConfig.groups"
+                                    z-dropdown-label="无"
+                                >
+                        </z-dropdown>
+                    </div>
+                    <div class="info-item">
+                        <span>角色</span>
+                        <z-dropdown z-dropdown-model="pageConfig.currentUser.role"
+                                    z-dropdown-options="pageConfig.roles"
+                                    z-dropdown-label="无"
+                                >
+                        </z-dropdown>
+                    </div>
+                    <div class="info-item">
+                        <span>昵称</span>
+                        <input ng-model="pageConfig.currentUser.nickname"/>
+                    </div>
+                    <div class="info-item">
+                        <span>性别</span>
+                        <input ng-model="pageConfig.currentUser.sex"/>
+                    </div>
+                    <div class="info-item">
+                        <span>手机号</span>
+                        <input ng-model="pageConfig.currentUser.username"/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div class="ee-footer">
     <span>茂玥科技  版权所有</span>

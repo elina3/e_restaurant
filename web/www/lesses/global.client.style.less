@@ -31,7 +31,7 @@ ul{
 .ee-wrapper {
   display: block;
   overflow: hidden;
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -90,7 +90,6 @@ ul{
   background-color: transparent;
 
   width: 100%;
-  height: 640px;
 
   .ee-tag-header{
     overflow: hidden;
@@ -185,14 +184,212 @@ ul{
 }
 
 .ee-footer{
-  position: absolute;
-  bottom: 0;
+
 
   width: 100%;
   margin: 10px auto;
   text-align: center;
 }
 
+.ee-table-list {
+  width: @media-min-screen;
+  margin: 10px auto;
+  div {
+    padding: 0;
+    margin: 0;
+  }
+
+  .content {
+    width: 100%;
+    margin-bottom: 30px;
+    overflow: hidden;
+    .list-header, .list-info {
+      text-align: left;
+      border-bottom: 1px solid @border-normal-color;
+
+    }
+    .list-header {
+      font-size: @font-sub-title-size;
+      color: @font-light-color;
+      span {
+        line-height: 50px;
+      }
+    }
+    .list-info {
+      font-size: @font-content-size;
+      color: @font-content-color;
+      div {
+        padding: 10px 0;
+      }
+      span {
+        line-height: 24px;
+        &.status {
+          color: @font-hight-light-color
+        }
+        &.public {
+          color: @background-normal-color;
+        }
+        &.collection {
+          color: @background-other-color;
+        }
+        &.type {
+          letter-spacing: 2px;
+        }
+      }
+      .handle {
+        cursor: pointer;
+        display: inline;
+        padding: 5px 12px;
+        .gif {
+          display: none;
+        }
+        &:hover {
+          .gif {
+            display: inherit;
+          }
+          .normal {
+            display: none;
+          }
+        }
+        &.edit {
+          padding: 5px 0;
+        }
+      }
+    }
+  }
+}
+
+
+.ee-pop-mask{
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 2000;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.8);
+
+  overflow-y: hidden;
+}
+
+.ee-pop-wrapper{
+  @border-color: #e4e4e4;
+  width: 600px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 60px 0;
+
+
+  .ee-pop-panel{
+    width: 100%;
+    height: 100%;
+
+    background: #fff;
+    overflow: auto;
+    border-radius: 4px;
+
+    .ee-pop-header{
+      padding: 0 20px;
+
+      width: 100%;
+    overflow:hidden;
+
+      background: #01a8f7;
+      color: #fff;
+      .ee-pop-title{
+        position: relative;
+
+        span{
+          font-size: 20px;
+          height: 60px;
+          line-height: 60px;
+        }
+
+        strong{
+          display: inline-block;
+          margin-left: 10px;
+
+          width: 35px;
+          height: 20px;
+          line-height: 20px;
+
+          background: rgba(255, 255, 255, 0.2);
+
+          border: 1px solid #8ad2fb;
+          border-radius: 5px;
+
+          font-size: 10px;
+          text-align: center;
+        }
+
+        .close{
+          position: absolute;
+          top: 20px;
+          right: 0;
+
+          width: 15px;
+          height: 15px;
+
+          opacity: 1 !important;
+          background: url('../../../images/global/close.png') center center no-repeat;
+          cursor: pointer;
+
+          &:hover{
+            background: url('../../../images/global/close_hover.png') center center no-repeat;
+          }
+        }
+      }
+      .ee-pop-title-detail{
+        overflow: hidden;
+        margin: 0 0 10px 0;
+        .detail-row{
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+
+          margin-bottom: 2px;
+        }
+
+        .ee-detail-info-one, .ee-detail-info-two{
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+
+          span, strong{
+            display: block;
+          }
+
+          span{
+            color: #8ad2fb;
+            font-size: 12px;
+          }
+          strong{
+            color: #fff;
+            font-weight: normal;
+            font-size: 14px;
+          }
+
+          &.ee-detail-info-one{
+            width: 200px;
+          }
+          &.ee-detail-info-two{
+            width: 320px;
+            margin-left: 10px;
+          }
+        }
+      }
+
+    }
+    .z-pop-body{
+      padding: 0 15px 15px 15px;
+
+      overflow-y: auto;
+    }
+  }
+}
 
 @media (max-width: @media-min-screen) {
   .ee-footer{

@@ -85,6 +85,27 @@ angular.module('EWeb').factory('UserService',
               return '未知';
 
           }
+        },
+        getUsers: function(param, callback){
+          RequestSupport.executeGet('/users/list', {
+            current_page: param.currentPage,
+            limit: param.limit,
+            skip_count: param.skipCount
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
         }
       };
     }]);
