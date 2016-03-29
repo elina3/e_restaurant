@@ -86,15 +86,60 @@ exports.signUp = function(req, res, next){
   });
 };
 
-exports.getNormalUsers = function(req, res, next){
-  var admin = req.admin;
-  userLogic.getNormalUsers(admin, function(err, users){
+exports.modifyUser = function(req, res, next){
+  var user = req.admin;
+  var userInfo = req.body.user_info || req.query.user_info || {};
+  if(!userInfo.group_id || !userInfo.username || !userInfo.password){
+    return next({err: systemError.param_null_error});
+  }
+  userInfo.hospital_id = user.hospital;
+
+  userLogic.modifyUser(userInfo, function(err, user){
     if(err){
       return next(err);
     }
 
     req.data = {
-      users: users
+      user: user
+    };
+    return next();
+  });
+};
+
+exports.deleteUser = function(req, res, next){
+  var user = req.admin;
+  var userId = req.body.user_id || req.query.user_id || '';
+  if(!userId){
+    return next({err: systemError.param_null_error});
+  }
+
+  userLogic.deleteUser(userId, function(err, user){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      user: user
+    };
+    return next();
+  });
+};
+
+exports.getNormalUsers = function(req, res, next){
+  var admin = req.admin;
+  var currentPage = req.query.current_page || req.body.current_page || 1;
+  var limit = req.query.limit || req.body.limit || -1;
+  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+
+  userLogic.getNormalUsers(admin, currentPage, limit, skipCount, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      users: result.users
     };
     return next();
   })

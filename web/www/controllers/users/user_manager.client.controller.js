@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('UserManagerController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserError) {
 
       $scope.pageConfig = {
         roles: [{id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},{id:'card_manager',text:'饭卡管理员'}],
@@ -14,20 +14,24 @@ angular.module('EWeb').controller('UserManagerController',
         groupList: [{id: '', text: '餐厅'},{id: '', text: ''}],
         popMaskShow: false,
         plat_user_panel: {
-          users: [{_id: '123456789', username: 'E23442579359',password: '123456', nickname: '小平', mobile_phone: '18321740715', role: {id:'waiter', text: '服务员'}, group: {id: '123456', text: '餐厅'}, sex: {id: 'female', text:'女'}}],
+          users: [],
           currentEditUser: null,
           errorInfo: {
             username: false,
             password: false,
             nickname: false,
             group: false,
-            mobile_photo: false,
+            mobile_phone: false,
             role: false
           },
           pagination: {
             currentPage: 1,
             limit: 10,
-            totalCount: 0
+            totalCount: 0,
+            isShowTotalInfo: true,
+            onCurrentPageChanged: function (callback) {
+              loadUsers();
+            }
           }
         },
         users: [],
@@ -42,9 +46,10 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.currentTag = tagName;
       };
 
-      $scope.scanUser = function(){
+      $scope.scanUser = function(user){
         $scope.pageConfig.popMaskShow = true;
         $scope.pageConfig.scanType = 'scan';
+        $scope.pageConfig.plat_user_panel.currentEditUser = user;
       };
 
       $scope.closePopMask = function(){
@@ -76,6 +81,19 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.addPanel = true;
       };
 
+      $scope.deleteUser = function(user){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        UserService.deleteUser(user._id, function(err, user){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            $scope.$emit(GlobalEvent.onShowAlert, UserError[err]||err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+          $state.reload();
+        });
+      };
       function validUserInfo(user){
         var isPassed = true;
         if(!user.username){
@@ -114,54 +132,66 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.plat_user_panel.errorInfo.role = false;
       }
 
-      function getIndexOfUsers(user){
+      function getIndexOfUsers(username){
         for(var i=0;i<$scope.pageConfig.plat_user_panel.users.length;i++){
-          if($scope.pageConfig.plat_user_panel.users[i].username === user.username){
+          if($scope.pageConfig.plat_user_panel.users[i].username === username){
             return i;
           }
         }
         return -1;
       }
       $scope.addOrEditUser = function(){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         if(!validUserInfo($scope.pageConfig.plat_user_panel.currentEditUser)){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           return;
         }
 
+        var index = getIndexOfUsers($scope.pageConfig.plat_user_panel.currentEditUser.username);
+        var param;
+
+        if($scope.pageConfig.scanType === 'create' && index > -1){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          $scope.$emit(GlobalEvent.onShowAlert, '该用户名已存在，请更换用户名');
+          return;
+        }
+        param = {
+          username: $scope.pageConfig.plat_user_panel.currentEditUser.username,
+          password: $scope.pageConfig.plat_user_panel.currentEditUser.password,
+          role: $scope.pageConfig.plat_user_panel.currentEditUser.role.id,
+          nickname: $scope.pageConfig.plat_user_panel.currentEditUser.nickname,
+          group_id: $scope.pageConfig.plat_user_panel.currentEditUser.group.id,
+          sex: $scope.pageConfig.plat_user_panel.currentEditUser.sex ? $scope.pageConfig.plat_user_panel.currentEditUser.sex.id : '',
+          mobile_phone: $scope.pageConfig.plat_user_panel.currentEditUser.mobile_phone,
+          head_photo: ''
+        };
         if($scope.pageConfig.scanType === 'create'){
 
-          //服务端的signup
-          var param = {
-            username: $scope.pageConfig.plat_user_panel.currentEditUser.username,
-            password: $scope.pageConfig.plat_user_panel.currentEditUser.password,
-            role: $scope.pageConfig.plat_user_panel.currentEditUser.role.id,
-            nickname: $scope.pageConfig.plat_user_panel.currentEditUser.nickname,
-            group_id: $scope.pageConfig.plat_user_panel.currentEditUser.group.id,
-            sex: $scope.pageConfig.plat_user_panel.currentEditUser.sex ? $scope.pageConfig.plat_user_panel.currentEditUser.sex.id : '',
-            mobile_phone: $scope.pageConfig.plat_user_panel.currentEditUser.mobile_phone,
-            head_photo: ''
-          };
           UserService.signUp(param, function(err, data){
-            console.log(data);
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {
-              return $scope.$emit(GlobalEvent.onShowAlert, err);
+              return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
             }
 
-            $scope.pageConfig.plat_user_panel.users.push($scope.pageConfig.plat_user_panel.currentEditUser);
-            $scope.$emit(GlobalEvent.onShowAlert, '注册成功');
+            clearError();
+            $scope.closePopMask();
+            $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
+            $state.reload();
           });
-          return;
         }else{
-          var index = getIndexOfUsers();
-          if(index === -1){
-            $scope.pageConfig.plat_user_panel.users.push($scope.pageConfig.plat_user_panel.currentEditUser);
-          }else{
-            $scope.pageConfig.plat_user_panel.users[index] = $scope.pageConfig.plat_user_panel.currentEditUser;
-          }
-        }
 
-        clearError();
-        $scope.closePopMask();
+          UserService.modifyUser(param, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if (err) {
+              return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
+            }
+
+            clearError();
+            $scope.closePopMask();
+            $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
+            $state.reload();
+          });
+        }
       };
 
       $scope.reset = function(){
@@ -175,6 +205,33 @@ angular.module('EWeb').controller('UserManagerController',
         clearError();
       };
 
+      function loadUsers(){
+        $scope.pageConfig.plat_user_panel.users = [];
+        UserService.getUsers($scope.pageConfig.plat_user_panel.pagination,function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          data.users.forEach(function(user){
+            $scope.pageConfig.plat_user_panel.users.push({
+              _id: user._id,
+              username: user.username,
+              password: user.password,
+              nickname: user.nickname,
+              sex: user.sex === 'male' ? {id: user.sex, text: '男'} : (user.sex === 'female' ? {id: user.sex, text: '女'}: null),
+              group: {id: user.group._id, text: user.group.name},
+              role: user.role ? {id: user.role, text: UserService.translateUserRole(user.role)} : null,
+              mobile_phone: user.mobile_phone
+            });
+          });
+
+          $scope.pageConfig.plat_user_panel.pagination.totalCount = data.total_count;
+          $scope.pageConfig.plat_user_panel.pagination.limit = data.limit;
+          $scope.pageConfig.plat_user_panel.pagination.pageCount = Math.ceil($scope.pageConfig.plat_user_panel.pagination.totalCount / $scope.pageConfig.plat_user_panel.pagination.limit);
+
+        });
+      }
 
       function init(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
@@ -183,22 +240,12 @@ angular.module('EWeb').controller('UserManagerController',
             $scope.$emit(GlobalEvent.onShowLoading, false);
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
-          console.log('group');
-          console.log(data);
+
           data.group_list.forEach(function(group){
             $scope.pageConfig.groups.push({id: group._id, text: group.name});
           });
 
-          UserService.getUsers($scope.pageConfig.plat_user_panel.pagination,function(err, data){
-            $scope.$emit(GlobalEvent.onShowLoading, false);
-            if (err) {
-              return $scope.$emit(GlobalEvent.onShowAlert, err);
-            }
-
-            console.log(data);
-            $scope.$emit(GlobalEvent.onShowLoading, false);
-
-          });
+          loadUsers();
         });
       }
 

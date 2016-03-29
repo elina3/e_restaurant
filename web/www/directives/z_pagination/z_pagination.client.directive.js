@@ -1,15 +1,15 @@
 /**
-* Created by elinaguo on 15/5/16.
-*/
+ * Created by elinaguo on 15/5/16.
+ */
 /**
-* function: 分页UI
-* author: elina
-*
-*  html代码
-*  <zz-pagination config="pagination"></zz-pagination>
-*
-*  angularjs代码
-$scope.pagination= {
+ * function: 分页UI
+ * author: elina
+ *
+ *  html代码
+ *  <zz-pagination config="pagination"></zz-pagination>
+ *
+ *  angularjs代码
+ $scope.pagination= {
                   currentPage: 1,                     //default
                   limit: 20,                          //default   每页显示几条
                   pageNavigationCount: 5,             //default   分页显示几页
@@ -28,18 +28,18 @@ $scope.pagination= {
                                                   }
                                                 }
               };
-$scope.pagination.render(); //渲染pagination
-*  }
-*
-*/
+ $scope.pagination.render(); //渲染pagination
+ *  }
+ *
+ */
 
 'use strict';
 
 
-angular.module('EWeb').directive('zzPagination', [function () {
+angular.module('EWeb').directive('zPagination', [function () {
     return {
         restrict: 'EA',
-        templateUrl: 'zzneighborhood/directive/zz_pagination/zz_pagination.client.directive.html',
+        templateUrl: 'directives/z_pagination/z_pagination.client.directive.html',
         replace: true,
         scope: {
             config: '='
@@ -49,43 +49,6 @@ angular.module('EWeb').directive('zzPagination', [function () {
             if (!scope.config) {
                 scope.config = {};
             }
-
-            scope.config.render = function () {
-                initConfig();
-                refreshPageNavigation();
-            };
-
-            scope.config.changePage = function (newPage) {
-                switchPage(newPage);
-            };
-
-            scope.config.seekPage = function (newPage) {
-                if (!newPage)
-                    return;
-
-                newPage = parseInt(newPage);
-                if (newPage > scope.config.pageCount) {
-                    return;
-                }
-
-                switchPage(newPage);
-            };
-
-            scope.config.changePageLimit = function () {
-                scope.config.currentPage = 1;
-                //limit已经通过ng－model改变
-                scope.config.onCurrentPageChanged(function (data) {
-                    //data.limit =  parseInt(data.limit);
-                    data.totalCount = data.totalCount;
-                    data.pageCount = Math.ceil(data.totalCount / data.limit);
-                });
-            };
-
-            scope.$watchCollection('config', function () {
-                console.log('currentPage changed');
-                refreshPageNavigation();
-            });
-
 
             function initConfig() {
                 if (!scope.config.currentPage || scope.config.currentPage === 0) {
@@ -117,11 +80,11 @@ angular.module('EWeb').directive('zzPagination', [function () {
                 }
 
                 if (scope.config.canSetLimit === undefined || scope.config.canSetLimit === null) {
-                    scope.config.canSetLimit = true;
+                    scope.config.canSetLimit = false;
                 }
 
                 if (scope.config.canSeekPage === undefined || scope.config.canSeekPage === null) {
-                    scope.config.canSeekPage = true;
+                    scope.config.canSeekPage = false;
                 }
 
                 if (!scope.config.onChange) {
@@ -131,12 +94,41 @@ angular.module('EWeb').directive('zzPagination', [function () {
                 }
             }
 
+            scope.config.changePage = function (newPage) {
+                switchPage(newPage);
+            };
+
+            scope.config.seekPage = function (newPage) {
+                if (!newPage)
+                    return;
+
+                newPage = parseInt(newPage);
+                if (newPage > scope.config.pageCount) {
+                    return;
+                }
+
+                switchPage(newPage);
+            };
+
+            scope.config.changePageLimit = function () {
+                scope.config.currentPage = 1;
+                //limit已经通过ng－model改变
+                scope.config.onCurrentPageChanged(function () {
+                    scope.config.pageCount = Math.ceil(scope.config.totalCount / scope.config.limit);
+                    refreshPageNavigation();
+                });
+            };
+
+            scope.$watchCollection('config', function () {
+                refreshPageNavigation();
+            });
+
             function refreshPageNavigation() {
                 if (scope.config.currentPage === '' || scope.config.currentPage <= 0) {
                     scope.config.currentPage = 1;
                     return;
                 }
-
+                scope.config.pageList = scope.config.pageList || [];
                 scope.config.pageList.splice(0, scope.config.pageList.length);
 
                 if (scope.config.pageCount > scope.config.pageNavigationCount) {
@@ -159,16 +151,16 @@ angular.module('EWeb').directive('zzPagination', [function () {
                 scope.config.currentPage = newPage;
 
                 if (!scope.config.onCurrentPageChanged) {
-                    console.log('currentPage changed!');
                     return;
                 }
 
-                scope.config.onCurrentPageChanged(function (data) {
-                    //data.limit =  parseInt(data.limit);
-                    data.totalCount = data.totalCount;
-                    data.pageCount = Math.ceil(data.totalCount / data.limit);
+                scope.config.onCurrentPageChanged(function () {
+                    scope.config.pageCount = Math.ceil(scope.config.totalCount / scope.config.limit);
+                    refreshPageNavigation();
                 });
             }
+
+            initConfig();
         }
     };
 }]);

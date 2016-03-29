@@ -86,18 +86,18 @@
                                             <img class="gif" ng-src="images/global/edit.gif"/>
                                             <img class="normal" ng-src="images/global/edit.png"/>
                                         </div>
-                                        <div class="handle stop">
+                                        <div class="handle stop" ng-click="deleteUser(user)">
                                             <img class="gif" ng-src="images/global/stop.gif"/>
                                             <img class="normal" ng-src="images/global/stop.png"/>
                                         </div>
-                                        <div class="handle" ng-click="scanUser()">
+                                        <div class="handle" ng-click="scanUser(user)">
                                             <img class="gif" ng-src="images/global/scan.gif"/>
                                             <img class="normal" ng-src="images/global/scan.png"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!--<z-pagination config="pageData.pagination"></z-pagination>-->
+                            <z-pagination config="pageConfig.plat_user_panel.pagination"></z-pagination>
                         </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
@@ -117,7 +117,7 @@
         <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'scan'">
             <div class="ee-pop-header">
                 <div class="ee-pop-title">
-                    <span>小平</span>
+                    <span>{{pageConfig.plat_user_panel.currentEditUser.nickname}}</span>
                     <!--<strong ng-show="pageConfig.currentPOI.is_chain">连锁</strong>-->
                     <div class="close" ng-click="closePopMask()"></div>
                 </div>
@@ -125,32 +125,32 @@
                     <div class="detail-row">
 
                         <div class="ee-detail-info-one">
-                            <span>编号</span>
-                            <strong>3123454哦佛尔肌肤</strong>
+                            <span>用户名</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.username}}</strong>
                         </div>
                         <div class="ee-detail-info-two">
                             <span>手机号</span>
-                            <strong>1234566789</strong>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.mobile_phone}}</strong>
                         </div>
                     </div>
                     <div class="detail-row">
                         <div class="ee-detail-info-one">
                             <span>性别</span>
-                            <strong>女</strong>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.sex.text}}</strong>
                         </div>
                         <div class="ee-detail-info-two">
                             <span>角色</span>
-                            <strong>餐厅服务员</strong>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.role.text}}</strong>
                         </div>
                     </div>
                     <div class="detail-row">
                         <div class="ee-detail-info-one">
                             <span>组别</span>
-                            <strong>餐厅</strong>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.group.text}}</strong>
                         </div>
                         <div class="ee-detail-info-two">
                             <span>证件号</span>
-                            <strong>410825198805177625</strong>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.description}}</strong>
                         </div>
                     </div>
 
@@ -210,7 +210,7 @@
                         <div class="info-value">
                             <input placeholder="请输入手机号" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.mobile_phone"/>
                         </div>
-                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.mobile_photo}">(必填项)</div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.mobile_phone}">(必填项)</div>
                     </div>
                     <div class="info-item">
                         <span class="info-name">组别</span>

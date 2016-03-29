@@ -48,6 +48,46 @@ angular.module('EWeb').factory('UserService',
               return callback(SystemError.network_error);
             });
         },
+        modifyUser: function(param, callback){
+          RequestSupport.executePost('/user/modify', {
+            user_info: param
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        deleteUser: function(userId, callback){
+          RequestSupport.executePost('/user/delete', {
+            user_id: userId
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         signIn: function(param, callback){
           RequestSupport.executePost('/user/sign_in', {
             username: param.username,

@@ -171,7 +171,7 @@ exports.signUp = function(userInfo, callback){
           user.role = userInfo.role;
           user.group = userInfo.group_id;
           user.hospital = group.hospital;
-          user.sex = userInfo.sex;
+          user.sex = !userInfo.sex ? 'unknown':userInfo.sex;
           user.mobile_phone = userInfo.mobile_phone;
           user.head_photo = userInfo.head_photo;
           user.description = userInfo.description;
@@ -184,6 +184,60 @@ exports.signUp = function(userInfo, callback){
           });
         });
     });
+};
+
+exports.modifyUser = function(userInfo, callback){
+  User.findOne({username: userInfo.username},function(err, user){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(!user){
+      return callback({err: userError.user_not_exist});
+    }
+
+    user.password = userInfo.password ? user.hashPassword(userInfo.password) : '';
+    user.nickname = userInfo.nickname;
+    user.role = userInfo.role;
+    user.group = userInfo.group_id;
+    user.sex = !userInfo.sex ? 'unknown':userInfo.sex;
+    user.mobile_phone = userInfo.mobile_phone;
+    user.head_photo = userInfo.head_photo;
+    user.description = userInfo.description;
+    user.save(function(err, newUser){
+      if(err || !newUser){
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, newUser);
+    });
+
+  });
+};
+
+exports.deleteUser = function(userId, callback){
+  User.findOne({_id: userId}, function(err, user){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(!user){
+      return callback({err: userError.user_not_exist});
+    }
+
+    if(user.deleted_status){
+      return callback({err: userError.user_deleted});
+    }
+
+    user.deleted_status = true;
+    user.save(function(err, newUser){
+      if(err || !newUser){
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, newUser);
+    });
+  });
 };
 
 exports.signIn = function(username, password, callback){
@@ -225,14 +279,42 @@ exports.getValidUserById = function(userId, callback){
     });
 };
 
-exports.getNormalUsers = function(admin, callback){
-  User.find({deleted_status: false, hospital: admin.hospital, role: {'$ne': 'admin'}})
-    .exec(function(err, users){
-      if(err){
-        return callback({err: systemError.database_query_error});
-      }
+exports.getNormalUsers = function(admin, currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false,
+    hospital: admin.hospital,
+    role: {'$ne': 'admin'}
+  };
+  User.count(query, function(err, totalCount){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
 
-      return callback(null, users);
-    });
+    if (limit === -1) {
+      limit = totalCount;
+    }
+
+    if (skipCount === -1) {
+      skipCount = limit * (currentPage - 1);
+    }
+
+    User.find(query)
+      .sort({update_time: -1})
+      .skip(skipCount)
+      .limit(limit)
+      .populate('group')
+      .exec(function(err, users){
+        if(err){
+          return callback({err: systemError.database_query_error});
+        }
+
+        return callback(null, {
+          totalCount: totalCount,
+          limit: limit,
+          users: users
+        });
+      });
+  });
+
 };
 
