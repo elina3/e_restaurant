@@ -42,7 +42,7 @@
                                         <span>手机号</span>
                                     </div>
                                     <div class="col-xs-1">
-                                        <span>状态</span>
+                                        <span>角色</span>
                                     </div>
 
                                     <div class="col-xs-1">
@@ -56,33 +56,33 @@
                                         <span>操作</span>
                                     </div>
                                 </div>
-                                <div class="row list-info">
+                                <div class="row list-info" ng-repeat="user in pageConfig.plat_user_panel.users">
                                     <div class="col-xs-2">
-                                        <span>E23442579359</span>
+                                        <span>{{user.username}}</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>小平</span>
+                                        <span>{{user.nickname}}</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>18321740710</span>
+                                        <span>{{user.mobile_phone}}</span>
                                     </div>
                                     <div class="col-xs-1">
                                         <span class="type">
-                                            服务员
+                                            {{user.role.text}}
                                         </span>
                                     </div>
                                     <div class="col-xs-1">
                                         <span class="type">
-                                            女
+                                            {{user.sex.text}}
                                         </span>
                                     </div>
                                     <div class="col-xs-1">
                                         <span class="type">
-                                            餐厅
+                                            {{user.group.text}}
                                         </span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <div class="handle edit">
+                                        <div class="handle edit" ng-click="editUser(user)">
                                             <img class="gif" ng-src="images/global/edit.gif"/>
                                             <img class="normal" ng-src="images/global/edit.png"/>
                                         </div>
@@ -165,53 +165,83 @@
                 </div>
             </div>
         </div>
-        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'edit'">
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'edit' || pageConfig.scanType === 'create'">
             <div class="ee-pop-header">
                 <div class="ee-pop-title">
-                    <span>新增用户</span>
+                    <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}用户</span>
                     <div class="close" ng-click="closePopMask()"></div>
                 </div>
             </div>
             <div class="ee-pop-body">
-                <div class="user-info">
+                <div class="ee-user-manager-view-new-user">
                     <div class="info-item">
-                        <span>用户名</span>
-                        <input ng-model="pageConfig.currentUser.username"/>
+                        <span class="info-name">用户名</span>
+                        <div class="info-value">
+                            <input placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.username"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.username}">(必填项，员工号)</div>
                     </div>
                     <div class="info-item">
-                        <span>密码</span>
-                        <input ng-model="pageConfig.currentUser.username"/>
+                        <span class="info-name">密码</span>
+                        <div class="info-value">
+                            <input placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_user_panel.currentEditUser.password"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.password}">(必填项,至少六个字符)</div>
                     </div>
+                    <div class="info-item">
+                        <span class="info-name">昵称</span>
+                        <div class="info-value">
+                            <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.nickname"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.nickname}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">性别</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.sex"
+                                        z-dropdown-options="pageConfig.sexs"
+                                        z-dropdown-label="请选择性别"
+                                    >
+                            </z-dropdown>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">手机号</span>
+                        <div class="info-value">
+                            <input placeholder="请输入手机号" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.mobile_phone"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.mobile_photo}">(必填项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">组别</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.group"
+                                        z-dropdown-options="pageConfig.groups"
+                                        z-dropdown-label="请选择组别"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.group}">(必选项)</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">角色</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_user_panel.currentEditUser.role"
+                                        z-dropdown-options="pageConfig.roles"
+                                        z-dropdown-label="请选择角色"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.role}">(必选项)</div>
+                    </div>
+                    <div class="handle">
 
-                    <div class="info-item">
-                        <span>组别</span>
-                        <z-dropdown z-dropdown-model="pageConfig.currentUser.group"
-                                    z-dropdown-options="pageConfig.groups"
-                                    z-dropdown-label="无"
-                                >
-                        </z-dropdown>
-                    </div>
-                    <div class="info-item">
-                        <span>角色</span>
-                        <z-dropdown z-dropdown-model="pageConfig.currentUser.role"
-                                    z-dropdown-options="pageConfig.roles"
-                                    z-dropdown-label="无"
-                                >
-                        </z-dropdown>
-                    </div>
-                    <div class="info-item">
-                        <span>昵称</span>
-                        <input ng-model="pageConfig.currentUser.nickname"/>
-                    </div>
-                    <div class="info-item">
-                        <span>性别</span>
-                        <input ng-model="pageConfig.currentUser.sex"/>
-                    </div>
-                    <div class="info-item">
-                        <span>手机号</span>
-                        <input ng-model="pageConfig.currentUser.username"/>
-                    </div>
+                        <div class="sure" ng-click="addOrEditUser()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
 
+                        <div class="cancel" ng-click="cancel()">取消</div>
+
+                        <div class="reset" ng-click="reset()" ng-show="pageConfig.scanType === 'create'">重置</div>
+                    </div>
                 </div>
             </div>
         </div>

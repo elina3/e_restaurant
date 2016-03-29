@@ -50,6 +50,9 @@ angular.module('EWeb').directive('zDropdown',
                     }
 
                     scope.$on(GlobalEvent.onBodyClick, function (evt, data) {
+                        if(!element[0] || !element[0].$$hashKey || !data || !data.target){
+                            return;
+                        }
                         checkClickMe(element[0].$$hashKey, data.target);
                     });
 
