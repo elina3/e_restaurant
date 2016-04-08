@@ -32,6 +32,9 @@ var GoodsSchema = new Schema({
   price: {
     type: Number
   },
+  unit: {//单位    盒/包/袋/个
+    type: String
+  },
   discount: {
     type: Number
   },

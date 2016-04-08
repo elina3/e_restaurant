@@ -3,27 +3,54 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$stateParams', '$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService',
-    function ($stateParams, $window, $rootScope, $scope, GlobalEvent, $state, UserService) {
+  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService',
+    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService) {
 
       $scope.pageConfig = {
         title: '',
         type: '',
         currentTag: 'goods',
-        groupList: []
+        scanType: '',
+        goodsPanel: {
+          currentEditGoods: null,
+          pagination: {
+            currentPage: 1,
+            limit: 10,
+            totalCount: 0
+          },
+          errorInfo: {
+            name: false,
+            display_photos: false,
+            price: false
+          },
+          goodsList: []
+        },
+        orderPanel: {
+          pagination: {
+            currentPage: 1,
+            limit: 10,
+            totalCount: 0
+          },
+          orderList: []
+        },
+        panel: {
+          showMask: false,
+          showGoodsEdit: false,
+          showOrderEdit: false,
+          showGoodsScan: false,
+          showOrderScan: false
+        }
       };
 
       $scope.goBack = function () {
-        $window.history.back();
+        $state.go('user_index');
       };
-
 
       $scope.changeTag = function(tagName){
         $scope.pageConfig.currentTag = tagName;
       };
 
-      function init(){
-
+      function initPageConfig(){
         switch($stateParams.goods_type){
           case 'goods':
             $scope.pageConfig.title = '超市管理';
@@ -38,13 +65,90 @@ angular.module('EWeb').controller('GoodsManagerController',
             $scope.pageConfig.type = 'restaurant';
             return;
         }
-        //UserService.getGroups({currentPage: 1,limit: -1, skipCount: 0}, function (err, data) {
-        //  $scope.$emit(GlobalEvent.onShowLoading, false);
-        //  if (err) {
-        //    return $scope.$emit(GlobalEvent.onShowAlert, err);
-        //  }
-        //  $scope.pageInfo.groupList = data.group_list;
-        //});
+      }
+
+      function getGoodsList(){
+
+      }
+
+      function getNewGoodsObj(){
+        return {
+          name: '',
+          description: '',
+          status: 'none',
+          price: 0,
+          discount: 1,
+          display_photos: [],
+          description_photos: []
+        };
+      }
+
+      $scope.clearMask = function(){
+        $scope.pageConfig.panel.showMask = false;
+        $scope.pageConfig.panel.showGoodsEdit = false;
+        $scope.pageConfig.panel.showOrderEdit = false;
+        $scope.pageConfig.panel.showGoodsScan = false;
+        $scope.pageConfig.panel.showOrderScan = false;
+      };
+
+      $scope.showEditGoodsPanel = function(goods){
+        $scope.pageConfig.panel.showGoodsEdit = true;
+        $scope.pageConfig.panel.showMask = true;
+        if(!goods){
+          $scope.pageConfig.goodsPanel.currentEditGoods = getNewGoodsObj();
+        }
+      };
+
+      function validGoodsInfo(){
+        var isValid = true;
+        if(!$scope.pageConfig.goodsPanel.currentEditGoods.name){
+          $scope.pageConfig.goodsPanel.errorInfo.name = true;
+          isValid = false;
+        }
+
+        if(!$scope.pageConfig.goodsPanel.currentEditGoods.price || parseInt($scope.pageConfig.goodsPanel.currentEditGoods.price) < 0){
+          $scope.pageConfig.goodsPanel.errorInfo.price = true;
+          isValid = false;
+        }
+
+        if(!$scope.pageConfig.goodsPanel.currentEditGoods.display_photos || $scope.pageConfig.goodsPanel.currentEditGoods.display_photos.length === 0){
+          $scope.pageConfig.goodsPanel.errorInfo.display_photos = true;
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      $scope.createOrEditGoods = function(isCreate){
+        if(!validGoodsInfo()){
+          return;
+        }
+
+        //if(isCreate){
+        //  GoodsService.createGoods($scope.pageConfig.goodsPanel.currentEditGoods, function(err, data){
+        //    if(err){
+        //
+        //    }
+        //
+        //
+        //  });
+        //}else{
+        //  GoodsService.modifyGoods($scope.pageConfig.goodsPanel.currentEditGoods, function(err, data){
+        //    if(err){
+        //
+        //    }
+        //
+        //
+        //  });
+        //}
+      };
+
+      $scope.translateGoodsStatus = function(status){
+        return GoodsService.translateGoodsStatus(status);
+      };
+
+      function init(){
+        initPageConfig();
       }
 
       init();

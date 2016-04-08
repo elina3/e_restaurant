@@ -116,9 +116,9 @@ angular.module('EWeb').factory('UserService',
             case 'admin':
               return '管理员';
             case 'waiter':
-              return '餐厅服务员';
+              return '服务员';
             case 'cashier':
-              return '超市收银员';
+              return '收银员';
             case 'card_manager':
               return '饭卡管理员';
             default:

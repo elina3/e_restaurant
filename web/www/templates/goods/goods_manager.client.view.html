@@ -21,17 +21,66 @@
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'orders' || pageConfig.currentTag === 'statistics' ? 'move-left' : ''">
-
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-                        {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}} {{pageConfig.type}}
-
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="add-user" ng-click="showEditGoodsPanel()">
+                                    <span>添加新菜品</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-3">
+                                        <span>菜名</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>售价</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>状态</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>折扣</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info" ng-repeat="goods in pageConfig.goodsPanel.goodsList">
+                                    <div class="col-xs-3">
+                                        <span>{{goods.name}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{goods.price}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{translateGoodsStatus(goods.status)}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="type">
+                                            {{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <div class="handle edit"  ng-click="showEditGoodsPanel(goods)">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop" ng-click="deleteGoods(goods)">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+                                        <div class="handle" ng-click="scanGoods(goods)">
+                                            <img class="gif" ng-src="images/global/scan.gif"/>
+                                            <img class="normal" ng-src="images/global/scan.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <z-pagination config="pageConfig.goodsPanel.pagination"></z-pagination>
+                        </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
                         orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
@@ -57,6 +106,83 @@
 
 </div>
 
+<div class="ee-pop-mask" ng-show="pageConfig.popMaskShow">
+    <div class="ee-pop-wrapper">
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'scan'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.plat_user_panel.currentEditUser.nickname}}</span>
+                    <!--<strong ng-show="pageConfig.currentPOI.is_chain">连锁</strong>-->
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+                <div class="ee-pop-title-detail">
+                    <div class="detail-row">
+
+                        <div class="ee-detail-info-one">
+                            <span>用户名</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.username}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>手机号</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.mobile_phone}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>性别</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.sex.text}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>角色</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.role.text}}</strong>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="ee-detail-info-one">
+                            <span>组别</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.group.text}}</strong>
+                        </div>
+                        <div class="ee-detail-info-two">
+                            <span>证件号</span>
+                            <strong>{{pageConfig.plat_user_panel.currentEditUser.description}}</strong>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="photo-container">
+                    <div class="photo">
+                        <img src="images/global/default_user.png"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'edit' || pageConfig.scanType === 'create'">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}餐品</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="ee-goods-detail-area">
+                    <div class="goods-photos">
+                        <div class="photos">
+                            <div class="photo"></div>
+                        </div>
+                    </div>
+                    <div class="goods-detail">
+
+                    </div>
+                    <div class="goods-description"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 <div class="ee-footer">
     <span>茂玥科技  版权所有</span>
 </div>

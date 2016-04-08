@@ -48,6 +48,32 @@ angular.module('EWeb').service('RequestSupport',
                     });
                   return q.promise;
               },
+              executePut: function (url, body) {
+                body = body || {};
+                body.access_token = Auth.getToken();
+                var q = $q.defer();
+                $http.put(Config.serverAddress + url, body)
+                  .success(function (data) {
+                    q.resolve(handleData(data));
+                  })
+                  .error(function (err) {
+                    q.reject(err);
+                  });
+                return q.promise;
+              },
+              executeDelete: function (url, body) {
+                body = body || {};
+                body.access_token = Auth.getToken();
+                var q = $q.defer();
+                $http.delete(Config.serverAddress + url, body)
+                  .success(function (data) {
+                    q.resolve(handleData(data));
+                  })
+                  .error(function (err) {
+                    q.reject(err);
+                  });
+                return q.promise;
+              },
               executeGetByPath: function (path) {
                   var q = $q.defer();
                   $http.get(path)
