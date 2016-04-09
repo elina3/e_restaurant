@@ -1,1 +1,109 @@
-<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="order-detail-page-view">
+    <div class="info-title">
+        <span>确认收货</span>
+    </div>
+    <div class="address">
+        <div>
+            <span>收货人：郭姗姗</span>
+            <span>18321740710</span>
+        </div>
+
+        <div class="address-info">收货地址：201栋 病床4号</div>
+        <div class="remark row">
+            <span class="key">备注信息：</span>
+            <span class="value">
+                <input type="text" ng-model="orderObj.remarks" />
+            </span>
+        </div>
+    </div>
+
+    <div class="info-title">
+        <span>确认订单信息</span>
+    </div>
+    <div class="order-list">
+        <div class="header row">
+            <div class="col-xs-6"><span>商品</span></div>
+            <div class="col-xs-2"><span>单价</span></div>
+            <div class="col-xs-2"><span>数量</span></div>
+            <div class="col-xs-2"><span>总价</span></div>
+        </div>
+        <div class="order-item rowcenter">
+            <div class="col-xs-6 goods-info">
+                <div class="row">
+                    <div class="col-xs-6 photo">
+                        <img src="temp/goods1.png"/>
+                    </div>
+                    <div class="col-xs-6 goods-name">
+                        <div class="center-content"><span>呱呱叫干锅主题餐厅</span></div>
+                    </div>
+                    <div class="col-xs-6 description">
+                        <p class="text">呱呱叫干锅主题餐厅</p>
+                        <div class="buy-info">
+                            <span class="sales-price">￥12</span>
+                            <span class="number">X 1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>1</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
+            <div class="summation">
+                <span class="total-number">共计1件商品</span>
+                <span class="total-text">合计：</span>
+                <span class="total-price">￥12</span>
+            </div>
+        </div>
+
+        <div class="order-item rowcenter">
+            <div class="col-xs-6 goods-info">
+                <div class="row">
+                    <div class="col-xs-6 photo">
+                        <img src="temp/goods1.png"/>
+                    </div>
+                    <div class="col-xs-6 goods-name">
+                        <div class="center-content"><span>呱呱叫干锅主题餐厅</span></div>
+                    </div>
+                    <div class="col-xs-6 description">
+                        <p class="text">呱呱叫干锅主题餐厅</p>
+                        <div class="buy-info">
+                            <span class="sales-price">￥12</span>
+                            <span class="number">X 1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>1</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
+            <div class="summation">
+                <span class="total-number">共计1件商品</span>
+                <span class="total-text">合计：</span>
+                <span class="total-price">￥12</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-remark">
+        <textarea rows="3" cols="35" placeholder="订单备注" ng-model="orderObj.remarks"></textarea>
+    </div>
+    <div class="order-total">
+                <span class="back">
+                    <a ui-sref="shopping_car">
+                        <img ng-src="images/global/back.png"/>
+                        返回购物车
+                    </a>
+                </span>
+        <span>共计1件商品:</span>
+        <span>合计:</span>
+        <span class="price">￥12</span>
+        <input type="button" class="pay" ng-click="summation.submitOrder()" value="确认下单"/>
+    </div>
+</div>
+
+<div class="car-footer row">
+    <p class="total-price col-xs-6">合计： <span class="count">￥12</span></p>
+
+    <p class="pay col-xs-6" ng-click="goToView('orderDetail')">结算</p>
+</div>

@@ -14,7 +14,12 @@ angular.module('EClientWeb').controller('OrderDetailController',
               $window) {
 
       $scope.pageData = {
-        title: '订单详情'
+        title: '订单详情',
+        headConfig: {
+          title: '订单详情',
+          backView: '',
+          backShow: true
+        }
       };
 
 
