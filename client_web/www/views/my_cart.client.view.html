@@ -50,12 +50,12 @@
     <div class="car-total">
         <span>合计:</span>
         <span class="price">￥12</span>
-        <input type="button" class="pay" ng-click="summation.buyNow()" value="结算"/>
+        <input type="button" class="pay" ng-click="goToView('orderDetail')" value="结算"/>
     </div>
 </div>
 <div class="car-footer row">
     <p class="total-price col-xs-6">合计： <span class="count">￥12</span></p>
 
-    <p class="pay col-xs-6" ng-click="summation.buyNow()">生成订单</p>
+    <p class="pay col-xs-6" ng-click="goToView('orderDetail')">结算</p>
 </div>
 <!--<div><button ng-click="goToView('orderDetail')">订单填写</button></div>-->

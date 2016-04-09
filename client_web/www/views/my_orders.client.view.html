@@ -1,3 +1,149 @@
-<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="my-orders-page-view">
+    <div class="info-title">
+        <span>我的订单</span>
+    </div>
 
-<div><button ng-click="goToView('orderDetail')">订单详情</button></div>
+    <div class="order-list">
+        <div class="row top">
+            <div class="col-xs-8 left">
+                <span>订单号: D201605170010001</span>
+            </div>
+            <div class="col-xs-4 right">
+                <span class="status">厨师烹饪中</span>
+                <span class="time">成交于 2016-12-1 12:00</span>
+            </div>
+        </div>
+        <div class="row order">
+            <div class="col-xs-8 goods-items">
+                <div class="row goods-item"
+                     ng-click="goToView('orderDetail')">
+                    <div class="col-xs-3 photo">
+                        <img src="temp/goods1.png"/>
+                    </div>
+                    <div class="col-xs-4 goods-des">
+                        <div class="center-box">
+                            <p>呱呱叫干锅主题餐厅</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 goods-price">
+                        <div class="center-box">
+                            <span>￥12</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 count">
+                        <div class="center-box">
+                            <span>x1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 price">
+                <div class="center-box">
+                    <span>￥12</span>
+                </div>
+
+            </div>
+            <div class="col-xs-2 status">
+                <div class="center-box state">
+                    <span>厨师烹饪中</span>
+                </div>
+            </div>
+        </div>
+        <div class="sum">
+            <span >共计1件商品</span>
+            <span>合计：</span>
+            <span class="large">￥12</span>
+        </div>
+    </div>
+    <div class="order-list">
+        <div class="row top">
+            <div class="col-xs-8 left">
+                <span>订单号: D201605170010001</span>
+            </div>
+            <div class="col-xs-4 right">
+                <span class="status">厨师烹饪中</span>
+                <span class="time">成交于 2016-12-1 12:00</span>
+            </div>
+        </div>
+        <div class="row order">
+            <div class="col-xs-8 goods-items">
+                <div class="row goods-item"
+                     ng-click="goToView('orderDetail')">
+                    <div class="col-xs-3 photo">
+                        <img src="temp/goods1.png"/>
+                    </div>
+                    <div class="col-xs-4 goods-des">
+                        <div class="center-box">
+                            <p>呱呱叫干锅主题餐厅</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 goods-price">
+                        <div class="center-box">
+                            <span>￥12</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 count">
+                        <div class="center-box">
+                            <span>x1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 price">
+                <div class="center-box">
+                    <span>￥12</span>
+                </div>
+
+            </div>
+            <div class="col-xs-2 status">
+                <div class="center-box state">
+                    <span>厨师烹饪中</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row order">
+            <div class="col-xs-8 goods-items">
+                <div class="row goods-item"
+                     ng-click="goToView('orderDetail')">
+                    <div class="col-xs-3 photo">
+                        <img src="temp/goods1.png"/>
+                    </div>
+                    <div class="col-xs-4 goods-des">
+                        <div class="center-box">
+                            <p>呱呱叫干锅主题餐厅</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 goods-price">
+                        <div class="center-box">
+                            <span>￥12</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 count">
+                        <div class="center-box">
+                            <span>x1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-2 price">
+                <div class="center-box">
+                    <span>￥12</span>
+                </div>
+
+            </div>
+            <div class="col-xs-2 status">
+                <div class="center-box state">
+                    <span>厨师烹饪中</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sum">
+            <span >共计2件商品</span>
+            <span>合计：</span>
+            <span class="large">￥24</span>
+        </div>
+    </div>
+</div>
