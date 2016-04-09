@@ -79,7 +79,8 @@ module.exports = function () {
   });
 
   // Setting the app router and static folder
-  app.use('/', express.static(path.resolve('../web/www')));
+  app.use('/', express.static(path.resolve('../client_web/www')));
+  app.use('/manager', express.static(path.resolve('../manager_web/www')));
   app.use(function (req, res, next) {
 
     // Environment dependent middleware
