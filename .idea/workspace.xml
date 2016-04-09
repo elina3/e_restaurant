@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7fd2200-feba-41f5-8acd-3145f158b689" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client_web/www/images/global/back.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client_web/www/lesses/views/order_detail.client.style.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/controllers/order_detail.client.controller.js" afterPath="$PROJECT_DIR$/client_web/www/controllers/order_detail.client.controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/views/order_detail.client.view.html" afterPath="$PROJECT_DIR$/client_web/www/views/order_detail.client.view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html" afterPath="$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="e_restaurant.iws" />
@@ -29,7 +26,7 @@
     <favorites_list name="e_restaurant" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.3656417">
+    <splitter split-orientation="horizontal" split-proportion="0.6236631">
       <split-first>
         <leaf>
           <file leaf-file-name="e_footer.client.directive.less" pinned="false" current-in-tab="false">
@@ -67,10 +64,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="order_detail.client.style.less" pinned="false" current-in-tab="true">
+          <file leaf-file-name="order_detail.client.style.less" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/order_detail.client.style.less">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.9477352" vertical-offset="1226" max-vertical-offset="2175">
+                <state vertical-scroll-proportion="-10.88" vertical-offset="1226" max-vertical-offset="2175">
                   <caret line="337" column="0" selection-start-line="337" selection-start-column="0" selection-end-line="337" selection-end-column="0" />
                   <folding>
                     <element signature="e#73#214#0" expanded="false" />
@@ -85,6 +82,18 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="goods_detail.client.view.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.375" vertical-offset="105" max-vertical-offset="840">
+                  <caret line="58" column="105" selection-start-line="58" selection-start-column="105" selection-end-line="58" selection-end-column="105" />
+                  <folding>
+                    <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -92,7 +101,7 @@
           <file leaf-file-name="order_detail.client.view.html" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/client_web/www/views/order_detail.client.view.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.7189097" vertical-offset="1063" max-vertical-offset="1650">
+                <state vertical-scroll-proportion="2.5298126" vertical-offset="0" max-vertical-offset="1650">
                   <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
                   <folding>
                     <element signature="n#div#0;n#div#3;n#div#0;n#!!top" expanded="false" />
@@ -850,16 +859,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.225" vertical-offset="105" max-vertical-offset="840">
-          <caret line="16" column="39" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="39" />
-          <folding>
-            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-17.333334" vertical-offset="394" max-vertical-offset="1005">
@@ -889,7 +888,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/views/order_detail.client.view.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7189097" vertical-offset="1063" max-vertical-offset="1650">
+        <state vertical-scroll-proportion="2.5298126" vertical-offset="0" max-vertical-offset="1650">
           <caret line="104" column="22" selection-start-line="104" selection-start-column="22" selection-end-line="104" selection-end-column="22" />
           <folding>
             <element signature="n#div#0;n#div#3;n#div#0;n#!!top" expanded="false" />
@@ -917,7 +916,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/order_detail.client.style.less">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9477352" vertical-offset="1226" max-vertical-offset="2175">
+        <state vertical-scroll-proportion="-10.88" vertical-offset="1226" max-vertical-offset="2175">
           <caret line="337" column="0" selection-start-line="337" selection-start-column="0" selection-end-line="337" selection-end-column="0" />
           <folding>
             <element signature="e#73#214#0" expanded="false" />
@@ -927,6 +926,16 @@
             <element signature="e#2730#3907#0" expanded="false" />
             <element signature="e#4769#5333#0" expanded="false" />
             <element signature="e#5561#6331#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.375" vertical-offset="105" max-vertical-offset="840">
+          <caret line="58" column="105" selection-start-line="58" selection-start-column="105" selection-end-line="58" selection-end-column="105" />
+          <folding>
+            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
