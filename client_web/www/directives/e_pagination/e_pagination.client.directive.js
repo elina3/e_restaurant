@@ -36,10 +36,10 @@
 'use strict';
 
 
-angular.module('EClientWeb').directive('zPagination', [function () {
+angular.module('EClientWeb').directive('ePagination', [function () {
     return {
         restrict: 'EA',
-        templateUrl: 'directives/z_pagination/z_pagination.client.directive.html',
+        templateUrl: 'directives/e_pagination/e_pagination.client.directive.html',
         replace: true,
         scope: {
             config: '='

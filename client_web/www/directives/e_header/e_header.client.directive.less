@@ -1,0 +1,206 @@
+.zz-nav-bar {
+  width: 100%;
+  height: @web-header-bar-height;;
+  overflow: hidden;
+  img {
+    vertical-align: middle;
+  }
+  .row{
+    padding: 0;
+    margin: 0;
+
+    .col-xs-6, .col-xs-12{
+      padding: 0;
+    }
+  }
+  .header, .sub-header {
+    width: 100%;
+  }
+  .header {
+    overflow: hidden;
+
+    padding: 5px 0;
+    height: 40px;
+
+    background-color: #FF4A2D;
+
+    color: @font-color-white;
+    line-height: 30px;
+    font-size: @font-size-title-normal-web;
+
+    .tel, .download {
+      display: inline;
+      padding-right: 10px;
+    }
+    .tel {
+      //border-right: 1px solid @background-color-white;
+      width: 40%;
+      margin-right: 10px;
+      img {
+        margin-top: -2px;
+      }
+    }
+    .info {
+      text-align: right;
+      .user {
+        display: inline;
+        margin-left: 10px;
+        float: right;
+      }
+      .nav-list {
+        color: #FFB9B1;
+        float: right;
+        .nav-item {
+          float: left;
+          padding: 0 10px;
+          text-align: center;
+          cursor: pointer;
+          font-weight: bold;
+          div {
+            float: left;
+          }
+          //border-right: 1px solid #FFB9B1;
+          .tips-s, .tips-l {
+            .info {
+              overflow: hidden;
+              height: 21px;
+              text-align: center;
+              margin-top: 9px;
+              span {
+                color: #FF4A2D;
+                font-size: 12px;
+                display: block;
+                line-height: 15px;
+              }
+            }
+
+          }
+          .tips-s {
+            margin-left: 4px;
+            background: url(../../images/global/t3.png) center center no-repeat;
+            background-size: 16px 16px;
+            .info {
+              width: 16px;
+            }
+          }
+          .tips-l {
+            margin-left: 10px;
+            background: url(../../images/global/t4.png) center center no-repeat;
+            background-size: 27px 16px;
+            .info {
+              width: 27px;
+            }
+          }
+          span {
+            width: 100%;
+            text-align: center;
+          }
+        }
+        .end {
+          border: none;
+        }
+        .active {
+          color: #fff;
+          //border-right: 1px solid @background-color-white;
+        }
+      }
+    }
+  }
+  .sub-header {
+    border-bottom: 2px solid @border-line-color-normal-web;
+    div {
+      overflow: hidden;
+    }
+    padding: 14px 0;
+    .logo {
+      span {
+        margin-left: 25px;
+      }
+
+      a:nth-child(1){
+        img{
+          height: 30px;
+          width: auto;
+        }
+      }
+    }
+    .search {
+      @height: 35px;
+      float: right;
+      background-color: #fff;
+      border: @background-color-red solid 2px;
+      width: 340px;
+      line-height: @height;
+      color: #fff;
+      position: relative;
+      padding: 0 10px;
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      form {
+        width: 100%;
+        height: 100%;
+      }
+      .search-input {
+        font-size: 12px;
+        line-height: @height;
+        padding-left: 5px;
+      }
+      .search-icon {
+        float: left;
+        line-height: 35px;
+      }
+      .search-button {
+        background-color: @background-color-red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: @height;
+        width: 61px;
+        color: @font-color-white;
+        outline: none;
+        border: none;
+      }
+    }
+  }
+  .nav-wrap {
+    width: 960px;
+    position: relative;
+    height: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .zz-nav-bar {
+    display: none;
+    .nav-wrap{
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 960px) {
+  .zz-nav-bar {
+    .nav-wrap {
+      width: 960px;
+    }
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1160px) {
+  .zz-nav-bar {
+    .nav-wrap {
+      width: 960px;
+    }
+  }
+}
+
+@media (min-width: 1160px) {
+  .zz-nav-bar {
+    .nav-wrap {
+      width: 1160px;
+    }
+  }
+}

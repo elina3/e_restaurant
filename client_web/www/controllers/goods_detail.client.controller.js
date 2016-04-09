@@ -14,7 +14,16 @@ angular.module('EClientWeb').controller('GoodsDetailController',
               $window) {
 
       $scope.pageData = {
-        title: '商品详情'
+        title: '商品详情',
+        headConfig: {
+          title: '瑞金古北分院食堂',
+          backView: '／',
+          backShow: false
+        },
+        goods: {
+          price: 12,
+          count: 1
+        }
       };
 
       $scope.goBack = function(){

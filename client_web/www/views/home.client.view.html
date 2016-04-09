@@ -1,8 +1,79 @@
-<h1>{{pageConfig.title}}</h1>
-<section>
-    <div><button ng-click="goToView('freeMeal')">自由餐</button></div>
-    <div><button ng-click="goToView('goodsDetail')">查看</button></div>
-    <div><button ng-click="goToView('goodsCart')">购物车</button></div>
-    <div><button ng-click="goToView('myOrders')">我的订单</button></div>
-    <div><button ng-click="goToView('signIn')">登录</button></div>
-</section>
+
+<!--<h1>{{pageConfig.title}}</h1>-->
+<!--<section>-->
+    <!--<div><button ng-click="goToView('freeMeal')">自由餐</button></div>-->
+    <!--<div><button ng-click="goToView('goodsDetail')">查看</button></div>-->
+    <!--<div><button ng-click="goToView('goodsCart')">购物车</button></div>-->
+    <!--<div><button ng-click="goToView('myOrders')">我的订单</button></div>-->
+    <!--<div><button ng-click="goToView('signIn')">登录</button></div>-->
+<!--</section>-->
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="home-page-view">
+    <div class="goods-list">
+        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
+            <div class="photo-area">
+                <div class="photo">
+                    <img src="temp/goods1.png">
+                </div>
+            </div>
+            <div class="desc">
+                <div class="wrap">
+                    <div class="description">
+                        <span>呱呱叫干锅主题餐厅</span>
+                    </div>
+                    <div class="price">
+                        <span>¥12</span>
+                    </div>
+                    <div class="handle">
+                        <div class="add">加入购物车</div>
+                        <div class="buy-now">立即购买</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
+            <div class="photo-area">
+                <div class="photo">
+                    <img src="temp/goods1.png">
+                </div>
+            </div>
+            <div class="desc">
+                <div class="wrap">
+                    <div class="description">
+                        <span>呱呱叫干锅主题餐厅</span>
+                    </div>
+                    <div class="price">
+                        <span>¥12</span>
+                    </div>
+                    <div class="handle">
+                        <div class="add">加入购物车</div>
+                        <div class="buy-now">立即购买</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
+            <div class="photo-area">
+                <div class="photo">
+                    <img src="temp/goods1.png">
+                </div>
+            </div>
+            <div class="desc">
+                <div class="wrap">
+                    <div class="description">
+                        <span>呱呱叫干锅主题餐厅</span>
+                    </div>
+                    <div class="price">
+                        <span>¥12</span>
+                    </div>
+                    <div class="handle">
+                        <div class="add">加入购物车</div>
+                        <div class="buy-now">立即购买</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

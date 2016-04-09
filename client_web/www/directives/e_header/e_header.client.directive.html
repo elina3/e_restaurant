@@ -1,0 +1,57 @@
+<div class="zz-nav-bar">
+    <div class="header">
+        <div class="nav-wrap">
+            <div class="row row-center">
+                <div class="col-xs-6 col col-center">
+                    <div class="tel">
+                        <img src="images/global/phone.png"/>
+                        <span>咨询电话：400-886-9256</span>
+                    </div>
+                </div>
+                <div class="col-xs-6 col col-center info">
+                    <div class="user">
+                        <span>欢迎您：超级玛丽</span>
+                    </div>
+                    <div class="nav-list">
+                        <div class="nav-item"
+                             ng-repeat="nav in navList"
+                             ng-class="{'active':navState===nav.state,'end':$index===navList.length-1}"
+                             ng-click="goState(nav.state)">
+                            <div><span>{{nav.label}}</span></div>
+
+                            <div ng-class="{'tips-s': nav.tipsNum<=99,'tips-l':nav.tipsNum>99}" ng-show="nav.showTips">
+                                <div class="info">
+                                    <span>{{nav.tipsNum<=99?nav.tipsNum:"99+"}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col col-center">
+                    <span>{{}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sub-header">
+        <div class="nav-wrap">
+            <div class="row row-center">
+                <div class="col-50 col-center logo">
+                    <a ui-sref="home"><img ng-src="images/global/logo.png"/></a>
+                    <span><img ng-src="images/global/logo-tips.png"/></span>
+                </div>
+                <div class="col-50 col-center">
+                    <!--<div class="search">-->
+                        <!--<form ng-submit="search(searchName)">-->
+                            <!--<i class="icon ion-search placeholder-icon search-icon"></i>-->
+                            <!--<input class="search-input" type="search" placeholder="搜索商品" ng-model="searchName">-->
+                            <!--<input type="button" class="search-button" ng-click="search(searchName)" value="搜索"/>-->
+                        <!--</form>-->
+
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
