@@ -1,0 +1,93 @@
+.z-pagination {
+  @color-gray: #333333;
+  @radius-size: 2px;
+
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  page_list: 10%;
+  margin: 20px 0;
+
+  .page_list {
+    display: inline-block;
+    overflow: hidden;
+    float: left;
+    ul {
+      display: inline-block;
+      overflow: hidden;
+      float: right;
+      padding: 5px;
+      li {
+        @height: 28px;
+        display: inline-block;
+        float: left;
+        min-width: 20px;
+        background: @background-white-color;
+        //border: 1px solid @border-normal-color;
+        cursor: pointer;
+        color: @font-light-color;
+        &.handle {
+          margin-left: 5px;
+          margin-right: 5px;
+        }
+        a {
+          display: block;
+          height: 100%;
+          width: 100%;
+          font-size: @font-content-size;
+          text-align: center;
+          text-decoration: none;
+          line-height: @height;
+          color: @font-light-color;
+          &:hover, &.current {
+            color: @font-content-color;
+            font-size: @font-content-big-size;
+          }
+        }
+        span {
+          line-height: @height;
+        }
+      }
+    }
+  }
+
+  .pagination_info {
+    display: inline-block;
+    float: left;
+    overflow: hidden;
+    height: 100%;
+    padding: 5px !important;
+    .base_info, .limit_set, .currentPage_set {
+      display: inline-block;
+      overflow: hidden;
+      float: left;
+      color: @color-gray;
+      span {
+        line-height: 28px;
+      }
+    }
+
+    .limit_set {
+      select {
+        color: @color-gray;
+        border: 1px solid #e7e7e7;
+        border-radius: @radius-size;
+        background: #fff;
+      }
+    }
+
+    .currentPage_set {
+      input {
+        color: @color-gray;
+        border: 1px solid #e7e7e7;
+        width: 50px;
+        height: 19px;
+        line-height: 19px;
+        margin: 0 10px;
+        padding: 0px;
+        text-align: center;
+        border-radius: @radius-size;
+      }
+    }
+  }
+}

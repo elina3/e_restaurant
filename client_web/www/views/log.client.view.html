@@ -1,0 +1,23 @@
+<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>
+<section>
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-xs-1">日志模块</div>
+            <div class="col-xs-2">时间</div>
+            <div class="col-xs-3">访问url</div>
+            <div class="col-xs-1">角色</div>
+            <div class="col-xs-2">提示</div>
+            <div class="col-xs-3">信息</div>
+        </div>
+        <div class="row" ng-repeat="log in pageData.logs">
+            <div class="col-xs-1">{{log.log_module}}</div>
+            <div class="col-xs-2">{{log.time | date:"yyyy-MM-dd hh:mm:ss"}}</div>
+            <div class="col-xs-3">{{log.access_url}}</div>
+            <div class="col-xs-1">{{log.role}}</div>
+            <div class="col-xs-2">{{log.tip}}</div>
+            <div class="col-xs-3">{{log.message}}</div>
+        </div>
+
+        <z-pagination config="pageData.pagination"></z-pagination>
+    </div>
+</section>

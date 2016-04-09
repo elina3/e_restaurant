@@ -5,3 +5,10 @@ web/node_modules
 
 web/www/lib
 web/www/dist
+
+client_web/www/lib
+client_web/www/dist
+client_web/node_modules
+manager_web/www/lib
+manager_web/www/dist
+manager_web/node_modules

@@ -1,0 +1,359 @@
+body {
+  color: @font-content-color;
+  font-family: @font-family, "华文细黑";
+  font-size: 13px;
+  input, button, textarea {
+    outline: none;
+  }
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper{
+  width: 95%;
+  margin: 0 auto;
+}
+
+.page-back {
+  width: 18px;
+  height: 18px;
+  border: none;
+  padding: 0;
+  background: url("../../img/global/arrow_left.png") no-repeat center center;
+  &:active {
+    background: url("../../img/global/arrow_left.png") no-repeat center center;
+  }
+  vertical-align: middle;
+  margin-top: -4px;
+}
+
+.title-span {
+  margin-left: 5px;
+}
+
+.amap-copyright, .amap-logo {
+  display: none;
+}
+
+.overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.row {
+  margin: 0;
+}
+
+input, textarea {
+  &::-webkit-input-placeholder {
+    color: @font-hight-light-color;
+    font-weight: 400;
+  }
+  &:-moz-placeholder {
+    color: @font-hight-light-color;
+    font-weight: 400;
+  }
+  &::-moz-placeholder {
+    color: @font-hight-light-color;
+    font-weight: 400;
+  }
+  &:-ms-input-placeholder {
+    color: @font-hight-light-color;
+    font-weight: 400;
+  }
+}
+
+.z-select-box {
+  position: relative;
+  cursor: pointer;
+  border: 1px solid @border-normal-color;
+  padding: 7px 33px 7px 15px;
+  .z-select-panel {
+    position: absolute;
+    top: 101%;
+    left: -1px;
+    right: -1px;
+    z-index: 10;
+    padding: 0;
+    background: #fff;
+    overflow: hidden;
+  }
+  .z-select-ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid @border-normal-color;
+    li {
+      width: 100%;
+      padding: 6px 15px;
+      cursor: pointer;
+      a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: @font-content-color;
+        border-bottom: 1px solid @border-normal-color;
+
+      }
+      i {
+        float: right;
+        color: inherit;
+      }
+      &:hover {
+        background: @background-normal-color;
+        color: @font-white-color;
+      }
+    }
+  }
+  &.disabled {
+    cursor: default;
+    color: #5B6A7D;
+    background-color: #f2f2f2;
+  }
+  //&:after {
+  //  content: "";
+  //  width: 0;
+  //  height: 0;
+  //  position: absolute;
+  //  right: 15px;
+  //  top: 50%;
+  //  margin-top: -3px;
+  //  border-width: 6px 6px 0;
+  //  border-style: solid;
+  //  border-color: @border-normal-color transparent;
+  //}
+}
+
+.z-page-top {
+  width: 100%;
+  padding: @header-bar-height @page-default-padding 0 @page-default-padding;
+  height: @page-top-show-height+@header-bar-height;
+  background-color: @background-gray-color;
+  overflow: hidden;
+  border-bottom: 1px solid @border-normal-color;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: @z-index-for-sub-title;
+
+  .gradient-background(@background-white-color, @background-gray-color);
+
+  .title {
+    font-size: @font-content-big-size;
+    color: @font-dark-color;
+    .page-back-icon {
+      border: none;
+      width: 18px;
+      height: 18px;
+      margin-top: -3px;
+      vertical-align: middle;
+      background: url('../../img/global/back_arrow.png') no-repeat center center;
+      &:active {
+        background: url("../../img/global/back_active.png") no-repeat center center;
+      }
+    }
+    .left {
+      .overflow();
+    }
+    .title-span {
+      line-height: @page-top-show-height;
+      cursor: pointer;
+      //&::before {
+      //  content: "";
+      //  width: 0;
+      //  height: 0;
+      //  position: absolute;
+      //  bottom: 100%;
+      //  left: -15px;
+      //  top: 18px;
+      //  border: 6px solid transparent;
+      //  border-right-color: @font-dark-color;
+      //}
+    }
+    div {
+      padding: 0;
+    }
+    .right {
+      text-align: right;
+    }
+  }
+}
+
+.gradient-background(@from,@to) {
+  background: -ms-linear-gradient(top, @from, @to); /* IE 10 */
+
+  background: -moz-linear-gradient(top,@from,@to); /*火狐*/
+
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(@from), to(@to)); /*谷歌*/
+
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(@from), to(@to)); /* Safari 4-5, Chrome 1-9*/
+
+  background: -webkit-linear-gradient(top, @from, @to); /*Safari5.1 Chrome 10+*/
+
+  background: -o-linear-gradient(top,@from, @to); /*Opera 11.10+*/
+}
+
+.z-panel{
+  background-color: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+
+  padding: 0 20px 20px 20px;
+
+  min-height: 500px;
+
+  .z-panel-header{
+    border-bottom: 1px solid #e0e0e0;
+    height: 65px !important;
+    padding: 0;
+
+    >div{
+      line-height: 65px;
+      height: 100%;
+
+      color: #333;
+      font-size: 18px;
+      &:nth-child(1){
+        padding-left: 0;
+      }
+    }
+
+    .z-header-button{
+      display: inline-block;
+      overflow: hidden;
+      float: right;
+
+      width: 70px;
+      height: 65px;
+      line-height: 65px;
+      cursor: pointer;
+
+      margin-left: 10px;
+      span{
+        margin-left: 5px;
+        font-size: 14px;
+        color: @font-blue;
+      }
+      &:hover span{
+        color: @font-blue-hover;
+      }
+    }
+
+  }
+  .row{
+    height: 40px;
+    line-height: 40px;
+
+    >*{
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .dark{
+      color: #333;
+    }
+    color: #808080;
+  }
+  .z-panel-body{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    mim-height: 500px;
+    max-height: 600px;
+    .z-panel-body-header{
+      position: absolute;
+
+      width: 100%;
+      height: 55px;
+
+      background: #fff;
+      border-bottom: 3px solid #e0e0e0;
+
+      line-height: 55px;
+      font-size: 15px;
+    }
+
+    .z-panel-body-content{
+      margin-top: 55px;
+      mim-height: 445px;
+      max-height: 545px;
+
+      overflow: auto;
+      font-size: 14px;
+
+      .row{
+        border-bottom: 1px solid #e0e0e0;
+        height: 60px;
+        line-height: 60px;
+        cursor: pointer;
+
+        &:hover{
+          background: #fafafa;
+          .handle{
+            visibility: visible;
+          }
+        }
+
+        .handle{
+          visibility: hidden;
+          span{
+            display: inline-block;
+            float: left;
+            overflow: hidden;
+
+
+            width: 20px;
+            height: 20px;
+
+            &.delete{
+              background: url('../../../img/private_poi_manager/delete.png') center center no-repeat;
+              &:hover{
+                background: url('../../../img/private_poi_manager/delete_hover.png') center center no-repeat;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .load-more{
+      margin: 10px auto;
+
+      width: 100%;
+      height: 30px;
+
+      background: #fafafa;
+
+      color: #808080;
+      line-height: 30px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+  }
+}
+
+.z-pop-mask{
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
