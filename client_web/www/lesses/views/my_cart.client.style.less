@@ -1,0 +1,335 @@
+.my-cart-page-view{
+  width: 100%;
+  margin: 0 auto;
+  .info-title {
+    width: 100%;
+    height: 80px;
+    span {
+      line-height: 80px;
+      color: @font-color-deep-dark;
+      font-size: 20px;
+    }
+  }
+  .header {
+    text-align: center;
+    span {
+      line-height: 40px;
+    }
+    color: @font-color-deep-dark;
+    background-color: @border-line-color-normal-web;
+  }
+  .goods-list {
+    width: 100%;
+    overflow: hidden;
+    border-left: 1px solid @border-line-color-normal-web;
+    border-right: 1px solid @border-line-color-normal-web;
+    border-bottom: 1px solid @border-line-color-normal-web;
+    padding-bottom: 5px;
+
+
+    .goods-item {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      padding-top: 5px;
+      cursor: pointer;
+      height: 125px;
+
+      .goods-info{
+        height: 100%;
+
+        .col-xs-6{
+          padding: 0;
+        }
+
+        .photo, .info{
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .photo {
+          display: table-cell;
+          vertical-align: middle;
+          height: inherit;
+          img{
+            width: auto;
+            height: 100%;
+          }
+        }
+      }
+      .goods-name {
+        overflow: auto;
+
+        width: 100%;
+        height: 100%;
+
+        line-height: 120px;
+        text-align: left;
+        white-space: normal;
+        word-break: break-all;
+      }
+
+      .goods-count {
+        display: block;
+        overflow: hidden;
+
+        width: 95px;
+        margin: 0 auto;
+
+        margin-top: 45px;
+
+        .left, .right, .middle {
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+
+          height: 30px;
+
+          padding: 0;
+
+          border: solid 1px @border-line-color-normal-web;
+          cursor: pointer;
+          input{
+            height: 30px;
+            padding: 0;
+            text-align: center;
+            outline: none;
+            border: none !important;
+          }
+        }
+
+        .left, .right{
+          width: 20px;
+        }
+
+        .middle{
+          width: 50px;
+          border-left: none;
+          border-right: none;
+
+          input{
+            width: 100% !important;
+          }
+        }
+      }
+
+      .app-delete{
+        display: none;
+        float: right;
+        padding: 0;
+      }
+      span {
+
+        line-height: 120px;
+      }
+      img {
+        width: auto;
+        height: 120px;
+        vertical-align: middle;
+      }
+      input[type=button] {
+        width: 100%;
+        outline: none;
+        background: none;
+        border: none;
+        //margin-top: 10px;
+        color: @font-color-deep-dark;
+      }
+    }
+  }
+
+  .car-total {
+    width: 100%;
+    margin-top: 30px;
+    text-align: right;
+    span {
+      line-height: 35px;
+    }
+    .price {
+      color: @font-color-red;
+      font-size: 20px;
+      margin-right: 10px;
+
+    }
+    .pay {
+      background-color: @background-color-red;
+      width: 115px;
+      height: 35px;
+      color: @font-color-white;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+}
+.car-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  @footer-height: 55px;
+  margin-bottom: @footer-height;
+  height: @footer-height;
+  padding: 0;
+  * {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+  border-top: 1px solid @border-line-color-normal-app;
+
+  .total-price {
+    height: @footer-height;
+    line-height: @footer-height;
+    background-color: @background-color-white;
+    font-size: @font-size-content-app;
+    .count {
+      font-size: @font-size-title-normal-app;
+      color: @font-color-red;
+    }
+  }
+
+  .pay {
+    height: @footer-height;
+    line-height: @footer-height;
+    background-color: @background-color-red;
+    font-size: @font-size-title-normal-app;
+    color: @font-color-white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+
+@media (max-width: 568px) {
+  .my-cart-page-view {
+    width: 100%;
+    .info-title{
+      display: none;
+    }
+    .header{
+      display: none;
+    }
+
+    .goods-item{
+      padding: 0 20px !important;
+      height: 165px !important;
+      overflow: hidden;
+
+      .goods-info{
+        display: block;
+        overflow: hidden;
+        padding: 0 !important;
+
+        width: 100%;
+        height: 120px !important;
+        margin: 0 0 5px 0;
+      }
+      .col-xs-1{
+        display: none;
+      }
+      .goods-count-box{
+        display: inline-block;
+        float: left;
+        overflow: hidden;
+
+        width: 95px;
+        height: 40px;
+        padding: 0 !important;
+        .goods-count{
+          margin: 0;
+        }
+      }
+      .app-delete{
+        display: inline-block !important;
+        width: 100px;
+        height: 30px;
+
+        line-height: 30px;
+        text-align: center;
+
+        border: 1px solid @font-color-red;
+        color: @font-color-red;
+        font-size: 13px;
+        background: #fff;
+      }
+    }
+
+    .car-total{
+      display: none !important;
+    }
+
+  }
+}
+
+@media (max-width: 768px)  and (min-width: 568px) {
+  .my-cart-page-view {
+    width: 100%;
+    .info-title{
+      display: none;
+    }
+
+    .header{
+      display: none;
+    }
+    .goods-item{
+      .add-delete{
+        display: none !important;
+      }
+    }
+
+
+    .car-total{
+      display: none;
+    }
+  }
+}
+
+@media (min-width: 769px) and (max-width: 960px) {
+  .my-cart-page-view {
+    width: 960px;
+
+    .goods-item{
+      .add-delete{
+        display: none !important;
+      }
+    }
+  }
+
+  .car-footer{
+    display: none;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1160px) {
+  .my-cart-page-view {
+    width: 960px;
+
+    .goods-item{
+      .add-delete{
+        display: none;
+      }
+    }
+  }
+
+  .car-footer{
+    display: none;
+  }
+}
+
+@media (min-width: 1160px) {
+  .my-cart-page-view {
+    width: 1160px;
+
+    .goods-item{
+      .add-delete{
+        display: none;
+      }
+    }
+  }
+
+  .car-footer{
+    display: none;
+  }
+}

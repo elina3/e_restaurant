@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7fd2200-feba-41f5-8acd-3145f158b689" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/directives/e_head_nav/e_head_nav.client.directive.less" afterPath="$PROJECT_DIR$/client_web/www/directives/e_head_nav/e_head_nav.client.directive.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.less" afterPath="$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/lesses/views/goods_detail.client.style.less" afterPath="$PROJECT_DIR$/client_web/www/lesses/views/goods_detail.client.style.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client_web/www/lesses/views/my_cart.client.style.less" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.less" afterPath="$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.less" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/controllers/goods_detail.client.controller.js" afterPath="$PROJECT_DIR$/client_web/www/controllers/goods_detail.client.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/controllers/my_cart.client.controller.js" afterPath="$PROJECT_DIR$/client_web/www/controllers/my_cart.client.controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html" afterPath="$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="e_restaurant.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,68 +30,92 @@
     <favorites_list name="e_restaurant" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="goods_detail.client.view.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.25" vertical-offset="30" max-vertical-offset="840">
-              <caret line="56" column="46" selection-start-line="56" selection-start-column="32" selection-end-line="56" selection-end-column="46" />
-              <folding>
-                <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="goods_detail.client.style.less" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/goods_detail.client.style.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.75" vertical-offset="390" max-vertical-offset="1185">
-              <caret line="294" column="22" selection-start-line="294" selection-start-column="22" selection-end-line="294" selection-end-column="22" />
-              <folding>
-                <element signature="e#327#424#0" expanded="false" />
-                <element signature="e#443#1043#0" expanded="false" />
-                <element signature="e#1056#1223#0" expanded="false" />
-                <element signature="e#1234#3832#0" expanded="false" />
-                <element signature="e#1470#3165#0" expanded="false" />
-                <element signature="e#2257#3156#0" expanded="false" />
-                <element signature="e#3849#5022#0" expanded="false" />
-                <element signature="e#5157#5386#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="e_header.client.directive.less" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.375" vertical-offset="795" max-vertical-offset="1740">
-              <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
-              <folding>
-                <element signature="e#760#843#0" expanded="false" />
-                <element signature="e#860#2285#0" expanded="false" />
-                <element signature="e#2612#3430#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="home.client.style.less" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/home.client.style.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.083333" vertical-offset="1" max-vertical-offset="705">
-              <caret line="227" column="1" selection-start-line="163" selection-start-column="0" selection-end-line="227" selection-end-column="1" />
-              <folding>
-                <element signature="e#144#2191#0" expanded="false" />
-                <element signature="e#469#910#0" expanded="false" />
-                <element signature="e#2242#3053#0" expanded="false" />
-                <element signature="e#3127#4242#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.45855615">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="e_footer.client.directive.less" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.less">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-18.458334" vertical-offset="52" max-vertical-offset="1065">
+                  <caret line="144" column="22" selection-start-line="144" selection-start-column="22" selection-end-line="144" selection-end-column="22" />
+                  <folding>
+                    <element signature="e#78#2314#0" expanded="false" />
+                    <element signature="e#2332#2636#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="goods_detail.client.controller.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client_web/www/controllers/goods_detail.client.controller.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0" vertical-offset="111" max-vertical-offset="735">
+                  <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="my_cart.client.style.less" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/my_cart.client.style.less">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-8.125" vertical-offset="150" max-vertical-offset="2295">
+                  <caret line="169" column="14" selection-start-line="169" selection-start-column="14" selection-end-line="169" selection-end-column="14" />
+                  <folding>
+                    <element signature="e#67#208#0" expanded="false" />
+                    <element signature="e#219#377#0" expanded="false" />
+                    <element signature="e#653#2642#0" expanded="false" />
+                    <element signature="e#1188#1380#0" expanded="false" />
+                    <element signature="e#1401#2204#0" expanded="false" />
+                    <element signature="e#2309#2347#0" expanded="false" />
+                    <element signature="e#2358#2443#0" expanded="false" />
+                    <element signature="e#2469#2636#0" expanded="false" />
+                    <element signature="e#2661#3094#0" expanded="false" />
+                    <element signature="e#4050#4921#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="my_cart.client.controller.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/client_web/www/controllers/my_cart.client.controller.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.45673078" vertical-offset="0" max-vertical-offset="675">
+                  <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="goods_detail.client.view.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="840">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="54" />
+                  <folding>
+                    <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="my_cart.client.view.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.846678" vertical-offset="373" max-vertical-offset="1005">
+                  <caret line="58" column="18" selection-start-line="58" selection-start-column="18" selection-end-line="58" selection-end-column="18" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -215,76 +242,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="temp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lesses" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lesses" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="directives" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -307,37 +264,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="directives" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_header" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_restaurant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client_web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="directives" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="e_head_nav" />
+              <option name="myItemId" value="controllers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -466,7 +393,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="23" width="1920" height="1006" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2866521" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -521,13 +448,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client_web/www/config/loading.client.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="225">
-          <caret line="6" column="26" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/interceptors/public.client.interceptor.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="420">
@@ -584,24 +504,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/controllers/my_cart.client.controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
-          <caret line="34" column="8" selection-start-line="25" selection-start-column="6" selection-end-line="34" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/controllers/my_orders.client.controller.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="585">
           <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="135">
-          <caret line="2" column="67" selection-start-line="1" selection-start-column="0" selection-end-line="2" selection-end-column="67" />
         </state>
       </provider>
     </entry>
@@ -782,17 +688,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.516129" vertical-offset="247" max-vertical-offset="1065">
-          <caret line="152" column="5" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-          <folding>
-            <element signature="e#78#2314#0" expanded="false" />
-            <element signature="e#2332#2636#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.021037867" vertical-offset="0" max-vertical-offset="713">
@@ -843,55 +738,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/controllers/goods_detail.client.controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34775642" vertical-offset="8" max-vertical-offset="795">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.175" vertical-offset="0" max-vertical-offset="915">
           <caret line="7" column="54" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="54" />
           <folding>
             <element signature="n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.25" vertical-offset="30" max-vertical-offset="840">
-          <caret line="56" column="46" selection-start-line="56" selection-start-column="32" selection-end-line="56" selection-end-column="46" />
-          <folding>
-            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/home.client.style.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.083333" vertical-offset="1" max-vertical-offset="705">
-          <caret line="227" column="1" selection-start-line="163" selection-start-column="0" selection-end-line="227" selection-end-column="1" />
-          <folding>
-            <element signature="e#144#2191#0" expanded="false" />
-            <element signature="e#469#910#0" expanded="false" />
-            <element signature="e#2242#3053#0" expanded="false" />
-            <element signature="e#3127#4242#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.375" vertical-offset="795" max-vertical-offset="1740">
-          <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
-          <folding>
-            <element signature="e#760#843#0" expanded="false" />
-            <element signature="e#860#2285#0" expanded="false" />
-            <element signature="e#2612#3430#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -904,10 +756,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_header/e_header.client.directive.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.575" vertical-offset="795" max-vertical-offset="1740">
+          <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
+          <folding>
+            <element signature="e#760#843#0" expanded="false" />
+            <element signature="e#860#2285#0" expanded="false" />
+            <element signature="e#2612#3430#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/views/goods_detail.client.view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="840">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="54" />
+          <folding>
+            <element signature="n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/goods_detail.client.style.less">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75" vertical-offset="390" max-vertical-offset="1185">
-          <caret line="294" column="22" selection-start-line="294" selection-start-column="22" selection-end-line="294" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.075" vertical-offset="330" max-vertical-offset="1185">
+          <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="311" selection-end-column="0" />
           <folding>
             <element signature="e#327#424#0" expanded="false" />
             <element signature="e#443#1043#0" expanded="false" />
@@ -918,6 +792,73 @@
             <element signature="e#3849#5022#0" expanded="false" />
             <element signature="e#5157#5386#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/home.client.style.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.825" vertical-offset="105" max-vertical-offset="705">
+          <caret line="246" column="1" selection-start-line="111" selection-start-column="0" selection-end-line="246" selection-end-column="1" />
+          <folding>
+            <element signature="e#144#2191#0" expanded="false" />
+            <element signature="e#469#910#0" expanded="false" />
+            <element signature="e#2242#3053#0" expanded="false" />
+            <element signature="e#3127#4242#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/views/my_cart.client.view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.846678" vertical-offset="373" max-vertical-offset="1005">
+          <caret line="58" column="18" selection-start-line="58" selection-start-column="18" selection-end-line="58" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/lesses/views/my_cart.client.style.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.125" vertical-offset="150" max-vertical-offset="2295">
+          <caret line="169" column="14" selection-start-line="169" selection-start-column="14" selection-end-line="169" selection-end-column="14" />
+          <folding>
+            <element signature="e#67#208#0" expanded="false" />
+            <element signature="e#219#377#0" expanded="false" />
+            <element signature="e#653#2642#0" expanded="false" />
+            <element signature="e#1188#1380#0" expanded="false" />
+            <element signature="e#1401#2204#0" expanded="false" />
+            <element signature="e#2309#2347#0" expanded="false" />
+            <element signature="e#2358#2443#0" expanded="false" />
+            <element signature="e#2469#2636#0" expanded="false" />
+            <element signature="e#2661#3094#0" expanded="false" />
+            <element signature="e#4050#4921#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/directives/e_footer/e_footer.client.directive.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.458334" vertical-offset="52" max-vertical-offset="1065">
+          <caret line="144" column="22" selection-start-line="144" selection-start-column="22" selection-end-line="144" selection-end-column="22" />
+          <folding>
+            <element signature="e#78#2314#0" expanded="false" />
+            <element signature="e#2332#2636#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/controllers/goods_detail.client.controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="111" max-vertical-offset="735">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_web/www/controllers/my_cart.client.controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45673078" vertical-offset="0" max-vertical-offset="675">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>

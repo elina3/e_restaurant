@@ -14,14 +14,16 @@ angular.module('EClientWeb').controller('MyCartController',
               $window) {
 
       $scope.pageData = {
-        title: '我的购物车'
+        title: '我的购物车',
+        headConfig: {
+          title: '购物车',
+          backView: '',
+          backShow: true
+        },
+        goods: {
+          count: 1
+        }
       };
-
-
-      $scope.goBack = function(){
-        $window.history.back();
-      };
-
 
       $scope.goToView = function(viewPage){
         switch(viewPage){

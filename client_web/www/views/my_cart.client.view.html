@@ -1,3 +1,61 @@
-<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>
+<!--<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>-->
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="my-cart-page-view">
+    <div class="info-title"><span>购物车</span></div>
+    <div class="row header">
+        <div class="col-xs-6"><span>商品</span></div>
+        <div class="col-xs-1"><span>单价</span></div>
+        <div class="col-xs-3"><span>数量</span></div>
+        <div class="col-xs-1"><span>总价</span></div>
+        <div class="col-xs-1"><span>操作</span></div>
+    </div>
+    <div class="goods-list">
+        <div class="row goods-item">
+            <div class="col-xs-6 goods-info row"
+                 ng-click="goToView('orderDetail',$event)">
+                <div class="col-xs-6 photo">
+                    <img src="temp/goods1.png"/>
+                </div>
+                <div class="col-xs-6 info">
+                    <div class="goods-name">呱呱叫干锅主题餐厅</div>
+                    <!--<div class="goods-name">{{goods.sku.display_name}}</div>-->
+                </div>
+            </div>
+            <div class="col-xs-1"><span>12</span></div>
+            <div class="col-xs-3 goods-count-box">
+                <div class="goods-count row">
+                    <div class="col-xs-1 left">
+                        <input type="button" ng-click="goodInfo.decreaseCount(goods)" value="-"/>
+                    </div>
+                    <div class="col-xs-3 middle">
+                        <input ng-model="pageData.goods.count"
+                               zz-validation zz-validation-type="number">
+                    </div>
+                    <div class="col-xs-1 right">
+                        <input type="button" ng-click="goodInfo.increaseCount(goods)" value="+"/>
+                    </div>
+                </div>
+            </div>
 
-<div><button ng-click="goToView('orderDetail')">订单填写</button></div>
+            <button class="app-delete">删除</button>
+            <div class="col-xs-1"><span>12</span></div>
+            <div class="col-xs-1">
+                    <span>
+                        <input type="button" ng-click="goodInfo.deleteGood($index)" value="删除"/>
+                    </span>
+            </div>
+        </div>
+
+    </div>
+    <div class="car-total">
+        <span>合计:</span>
+        <span class="price">￥12</span>
+        <input type="button" class="pay" ng-click="summation.buyNow()" value="结算"/>
+    </div>
+</div>
+<div class="car-footer row">
+    <p class="total-price col-xs-6">合计： <span class="count">￥12</span></p>
+
+    <p class="pay col-xs-6" ng-click="summation.buyNow()">生成订单</p>
+</div>
+<!--<div><button ng-click="goToView('orderDetail')">订单填写</button></div>-->
