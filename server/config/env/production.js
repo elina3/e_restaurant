@@ -8,6 +8,6 @@ module.exports = {
   app: {
     title: 'ERestaurant - Production Environment'
   },
-  serverAddress:'https://localhost:2003/',
-  port: process.env.PORT || 2003
+  serverAddress:'https://localhost:7008/',
+  port: process.env.PORT || 7008
 };

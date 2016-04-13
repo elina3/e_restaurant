@@ -53,7 +53,7 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         controller: 'LogController'
     });
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/client/sign_in');
 }]);
 
 eClientWeb.config(['$httpProvider', function ($httpProvider) {
