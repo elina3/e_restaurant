@@ -8,10 +8,12 @@ angular.module('EClientWeb').controller('SignInController',
     '$scope',
     '$state',
     '$window',
+    'Config',
     function ($rootScope,
               $scope,
               $state,
-              $window) {
+              $window,
+              Config) {
 
       $scope.pageData = {
         title: '登录',
@@ -22,6 +24,10 @@ angular.module('EClientWeb').controller('SignInController',
 
       $scope.goBack = function(){
         $window.history.back();
+      };
+
+      $scope.goToManager = function(){
+        $window.location.href = Config.managerServerAddress;
       };
 
       $scope.goToView = function(viewPage){

@@ -3,8 +3,8 @@
 */
 'use strict';
 angular.module('EWeb').controller('UserSignInController',
-  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService',
-    function ($rootScope, $scope, GlobalEvent, $state, UserService) {
+  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Config', '$window',
+    function ($rootScope, $scope, GlobalEvent, $state, UserService, Config, $window) {
 
       $scope.signInObject = {
         username: '',
@@ -34,5 +34,8 @@ angular.module('EWeb').controller('UserSignInController',
 
           $state.go('user_index');
         });
+      };
+      $scope.goToClientIndex = function(){
+        $window.location.href = Config.clientAddress;
       };
     }]);

@@ -4,19 +4,19 @@
         <div class="entry-box row">
             <div class="entry-view">
                 <div class="offline">
-                    <div class="entry-icon"><img src="images/user_manager/restaurant.png" ng-click="goto(1)"></div>
+                    <div class="entry-icon"><img src="images/user_manager/restaurant.png" ng-click="goToView('restaurant')"></div>
                     <div class="entry-name" ng-click="goToView('restaurant')"><span>餐厅</span></div>
                 </div>
             </div>
             <div class="entry-view" ng-show="false">
                 <div class="online">
-                    <div class="entry-icon"><img src="images/user_manager/supermarket.png" ng-click="goto(2)"></div>
+                    <div class="entry-icon"><img src="images/user_manager/supermarket.png" ng-click="goToView('supermarket')"></div>
                     <div class="entry-name" ng-click="goToView('supermarket')"><span>超市</span></div>
                 </div>
             </div>
             <div class="entry-view">
                 <div class="scan">
-                    <div class="entry-icon"><img src="images/user_manager/user.png" ng-click="goto(3)"></div>
+                    <div class="entry-icon"><img src="images/user_manager/user.png" ng-click="goToView('user_manager')"></div>
                     <div class="entry-name" ng-click="goToView('user_manager')"><span>用户</span></div>
                 </div>
             </div>

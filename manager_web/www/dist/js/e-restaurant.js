@@ -103,7 +103,8 @@ eWeb.config(['$httpProvider', function ($httpProvider) {
 'use strict';
 
 angular.module('EWeb').constant('Config', {
-    serverAddress: 'http://' + window.location.host,
+    serverAddress: 'http://' + window.location.host + '/manager',
+    clientAddress: 'http://' + window.location.host,
     //serverAddress: 'https://zhuzhu1688.com',
     //serverAddress: 'https://agilepops.com',
     qiniuServerAddress: 'http://7xs3gd.com1.z0.glb.clouddn.com/'
@@ -1419,8 +1420,8 @@ angular.module('EWeb').controller('GoodsManagerController',
 */
 'use strict';
 angular.module('EWeb').controller('UserSignInController',
-  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService',
-    function ($rootScope, $scope, GlobalEvent, $state, UserService) {
+  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Config', '$window',
+    function ($rootScope, $scope, GlobalEvent, $state, UserService, Config, $window) {
 
       $scope.signInObject = {
         username: '',
@@ -1450,6 +1451,9 @@ angular.module('EWeb').controller('UserSignInController',
 
           $state.go('user_index');
         });
+      };
+      $scope.goToClientIndex = function(){
+        $window.location.href = Config.clientAddress;
       };
     }]);
 
