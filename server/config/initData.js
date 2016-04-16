@@ -47,7 +47,7 @@ exports.createDefaultGroup = function(){
         console.log(JSON.stringify(restaurantGroup));
 
         var userInfo = {
-          username : 'admin@shanghaiminhang.com',
+          username : 'mh-rjgb@rjhgb.com',
           password : '123456',
           nickname : '管理员',
           role : 'admin',

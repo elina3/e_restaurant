@@ -1,33 +1,62 @@
-<div class="zz-sign-in">
-    <div class=" row zz-header">
-        <div class="col-xs-12 title">
-            <span>点餐系统登录</span>
-        </div>
-    </div>
-    <div class="wrap">
-        <div class="row content">
-            <div class="col-xs-12 col-sm-6 list">
-                <div class="row info">
-                    <div class="col-xs-2 left">用户名：</div>
-                    <div class="col-xs-10 right">
-                        <input type="text"
-                               ng-model="signInObject.username"/>
+<!--<div class="zz-sign-in">-->
+    <!--<div class=" row zz-header">-->
+        <!--<div class="col-xs-12 title">-->
+            <!--<span>点餐系统登录</span>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="wrap">-->
+        <!--<div class="row content">-->
+            <!--<div class="col-xs-12 col-sm-6 list">-->
+                <!--<div class="row info">-->
+                    <!--<div class="col-xs-2 left">用户名：</div>-->
+                    <!--<div class="col-xs-10 right">-->
+                        <!--<input type="text"-->
+                               <!--ng-model="signInObject.username"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-xs-12 col-sm-6 list">-->
+                <!--<div class="row info">-->
+                    <!--<div class="col-xs-2 left">密码：</div>-->
+                    <!--<div class="col-xs-10 right">-->
+                        <!--<input type="password" ng-model="signInObject.password"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="footer">-->
+        <!--<div class="col-xs-12 col-sm-6 col-sm-offset-3 signin">-->
+            <!--<input type="button" value="登录" ng-click="signIn()"/>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<div class="sign-in-page-view">
+    <div class="sign-in-bg">
+
+        <div class="wrapper">
+            <div class="sign-in-header">
+                <div class="logo"><img src="images/global/logo-white.png"/></div>
+                <div class="logo-title"><span>瑞金医院古北分院</span></div>
+                <div class="logo-title-tip"><span>餐厅后台管理系统</span></div>
+            </div>
+            <div class="sign-in-area">
+                <div class="sign-in-container">
+                    <div class="container-title">
+                        <span>餐厅后台管理系统</span>
+                    </div>
+                    <div class="sign-in-data">
+                        <div class="input-box"><img src="images/sign_in/username.png"/><input type="text" ng-model="signInObject.username" placeholder="账户名"/></div>
+                        <div class="input-box"><img src="images/sign_in/password.png"/><input type="password" ng-model="signInObject.password" placeholder="密码"/></div>
+                    </div>
+                    <div class="sign-in-handle">
+                        <a class="sign-in-button" ng-click="signIn('home')">登录</a>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-6 list">
-                <div class="row info">
-                    <div class="col-xs-2 left">密码：</div>
-                    <div class="col-xs-10 right">
-                        <input type="password" ng-model="signInObject.password"/>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-    <div class="footer">
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3 signin">
-            <input type="button" value="登录" ng-click="signIn()"/>
-        </div>
+
+        <div class="copy-right">上海茼蒿网络科技有限公司</div>
     </div>
 </div>
+

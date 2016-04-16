@@ -1,106 +1,536 @@
 /**
- * Created by louisha on 15/6/19.
+ * Created by elina on 15/6/19.
  */
 
-@wrap_width: 60%;
-@header_height: 60px;
-.zz-sign-in {
-  margin: 0;
-  width: 100%;
-  input {
-    padding-left: 5px;
-    border-radius: 4px;
-  }
-  .wrap {
-    margin: 0 auto;
-    width: @wrap_width;
-    margin-top: @header_height+20;
-    position: relative;
-    .content {
-      margin: 0;
-      margin-top: 100px;
-      .list {
-        margin-bottom: 20px;
+
+
+.sign-in-page-view{
+  .sign-in-bg{
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: url('../../../images/sign_in/background-img.png') center center no-repeat;
+    background-size: cover;
+    overflow-y: hidden;
+
+    .wrapper{
+      height: 100%;
+    }
+
+    .sign-in-header{
+      margin: 10px 0;
+      height: 80px;
+
+      .logo,.logo-title{
+        display: inline-block;
+        float: left;
         overflow: hidden;
-        .info {
-          margin: 0;
-          font-size: 13px;
-          color: #333333;
-          line-height: @info_height;
-          .left {
-            padding: 0;
+
+        height: 80px;
+      }
+
+      .logo{
+        width: 80px;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .logo-title{
+        padding: 0 20px;
+        line-height: 80px;
+        font-size: 30px;
+        color: #fff;
+      }
+      .logo-title-tip{
+        display: none;
+        overflow: hidden;
+
+        width: 100%;
+        height: 15px;
+        line-height: 15px;
+        font-size: 14px;
+        color: #cdcdcd;
+        text-align: center
+      }
+    }
+
+    .sign-in-area{
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+
+    .sign-in-container{
+      display: block;
+      overflow: hidden;
+      float: right;
+
+      margin-right: 10%;
+      padding: 30px 30px;
+
+      width: 350px;
+
+      background-color: rgba(255,255,255,0.2);
+
+      .container-title{
+        height: 40px;
+        line-height: 40px;
+
+        font-size: 18px;
+        color: #cdcdcd;
+      }
+
+      .sign-in-data{
+        margin: 30px auto;
+
+        width: 100%;
+        .input-box{
+          position: relative;
+          overflow: hidden;
+
+
+          width: 100%;
+          margin-bottom: 15px;
+
+          img{
+            position: absolute;
+            top: 17px;
+            left: 17px;
+
+            width: 14px;
+            height: 14px;
           }
-          .right {
-            input[type=text],input[type=password] {
-              width: 100%;
-              border: 1px solid #CCCCCC;
-              outline: none;
-              &:hover {
+          input{
+            width: 100%;
+            height: 50px;
+            outline: hidden;
+            border: none;
+            border-bottom: 1px solid #cdcdcd;
+            padding: 10px 0 10px 50px;
 
-              }
-              &:focus {
+            background: transparent;
 
-              }
-              &:active {
+            color: #fff;
 
-              }
-            }
-            input[type=button] {
-              width: 100%;
-              outline: none;
-              background: none;
-              background-color: @button_color;
-              border: none;
-              margin-top: 10px;
-              color: @font_color;
-              &:hover {
-
-              }
-              &:focus {
-
-              }
-              &:active {
-
-              }
+            &:focus{
+              border-color: #fff;
             }
           }
         }
       }
-    }
-  }
-  .footer {
-    margin: 0 auto;
-    width: @wrap_width;
-    .signin {
-      line-height: 50px;
-      text-align: center;
-      color: @font_color;
-      padding: 0;
-      font-size: 16px;
-      input[type=button] {
-        background: none;
-        outline: none;
-        border: none;
-        background-color: #6ACB9A;
+
+      .sign-in-handle{
         width: 100%;
+        margin-top: 10px;
+        overflow: hidden;
+        a{
+          display: block;
+          overflow: hidden;
 
-      }
-    }
-  }
-}
+          height: 50px;
 
-@media (max-width: 768px) {
-  .zz-sign-in {
-    .wrap {
-      width: 100%;
-      .tab {
-        height: 60px;
+          border: none;
+
+          background: #fc4b20;
+
+          font-size: 14px;
+          line-height: 50px;
+          text-decoration: none;
+          text-align: center;
+          color: #fff;
+          cursor: pointer;
+
+        }
       }
+
     }
-    .footer {
-      width: 100%;
+
+    .copy-right{
       position: fixed;
       bottom: 0;
+      left: 0;
+
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      font-size: 12px;
+      text-align: center;
+      color: #999;
     }
   }
 }
+
+
+@media (max-height: 414px) {
+  .sign-in-page-view {
+    width: 100%;
+    overflow-y: hidden;
+
+    .sign-in-bg{
+      overflow-y: hidden;
+
+      .sign-in-header{
+        display: inline-block;
+        float: left;
+        overflow: hidden;
+
+        width: 50%;
+        height: auto;
+        margin: 0 auto;
+        margin-top: 0 !important;
+
+        .logo,.logo-title{
+          display: block;
+          overflow: hidden;
+          height: 10%;
+
+          &.logo{
+            margin-top: 5%;
+            width: 100% !important;
+            height: 10% !important;
+            img{
+              display: block;
+              width: 50px !important;
+              height: 50px !important;
+              margin: 0 auto;
+            }
+          }
+          &.logo-title{
+            width: 100%;
+            height: 30%;
+            margin: 5% auto;
+            line-height: 100%;
+            text-align: center;
+            font-size: 24px;
+          }
+        }
+        .logo-title-tip{
+          display: block;
+        }
+      }
+
+      .sign-in-area{
+        position: static !important;
+        display: inline-block;
+        overflow: hidden;
+        float: left;
+
+        width: 50%;
+      }
+      .sign-in-container{
+        display: block;
+        float: none;
+        background: transparent;
+
+        width: 80%;
+        padding: 0 30px !important;
+        margin: 0 auto;
+        margin-top: 10%;
+
+
+        .container-title{
+          display: none;
+        }
+
+        .sign-in-data{
+          margin: 10px auto !important;
+          .input-box{
+            margin-bottom: 15px !important;
+          }
+        }
+      }
+
+      .wrapper{
+        height: 90%;
+      }
+      .copy-right{
+        position: static;
+        height: 10%;
+        line-height: 10px;
+      }
+    }
+  }
+}
+
+
+
+@media (max-width: 568px) {
+  .sign-in-page-view {
+    width: 100%;
+
+    .sign-in-bg{
+      overflow: hidden;
+
+      .sign-in-header{
+        overflow: hidden;
+        height: auto;
+        margin: 5% auto;
+
+        .logo,.logo-title{
+          display: block;
+          overflow: hidden;
+          height: 10%;
+
+          &.logo{
+            margin-top: 5%;
+            width: 100% !important;
+            height: 10% !important;
+            img{
+              display: block;
+              width: 50px !important;
+              height: 50px !important;
+              margin: 0 auto;
+            }
+          }
+          &.logo-title{
+            width: 100%;
+            height: 30%;
+            margin: 5% auto;
+            line-height: 100%;
+            text-align: center;
+            font-size: 24px;
+          }
+        }
+        .logo-title-tip{
+          display: block;
+        }
+      }
+
+      .sign-in-area{
+        position: fixed;
+        bottom: 10%;
+      }
+      .sign-in-container{
+        display: block;
+        float: none;
+        background: transparent;
+
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 5%;
+        padding: 0 30px;
+
+
+        .container-title{
+          display: none;
+        }
+
+        .sign-in-data{
+          .input-box{
+            margin-bottom: 5%;
+          }
+        }
+      }
+
+      .copy-right{
+        height: 10%;
+        line-height: 60px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px)  and (min-width: 568px) {
+  .sign-in-page-view {
+    width: 100%;
+
+    .sign-in-bg{
+      .sign-in-header{
+        overflow: hidden;
+        height: auto;
+        margin-top: 15%;
+        .logo,.logo-title{
+          display: block;
+          overflow: hidden;
+
+          &.logo{
+            margin-top: 30px;
+            width: 100% !important;
+            height: 50px !important;
+            img{
+              display: block;
+              width: 50px !important;
+              height: 50px !important;
+              margin: 0 auto;
+            }
+          }
+          &.logo-title{
+            width: 100%;
+            height: 70px;
+            line-height: 70px;
+            text-align: center;
+            font-size: 24px;
+          }
+        }
+        .logo-title-tip{
+          display: block;
+        }
+      }
+
+      .sign-in-area{
+        position: fixed;
+        bottom: 130px;
+      }
+      .sign-in-container{
+        display: block;
+        float: none;
+        background: transparent;
+
+        width: 80%;
+        padding: 0 30px;
+        margin: 0 auto;
+        margin-top: 10%;
+
+        .container-title{
+          display: none;
+        }
+
+        .sign-in-data{
+          .input-box{
+            margin-bottom: 30px;
+          }
+          margin-bottom: 60px;
+        }
+      }
+    }
+  }
+}
+
+
+@media (min-width: 769px) and (max-width: 960px) {
+  .home-page-view{
+    width: 960px;
+    .sign-in-area{
+      margin-top: 10% !important;
+    }
+  }
+
+}
+
+@media (min-width: 960px) and (max-width: 1160px) {
+  .home-page-view{
+    width: 960px;
+    .sign-in-area{
+      margin-top: 10% !important;
+    }
+  }
+}
+
+@media (min-width: 1160px) {
+  .home-page-view{
+    width: 1160px;
+    .sign-in-area{
+      margin-top: 10% !important;
+    }
+  }
+}
+
+//@wrap_width: 60%;
+//@header_height: 60px;
+//.zz-sign-in {
+//  margin: 0;
+//  width: 100%;
+//  input {
+//    padding-left: 5px;
+//    border-radius: 4px;
+//  }
+//  .wrap {
+//    margin: 0 auto;
+//    width: @wrap_width;
+//    margin-top: @header_height+20;
+//    position: relative;
+//    .content {
+//      margin: 0;
+//      margin-top: 100px;
+//      .list {
+//        margin-bottom: 20px;
+//        overflow: hidden;
+//        .info {
+//          margin: 0;
+//          font-size: 13px;
+//          color: #333333;
+//          line-height: @info_height;
+//          .left {
+//            padding: 0;
+//          }
+//          .right {
+//            input[type=text],input[type=password] {
+//              width: 100%;
+//              border: 1px solid #CCCCCC;
+//              outline: none;
+//              &:hover {
+//
+//              }
+//              &:focus {
+//
+//              }
+//              &:active {
+//
+//              }
+//            }
+//            input[type=button] {
+//              width: 100%;
+//              outline: none;
+//              background: none;
+//              background-color: @button_color;
+//              border: none;
+//              margin-top: 10px;
+//              color: @font_color;
+//              &:hover {
+//
+//              }
+//              &:focus {
+//
+//              }
+//              &:active {
+//
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//  .footer {
+//    margin: 0 auto;
+//    width: @wrap_width;
+//    .signin {
+//      line-height: 50px;
+//      text-align: center;
+//      color: @font_color;
+//      padding: 0;
+//      font-size: 16px;
+//      input[type=button] {
+//        background: none;
+//        outline: none;
+//        border: none;
+//        background-color: #6ACB9A;
+//        width: 100%;
+//
+//      }
+//    }
+//  }
+//}
+//
+//@media (max-width: 768px) {
+//  .zz-sign-in {
+//    .wrap {
+//      width: 100%;
+//      .tab {
+//        height: 60px;
+//      }
+//    }
+//    .footer {
+//      width: 100%;
+//      position: fixed;
+//      bottom: 0;
+//    }
+//  }
+//}
