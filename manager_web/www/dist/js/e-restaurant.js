@@ -12,53 +12,41 @@ var eWeb = angular.module('EWeb', [
 
 eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
-        //.state('goods_list', {
-        //    url: '/goods_list',
-        //    templateUrl: '/templates/goods/goods_list.client.view.html',
-        //    controller: 'GoodsListController'
-        //})
-        //.state('goods_add', {
-        //    abstract: true,
-        //    url: '/goods_add',
-        //    templateUrl: '/templates/goods/goods_add.client.view.html',
-        //    controller: 'GoodsAddController'
-        //})
-        .state('user_sign_up', {
-            url: '/user/sign_up',
-            templateUrl: 'templates/user/sign_up.client.view.html',
-            controller: 'UserSignUpController'
-        })
-        .state('user_sign_in', {
-            url: '/user/sign_in',
-            templateUrl: 'templates/user/sign_in.client.view.html',
-            controller: 'UserSignInController'
-        })
+      //.state('goods_list', {
+      //    url: '/goods_list',
+      //    templateUrl: '/templates/goods/goods_list.client.view.html',
+      //    controller: 'GoodsListController'
+      //})
+      //.state('user_sign_up', {
+      //    url: '/user/sign_up',
+      //    templateUrl: 'templates/user/sign_up.client.view.html',
+      //    controller: 'UserSignUpController'
+      //})
+      .state('user_sign_in', {
+          url: '/user/sign_in',
+          templateUrl: 'templates/user/sign_in.client.view.html',
+          controller: 'UserSignInController'
+      })
       .state('goods_manager', {
           url: '/good/manager:goods_type',
           templateUrl: 'templates/goods/goods_manager.client.view.html',
           controller: 'GoodsManagerController'
+      })
+      .state('goods_add', {
+        url: '/goods/add',
+        templateUrl: 'templates/goods/goods_add.client.view.html',
+        controller: 'GoodsAddController'
       })
       .state('user_manager', {
           url: '/user/manager',
           templateUrl: 'templates/user/user_manager.client.view.html',
           controller: 'UserManagerController'
       })
-        .state('user_index', {
-          url: '/user/index',
-          templateUrl: 'templates/user/user_index.client.view.html',
-          controller: 'UserIndexController'
-        })
-        //.state('client_sign_up', {
-        //    url: '/client/client_sign_up',
-        //    templateUrl: '/templates/client/sign_up.client.view.html',
-        //    controller: 'ClientSignUpController'
-        //})
-        //.state('client_sign_in', {
-        //    url: '/client/client_sign_in',
-        //    templateUrl: '/templates/client/sign_in.client.view.html',
-        //    controller: 'ClientSignInController'
-        //})
-    ;
+      .state('user_index', {
+        url: '/user/index',
+        templateUrl: 'templates/user/user_index.client.view.html',
+        controller: 'UserIndexController'
+      });
 
     $urlRouterProvider.otherwise('/user/sign_in');
 }]);
@@ -118,7 +106,7 @@ angular.module('EWeb').constant('Config', {
     serverAddress: 'http://' + window.location.host,
     //serverAddress: 'https://zhuzhu1688.com',
     //serverAddress: 'https://agilepops.com',
-    qiniuServerAddress: 'https://dn-agilepops.qbox.me'
+    qiniuServerAddress: 'http://7xs3gd.com1.z0.glb.clouddn.com/'
 });
 
 /**
@@ -310,232 +298,246 @@ angular.module('EWeb').factory('GoodsService',
     }]);
 
 
-//'use strict';
-///**
-// * Created by louisha on 15/6/24.
-// */
-//angular.module('EWeb').service('QiNiuService',
-//    ['$http', '$q', 'localStorageService', 'RequestService', 'Config',
-//        function ($http, $q, localStorageService, RequestService, Config) {
-//            function utf16to8(str) {
-//                var out, i, len, c;
-//                out = '';
-//                len = str.length;
-//                for (i = 0; i < len; i++) {
-//                    c = str.charCodeAt(i);
-//                    if ((c >= 0x0001) && (c <= 0x007F)) {
-//                        out += str.charAt(i);
-//                    } else if (c > 0x07FF) {
-//                        out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-//                        out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
-//                        out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-//                    } else {
-//                        out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
-//                        out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-//                    }
-//                }
-//                return out;
-//            }
-//
-//            /*
-//             * Interfaces:
-//             * b64 = base64encode(data);
-//             */
-//            var base64EncodeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-//
-//            function base64encode(str) {
-//                var out, i, len;
-//                var c1, c2, c3;
-//                len = str.length;
-//                i = 0;
-//                out = '';
-//                while (i < len) {
-//                    c1 = str.charCodeAt(i++) & 0xff;
-//                    if (i === len) {
-//                        out += base64EncodeChars.charAt(c1 >> 2);
-//                        out += base64EncodeChars.charAt((c1 & 0x3) << 4);
-//                        out += '==';
-//                        break;
-//                    }
-//                    c2 = str.charCodeAt(i++);
-//                    if (i === len) {
-//                        out += base64EncodeChars.charAt(c1 >> 2);
-//                        out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-//                        out += base64EncodeChars.charAt((c2 & 0xF) << 2);
-//                        out += '=';
-//                        break;
-//                    }
-//                    c3 = str.charCodeAt(i++);
-//                    out += base64EncodeChars.charAt(c1 >> 2);
-//                    out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-//                    out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
-//                    out += base64EncodeChars.charAt(c3 & 0x3F);
-//                }
-//                return out;
-//            }
-//
-//
-//            var uploadEndPoint = 'http://up.qiniu.com';
-//
-//            // if page loaded over HTTPS, then uploadEndPoint should be "https://up.qbox.me", see https://github.com/qiniu/js-sdk/blob/master/README.md#%E8%AF%B4%E6%98%8E
-//            if (window && window.location && window.location.protocol === 'https:') {
-//                uploadEndPoint = 'https://up.qbox.me';
-//            }
-//
-//            var defaultsSetting = {
-//                chunkSize: 1024 * 1024 * 4,
-//                mkblkEndPoint: uploadEndPoint + '/mkblk/',
-//                mkfileEndPoint: uploadEndPoint + '/mkfile/',
-//                maxRetryTimes: 3
-//            };
-//
-//            //Is support qiniu resumble upload
-//            this.support = (
-//            typeof File !== 'undefined' &&
-//            typeof Blob !== 'undefined' &&
-//            typeof FileList !== 'undefined' &&
-//            (!!Blob.prototype.slice || !!Blob.prototype.webkitSlice || !!Blob.prototype.mozSlice ||
-//            false
-//            )
-//            );
-//            if (!this.support) {
-//                return null;
-//            }
-//
-//            var fileHashKeyFunc = function (file) {
-//                return file.name + file.lastModified + file.size + file.type;
-//            };
-//
-//            return {
-//                upload: function (config) {
-//                    var deferred = $q.defer();
-//                    var promise = deferred.promise;
-//
-//                    var file = config.file;
-//                    if (!file) {
-//                        return;
-//                    }
-//
-//                    var fileHashKey = fileHashKeyFunc(file);
-//                    var blockRet = localStorageService.get(fileHashKey);
-//                    if (!blockRet) {
-//                        blockRet = [];
-//                    }
-//                    var blkCount = (file.size + ((1 << 22) - 1)) >> 22;
-//
-//                    var getChunck = function (file, startByte, endByte) {
-//                        return file[(file.slice ? 'slice' : (file.mozSlice ? 'mozSlice' : (file.webkitSlice ? 'webkitSlice' : 'slice')))](startByte, endByte);
-//                    };
-//
-//                    var getBlkSize = function (file, blkCount, blkIndex) {
-//
-//                        if (blkIndex === blkCount - 1) {
-//                            return file.size - 4194304 * blkIndex;
-//                        } else {
-//                            return 4194304;
-//                        }
-//                    };
-//
-//                    var mkfile = function (file, blockRet) {
-//                        if (blockRet.length === 0) {
-//                            return;
-//                        }
-//                        var body = '';
-//                        var b;
-//                        for (var i = 0; i < blockRet.length - 1; i++) {
-//                            b = angular.fromJson(blockRet[i]);
-//                            body += (b.ctx + ',');
-//                        }
-//                        b = angular.fromJson(blockRet[blockRet.length - 1]);
-//                        body += b.ctx;
-//
-//                        var url = defaultsSetting.mkfileEndPoint + file.size;
-//                        if (config && config.key) {
-//                            url += ('/key/' + base64encode(utf16to8(config.key)));
-//                        }
-//                        $http({
-//                            url: url,
-//                            method: 'POST',
-//                            data: body,
-//                            headers: {
-//                                'Authorization': 'UpToken ' + config.token,
-//                                'Content-Type': 'text/plain'
-//                            }
-//                        }).success(function (e) {
-//                            deferred.resolve(e);
-//                            localStorageService.remove(fileHashKey);
-//                        }).error(function (e) {
-//                            deferred.reject(e);
-//                        });
-//                    };
-//                    var xhr;
-//
-//                    var mkblk = function (file, i, retry) {
-//                        if (i === blkCount) {
-//                            mkfile(file, blockRet);
-//                            return;
-//                        }
-//                        if (!retry) {
-//                            deferred.reject('max retried,still failure');
-//                            return;
-//                        }
-//                        var blkSize = getBlkSize(file, blkCount, i);
-//                        var offset = i * 4194304;
-//                        var chunck = getChunck(file, offset, offset + blkSize);
-//
-//                        xhr = new XMLHttpRequest();
-//                        xhr.open('POST', defaultsSetting.mkblkEndPoint + blkSize, true);
-//                        xhr.setRequestHeader('Authorization', 'UpToken ' + config.token);
-//
-//                        xhr.upload.addEventListener('progress', function (evt) {
-//                            if (evt.lengthComputable) {
-//                                var nevt = {
-//                                    totalSize: file.size,
-//                                    loaded: evt.loaded + offset
-//                                };
-//                                deferred.notify(nevt);
-//                            }
-//                        });
-//
-//                        xhr.upload.onerror = function () {
-//                            mkblk(config.file, i, --retry);
-//                        };
-//
-//                        xhr.onreadystatechange = function (response) {
-//                            if (response && xhr.readyState === 4 && xhr.status === 200) {
-//                                if (xhr.status === 200) {
-//                                    blockRet[i] = xhr.responseText;
-//                                    localStorageService.set(fileHashKey, blockRet);
-//                                    mkblk(config.file, ++i, defaultsSetting.maxRetryTimes);
-//                                } else {
-//                                    mkblk(config.file, i, --retry);
-//                                }
-//                            }
-//                        };
-//                        xhr.send(chunck);
-//                    };
-//
-//
-//                    mkblk(config.file, blockRet.length, defaultsSetting.maxRetryTimes);
-//                    promise.abort = function () {
-//                        xhr.abort();
-//                        localStorageService.remove(fileHashKey);
-//                    };
-//
-//                    promise.pause = function () {
-//                        xhr.abort();
-//                    };
-//
-//                    return promise;
-//                },
-//                qiNiuKey: function () {
-//                    return RequestService.executeGet('/token/image/upload', {});
-//                },
-//                qiNiuUptokenUrl: function () {
-//                    return Config.serverAddress + '/token/image/upload';
-//                }
-//            };
-//        }]);
+'use strict';
+/**
+ * Created by louisha on 15/11/2
+ */
+angular.module('EWeb').service('QiNiuService',
+  ['$http', '$q', 'localStorageService', 'RequestSupport', 'Config', 'SystemError',
+      function ($http, $q, localStorageService, RequestSupport, Config, SystemError) {
+          function utf16to8(str) {
+              var out, i, len, c;
+              out = '';
+              len = str.length;
+              for (i = 0; i < len; i++) {
+                  c = str.charCodeAt(i);
+                  if ((c >= 0x0001) && (c <= 0x007F)) {
+                      out += str.charAt(i);
+                  } else if (c > 0x07FF) {
+                      out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                      out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+                      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+                  } else {
+                      out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+                      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+                  }
+              }
+              return out;
+          }
+
+          /*
+           * Interfaces:
+           * b64 = base64encode(data);
+           */
+          var base64EncodeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+          function base64encode(str) {
+              var out, i, len;
+              var c1, c2, c3;
+              len = str.length;
+              i = 0;
+              out = '';
+              while (i < len) {
+                  c1 = str.charCodeAt(i++) & 0xff;
+                  if (i === len) {
+                      out += base64EncodeChars.charAt(c1 >> 2);
+                      out += base64EncodeChars.charAt((c1 & 0x3) << 4);
+                      out += '==';
+                      break;
+                  }
+                  c2 = str.charCodeAt(i++);
+                  if (i === len) {
+                      out += base64EncodeChars.charAt(c1 >> 2);
+                      out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                      out += base64EncodeChars.charAt((c2 & 0xF) << 2);
+                      out += '=';
+                      break;
+                  }
+                  c3 = str.charCodeAt(i++);
+                  out += base64EncodeChars.charAt(c1 >> 2);
+                  out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+                  out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+                  out += base64EncodeChars.charAt(c3 & 0x3F);
+              }
+              return out;
+          }
+
+
+          var uploadEndPoint = 'http://up.qiniu.com';
+
+          // if page loaded over HTTPS, then uploadEndPoint should be "https://up.qbox.me", see https://github.com/qiniu/js-sdk/blob/master/README.md#%E8%AF%B4%E6%98%8E
+          if (window && window.location && window.location.protocol === 'https:') {
+              uploadEndPoint = 'https://up.qbox.me';
+          }
+
+          var defaultsSetting = {
+              chunkSize: 1024 * 1024 * 4,
+              mkblkEndPoint: uploadEndPoint + '/mkblk/',
+              mkfileEndPoint: uploadEndPoint + '/mkfile/',
+              maxRetryTimes: 3
+          };
+
+          //Is support qiniu resumble upload
+          this.support = (
+          typeof File !== 'undefined' &&
+          typeof Blob !== 'undefined' &&
+          typeof FileList !== 'undefined' &&
+          (!!Blob.prototype.slice || !!Blob.prototype.webkitSlice || !!Blob.prototype.mozSlice ||
+          false
+          )
+          );
+          if (!this.support) {
+              return null;
+          }
+
+          var fileHashKeyFunc = function (file) {
+              return file.name + file.lastModified + file.size + file.type;
+          };
+
+          return {
+              upload: function (config) {
+                  var deferred = $q.defer();
+                  var promise = deferred.promise;
+
+                  var file = config.file;
+                  if (!file) {
+                      return;
+                  }
+
+                  var fileHashKey = fileHashKeyFunc(file);
+                  var blockRet = localStorageService.get(fileHashKey);
+                  if (!blockRet) {
+                      blockRet = [];
+                  }
+                  var blkCount = (file.size + ((1 << 22) - 1)) >> 22;
+
+                  var getChunck = function (file, startByte, endByte) {
+                      return file[(file.slice ? 'slice' : (file.mozSlice ? 'mozSlice' : (file.webkitSlice ? 'webkitSlice' : 'slice')))](startByte, endByte);
+                  };
+
+                  var getBlkSize = function (file, blkCount, blkIndex) {
+
+                      if (blkIndex === blkCount - 1) {
+                          return file.size - 4194304 * blkIndex;
+                      } else {
+                          return 4194304;
+                      }
+                  };
+
+                  var mkfile = function (file, blockRet) {
+                      if (blockRet.length === 0) {
+                          return;
+                      }
+                      var body = '';
+                      var b;
+                      for (var i = 0; i < blockRet.length - 1; i++) {
+                          b = angular.fromJson(blockRet[i]);
+                          body += (b.ctx + ',');
+                      }
+                      b = angular.fromJson(blockRet[blockRet.length - 1]);
+                      body += b.ctx;
+
+                      var url = defaultsSetting.mkfileEndPoint + file.size;
+                      if (config && config.key) {
+                          url += ('/key/' + base64encode(utf16to8(config.key)));
+                      }
+                      $http({
+                          url: url,
+                          method: 'POST',
+                          data: body,
+                          headers: {
+                              'Authorization': 'UpToken ' + config.token,
+                              'Content-Type': 'text/plain'
+                          }
+                      }).success(function (e) {
+                          deferred.resolve(e);
+                          localStorageService.remove(fileHashKey);
+                      }).error(function (e) {
+                          deferred.reject(e);
+                      });
+                  };
+                  var xhr;
+
+                  var mkblk = function (file, i, retry) {
+                      if (i === blkCount) {
+                          mkfile(file, blockRet);
+                          return;
+                      }
+                      if (!retry) {
+                          deferred.reject('max retried,still failure');
+                          return;
+                      }
+                      var blkSize = getBlkSize(file, blkCount, i);
+                      var offset = i * 4194304;
+                      var chunck = getChunck(file, offset, offset + blkSize);
+
+                      xhr = new XMLHttpRequest();
+                      xhr.open('POST', defaultsSetting.mkblkEndPoint + blkSize, true);
+                      xhr.setRequestHeader('Authorization', 'UpToken ' + config.token);
+
+                      xhr.upload.addEventListener('progress', function (evt) {
+                          if (evt.lengthComputable) {
+                              var nevt = {
+                                  totalSize: file.size,
+                                  loaded: evt.loaded + offset
+                              };
+                              deferred.notify(nevt);
+                          }
+                      });
+
+                      xhr.upload.onerror = function () {
+                          mkblk(config.file, i, --retry);
+                      };
+
+                      xhr.onreadystatechange = function (response) {
+                          if (response && xhr.readyState === 4 && xhr.status === 200) {
+                              if (xhr.status === 200) {
+                                  blockRet[i] = xhr.responseText;
+                                  localStorageService.set(fileHashKey, blockRet);
+                                  mkblk(config.file, ++i, defaultsSetting.maxRetryTimes);
+                              } else {
+                                  mkblk(config.file, i, --retry);
+                              }
+                          }
+                      };
+                      xhr.send(chunck);
+                  };
+
+
+                  mkblk(config.file, blockRet.length, defaultsSetting.maxRetryTimes);
+                  promise.abort = function () {
+                      xhr.abort();
+                      localStorageService.remove(fileHashKey);
+                  };
+
+                  promise.pause = function () {
+                      xhr.abort();
+                  };
+
+                  return promise;
+              },
+              qiNiuKey: function (callback) {
+                  RequestSupport.executeGet('/token/image/upload', {})
+                    .then(function (data) {
+                        if (!callback) {
+                            return data;
+                        }
+
+                        if (data.err) {
+                            return callback(data.err);
+                        }
+
+                        callback(null, data);
+                    },
+                    function (err) {
+                        return callback(SystemError.network_error);
+                    });
+              },
+              qiNiuUptokenUrl: function () {
+                  return Config.serverAddress + '/token/image/upload';
+              }
+          };
+      }]);
 
 /**
 * Created by elinaguo on 16/2/26.
@@ -1001,1145 +1003,82 @@ angular.module('EWeb').factory('PublicInterceptor', ['Auth', function (Auth) {
 }]);
 
 
-///**
-// * Created by louisha on 15/7/7.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GrocerAcountListController',
-//    ['$rootScope', '$scope', 'GlobalEvent', 'AccountServer', '$state',
-//        function ($rootScope, $scope, GlobalEvent, AccountServer, $state) {
-//
-//            $scope.initPage = {
-//                accountList: []
-//            };
-//
-//            function getAccountList() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                AccountServer.getGrocerList().then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.accountList = data.grocers;
-//                    }
-//
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            getAccountList();
-//
-//            $scope.onEdit = function (account) {
-//                $state.go('grocerSignUp', {account: account._id});
-//            };
-//
-//            $scope.onDelete = function (id) {
-//                $scope.$emit(GlobalEvent.onShowAlertConfirm, {info: '是否确认删除？'}, function () {
-//
-//                    $scope.$emit(GlobalEvent.onShowLoading, true);
-//                    AccountServer.deleteGrocer(id).then(function (data) {
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                        if (data.err) {
-//                            console.log(data.err);
-//                            $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                        }
-//                        else if (data.error) {
-//                            console.log(data.error);
-//                            $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                        }
-//                        else if (data.success) {
-//                            $scope.$emit(GlobalEvent.onShowAlert, '删除成功');
-//                            getAccountList();
-//                        } else {
-//                            $scope.$emit(GlobalEvent.onShowAlert, '删除失败');
-//                        }
-//
-//                    }, function (err) {
-//                        console.log(err);
-//                    });
-//
-//                });
-//
-//            };
-//        }]);
+/**
+ * Created by elinaguo on 16/4/16.
+ */
 
-///**
-// * Created by louisha on 15/7/10.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GrocerHometController',
-//    ['$scope', 'GlobalEvent', 'SignService', 'Config', '$state', 'EnvironmentService', 'DownloadService',
-//        function ($scope, GlobalEvent, SignService, Config, $state, EnvironmentService, DownloadService) {
-//
-//            $scope.initPage = {
-//                downloadAndroidLink: DownloadService.GROCER_ANDROID_LINK,
-//                downloadIOSLink: DownloadService.groceyIosLink(),
-//                downloadDistributorAndroidLink: DownloadService.DISTRIBUTOR_ANDROID_LINK,
-//                downloadDistributorIOSLink: DownloadService.distributorIosLink(),
-//                downloadDeliveryAndroidLink: DownloadService.DELIVERY_ANDROID_LINK,
-//                downloadDeliveryIOSLink: DownloadService.deliveryIosLink(),
-//                ercode_img: ''
-//            };
-//            $scope.signInConfig = {
-//                username: '',
-//                password: ''
-//            };
-//            $scope.goDistributorSignIn = function () {
-//                $state.go('distributorSignIn');
-//            };
-//            $scope.signIn = function () {
-//                if (!$scope.signInConfig.username || !$scope.signInConfig.password) {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请输入用户名或密码');
-//                }
-//                if ($scope.signInConfig.password.length < 6) {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '密码不能少于6位');
-//
-//                }
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                SignService.grocerySignIn($scope.signInConfig.username, $scope.signInConfig.password).then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    if (data.err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    if (data.error) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                    }
-//                    window.location = Config.serverAddress + '/grocery/#/home/' + data.access_token;
-//                }, function (err) {
-//                    console.log(err);
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '登录失败，网络错误');
-//                });
-//            };
-//
-//            function closeLoading(inx) {
-//                if (inx <= 0) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                }
-//            }
-//
-//            function init() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                var request_inx = 3;
-//                DownloadService.getGroceryAppInfo(function (err, data) {
-//                    if (err) {
-//                        console.log(err.type);
-//                    }
-//                    request_inx--;
-//                    closeLoading(request_inx);
-//                    $scope.initPage.downloadIOSLink = DownloadService.groceyIosLink();
-//                });
-//
-//                DownloadService.getDistributorAppInfo(function (err, data) {
-//                    if (err) {
-//                        console.log(err.type);
-//                    }
-//                    request_inx--;
-//                    closeLoading(request_inx);
-//                    $scope.initPage.downloadDistributorIOSLink = DownloadService.distributorIosLink();
-//                });
-//
-//                DownloadService.getDeliveryAppInfo(function (err, data) {
-//                    if (err) {
-//                        console.log(err.type);
-//                    }
-//                    request_inx--;
-//                    closeLoading(request_inx);
-//                    $scope.initPage.downloadDeliveryIOSLink = DownloadService.deliveryIosLink();
-//                });
-//            }
-//
-//            $scope.downloadIos = function (type) {
-//                var _link = '';
-//                switch (type) {
-//                    case 'shop':
-//                        _link = $scope.initPage.downloadIOSLink;
-//                        break;
-//                    case 'distributor':
-//                        _link = $scope.initPage.downloadDistributorIOSLink;
-//                        break;
-//                    case 'delivery':
-//                        _link = $scope.initPage.downloadDeliveryIOSLink;
-//                        break;
-//
-//                }
-//                window.open(_link);
-//            };
-//
-//            init();
-//
-//        }]);
+'use strict';
+angular.module('EWeb').controller('GoodsAddController',
+  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config',
+    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config) {
 
-///**
-// * Created by louisha on 15/6/19.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GrocerSignUpController',
-//    ['$rootScope',
-//        '$scope',
-//        'GlobalEvent',
-//        '$base64',
-//        'Global',
-//        'BMapService',
-//        'QiNiuService',
-//        'Config',
-//        'SignService',
-//        '$stateParams',
-//        'AccountServer',
-//        '$state',
-//        function ($rootScope, $scope, GlobalEvent, $base64, Global, BMapService, QiNiuService, Config, SignService, $stateParams, AccountServer, $state) {
-//
-//            function getDomById(id) {
-//                return document.getElementById(id);
-//            }
-//
-//            function getQiniuKey() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                QiNiuService.qiNiuKey().then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    $scope.initPage.qiniu_key = data.token;
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function getGrocerById(id) {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                AccountServer.getGrocerById(id).then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    if (data.err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    if (data.error) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                    }
-//                    $scope.initPage.account = data.grocer;
-//                    if ($scope.initPage.account) {
-//                        $scope.signUpObject.username = $scope.initPage.account.username;
-//                        $scope.signUpObject.password = $scope.initPage.account.password;
-//                        $scope.signUpObject.nickname = $scope.initPage.account.nickname;
-//                        $scope.signUpObject.grocery_name = $scope.initPage.account.grocery_name;
-//                        $scope.signUpObject.grocery_area = $scope.initPage.account.grocery_area;
-//                        $scope.signUpObject.grocery_photos = $scope.initPage.account.grocery_photos;
-//                        $scope.signUpObject.grocery_address = $scope.initPage.account.grocery_address;
-//                        $scope.signUpObject.grocery_longitude = $scope.initPage.account.grocery_location[0];
-//                        $scope.signUpObject.grocery_latitude = $scope.initPage.account.grocery_location[1];
-//                        $scope.signUpObject.grocery_annual_sales = $scope.initPage.account.grocery_annual_sales;
-//                        $scope.signUpObject.district = $scope.initPage.account.district || '';
-//                        if ($scope.signUpObject.district !== '') {
-//                            var area = $scope.initPage.account.district.split('-');
-//                            $scope.initPage.province = area[0];
-//                            $scope.initPage.city = area[1];
-//                            $scope.initPage.county = area[2];
-//                        }
-//                        for (var i = 0; i < $scope.initPage.account.grocery_photos.length; i++) {
-//                            var obj = {
-//                                img: Config.qiniuServerAddress + $scope.initPage.account.grocery_photos[i]
-//
-//                            };
-//                            $scope.initPage.grocery_photo.push(obj);
-//                        }
-//
-//                    }
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            $scope.initPage = {
-//                showMap: false,
-//                map: null,
-//                grocery_photo: [],
-//                qiniu_key: '',
-//                search_key: '',
-//                provinces: [],
-//                citys: [],
-//                countys: [],
-//                province: '',
-//                city: '',
-//                county: '',
-//                account: null,
-//                title: '',
-//                annual_sales: ['20万以下', '20-50万', '50-100万', '100-150万', '150-200万', '200万以上']
-//            };
-//            $scope.signUpObject = {
-//                username: '',
-//                password: '',
-//                nickname: '',
-//                phone: '',
-//                mobile_phone: '',
-//                grocery_name: '',
-//                grocery_photos: [],
-//                grocery_area: '',
-//                grocery_longitude: '',
-//                grocery_latitude: '',
-//                grocery_address: '',
-//                business_license: '',
-//                grocery_annual_sales: '',
-//                district: ''
-//            };
-//
-//            function initSignUpObject() {
-//                $scope.signUpObject.username = '';
-//                $scope.signUpObject.password = '';
-//                $scope.signUpObject.nickname = '';
-//                $scope.signUpObject.phone = '';
-//                $scope.signUpObject.mobile_phone = '';
-//                $scope.signUpObject.grocery_name = '';
-//                $scope.signUpObject.grocery_area = '';
-//                $scope.signUpObject.grocery_photos = [];
-//                $scope.signUpObject.grocery_address = '';
-//                $scope.signUpObject.grocery_longitude = '';
-//                $scope.signUpObject.grocery_latitude = '';
-//                $scope.signUpObject.business_license = '';
-//                $scope.signUpObject.grocery_annual_sales = '';
-//                $scope.signUpObject.district = '';
-//
-//                $scope.initPage.grocery_photo = [];
-//            }
-//
-//            function initAreaInfo() {
-//                Global.getAreaInfo(function (err, area) {
-//                    if (area) {
-//                        initArea(area);
-//                    }
-//                });
-//
-//            }
-//
-//            function initArea(province) {
-//                $scope.initPage.province = province[0].name;
-//                $scope.initPage.city = province[0].citys[0].name;
-//                $scope.initPage.county = province[0].citys[0].county[0].name;
-//
-//                province.forEach(function (p) {
-//                    $scope.initPage.provinces.push(p.name);
-//                    p.citys.forEach(function (c) {
-//                        $scope.initPage.citys.push(c.name);
-//                        c.county.forEach(function (co) {
-//                            $scope.initPage.countys.push(co.name);
-//                        });
-//                    });
-//                });
-//            }
-//
-//            function initDate() {
-//                $scope.initPage.grocery_photo = [];
-//                if ($stateParams.account) {
-//                    $scope.initPage.title = '小店编辑';
-//                    getGrocerById($stateParams.account);
-//                }
-//                else {
-//                    $scope.initPage.title = '小店注册';
-//                }
-//
-//                initMap();
-//
-//            }
-//
-//            function start(index) {
-//                $scope.initPage.grocery_photo[index].progress = {
-//                    p: 0
-//                };
-//                $scope.initPage.grocery_photo[index].upload = QiNiuService.upload({
-//                    //key: '',
-//                    file: $scope.initPage.grocery_photo[index].file,
-//                    token: $scope.initPage.qiniu_key
-//                });
-//                $scope.initPage.grocery_photo[index].upload.then(function (response) {
-//                    console.log(response);
-//                    $scope.signUpObject.grocery_photos.splice(index, 0, response.key);
-//                    $scope.initPage.grocery_photo[index].img = Config.qiniuServerAddress + response.key;
-//
-//                }, function (response) {
-//                    console.log(response);
-//                }, function (evt) {
-//                    $scope.initPage.grocery_photo[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
-//                });
-//            }
-//
-//            $scope.abort = function (index) {
-//                if ($scope.initPage.grocery_photo[index].upload) {
-//                    //待修改的，非上传图片属性不会有这个属性
-//                    $scope.initPage.grocery_photo[index].upload.abort();
-//
-//                }
-//                $scope.initPage.grocery_photo.splice(index, 1);
-//                $scope.signUpObject.grocery_photos.splice(index, 1);
-//            };
-//
-//            $scope.onFileSelect = function ($files) {
-//                var offsetx = $scope.initPage.grocery_photo.length;
-//                for (var i = 0; i < $files.length; i++) {
-//                    $scope.initPage.grocery_photo[i + offsetx] = {
-//                        file: $files[i]
-//                    };
-//                    start(i + offsetx);
-//                }
-//            };
-//
-//            $scope.showMap = function () {
-//                $scope.initPage.showMap = true;
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                BMapService.setToLocation($scope.initPage.map, function () {
-//                    $scope.$apply(function () {
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    });
-//                });
-//            };
-//
-//            $scope.hideMap = function () {
-//                $scope.initPage.showMap = false;
-//            };
-//
-//            $scope.refreshLocation = function () {
-//                var current = $scope.initPage.map.getCenter();
-//                $scope.signUpObject.grocery_latitude = current.lat;
-//                $scope.signUpObject.grocery_longitude = current.lng;
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                BMapService.refreshLocation($scope.initPage.map, function (addComp) {
-//                    $scope.$apply(function () {
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                        $scope.signUpObject.grocery_address = BMapService.getAddressStrByMap(addComp);
-//                        $scope.hideMap();
-//
-//                    });
-//                });
-//            };
-//
-//            $scope.signUp = function () {
-//                //console.log($scope.signUpObject.grocery_annual_sales);
-//                if ($scope.signUpObject.username.length < 11) {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '必须是11位的手机号码');
-//                }
-//
-//                if (!$scope.initPage.account && $scope.signUpObject.password.length < 6) {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '密码必须大于6位数');
-//                }
-//
-//                if ($scope.signUpObject.nickname === '') {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请输入店主名');
-//                }
-//
-//                if ($scope.signUpObject.grocery_name === '') {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请输入店名');
-//                }
-//
-//                if ($scope.signUpObject.grocery_area === '') {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请输入面积');
-//                }
-//
-//                if ($scope.signUpObject.grocery_annual_sales === '') {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请输入年营业额');
-//                }
-//
-//                if (!$scope.signUpObject.grocery_latitude || !$scope.signUpObject.grocery_longitude) {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请进行地图定位');
-//                }
-//
-//                if ($scope.initPage.province === '' || $scope.initPage.city === '' || $scope.initPage.county === '') {
-//                    return $scope.$emit(GlobalEvent.onShowAlert, '请选择地区');
-//                }
-//
-//                $scope.signUpObject.district = $scope.initPage.province + '-' + $scope.initPage.city + '-' + $scope.initPage.county;
-//
-//                //if ($scope.signUpObject.grocery_photos.length === 0) {
-//                //  return $scope.$emit(GlobalEvent.onShowAlert, '请上传店铺照片');
-//                //}
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                if (!$scope.initPage.account) {
-//                    SignService.grocerySignUp(
-//                        $scope.signUpObject
-//                    )
-//                        .then(function (data) {
-//                            console.log(data);
-//                            $scope.$emit(GlobalEvent.onShowLoading, false);
-//                            if (data.err) {
-//                                $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                            }
-//                            else if (data.error) {
-//                                $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//
-//                            }
-//                            else {
-//                                $scope.$emit(GlobalEvent.onShowAlert, '注册成功');
-//                                initSignUpObject();
-//                            }
-//                        }, function (err) {
-//                        });
-//                }
-//                else {
-//                    $scope.signUpObject._id = $scope.initPage.account._id.toString();
-//                    delete $scope.signUpObject.password;
-//                    console.log('xiu gai:');
-//                    console.log($scope.signUpObject);
-//                    AccountServer.modifyGrocer(
-//                        $scope.signUpObject
-//                    )
-//                        .then(function (data) {
-//                            console.log(data);
-//                            $scope.$emit(GlobalEvent.onShowLoading, false);
-//                            if (data.err) {
-//                                $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                            }
-//                            else if (data.error) {
-//                                $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                            }
-//                            else {
-//                                $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
-//                                $state.go('grocersList');
-//
-//                            }
-//                        }, function (err) {
-//                        });
-//                }
-//
-//            };
-//
-//            function initMap() {
-//
-//                $scope.initPage.map = BMapService.create('bmap', new BMap.Point(116.404, 39.915), 11, true);
-//                $scope.initPage.map.addEventListener('moveend', function () {
-//                    BMapService.refreshLocation($scope.initPage.map, function (addComp) {
-//                        $scope.$apply(function () {
-//                            $scope.initPage.search_key = BMapService.getAddressStrByMap(addComp);
-//                        });
-//                    });
-//
-//                });
-//                initSearchInfo();
-//
-//            }
-//
-//            function initSearchInfo() {
-//                var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-//                    {
-//                        'input': 'suggestId',
-//                        'location': $scope.initPage.map
-//                    });
-//                ac.addEventListener('onhighlight', function (e) {
-//                    var str = '';
-//                    var _value = e.fromitem.value;
-//                    var value = '';
-//                    if (e.fromitem.index > -1) {
-//                        value = _value.province + _value.city + _value.district + _value.street + _value.business;
-//                    }
-//                    str = 'FromItem<br />index = ' + e.fromitem.index + '<br />value = ' + value;
-//
-//                    value = '';
-//                    if (e.toitem.index > -1) {
-//                        _value = e.toitem.value;
-//                        value = _value.province + _value.city + _value.district + _value.street + _value.business;
-//                    }
-//                    str += '<br />ToItem<br />index = ' + e.toitem.index + '<br />value = ' + value;
-//                    getDomById('searchResultPanel').innerHTML = str;
-//                });
-//                var placeVal;
-//                ac.addEventListener('onconfirm', function (e) {    //鼠标点击下拉列表后的事件
-//                    var _value = e.item.value;
-//                    placeVal = _value.province + _value.city + _value.district + _value.street + _value.business;
-//                    getDomById('searchResultPanel').innerHTML = 'onconfirm<br />index = ' + e.item.index + '<br />placeVal = ' + placeVal;
-//
-//                    BMapService.setPlace(placeVal, $scope.initPage.map);
-//                });
-//            }
-//
-//            initAreaInfo();
-//
-//            getQiniuKey();
-//
-//            initDate();
-//
-//        }]);
+      var qiniuToken;
+      $scope.pageData = {
+        photos: []
+      };
 
-///**
-// * Created by louisha on 15/6/19.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GoodsAddController',
-//    ['$scope', 'GlobalEvent', '$state', '$stateParams', 'GoodsService', 'Global', '$base64', 'QiNiuService', 'Config', 'AccountServer', '$window', '$timeout',
-//        function ($scope, GlobalEvent, $state, $stateParams, GoodsService, Global, $base64, QiNiuService, Config, AccountServer, $window, $timeout) {
-//
-//            var isEditGoodsPage = false;
-//            $scope.isCreate = !isEditGoodsPage;
-//            $scope.initPage = {
-//                title: '',
-//                goods: null,
-//                goodsCategories: [],
-//                display_photos: [],
-//                description_photos: [],
-//                banner_photos: [],
-//                qiniu_key: '',
-//                sku_features_input: '',
-//                provinces: [],
-//                citys: [],
-//                countys: [],
-//                province: [],
-//                city: [],
-//                county: [],
-//                distributor: null,
-//                distributorList: [],
-//                goodsTemplates: []
-//            };
-//            $scope.goodsObj = {
-//                category: '',
-//                name: '',
-//                market_price: '',
-//                price: '',
-//                display_photos: [],
-//                goods_parameters: '',
-//                description: '',
-//                description_photos: [],
-//                recommend: 'false',
-//                banner_recommend: 'false',
-//                banner_photos: [],
-//                sku_features: [{key: 'features', value: []}],
-//                district: '',
-//                self_production: 'true',
-//                distributor: '',
-//                source: '柱柱自营'
-//            };
-//
-//            function getGoodsCategories() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsCategories().then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.goodsCategories = data.categories;
-//                        if (!$scope.initPage.goods) {
-//                            $scope.goodsObj.category = $scope.initPage.goodsCategories.length > 0 ? $scope.initPage.goodsCategories[0]._id : '';
-//                        }
-//
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function getQiniuKey() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                QiNiuService.qiNiuKey().then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    $scope.initPage.qiniu_key = data.token;
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function getDistributorListByDistrict() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                var district = $scope.initPage.province + '-' + $scope.initPage.city + '-' + $scope.initPage.county;
-//                AccountServer.getDistributorListByDistrict(district).then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    if (data.error) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                    }
-//                    else {
-//                        $scope.initPage.distributorList = data.distributors;
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function generalImgUrl(imgName) {
-//                return Config.qiniuServerAddress + imgName;
-//            }
-//
-//            function initGoodsObj() {
-//                $scope.goodsObj.category = $scope.initPage.goodsCategories.length > 0 ? $scope.initPage.goodsCategories[0]._id : '';
-//                $scope.goodsObj.name = '';
-//                $scope.goodsObj.market_price = '';
-//                $scope.goodsObj.price = '';
-//                $scope.goodsObj.display_photos = [];
-//                $scope.goodsObj.goods_parameters = '';
-//                $scope.goodsObj.description = '';
-//                $scope.goodsObj.recommend = 'false';
-//                $scope.goodsObj.banner_recommend = 'false';
-//                $scope.goodsObj.description_photos = [];
-//                $scope.goodsObj.sku_features = [{key: 'features', value: []}];
-//                $scope.goodsObj.district = '';
-//                $scope.goodsObj.source = '邻里邻店自营';
-//                $scope.goodsObj.distributor = '';
-//                $scope.goodsObj.self_production = 'true';
-//                $scope.initPage.display_photos = [];
-//                $scope.initPage.description_photos = [];
-//                $scope.initPage.banner_photos = [];
-//                $scope.initPage.sku_features_input = '';
-//                $scope.initPage.distributor = null;
-//
-//            }
-//
-//            function initGoodsImageForEdit(photos, target) {
-//                for (var i = 0; i < photos.length; i++) {
-//                    var obj = {
-//                        img: generalImgUrl(photos[i])
-//
-//                    };
-//                    target.push(obj);
-//                }
-//            }
-//
-//
-//            function initAreaInfo() {
-//                Global.getAreaInfo(function (err, area) {
-//                    if (area) {
-//                        initArea(area);
-//                    }
-//                });
-//
-//            }
-//
-//            function initArea(province) {
-//                $scope.initPage.province = province[0].name;
-//                $scope.initPage.city = province[0].citys[0].name;
-//                $scope.initPage.county = province[0].citys[0].county[0].name;
-//                getDistributorListByDistrict();
-//                province.forEach(function (p) {
-//                    $scope.initPage.provinces.push(p.name);
-//                    p.citys.forEach(function (c) {
-//                        $scope.initPage.citys.push(c.name);
-//                        c.county.forEach(function (co) {
-//                            $scope.initPage.countys.push(co.name);
-//                        });
-//                    });
-//                });
-//            }
-//
-//            function initDate() {
-//                if ($stateParams.goodsId) {
-//                    isEditGoodsPage = true;
-//                    $scope.isCreate = false;
-//                    $scope.getGoodsDetailById($stateParams.goodsId);
-//                    $scope.initPage.title = '商品编辑';
-//                }
-//                else {
-//                    $scope.initPage.title = '商品添加';
-//                }
-//
-//            }
-//
-//            function start(index, target) {
-//                target[index].progress = {
-//                    p: 0
-//                };
-//                target[index].upload = QiNiuService.upload({
-//                    //key: '',
-//                    file: target[index].file,
-//                    token: $scope.initPage.qiniu_key
-//                });
-//                target[index].upload.then(function (response) {
-//                    console.log(response);
-//                    if (target === $scope.initPage.display_photos) {
-//                        $scope.goodsObj.display_photos.splice(index, 0, response.key);
-//                    }
-//                    else if (target === $scope.initPage.description_photos) {
-//                        $scope.goodsObj.description_photos.splice(index, 0, response.key);
-//                    }
-//                    else if (target === $scope.initPage.banner_photos) {
-//                        $scope.goodsObj.banner_photos[0] = response.key;
-//                    }
-//                    target[index].img = generalImgUrl(response.key);
-//                }, function (response) {
-//                    alert(response);
-//                    console.log(response);
-//                }, function (evt) {
-//                    target[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
-//                });
-//            }
-//
-//            $scope.getGoodsDetailById = function (goodsId) {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsById(goodsId).then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.goods = data.goods;
-//                        if ($scope.initPage.goods) {
-//                            $scope.goodsObj.category = $scope.initPage.goods.categories[0]._id;
-//                            $scope.goodsObj.name = $scope.initPage.goods.name || '';
-//                            $scope.goodsObj.goods_parameters = $scope.initPage.goods.goods_parameters || '';
-//                            $scope.goodsObj.description = $scope.initPage.goods.description || '';
-//                            $scope.goodsObj.market_price = $scope.initPage.goods.market_price;
-//                            $scope.goodsObj.price = $scope.initPage.goods.price;
-//                            $scope.goodsObj.display_photos = $scope.initPage.goods.display_photos;
-//                            $scope.goodsObj.description_photos = $scope.initPage.goods.description_photos;
-//                            $scope.goodsObj.recommend = $scope.initPage.goods.recommend.toString();
-//                            $scope.goodsObj.banner_recommend = $scope.initPage.goods.banner_recommend.toString();
-//                            $scope.goodsObj.banner_photos = $scope.initPage.goods.banner_photos;
-//                            $scope.goodsObj.district = $scope.initPage.goods.district || '';
-//                            $scope.goodsObj.self_production = $scope.initPage.goods.self_production.toString();
-//                            $scope.goodsObj.distributor = $scope.initPage.goods.distributor;
-//                            $scope.goodsObj.source = $scope.initPage.goods.source;
-//                            if ($scope.goodsObj.district !== '') {
-//                                var area = $scope.initPage.goods.district.split('-');
-//                                $scope.initPage.province = area[0];
-//                                $scope.initPage.city = area[1];
-//                                $scope.initPage.county = area[2];
-//                            }
-//
-//                            if ($scope.initPage.goods.sku_features && $scope.initPage.goods.sku_features.length > 0) {
-//                                if ($scope.initPage.goods.sku_features[0].value && $scope.initPage.goods.sku_features[0].value.length > 0) {
-//                                    $scope.goodsObj.sku_features = $scope.initPage.goods.sku_features;
-//                                }
-//                            }
-//
-//                            $scope.initPage.description_photos = [];
-//                            $scope.initPage.display_photos = [];
-//                            $scope.initPage.banner_photos = [];
-//                            initGoodsImageForEdit($scope.initPage.goods.description_photos, $scope.initPage.description_photos);
-//                            initGoodsImageForEdit($scope.initPage.goods.display_photos, $scope.initPage.display_photos);
-//                            initGoodsImageForEdit($scope.initPage.goods.banner_photos, $scope.initPage.banner_photos);
-//
-//                        }
-//                    }
-//                    $scope.initPage.goodsTemplates = [];
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            };
-//
-//            $scope.$on(GlobalEvent.onBodyClick, function () {
-//                $scope.initPage.goodsTemplates = [];
-//            });
-//
-//            $scope.getGoodsTemplatesByKeyword = function () {
-//                $timeout(function () {
-//                    GoodsService.getGoodsTemplateListByUser($scope.goodsObj.name, 10).then(function (data) {
-//                        console.log(data);
-//                        $scope.initPage.goodsTemplates = data.goods_templates;
-//                    }, function (err) {
-//                        console.log(err);
-//                    });
-//                });
-//            };
-//
-//            $scope.abort = function (index, target) {
-//                if (target[index].upload) {
-//                    //待修改的，非上传图片属性不会有这个属性
-//                    target[index].upload.abort();
-//
-//                }
-//                target.splice(index, 1);
-//                if (target === $scope.initPage.display_photos) {
-//                    $scope.goodsObj.display_photos.splice(index, 1);
-//                }
-//                else if (target === $scope.initPage.description_photos) {
-//                    $scope.goodsObj.description_photos.splice(index, 1);
-//                }
-//                else if (target === $scope.initPage.banner_photos) {
-//                    $scope.goodsObj.banner_photos.splice(index, 1);
-//                }
-//            };
-//
-//            $scope.onFileSelect = function ($files, target) {
-//                var offsetx = target.length;
-//                if (target === $scope.initPage.banner_photos) {
-//                    target[0] = {
-//                        file: $files[0]
-//                    };
-//                    start(0, target);
-//                }
-//                else {
-//                    for (var i = 0; i < $files.length; i++) {
-//                        target[i + offsetx] = {
-//                            file: $files[i]
-//                        };
-//                        start(i + offsetx, target);
-//                    }
-//                }
-//
-//            };
-//
-//            $scope.getCategoryName = function (categorys) {
-//                return GoodsService.getCategoryName(categorys);
-//            };
-//
-//            $scope.skuFeaturesAdd = function () {
-//                //sku_features: [{key: '香味', value: ['苹果香','柠檬酸','薄荷凉','香橙甜']}],
-//                if ($scope.initPage.sku_features_input === '') {
-//                    return;
-//                }
-//                //var _index = $scope.goodsObj.sku_features.length;
-//                //var _key = 'sku_features_' + _index;
-//                //var obj = {key: _key, value: [$scope.initPage.sku_features_input]};
-//                //$scope.goodsObj.sku_features[0].value.push(obj);
-//                $scope.goodsObj.sku_features[0].value.push($scope.initPage.sku_features_input);
-//                $scope.initPage.sku_features_input = '';
-//            };
-//
-//            $scope.skuFeaturesRemove = function (index) {
-//                $scope.goodsObj.sku_features[0].value.splice(index, 1);
-//            };
-//
-//            function generateDistrcit(province, city, county) {
-//                return province + '-' + city + '-' + county;
-//            }
-//
-//            function goodsParamValid(callback) {
-//                if ($scope.goodsObj.name === '') {
-//                    return callback('请输入商品名称');
-//                }
-//
-//                if ($scope.isCreate && $scope.goodsObj.market_price === '') {
-//                    return callback('请输入商品价格');
-//                }
-//
-//                if ($scope.goodsObj.display_photos.length === 0) {
-//                    return callback('请至少选择一张展示图片');
-//                }
-//
-//                if ($scope.goodsObj.description_photos.length === 0) {
-//                    return callback('请至少选择一张商品图片');
-//                }
-//
-//                if ($scope.goodsObj.banner_recommend === 'true' && $scope.goodsObj.banner_photos.length === 0) {
-//                    return callback('请选择一张banner推荐照片');
-//                }
-//
-//                if ($scope.initPage.province === '' || $scope.initPage.city === '' || $scope.initPage.county === '') {
-//                    return callback('请选择地区');
-//                }
-//
-//                if ($scope.goodsObj.self_production === 'false' && !$scope.goodsObj.distributor) {
-//                    return callback('请选择合作商');
-//                }
-//
-//                return callback();
-//            }
-//
-//            function prepareSubmitGoods() {
-//                $scope.goodsObj.district = generateDistrcit($scope.initPage.province, $scope.initPage.city, $scope.initPage.county);
-//                $scope.goodsObj.name = $window.encodeURI($scope.goodsObj.name, 'UTF-8');
-//                $scope.goodsObj.goods_parameters = $window.encodeURI($scope.goodsObj.goods_parameters, 'UTF-8');
-//                $scope.goodsObj.description = $window.encodeURI($scope.goodsObj.description, 'UTF-8');
-//                if ($scope.goodsObj.banner_recommend !== 'true' && $scope.goodsObj.banner_recommend !== true && $scope.goodsObj.banner_photos.length > 0) {
-//                    $scope.goodsObj.banner_photos = [];
-//                    $scope.initPage.banner_photos = [];
-//                }
-//
-//                if ($scope.initPage.distributor) {
-//                    var obj = JSON.parse($scope.initPage.distributor);
-//                    if (obj) {
-//                        $scope.goodsObj.source = obj.name;
-//                        $scope.goodsObj.distributor = obj._id;
-//                    }
-//                }
-//            }
-//
-//            function createNewGoods(callback) {
-//                GoodsService.createGoods($scope.goodsObj).then(function (data) {
-//                    console.log(data);
-//                    if (data.err) {
-//                        return callback(data.err);
-//                    }
-//                    else if (data.error) {
-//                        return callback(data.error);
-//                    }
-//                    else {
-//                        return callback();
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function editGoods(callback) {
-//                GoodsService.updateGoods($scope.initPage.goods._id, $scope.goodsObj).then(function (data) {
-//                    console.log(data);
-//                    if (data.err) {
-//                        return callback(data.err);
-//                    }
-//                    else if (data.error) {
-//                        return callback(data.error);
-//                    }
-//
-//                    return callback();
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            $scope.submitNewGoods = function () {
-//                goodsParamValid(function (err) {
-//                    if (err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, err);
-//                    } else {
-//
-//                        prepareSubmitGoods();
-//
-//                        $scope.$emit(GlobalEvent.onShowLoading, true);
-//                        if (isEditGoodsPage) {
-//                            editGoods(function (err) {
-//                                $scope.$emit(GlobalEvent.onShowLoading, false);
-//                                if (err) {
-//                                    console.log(err);
-//                                    return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                                } else {
-//                                    $scope.$emit(GlobalEvent.onShowAlert, '商品编辑成功');
-//                                    $state.go('goodsList');
-//                                }
-//                            });
-//                        }
-//                        else {
-//                            createNewGoods(function (err) {
-//                                $scope.$emit(GlobalEvent.onShowLoading, false);
-//                                if (err) {
-//                                    return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                                } else {
-//                                    initGoodsObj();
-//                                    return $scope.$emit(GlobalEvent.onShowAlert, '商品添加成功');
-//                                }
-//                            });
-//                        }
-//                    }
-//                });
-//            };
-//
-//            $scope.updateDistributorList = function () {
-//                getDistributorListByDistrict();
-//            };
-//
-//            getGoodsCategories();
-//            getQiniuKey();
-//            initAreaInfo();
-//            initDate();
-//        }]);
+      function init(){
 
-///**
-// * Created by louisha on 15/6/19.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GoodsListController',
-//    ['$scope', 'GlobalEvent', '$state', 'GoodsService',
-//        function ($scope, GlobalEvent, $state, GoodsService) {
-//            $scope.initPage = {
-//                goods_list: [],
-//                goodsCategories: [],
-//                search:{
-//                    category: '',
-//                    goodsName:''
-//                },
-//                pagination: {
-//                    currentPage: 1,
-//                    limit: 10,
-//                    totalCount: 0,
-//                    pageCount: 0,
-//                    pageNavigationCount: 5,
-//                    canSeekPage: true,
-//                    limitArray: [10, 20, 30, 40, 100],
-//                    pageList: [],
-//                    onCurrentPageChanged: function (callback) {
-//                        console.log('current page changed');
-//                        getGoodsList();
-//                    }
-//                }
-//            };
-//
-//            function getGoodsCategories() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsCategories().then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.goodsCategories = data.categories;
-//
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function updatePaginationConfig(totalCount, limit){
-//                $scope.initPage.pagination.totalCount = totalCount;
-//                $scope.initPage.pagination.limit = limit;
-//                $scope.initPage.pagination.pageCount = Math.ceil(totalCount / limit);
-//                $scope.initPage.pagination.render();
-//            }
-//
-//            function getGoodsList() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsListByCondition($scope.initPage.pagination.currentPage, $scope.initPage.pagination.limit, $scope.initPage.search).then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.goods_list = data.goods_list;
-//                        updatePaginationConfig(data.total_count, data.limit);
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            $scope.onSearchClick = function(){
-//                getGoodsList();
-//            };
-//
-//            $scope.getCategoryName = function (categorys) {
-//                return GoodsService.getCategoryName(categorys);
-//            };
-//
-//            $scope.addGoods = function () {
-//                $state.go('goodsAdd');
-//            };
-//
-//            $scope.onEditGoods = function (goods) {
-//                $state.go('goodsAdd', {goodsId: goods._id});
-//            };
-//            $scope.onDeleteGoods = function (goodsId) {
-//
-//                $scope.$emit(GlobalEvent.onShowAlertConfirm, {info: '是否确认删除？'}, function () {
-//                    $scope.$emit(GlobalEvent.onShowLoading, true);
-//                    GoodsService.deleteGoods(goodsId).then(function (data) {
-//                        console.log(data);
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                        if (data.err) {
-//                            $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                        }
-//                        if (data.error) {
-//                            $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                        }
-//                        else {
-//                            $scope.$emit(GlobalEvent.onShowAlert, '删除成功');
-//                            getGoodsList();
-//                        }
-//                    }, function (err) {
-//                        console.log(err);
-//                    });
-//                });
-//
-//            };
-//
-//            getGoodsCategories();
-//            getGoodsList();
-//        }]);
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        QiNiuService.qiNiuKey(function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            console.log(err);
+            return;
+          }
+
+          console.log(data);
+          qiniuToken = data.token;
+        });
+      }
+
+      init();
+
+      function generalImgUrl(imgName) {
+        return Config.qiniuServerAddress + imgName;
+      }
+
+      function start(index, target) {
+        target[index].progress = {
+          p: 0
+        };
+        target[index].upload = QiNiuService.upload({
+          file: target[index].file,
+          token: qiniuToken
+        });
+        target[index].upload.then(function (response) {
+          $scope.pageData.photos.push(response.key);
+          target[index].img = generalImgUrl(response.key);
+        }, function (response) {
+          alert(response);
+          console.log(response);
+        }, function (evt) {
+          target[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
+        });
+      }
+
+      $scope.onFileSelect = function ($files, target) {
+        var offsetx = target.length;
+        for (var i = 0; i < $files.length; i++) {
+          target[i + offsetx] = {
+            file: $files[i]
+          };
+          start(i + offsetx, target);
+        }
+      };
+
+
+
+      $scope.abort = function (index, target) {
+        if (target[index].upload) {
+          //待修改的，非上传图片属性不会有这个属性
+          target[index].upload.abort();
+        }
+        target.splice(index, 1);
+        $scope.pageData.photos.splice(index, 1);
+      };
+
+    }]);
 
 /**
  * Created by elinaguo on 16/3/16.
@@ -2187,6 +1126,10 @@ angular.module('EWeb').controller('GoodsManagerController',
 
       $scope.goBack = function () {
         $state.go('user_index');
+      };
+
+      $scope.addGoods = function(){
+        $state.go('goods_add');
       };
 
       $scope.changeTag = function(tagName){
@@ -2295,426 +1238,41 @@ angular.module('EWeb').controller('GoodsManagerController',
       }
 
       init();
+
+
+
+      //
+      //var fileUploadObj;
+      //function uploadStart(file) {
+      //  if (!fileUploadObj) {
+      //    fileUploadObj = {
+      //      file: null,
+      //      upload: null,
+      //      progress: {p: 0},
+      //      img: ''
+      //    };
+      //  }
+      //  fileUploadObj.file = file;
+      //  fileUploadObj.upload = null;
+      //  uploadHandle();
+      //}
+      //
+      //function uploadHandle() {
+      //  var compressOption = {
+      //    cpmpressMaxSize: 30,
+      //    quality: 70
+      //  };
+      //  fileUploadObj.upload = QiNiuService.upload({
+      //    file: fileUploadObj.file
+      //  }, compressOption);
+      //  fileUploadObj.upload.then(function (response) {
+      //    //response.key
+      //    fileUploadObj.img = Config.qiniuServerAddress + '/' + response.key;
+      //  }, function (err) {
+      //    $scope.$emit(GlobalEvent.onShowAlert, {content: err});
+      //  });
+      //}
     }]);
-
-///**
-// * Created by louisha on 15/8/18.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GoodsTemplateController',
-//    [
-//        '$scope',
-//        'GlobalEvent',
-//        '$state',
-//        '$stateParams',
-//        'GoodsService',
-//        'QiNiuService',
-//        'Config',
-//        'AccountServer',
-//        '$window',
-//        function ($scope,
-//                  GlobalEvent,
-//                  $state,
-//                  $stateParams,
-//                  GoodsService,
-//                  QiNiuService,
-//                  Config,
-//                  AccountServer,
-//                  $window) {
-//            $scope.initPage = {
-//                title: '',
-//                goodsCategories: [],
-//                display_photos: [],
-//                description_photos: [],
-//                category: '',
-//                qiniu_key: '',
-//                isEditGoodsPage: false
-//            };
-//            $scope.goodsObj = {
-//                categories: [],
-//                brand: '',
-//                name: '',
-//                display_photos: [],
-//                description_photos: [],
-//                goods_parameters: ''
-//            };
-//
-//            function getGoodsCategories() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsCategories().then(function (data) {
-//                    console.log(data);
-//                    if (data.err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    if (data.error) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                    }
-//                    $scope.initPage.goodsCategories = data.categories;
-//                    if (!$scope.initPage.isEditGoodsPage) {
-//                        $scope.initPage.category = $scope.initPage.goodsCategories.length > 0 ? $scope.initPage.goodsCategories[0]._id : '';
-//                    }
-//
-//                    getQiniuKey();
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function getGoodsDetailById(goodsId) {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.goodsTemplateById(goodsId, function (err, data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                    }
-//                    $scope.goodsObj.name = data.name || '';
-//                    $scope.goodsObj.brand = data.brand ? data.brand.name : '';
-//                    $scope.goodsObj.goods_parameters = data.goods_parameters || '';
-//                    $scope.goodsObj.categories = data.categories;
-//                    $scope.initPage.category = data.categories[0];
-//                    $scope.goodsObj.display_photos = data.display_photos;
-//                    $scope.goodsObj.description_photos = data.description_photos;
-//                    $scope.initPage.display_photos = [];
-//                    $scope.initPage.description_photos = [];
-//                    initGoodsImageForEdit(data.description_photos, $scope.initPage.description_photos);
-//                    initGoodsImageForEdit(data.display_photos, $scope.initPage.display_photos);
-//                });
-//            }
-//
-//            function initGoodsImageForEdit(photos, target) {
-//                for (var i = 0; i < photos.length; i++) {
-//                    var obj = {
-//                        img: generalImgUrl(photos[i])
-//
-//                    };
-//                    target.push(obj);
-//                }
-//            }
-//
-//
-//            function getQiniuKey() {
-//                QiNiuService.qiNiuKey().then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    if (!data) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, '获取七牛上传凭证失败，请刷新网页');
-//                    }
-//                    if (data.err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    if (data.error) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, data.error.type);
-//                    }
-//                    $scope.initPage.qiniu_key = data.token;
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function generalImgUrl(imgName) {
-//                return Config.qiniuServerAddress + imgName;
-//            }
-//
-//            function initGoodsObj() {
-//                $scope.initPage.category = $scope.initPage.goodsCategories.length > 0 ? $scope.initPage.goodsCategories[0]._id : '';
-//                $scope.goodsObj.categories = [];
-//                $scope.goodsObj.name = '';
-//                $scope.goodsObj.brand = '';
-//                $scope.goodsObj.display_photos = [];
-//                $scope.goodsObj.description_photos = [];
-//                $scope.goodsObj.goods_parameters = '';
-//                $scope.initPage.display_photos = [];
-//                $scope.initPage.goods_parameters = [];
-//            }
-//
-//
-//            function fileUploadStart(index, target) {
-//                target[index].progress = {
-//                    p: 0
-//                };
-//                target[index].upload = QiNiuService.upload({
-//                    //key: '',
-//                    file: target[index].file,
-//                    token: $scope.initPage.qiniu_key
-//                });
-//                target[index].upload.then(function (response) {
-//                    console.log(response);
-//                    if (target === $scope.initPage.display_photos) {
-//                        $scope.goodsObj.display_photos.splice(index, 0, response.key);
-//                    }
-//                    else if (target === $scope.initPage.description_photos) {
-//                        $scope.goodsObj.description_photos.splice(index, 0, response.key);
-//                    }
-//                    target[index].img = generalImgUrl(response.key);
-//                }, function (response) {
-//                    alert(response);
-//                    console.log(response);
-//                }, function (evt) {
-//                    target[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
-//                });
-//            }
-//
-//            $scope.imgAbort = function (index, target) {
-//                if ($scope.initPage[target][index].upload) {
-//                    //待修改的，非上传图片属性不会有这个属性
-//                    $scope.initPage[target][index].upload.abort();
-//                }
-//                $scope.initPage[target].splice(index, 1);
-//                $scope.goodsObj[target].splice(index, 1);
-//
-//            };
-//
-//            $scope.onFileSelect = function ($files, target) {
-//                var offsetx = target.length;
-//                for (var i = 0; i < $files.length; i++) {
-//                    target[i + offsetx] = {
-//                        file: $files[i]
-//                    };
-//                    fileUploadStart(i + offsetx, target);
-//                }
-//
-//            };
-//
-//            $scope.getCategoryName = function (categorys) {
-//                return GoodsService.getCategoryName(categorys);
-//            };
-//
-//            function goodsParamValid(callback) {
-//                if ($scope.goodsObj.name === '') {
-//                    return callback('请输入商品名称');
-//                }
-//                if ($scope.goodsObj.display_photos.length === 0) {
-//                    return callback('请至少选择一张商品图片');
-//                }
-//                return callback();
-//            }
-//
-//            function prepareSubmitGoods() {
-//                $scope.goodsObj.name = $window.encodeURI($scope.goodsObj.name, 'UTF-8');
-//                $scope.goodsObj.brand = $window.encodeURI($scope.goodsObj.brand, 'UTF-8');
-//                $scope.goodsObj.goods_parameters = $window.encodeURI($scope.goodsObj.goods_parameters, 'UTF-8');
-//                $scope.goodsObj.categories = [];
-//                $scope.goodsObj.categories.push($scope.initPage.category);
-//            }
-//
-//            $scope.submitGoods = function () {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                goodsParamValid(function (err) {
-//                    if (err) {
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                        return $scope.$emit(GlobalEvent.onShowAlert, err);
-//                    } else {
-//                        prepareSubmitGoods();
-//                        if (!$scope.initPage.isEditGoodsPage) {
-//                            GoodsService.createGoodsTemplate($scope.goodsObj, function (err, data) {
-//                                $scope.$emit(GlobalEvent.onShowLoading, false);
-//                                if (err) {
-//                                    return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                                }
-//                                initGoodsObj();
-//                                return $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
-//                            });
-//                        }
-//                        else {
-//                            GoodsService.goodsTemplateUpdate($stateParams.goodsId, $scope.goodsObj, function (err, data) {
-//                                $scope.$emit(GlobalEvent.onShowLoading, false);
-//                                if (err) {
-//                                    return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                                }
-//                                $scope.$emit(GlobalEvent.onShowAlert, '编辑成功');
-//                                $state.go('goodsTemplateList');
-//                            });
-//                        }
-//
-//                    }
-//                });
-//            };
-//
-//            function initDate() {
-//                getGoodsCategories();
-//                if ($stateParams.goodsId) {
-//                    $scope.initPage.isEditGoodsPage = true;
-//                    getGoodsDetailById($stateParams.goodsId);
-//                    $scope.initPage.title = '商品模板编辑';
-//                }
-//                else {
-//                    $scope.initPage.title = '商品模板添加';
-//                }
-//            }
-//
-//            initDate();
-//        }]);
-
-///**
-// * Created by louisha on 15/6/19.
-// */
-//'use strict';
-//angular.module('eWeb').controller('GoodsTemplateListController',
-//    ['$scope', 'GlobalEvent', '$state', 'GoodsService',
-//        function ($scope, GlobalEvent, $state, GoodsService) {
-//            $scope.initPage = {
-//                goods_list: [],
-//                goodsCategories: [],
-//                search: {
-//                    category: '',
-//                    goodsName: ''
-//                },
-//                pagination: {
-//                    currentPage: 1,
-//                    limit: 10,
-//                    totalCount: 0,
-//                    pageCount: 0,
-//                    pageNavigationCount: 5,
-//                    canSeekPage: true,
-//                    limitArray: [10, 20, 30, 40, 100],
-//                    pageList: [],
-//                    onCurrentPageChanged: function (callback) {
-//                        console.log('current page changed');
-//                        getGoodsList();
-//                    }
-//                }
-//            };
-//
-//
-//            function updatePaginationConfig(totalCount, limit) {
-//                $scope.initPage.pagination.totalCount = totalCount;
-//                $scope.initPage.pagination.limit = limit;
-//                $scope.initPage.pagination.pageCount = Math.ceil(totalCount / limit);
-//                $scope.initPage.pagination.render();
-//            }
-//
-//            function getGoodsCategories() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsCategories().then(function (data) {
-//                    console.log(data);
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.goodsCategories = data.categories;
-//                        getGoodsList();
-//
-//                    }
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            function getGoodsList() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                GoodsService.getGoodsTemplateList({
-//                    goods_name: $scope.initPage.search.goodsName,
-//                    category: $scope.initPage.search.category,
-//                    current_page: $scope.initPage.pagination.currentPage,
-//                    limit: $scope.initPage.pagination.limit
-//                }, function (err, data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    if (err) {
-//                        return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                    }
-//                    $scope.initPage.goods_list = data.goods_template_info_list;
-//                    updatePaginationConfig(data.total_count, data.limit);
-//                });
-//            }
-//
-//
-//            $scope.onSearchClick = function () {
-//                getGoodsList();
-//            };
-//
-//            $scope.getCategoryNameById = function (categoryId) {
-//                for (var i = 0; i < $scope.initPage.goodsCategories.length; i++) {
-//                    if ($scope.initPage.goodsCategories[i]._id === categoryId) {
-//                        return $scope.initPage.goodsCategories[i].name;
-//                    }
-//                }
-//                return '';
-//            };
-//
-//            $scope.addGoodsTemplate = function () {
-//                $state.go('goodsTemplate');
-//            };
-//
-//
-//            $scope.onEditGoods = function (goods) {
-//                $state.go('goodsTemplate', {goodsId: goods._id});
-//            };
-//
-//            $scope.onDeleteGoods = function (goodsId) {
-//
-//                $scope.$emit(GlobalEvent.onShowAlertConfirm, {info: '是否确认删除该商品模板？'}, function () {
-//                    $scope.$emit(GlobalEvent.onShowLoading, true);
-//                    GoodsService.goodsTemplateDelete(goodsId, function (err, data) {
-//                        $scope.$emit(GlobalEvent.onShowLoading, false);
-//                        if (err) {
-//                            return $scope.$emit(GlobalEvent.onShowAlert, err.type);
-//                        }
-//                        $scope.$emit(GlobalEvent.onShowAlert, '删除成功');
-//                        getGoodsList();
-//                    });
-//
-//                });
-//            };
-//            getGoodsCategories();
-//        }]);
-
-///**
-// * Created by louisha on 15/7/8.
-// */
-//'use strict';
-//angular.module('eWeb').controller('OrderListController',
-//    ['$rootScope', '$scope', 'GlobalEvent', 'OrderService', 'Global',
-//        function ($rootScope, $scope, GlobalEvent, OrderService, Global) {
-//
-//            $scope.initPage = {
-//                orderList: [],
-//                pagination: {
-//                    currentPage: 1,
-//                    limit: 10,
-//                    totalCount: 0,
-//                    pageCount: 0,
-//                    pageNavigationCount: 5,
-//                    canSeekPage: false,
-//                    limitArray: [10, 20, 30, 40, 100],
-//                    pageList: [],
-//                    onCurrentPageChanged: function () {
-//                        console.log('current page changed');
-//                        getOrderList();
-//                    }
-//                }
-//            };
-//
-//
-//            function updatePaginationConfig(totalCount, limit){
-//                $scope.initPage.pagination.totalCount = totalCount;
-//                $scope.initPage.pagination.limit = limit;
-//                $scope.initPage.pagination.pageCount = Math.ceil(totalCount / limit);
-//                $scope.initPage.pagination.render();
-//            }
-//
-//            function getOrderList() {
-//                $scope.$emit(GlobalEvent.onShowLoading, true);
-//                OrderService.getGrocerOrderList($scope.initPage.pagination.currentPage, $scope.initPage.pagination.limit, $scope.initPage.searchKey).then(function (data) {
-//                    $scope.$emit(GlobalEvent.onShowLoading, false);
-//                    console.log(data);
-//                    if (data.err) {
-//                        $scope.$emit(GlobalEvent.onShowAlert, data.err.type);
-//                    }
-//                    else {
-//                        $scope.initPage.orderList = data.grocer_orders;
-//                        updatePaginationConfig(data.total_count, data.limit);
-//                    }
-//
-//                }, function (err) {
-//                    console.log(err);
-//                });
-//            }
-//
-//            getOrderList();
-//        }]);
 
 /**
 * Created by louisha on 15/6/19.
@@ -2753,85 +1311,6 @@ angular.module('EWeb').controller('UserSignInController',
           $state.go('user_index');
         });
       };
-    }]);
-
-/**
-* Created by louisha on 15/6/19.
-*/
-'use strict';
-angular.module('EWeb').controller('UserSignUpController',
-  [ '$scope',
-    'GlobalEvent',
-    'UserService',
-    function ($scope, GlobalEvent, UserService) {
-      $scope.pageInfo = {
-        title: '服务员注册',
-        roles: [{key: 'waiter', value: '餐厅服务员'}, {key: 'cashier', value: '超市收银员'}, {key: 'card_manager', value: '饭卡充值员'}],
-        groupList: []
-      };
-      $scope.signUpObject = {
-        username: '',
-        password: '',
-        role: 'waiter',
-        nickname: '',
-        group_id: '',
-        sex: 'male',
-        mobile_phone: '',
-        head_photo: ''
-      };
-
-      function initSignUpObject() {
-        $scope.signUpObject.username = '';
-        $scope.signUpObject.password = '';
-        $scope.signUpObject.nickname = '';
-        $scope.signUpObject.group_id = '';
-        $scope.signUpObject.sex = '';
-        $scope.signUpObject.role = 'waiter';
-      }
-
-      $scope.signUp = function () {
-        if ($scope.signUpObject.username.length < 11) {
-          return $scope.$emit(GlobalEvent.onShowAlert, '必须是11位的手机号码');
-        }
-
-        if ($scope.signUpObject.password.length < 6) {
-          return $scope.$emit(GlobalEvent.onShowAlert, '密码必须大于6位数');
-        }
-
-        if ($scope.signUpObject.nickname === '') {
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入姓名');
-        }
-
-        if ($scope.signUpObject.group_id === '') {
-          return $scope.$emit(GlobalEvent.onShowAlert, '请选择所属医院');
-        }
-
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        UserService.signUp($scope.signUpObject, function (err, data) {
-          console.log(data);
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if (err) {
-            return $scope.$emit(GlobalEvent.onShowAlert, err);
-          }
-
-          $scope.$emit(GlobalEvent.onShowAlert, '注册成功');
-          initSignUpObject();
-        });
-
-      };
-
-      function init() {
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        UserService.getGroups({currentPage: 1,limit: -1, skipCount: 0}, function (err, data) {
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if (err) {
-            return $scope.$emit(GlobalEvent.onShowAlert, err);
-          }
-          $scope.pageInfo.groupList = data.group_list;
-        });
-      }
-
-      init();
     }]);
 
 /**
@@ -3199,6 +1678,48 @@ angular.module('EWeb').controller('IndexController',
       }]);
 
 'use strict';
+/**
+ * Created by elina on 15/6/24.
+ */
+angular.module('EWeb').directive('eFileSelect', ['$parse', '$timeout',
+    function ($parse, $timeout) {
+        return function (scope, elem, attr) {
+            var fn = $parse(attr.eFileSelect);
+            if (elem[0].tagName.toLowerCase() !== 'input' || (elem.attr('type') && elem.attr('type').toLowerCase()) !== 'file') {
+                var fileElem = angular.element('<input type="file">');
+                for (var i = 0; i < elem[0].attributes.length; i++) {
+                    fileElem.attr(elem[0].attributes[i].name, elem[0].attributes[i].value);
+                }
+                if (elem.attr('data-multiple')) fileElem.attr('multiple', 'true');
+                //fileElem.css('top', 0).css('bottom', 0).css('left', 0).css('right', 0).css('width', '100%').
+                //    css('opacity', 0).css('position', 'absolute').css('filter', 'alpha(opacity=0)');
+                elem.append(fileElem);
+                //if (elem.css('position') === '' || elem.css('position') === 'static') {
+                //    elem.css('position', 'relative');
+                //}
+                elem = fileElem;
+            }
+            elem.bind('change', function (evt) {
+                var files = [],
+                    fileList, i;
+                fileList = evt.__files_ || evt.target.files;
+                if (fileList !== null) {
+                    for (i = 0; i < fileList.length; i++) {
+                        files.push(fileList.item(i));
+                    }
+                }
+                $timeout(function () {
+                    fn(scope, {
+                        $files: files,
+                        $event: evt
+                    });
+                });
+            });
+        };
+    }
+]);
+
+'use strict';
 angular.module('EWeb').directive('zzValidation', function ($parse) {
   var _isMobile = /^\d{11}$/;
   var _integer = /\D/g;
@@ -3307,6 +1828,98 @@ angular.module('EWeb').directive('zzValidation', function ($parse) {
 });
 
 /**
+ * Created by louisha on 15/10/13.
+ */
+
+'use strict';
+
+angular.module('EWeb').directive('zHeader',
+    ['Auth', 'GlobalEvent', '$state', 'UserService',
+        function (Auth, GlobalEvent, $state, UserService) {
+            return {
+                restrict: 'EA',
+                templateUrl: 'directives/z_header/z_header.client.directive.html',
+                replace: true,
+                scope: {
+                    style: '@'
+                },
+                link: function (scope, element, attributes) {
+                    scope.user = Auth.getUser();
+                    scope.mainMenuOpened = false;
+                    scope.menuOpened = false;
+                    scope.toggleMenuOpen = function (event) {
+                        scope.menuOpened = true;
+                        console.log('mouse：' + scope.menuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.hideMenuOpen = function (event) {
+                        scope.menuOpened = false;
+                        console.log('mouse hide：' + scope.menuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.toggleMainMenuOpen = function (event) {
+                        scope.mainMenuOpened = true;
+                        console.log(scope.mainMenuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.hideMainMenuOpen = function (event) {
+                        scope.mainMenuOpened = false;
+                        console.log(scope.mainMenuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.goToView = function (type) {
+                        scope.mainMenuOpened = false;
+                        switch (type) {
+                            case 'user_manager':
+                                return $state.go('user_manager');
+                            case 'restaurant':
+                                return $state.go('goods_manager', {goods_type: 'dish'});
+                            case 'supermarket':
+                                return $state.go('goods_manager', {goods_type: 'goods'});
+                            default :
+                                return;
+                        }
+                    };
+
+                    scope.translateRole = function(role){
+                        return UserService.translateUserRole(role);
+                    };
+
+                    scope.quit = function () {
+                        scope.menuOpened = false;
+                        console.log('quit：' + scope.menuOpened);
+                        scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
+                            if (status) {
+                                UserService.signOut(function (err, data) {
+                                    if (err) {
+                                        return scope.$emit(GlobalEvent.onShowAlert, err);
+                                    }
+                                    $state.go('user_index');
+                                });
+                            }
+                        });
+                    };
+
+                    scope.backHome = function () {
+                        $state.go('user_index');
+                    };
+                }
+            };
+        }]);
+
+/**
  * Created by louisha on 16/01/26.
  *
  * option{
@@ -3402,98 +2015,6 @@ angular.module('EWeb').directive('zDropdown',
                                 break;
                         }
                         return result;
-                    };
-                }
-            };
-        }]);
-
-/**
- * Created by louisha on 15/10/13.
- */
-
-'use strict';
-
-angular.module('EWeb').directive('zHeader',
-    ['Auth', 'GlobalEvent', '$state', 'UserService',
-        function (Auth, GlobalEvent, $state, UserService) {
-            return {
-                restrict: 'EA',
-                templateUrl: 'directives/z_header/z_header.client.directive.html',
-                replace: true,
-                scope: {
-                    style: '@'
-                },
-                link: function (scope, element, attributes) {
-                    scope.user = Auth.getUser();
-                    scope.mainMenuOpened = false;
-                    scope.menuOpened = false;
-                    scope.toggleMenuOpen = function (event) {
-                        scope.menuOpened = true;
-                        console.log('mouse：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.hideMenuOpen = function (event) {
-                        scope.menuOpened = false;
-                        console.log('mouse hide：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.toggleMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = true;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.hideMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = false;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.goToView = function (type) {
-                        scope.mainMenuOpened = false;
-                        switch (type) {
-                            case 'user_manager':
-                                return $state.go('user_manager');
-                            case 'restaurant':
-                                return $state.go('goods_manager', {goods_type: 'dish'});
-                            case 'supermarket':
-                                return $state.go('goods_manager', {goods_type: 'goods'});
-                            default :
-                                return;
-                        }
-                    };
-
-                    scope.translateRole = function(role){
-                        return UserService.translateUserRole(role);
-                    };
-
-                    scope.quit = function () {
-                        scope.menuOpened = false;
-                        console.log('quit：' + scope.menuOpened);
-                        scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
-                            if (status) {
-                                UserService.signOut(function (err, data) {
-                                    if (err) {
-                                        return scope.$emit(GlobalEvent.onShowAlert, err);
-                                    }
-                                    $state.go('user_index');
-                                });
-                            }
-                        });
-                    };
-
-                    scope.backHome = function () {
-                        $state.go('user_index');
                     };
                 }
             };

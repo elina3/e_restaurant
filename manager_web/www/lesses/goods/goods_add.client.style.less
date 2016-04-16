@@ -1,0 +1,38 @@
+
+.goods-add-page-view{
+
+  .photo {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    ol {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .photo_select {
+    position: relative;
+    p {
+      background-color: @button_color;
+      color: @font_color;
+      text-align: center;
+      border-radius: 4px;
+    }
+    input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      filter: alpha(opacity=0);
+      -moz-opacity: 0;
+      -khtml-opacity: 0;
+      opacity: 0;
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+}

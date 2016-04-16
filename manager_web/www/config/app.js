@@ -12,31 +12,30 @@ var eWeb = angular.module('EWeb', [
 
 eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
-        //.state('goods_list', {
-        //    url: '/goods_list',
-        //    templateUrl: '/templates/goods/goods_list.client.view.html',
-        //    controller: 'GoodsListController'
-        //})
-        //.state('goods_add', {
-        //    abstract: true,
-        //    url: '/goods_add',
-        //    templateUrl: '/templates/goods/goods_add.client.view.html',
-        //    controller: 'GoodsAddController'
-        //})
-        .state('user_sign_up', {
-            url: '/user/sign_up',
-            templateUrl: 'templates/user/sign_up.client.view.html',
-            controller: 'UserSignUpController'
-        })
-        .state('user_sign_in', {
-            url: '/user/sign_in',
-            templateUrl: 'templates/user/sign_in.client.view.html',
-            controller: 'UserSignInController'
-        })
+      //.state('goods_list', {
+      //    url: '/goods_list',
+      //    templateUrl: '/templates/goods/goods_list.client.view.html',
+      //    controller: 'GoodsListController'
+      //})
+      //.state('user_sign_up', {
+      //    url: '/user/sign_up',
+      //    templateUrl: 'templates/user/sign_up.client.view.html',
+      //    controller: 'UserSignUpController'
+      //})
+      .state('user_sign_in', {
+          url: '/user/sign_in',
+          templateUrl: 'templates/user/sign_in.client.view.html',
+          controller: 'UserSignInController'
+      })
       .state('goods_manager', {
           url: '/good/manager:goods_type',
           templateUrl: 'templates/goods/goods_manager.client.view.html',
           controller: 'GoodsManagerController'
+      })
+      .state('goods_add', {
+        url: '/goods/add',
+        templateUrl: 'templates/goods/goods_add.client.view.html',
+        controller: 'GoodsAddController'
       })
       .state('user_manager', {
           url: '/user/manager',
@@ -47,18 +46,7 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         url: '/user/index',
         templateUrl: 'templates/user/user_index.client.view.html',
         controller: 'UserIndexController'
-      })
-      //.state('client_sign_up', {
-      //    url: '/client/client_sign_up',
-      //    templateUrl: '/templates/client/sign_up.client.view.html',
-      //    controller: 'ClientSignUpController'
-      //})
-      //.state('client_sign_in', {
-      //    url: '/client/client_sign_in',
-      //    templateUrl: '/templates/client/sign_in.client.view.html',
-      //    controller: 'ClientSignInController'
-      //})
-    ;
+      });
 
     $urlRouterProvider.otherwise('/user/sign_in');
 }]);

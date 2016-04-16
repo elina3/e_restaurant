@@ -46,6 +46,10 @@ angular.module('EWeb').controller('GoodsManagerController',
         $state.go('user_index');
       };
 
+      $scope.addGoods = function(){
+        $state.go('goods_add');
+      };
+
       $scope.changeTag = function(tagName){
         $scope.pageConfig.currentTag = tagName;
       };
@@ -152,4 +156,38 @@ angular.module('EWeb').controller('GoodsManagerController',
       }
 
       init();
+
+
+
+      //
+      //var fileUploadObj;
+      //function uploadStart(file) {
+      //  if (!fileUploadObj) {
+      //    fileUploadObj = {
+      //      file: null,
+      //      upload: null,
+      //      progress: {p: 0},
+      //      img: ''
+      //    };
+      //  }
+      //  fileUploadObj.file = file;
+      //  fileUploadObj.upload = null;
+      //  uploadHandle();
+      //}
+      //
+      //function uploadHandle() {
+      //  var compressOption = {
+      //    cpmpressMaxSize: 30,
+      //    quality: 70
+      //  };
+      //  fileUploadObj.upload = QiNiuService.upload({
+      //    file: fileUploadObj.file
+      //  }, compressOption);
+      //  fileUploadObj.upload.then(function (response) {
+      //    //response.key
+      //    fileUploadObj.img = Config.qiniuServerAddress + '/' + response.key;
+      //  }, function (err) {
+      //    $scope.$emit(GlobalEvent.onShowAlert, {content: err});
+      //  });
+      //}
     }]);
