@@ -52,7 +52,8 @@ exports.createDefaultGroup = function(){
           nickname : '管理员',
           role : 'admin',
           hospital_id: hospital._id.toString(),
-          sex : 'unknown',
+          group_id: restaurantGroup._id.toString(),//默认餐厅管理员
+          sex : 'female',
           mobile_phone : '18321740710',
           head_photo : '',
           description : ''
@@ -60,6 +61,7 @@ exports.createDefaultGroup = function(){
         userLogic.signUpAdmin(userInfo, function(err, admin){
           if(err){
             console.log('create admin failed');
+            console.log(err);
             return;
           }
 

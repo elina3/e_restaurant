@@ -4,12 +4,13 @@
 'use strict';
 
 var goodsController = require('../controllers/goods');
+var authFilter = require('../filters/auth');
 
 module.exports = function (app) {
-  app.route('/goods').post(goodsController.addNewGoods);
-  app.route('/goods').get(goodsController.getGoodsDetail);
-  app.route('/goods').put(goodsController.updateGoods);
-  app.route('/goods').delete(goodsController.deleteGoods);
+  app.route('/goods').post(authFilter.requireUser, goodsController.addNewGoods);
+  app.route('/goods').get(authFilter.requireUser, goodsController.getGoodsDetail);
+  app.route('/goods/update').post(authFilter.requireUser, goodsController.updateGoods);
+  app.route('/goods/delete').post(authFilter.requireUser, goodsController.deleteGoods);
 
-  app.route('/goods_list').get(goodsController.getGoodsList);
+  app.route('/goods_list').get(authFilter.requireUser, goodsController.getGoodsList);
 };

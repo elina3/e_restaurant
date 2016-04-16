@@ -101,45 +101,58 @@ exports.signUpAdmin = function(userInfo, callback){
       if(!hospital){
         return callback({err: userError.hospital_not_exist});
       }
-
-      User.findOne({username: userInfo.username, role: 'admin', hospital: userInfo.hospital_id})
-        .exec(function(err, admin){
+      Group.findOne({_id: userInfo.group_id})
+        .exec(function(err, group){
           if(err){
             return callback({err: systemError.internal_system_error});
           }
 
-          if(admin){
-            return callback({err: userError.admin_exist});
+          if(!group){
+            return callback({err: userError.group_not_exist});
           }
 
-          admin = new User();
-          admin.username = userInfo.username ? userInfo.username : '';
-          admin.password = userInfo.password ? admin.hashPassword(userInfo.password) : '';
-          admin.nickname = userInfo.nickname;
-          admin.role = userInfo.role;
-          admin.sex = userInfo.sex;
-          admin.mobile_phone = userInfo.mobile_phone;
-          admin.head_photo = userInfo.head_photo;
-          admin.description = userInfo.description;
-          admin.hospital = userInfo.hospital_id;
-          admin.save(function(err, newUser){
-            if(err || !newUser){
-              return callback({err: systemError.database_save_error});
-            }
-
-            if(!hospital.admins){
-              hospital.admins = [];
-            }
-            hospital.admins.push(admin._id);
-            hospital.save(function(err, newHospital){
-              if(err || !newHospital){
-                return callback({err: systemError.database_save_error});
+          User.findOne({username: userInfo.username, role: 'admin', hospital: userInfo.hospital_id})
+            .exec(function(err, admin){
+              if(err){
+                return callback({err: systemError.internal_system_error});
               }
 
-              return callback(null, newUser);
+              if(admin){
+                return callback({err: userError.admin_exist});
+              }
+
+              admin = new User();
+              admin.username = userInfo.username ? userInfo.username : '';
+              admin.password = userInfo.password ? admin.hashPassword(userInfo.password) : '';
+              admin.nickname = userInfo.nickname;
+              admin.role = userInfo.role;
+              admin.sex = userInfo.sex;
+              admin.mobile_phone = userInfo.mobile_phone;
+              admin.head_photo = userInfo.head_photo;
+              admin.description = userInfo.description;
+              admin.hospital = userInfo.hospital_id;
+              admin.group = userInfo.group_id;
+              admin.save(function(err, newUser){
+                if(err || !newUser){
+                  return callback({err: systemError.database_save_error});
+                }
+
+                if(!hospital.admins){
+                  hospital.admins = [];
+                }
+                hospital.admins.push(admin._id);
+                hospital.save(function(err, newHospital){
+                  if(err || !newHospital){
+                    return callback({err: systemError.database_save_error});
+                  }
+
+                  return callback(null, newUser);
+                });
+              });
             });
-          });
         });
+
+
     });
 };
 

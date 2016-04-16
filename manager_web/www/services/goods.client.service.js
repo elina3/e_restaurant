@@ -7,7 +7,7 @@ angular.module('EWeb').factory('GoodsService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getGoods: function(param, callback){
+        getGoodsList: function(param, callback){
           RequestSupport.executeGet('/goods_list', {
             current_page: param.currentPage,
             limit: param.limit,
@@ -49,7 +49,8 @@ angular.module('EWeb').factory('GoodsService',
             });
         },
         modifyGoods: function(param, callback){
-          RequestSupport.executePut('/goods', {
+          RequestSupport.executePost('/goods/update', {
+            goods_id: param._id,
             goods_info: param
           })
             .then(function (data) {
@@ -69,7 +70,7 @@ angular.module('EWeb').factory('GoodsService',
             });
         },
         deleteGoods: function(goodsId, callback){
-          RequestSupport.executeDelete('/goods', {
+          RequestSupport.executePost('/goods/delete', {
             goods_id: goodsId
           })
             .then(function (data) {
@@ -94,8 +95,10 @@ angular.module('EWeb').factory('GoodsService',
               return '售罄';
             case 'on_sale':
               return '热卖中';
+            case 'opening':
+              return '开放中';
             case 'none':
-              return '未上架';
+              return '未开放';
             default:
               return '未上架';
 

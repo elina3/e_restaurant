@@ -1,9 +1,8 @@
 <div class="goods-add-page-view">
     <h1>添加商品</h1>
-    <div  class="row">
+    <div  class="row ee-photo-box">
         <div class="photo" ng-repeat="(k,v) in pageData.photos">
             <img ng-src="{{v.img}}"/>
-
             <div class="closed" ng-click="abort(k,pageData.photos)"></div>
             <ol ng-show="v.progress && v.progress.p!==100">
                 <li>

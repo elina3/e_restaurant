@@ -14,16 +14,13 @@ exports.addGoods = function(goodsInfo, user, callback){
     return callback({err: goodsError.goods_name_null});
   }
 
-  if(!goodsInfo.price || goodsInfo.price < 0){
-    return callback({err: goodsError.goods_price_null});
-  }
-
   var goods = new Goods({
     name: goodsInfo.name,
     description: goodsInfo.description,
-    status: 'none',
-    price: goodsInfo.price,
-    discount: goodsInfo.discount,
+    status: goodsInfo.status,
+    price: goodsInfo.price ? parseFloat(goodsInfo.price) : -1,
+    unit: goodsInfo.unit ? goodsInfo.unit : '盒',
+    discount: goodsInfo.discount ? parseFloat(goodsInfo.discount): 1,
     display_photos: goodsInfo.display_photos,
     description_photos: goodsInfo.description_photos,
     create_user: user._id,
@@ -64,17 +61,13 @@ exports.getGoodsById = function(goodsId, callback){
   });
 };
 
-exports.updateGoodsById = function(goodsId, goodsInfo, callback){
+exports.updateGoodsById = function(goodsId, goodsInfo, user, callback){
   if(!goodsId){
     return callback({err: goodsError.goods_id_null});
   }
 
   if(!goodsInfo.name){
     return callback({err: goodsError.goods_name_null});
-  }
-
-  if(!goodsInfo.price || goodsInfo.price < 0){
-    return callback({err: goodsError.goods_price_null});
   }
 
   getGoodsDetailById(goodsId, function(err, goods){
@@ -84,10 +77,12 @@ exports.updateGoodsById = function(goodsId, goodsInfo, callback){
 
     Goods.update({_id: goodsId},{$set: {name: goodsInfo.name,
       description: goodsInfo.description,
-      price: goodsInfo.price,
-      discount: goodsInfo.discount,
+      price: goodsInfo.price? parseFloat(goodsInfo.price):-1,
+      discount: goodsInfo.discount ? parseFloat(goodsInfo.discount): 1,
       display_photos: goodsInfo.display_photos,
       description_photos: goodsInfo.description_photos,
+      create_user: user._id,
+      create_group: user.group,
       deleted_status: false}}, function(err){
       if(err){
         return callback({err: systemError.internal_system_error});
@@ -141,7 +136,11 @@ exports.getGoodsList = function(currentPage, limit, skipCount, callback){
           return callback({err: systemError.internal_system_error});
         }
 
-        return callback(null, goodsList);
+        return callback(null, {
+          totalCount: totalCount,
+          limit: limit,
+          goodsList: goodsList
+        });
       });
   });
 };

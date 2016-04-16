@@ -1,38 +1,126 @@
 
-.goods-add-page-view{
+.ee-goods-detail-area{
+  position: relative;
+  padding: 0 20px;
 
-  .photo {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    ol {
-      position: absolute;
-      top: 0;
-      left: 0;
+  width: 100%;
+
+
+  @photo-size: 100px;
+
+  .goods-display-photo-area{
+    margin: 10px 0;
+    min-height: @photo-size + 20;
+    .area-title{
+      display: block;
+      height: 20px;
+      line-height: 20px;
+      font-size: 16px;
     }
-    img {
-      max-width: 100%;
-      height: auto;
+
+    .photo_select p{
+      border: 1px solid @task-photos-theme-color !important;
+      color: @task-photos-theme-color;
     }
   }
-  .photo_select {
-    position: relative;
-    p {
-      background-color: @button_color;
-      color: @font_color;
-      text-align: center;
-      border-radius: 4px;
-    }
-    input[type="file"] {
-      position: absolute;
-      top: 0;
-      left: 0;
-      filter: alpha(opacity=0);
-      -moz-opacity: 0;
-      -khtml-opacity: 0;
-      opacity: 0;
+
+  .goods-detail{
+    @input-height: 34px;
+    .goods-name{
       width: 100%;
-      cursor: pointer;
+      height: @input-height;
+      line-height: @input-height;
+      margin: 10px auto;
+
+      input{
+        padding: 0 15px;
+        width: 100%;
+        height: @input-height;
+        line-height: @input-height;
+      }
+    }
+
+    .goods-status-price{
+      display: block;
+      height: @input-height;
+      margin: 23px auto;
+
+      .status, .price{
+
+        display: inline-block;
+        float: left;
+
+      }
+
+      .status{
+        margin-right: 5%;
+        width: 50%;
+      }
+
+      .price{
+        width: 45%;
+        height: @input-height;
+
+        line-height: @input-height;
+
+        input{
+          padding: 0 15px;
+          width: 50%;
+          height: @input-height;
+          line-height: @input-height;
+        }
+      }
+    }
+
+    .goods-description{
+      display: block;
+
+      textarea{
+        resize: none;
+        line-height: 1.5;
+
+        padding: 15px;
+        width: 100%;
+        min-height: 80px;
+        border: 1px solid @border-normal-color;
+      }
+
     }
   }
+
+  .goods-handle-area{
+    overflow: hidden;
+    margin: 10px auto;
+
+    button{
+      display: inline-block;
+      overflow: hidden;
+      float: right;
+
+      width: 200px;
+      heigth: 40px;
+      line-height: 40px;
+
+      font-size: 14px;
+      outline: none;
+      border: none;
+      text-align: center;
+      &.save{
+        color: #fff;
+        background: @task-photos-theme-color;
+      }
+      &.reset{
+        border: none;
+
+        background: #fff;
+        width: 80px;
+        color: #999;
+        margin-left: 0;
+        &:hover{
+          color: #666;
+        }
+      }
+    }
+  }
+
 }

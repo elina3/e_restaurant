@@ -200,7 +200,7 @@ angular.module('EWeb').factory('GoodsService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getGoods: function(param, callback){
+        getGoodsList: function(param, callback){
           RequestSupport.executeGet('/goods_list', {
             current_page: param.currentPage,
             limit: param.limit,
@@ -242,7 +242,8 @@ angular.module('EWeb').factory('GoodsService',
             });
         },
         modifyGoods: function(param, callback){
-          RequestSupport.executePut('/goods', {
+          RequestSupport.executePost('/goods/update', {
+            goods_id: param._id,
             goods_info: param
           })
             .then(function (data) {
@@ -262,7 +263,7 @@ angular.module('EWeb').factory('GoodsService',
             });
         },
         deleteGoods: function(goodsId, callback){
-          RequestSupport.executeDelete('/goods', {
+          RequestSupport.executePost('/goods/delete', {
             goods_id: goodsId
           })
             .then(function (data) {
@@ -287,8 +288,10 @@ angular.module('EWeb').factory('GoodsService',
               return '售罄';
             case 'on_sale':
               return '热卖中';
+            case 'opening':
+              return '开放中';
             case 'none':
-              return '未上架';
+              return '未开放';
             default:
               return '未上架';
 
@@ -1012,13 +1015,12 @@ angular.module('EWeb').controller('GoodsAddController',
   ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config',
     function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config) {
 
-      var qiniuToken;
       $scope.pageData = {
+        qiniuToken: '',
         photos: []
       };
 
       function init(){
-
         $scope.$emit(GlobalEvent.onShowLoading, true);
         QiNiuService.qiNiuKey(function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
@@ -1028,7 +1030,7 @@ angular.module('EWeb').controller('GoodsAddController',
           }
 
           console.log(data);
-          qiniuToken = data.token;
+          $scope.pageData.qiniuToken = data.token;
         });
       }
 
@@ -1044,11 +1046,11 @@ angular.module('EWeb').controller('GoodsAddController',
         };
         target[index].upload = QiNiuService.upload({
           file: target[index].file,
-          token: qiniuToken
+          token: $scope.pageData.qiniuToken
         });
         target[index].upload.then(function (response) {
-          $scope.pageData.photos.push(response.key);
           target[index].img = generalImgUrl(response.key);
+          target[index].photo_key = response.key;
         }, function (response) {
           alert(response);
           console.log(response);
@@ -1067,17 +1069,13 @@ angular.module('EWeb').controller('GoodsAddController',
         }
       };
 
-
-
       $scope.abort = function (index, target) {
         if (target[index].upload) {
           //待修改的，非上传图片属性不会有这个属性
           target[index].upload.abort();
         }
         target.splice(index, 1);
-        $scope.pageData.photos.splice(index, 1);
       };
-
     }]);
 
 /**
@@ -1085,27 +1083,33 @@ angular.module('EWeb').controller('GoodsAddController',
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService',
-    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService) {
+  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config',
+    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config) {
 
       $scope.pageConfig = {
+        qiniuToken: '',
         title: '',
         type: '',
         currentTag: 'goods',
         scanType: '',
         goodsPanel: {
           currentEditGoods: null,
+          newCreate: false,
           pagination: {
             currentPage: 1,
-            limit: 10,
-            totalCount: 0
+            limit: 2,
+            totalCount: 0,
+            onCurrentPageChanged: function (callback) {
+              loadGoodsList();
+            }
           },
           errorInfo: {
             name: false,
             display_photos: false,
             price: false
           },
-          goodsList: []
+          goodsList: [],
+          goodsStatuses: [{id: 'none', text: '未开放'},{id: 'sold_out', text: '售罄'}, {id: 'on_sale', text: '热卖中'}]
         },
         orderPanel: {
           pagination: {
@@ -1124,6 +1128,54 @@ angular.module('EWeb').controller('GoodsManagerController',
         }
       };
 
+      function loadGoodsList(){
+        $scope.pageConfig.goodsPanel.goodsList = [];
+        GoodsService.getGoodsList($scope.pageConfig.goodsPanel.pagination, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          data.goods_list.forEach(function(goods){
+            var goodsObj = {
+              _id: goods._id,
+              name: goods.name,
+              price: goods.price,
+              unit: goods.unit,
+              discount: goods.discount,
+              description: goods.description,
+              display_photos: [],
+              description_photos: [],
+              statusObj: {id: goods.status, text: GoodsService.translateGoodsStatus(goods.status)}
+            };
+
+            if(goods.display_photos && goods.display_photos.length > 0){
+              goods.display_photos.forEach(function(photoKey){
+                goodsObj.display_photos.push({
+                  img: generalImgUrl(photoKey),
+                  photo_key: photoKey
+                });
+              });
+            }
+
+            if(goods.description_photos && goods.description_photos.length > 0){
+              goods.description_photos.forEach(function(photoKey){
+                goodsObj.description_photos.push({
+                  img: generalImgUrl(photoKey),
+                  photo_key: photoKey
+                });
+              });
+            }
+            $scope.pageConfig.goodsPanel.goodsList.push(goodsObj);
+          });
+
+          $scope.pageConfig.goodsPanel.pagination.totalCount = data.total_count;
+          $scope.pageConfig.goodsPanel.pagination.limit = data.limit;
+          $scope.pageConfig.goodsPanel.pagination.pageCount = Math.ceil($scope.pageConfig.goodsPanel.pagination.totalCount / $scope.pageConfig.goodsPanel.pagination.limit);
+
+        });
+      }
+
       $scope.goBack = function () {
         $state.go('user_index');
       };
@@ -1136,32 +1188,11 @@ angular.module('EWeb').controller('GoodsManagerController',
         $scope.pageConfig.currentTag = tagName;
       };
 
-      function initPageConfig(){
-        switch($stateParams.goods_type){
-          case 'goods':
-            $scope.pageConfig.title = '超市管理';
-            $scope.pageConfig.type = 'supermarket';
-            return;
-          case 'dish':
-            $scope.pageConfig.title = '餐厅管理';
-            $scope.pageConfig.type = 'restaurant';
-            return;
-          default:
-            $scope.pageConfig.title = '餐厅管理';
-            $scope.pageConfig.type = 'restaurant';
-            return;
-        }
-      }
-
-      function getGoodsList(){
-
-      }
-
       function getNewGoodsObj(){
         return {
           name: '',
           description: '',
-          status: 'none',
+          statusObj: {id: 'none', text: '未开放'},
           price: 0,
           discount: 1,
           display_photos: [],
@@ -1182,18 +1213,24 @@ angular.module('EWeb').controller('GoodsManagerController',
         $scope.pageConfig.panel.showMask = true;
         if(!goods){
           $scope.pageConfig.goodsPanel.currentEditGoods = getNewGoodsObj();
+          $scope.pageConfig.goodsPanel.newCreate = true;
+        }else{
+          $scope.pageConfig.goodsPanel.currentEditGoods = goods;
+          $scope.pageConfig.goodsPanel.newCreate = false;
         }
+      };
+      $scope.closeEditGoodsPanel = function(){
+        $scope.pageConfig.panel.showGoodsEdit = false;
+        $scope.pageConfig.panel.showMask = false;
+
+        $scope.pageConfig.goodsPanel.currentEditGoods = null;
+        $scope.pageConfig.goodsPanel.newCreate = true;
       };
 
       function validGoodsInfo(){
         var isValid = true;
         if(!$scope.pageConfig.goodsPanel.currentEditGoods.name){
           $scope.pageConfig.goodsPanel.errorInfo.name = true;
-          isValid = false;
-        }
-
-        if(!$scope.pageConfig.goodsPanel.currentEditGoods.price || parseInt($scope.pageConfig.goodsPanel.currentEditGoods.price) < 0){
-          $scope.pageConfig.goodsPanel.errorInfo.price = true;
           isValid = false;
         }
 
@@ -1204,74 +1241,177 @@ angular.module('EWeb').controller('GoodsManagerController',
 
         return isValid;
       }
+      function handleValidError(){
+        if($scope.pageConfig.goodsPanel.errorInfo.name){
+          $scope.$emit(GlobalEvent.onShowAlert, '请输入商品名');
+        }
+        try{
+          if($scope.pageConfig.goodsPanel.currentEditGoods.price){
+            var price = parseFloat($scope.pageConfig.goodsPanel.currentEditGoods.price);
+            if(price < 0){
+              $scope.$emit(GlobalEvent.onShowAlert, '请输入正确的价格');
+            }
+          }
+        }catch(e){
+          $scope.$emit(GlobalEvent.onShowAlert, '请输入正确的价格');
+        }
+        if($scope.pageConfig.goodsPanel.errorInfo.display_photos){
+          $scope.$emit(GlobalEvent.onShowAlert, '请至少选择一行显示照片');
+        }
+      }
 
-      $scope.createOrEditGoods = function(isCreate){
+      function generateUploadGoodsInfo(){
+        var goodsInfo = {
+          _id: $scope.pageConfig.goodsPanel.currentEditGoods._id,
+          name: $scope.pageConfig.goodsPanel.currentEditGoods.name,
+          status: $scope.pageConfig.goodsPanel.currentEditGoods.statusObj.id,
+          price: parseFloat($scope.pageConfig.goodsPanel.currentEditGoods.price),
+          unit: '个',
+          discount: 1,
+          description: $scope.pageConfig.goodsPanel.currentEditGoods.description,
+          display_photos: [],
+          description_photos: []
+        };
+
+        if($scope.pageConfig.goodsPanel.currentEditGoods.display_photos && $scope.pageConfig.goodsPanel.currentEditGoods.display_photos.length > 0){
+          $scope.pageConfig.goodsPanel.currentEditGoods.display_photos.forEach(function(photo){
+            goodsInfo.display_photos.push(photo.photo_key);
+          });
+        }
+        if($scope.pageConfig.goodsPanel.currentEditGoods.description_photos && $scope.pageConfig.goodsPanel.currentEditGoods.description_photos.length > 0){
+          $scope.pageConfig.goodsPanel.currentEditGoods.description_photos.forEach(function(photo){
+            goodsInfo.description_photos.push(photo.photo_key);
+          });
+        }
+
+        return goodsInfo;
+      }
+
+      $scope.saveGoods = function(){
         if(!validGoodsInfo()){
+          handleValidError();
           return;
         }
 
-        //if(isCreate){
-        //  GoodsService.createGoods($scope.pageConfig.goodsPanel.currentEditGoods, function(err, data){
-        //    if(err){
-        //
-        //    }
-        //
-        //
-        //  });
-        //}else{
-        //  GoodsService.modifyGoods($scope.pageConfig.goodsPanel.currentEditGoods, function(err, data){
-        //    if(err){
-        //
-        //    }
-        //
-        //
-        //  });
-        //}
+        var uploadGoodsInfo = generateUploadGoodsInfo();
+        if($scope.pageConfig.goodsPanel.newCreate){
+          GoodsService.createGoods(uploadGoodsInfo, function(err, data){
+            if(err){
+              $scope.$emit(GlobalEvent.onShowAlert, '创建失败！错误：' + err);
+              return;
+            }
+            $scope.$emit(GlobalEvent.onShowAlert, '新建商品成功！');
+            $scope.closeEditGoodsPanel();
+            $state.reload();
+          });
+        }else{
+          GoodsService.modifyGoods(uploadGoodsInfo, function(err, data){
+            if(err){
+              $scope.$emit(GlobalEvent.onShowAlert, '修改商品失败！错误：' + err);
+              return;
+            }
+            $scope.$emit(GlobalEvent.onShowAlert, '修改商品成功！');
+            $scope.closeEditGoodsPanel();
+            $state.reload();
+          });
+        }
       };
-
+      $scope.resetGoods = function(){
+        $scope.pageConfig.goodsPanel.currentEditGoods = getNewGoodsObj();
+      };
+      $scope.deleteGoods = function(goods){
+        GoodsService.deleteGoods(goods._id, function(err, data){
+          if(err){
+            $scope.$emit(GlobalEvent.onShowAlert, '删除失败！错误：' + err);
+            return;
+          }
+          $scope.$emit(GlobalEvent.onShowAlert, '删除商品成功！');
+          $scope.closeEditGoodsPanel();
+          $state.reload();
+        });
+      };
       $scope.translateGoodsStatus = function(status){
         return GoodsService.translateGoodsStatus(status);
       };
 
+
+      function initPageConfig(){
+        switch($stateParams.goods_type){
+          case 'goods':
+            $scope.pageConfig.title = '超市管理';
+            $scope.pageConfig.type = 'supermarket';
+            break;
+          case 'dish':
+            $scope.pageConfig.title = '餐厅管理';
+            $scope.pageConfig.type = 'restaurant';
+            break;
+          default:
+            $scope.pageConfig.title = '餐厅管理';
+            $scope.pageConfig.type = 'restaurant';
+            break;
+        }
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        QiNiuService.qiNiuKey(function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            console.log(err);
+            return;
+          }
+
+          console.log(data);
+          $scope.pageConfig.qiniuToken = data.token;
+        });
+      }
       function init(){
         initPageConfig();
+        loadGoodsList();
       }
 
       init();
 
+      //<editor-fold desc="图片上传相关">
+      function generalImgUrl(imgName) {
+        return Config.qiniuServerAddress + imgName;
+      }
 
+      function start(index, target) {
+        target[index].progress = {
+          p: 0
+        };
+        target[index].upload = QiNiuService.upload({
+          file: target[index].file,
+          token: $scope.pageConfig.qiniuToken
+        });
+        target[index].upload.then(function (response) {
+          target[index].img = generalImgUrl(response.key);
+          target[index].photo_key = response.key;
+        }, function (response) {
+          alert(response);
+          console.log(response);
+        }, function (evt) {
+          target[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
+        });
+      }
 
-      //
-      //var fileUploadObj;
-      //function uploadStart(file) {
-      //  if (!fileUploadObj) {
-      //    fileUploadObj = {
-      //      file: null,
-      //      upload: null,
-      //      progress: {p: 0},
-      //      img: ''
-      //    };
-      //  }
-      //  fileUploadObj.file = file;
-      //  fileUploadObj.upload = null;
-      //  uploadHandle();
-      //}
-      //
-      //function uploadHandle() {
-      //  var compressOption = {
-      //    cpmpressMaxSize: 30,
-      //    quality: 70
-      //  };
-      //  fileUploadObj.upload = QiNiuService.upload({
-      //    file: fileUploadObj.file
-      //  }, compressOption);
-      //  fileUploadObj.upload.then(function (response) {
-      //    //response.key
-      //    fileUploadObj.img = Config.qiniuServerAddress + '/' + response.key;
-      //  }, function (err) {
-      //    $scope.$emit(GlobalEvent.onShowAlert, {content: err});
-      //  });
-      //}
+      $scope.onFileSelect = function ($files, target) {
+        var offsetx = target.length;
+        for (var i = 0; i < $files.length; i++) {
+          target[i + offsetx] = {
+            file: $files[i]
+          };
+          start(i + offsetx, target);
+        }
+      };
+
+      $scope.abort = function (index, target) {
+        if (target[index].upload) {
+          //待修改的，非上传图片属性不会有这个属性
+          target[index].upload.abort();
+        }
+        target.splice(index, 1);
+      };
+      //</editor-fold>
     }]);
 
 /**
@@ -1828,98 +1968,6 @@ angular.module('EWeb').directive('zzValidation', function ($parse) {
 });
 
 /**
- * Created by louisha on 15/10/13.
- */
-
-'use strict';
-
-angular.module('EWeb').directive('zHeader',
-    ['Auth', 'GlobalEvent', '$state', 'UserService',
-        function (Auth, GlobalEvent, $state, UserService) {
-            return {
-                restrict: 'EA',
-                templateUrl: 'directives/z_header/z_header.client.directive.html',
-                replace: true,
-                scope: {
-                    style: '@'
-                },
-                link: function (scope, element, attributes) {
-                    scope.user = Auth.getUser();
-                    scope.mainMenuOpened = false;
-                    scope.menuOpened = false;
-                    scope.toggleMenuOpen = function (event) {
-                        scope.menuOpened = true;
-                        console.log('mouse：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.hideMenuOpen = function (event) {
-                        scope.menuOpened = false;
-                        console.log('mouse hide：' + scope.menuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.toggleMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = true;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.hideMainMenuOpen = function (event) {
-                        scope.mainMenuOpened = false;
-                        console.log(scope.mainMenuOpened);
-                        if (event) {
-                            event.stopPropagation();
-                        }
-                    };
-
-                    scope.goToView = function (type) {
-                        scope.mainMenuOpened = false;
-                        switch (type) {
-                            case 'user_manager':
-                                return $state.go('user_manager');
-                            case 'restaurant':
-                                return $state.go('goods_manager', {goods_type: 'dish'});
-                            case 'supermarket':
-                                return $state.go('goods_manager', {goods_type: 'goods'});
-                            default :
-                                return;
-                        }
-                    };
-
-                    scope.translateRole = function(role){
-                        return UserService.translateUserRole(role);
-                    };
-
-                    scope.quit = function () {
-                        scope.menuOpened = false;
-                        console.log('quit：' + scope.menuOpened);
-                        scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
-                            if (status) {
-                                UserService.signOut(function (err, data) {
-                                    if (err) {
-                                        return scope.$emit(GlobalEvent.onShowAlert, err);
-                                    }
-                                    $state.go('user_index');
-                                });
-                            }
-                        });
-                    };
-
-                    scope.backHome = function () {
-                        $state.go('user_index');
-                    };
-                }
-            };
-        }]);
-
-/**
  * Created by louisha on 16/01/26.
  *
  * option{
@@ -2015,6 +2063,98 @@ angular.module('EWeb').directive('zDropdown',
                                 break;
                         }
                         return result;
+                    };
+                }
+            };
+        }]);
+
+/**
+ * Created by louisha on 15/10/13.
+ */
+
+'use strict';
+
+angular.module('EWeb').directive('zHeader',
+    ['Auth', 'GlobalEvent', '$state', 'UserService',
+        function (Auth, GlobalEvent, $state, UserService) {
+            return {
+                restrict: 'EA',
+                templateUrl: 'directives/z_header/z_header.client.directive.html',
+                replace: true,
+                scope: {
+                    style: '@'
+                },
+                link: function (scope, element, attributes) {
+                    scope.user = Auth.getUser();
+                    scope.mainMenuOpened = false;
+                    scope.menuOpened = false;
+                    scope.toggleMenuOpen = function (event) {
+                        scope.menuOpened = true;
+                        console.log('mouse：' + scope.menuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.hideMenuOpen = function (event) {
+                        scope.menuOpened = false;
+                        console.log('mouse hide：' + scope.menuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.toggleMainMenuOpen = function (event) {
+                        scope.mainMenuOpened = true;
+                        console.log(scope.mainMenuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.hideMainMenuOpen = function (event) {
+                        scope.mainMenuOpened = false;
+                        console.log(scope.mainMenuOpened);
+                        if (event) {
+                            event.stopPropagation();
+                        }
+                    };
+
+                    scope.goToView = function (type) {
+                        scope.mainMenuOpened = false;
+                        switch (type) {
+                            case 'user_manager':
+                                return $state.go('user_manager');
+                            case 'restaurant':
+                                return $state.go('goods_manager', {goods_type: 'dish'});
+                            case 'supermarket':
+                                return $state.go('goods_manager', {goods_type: 'goods'});
+                            default :
+                                return;
+                        }
+                    };
+
+                    scope.translateRole = function(role){
+                        return UserService.translateUserRole(role);
+                    };
+
+                    scope.quit = function () {
+                        scope.menuOpened = false;
+                        console.log('quit：' + scope.menuOpened);
+                        scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
+                            if (status) {
+                                UserService.signOut(function (err, data) {
+                                    if (err) {
+                                        return scope.$emit(GlobalEvent.onShowAlert, err);
+                                    }
+                                    $state.go('user_index');
+                                });
+                            }
+                        });
+                    };
+
+                    scope.backHome = function () {
+                        $state.go('user_index');
                     };
                 }
             };

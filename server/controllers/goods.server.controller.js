@@ -20,9 +20,10 @@ exports.addNewGoods = function(req, res, next){
 };
 
 exports.updateGoods = function(req, res, next){
-  var goodsId = req.body.goods_id || req.query.goods_id || '';
+  var goodsId = req.body.goods_id || req.query.goods_id || req.params.goods_id || '';
   var goodsInfo = req.body.goods_info || req.query.goods_info || {};
-  goodsLogic.updateGoodsById(goodsId, goodsInfo, function(err, success){
+  var user = req.user;
+  goodsLogic.updateGoodsById(goodsId, goodsInfo, user, function(err, success){
     if(err){
       req.err = err;
       return next();
@@ -69,15 +70,20 @@ exports.getGoodsList = function(req, res, next){
   var currentPage = req.query.current_page || req.body.current_page || 1;
   var limit = req.query.limit || req.body.limit || -1;
   var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  currentPage = parseInt(currentPage);
+  skipCount = parseInt(skipCount);
+  limit = parseInt(limit);
 
-  goodsLogic.getGoodsList(currentPage, limit, skipCount, function(err, goodsList){
+  goodsLogic.getGoodsList(currentPage, limit, skipCount, function(err, result){
     if(err){
       req.err = err;
       return next();
     }
 
     req.data = {
-      goods_list: goodsList
+      total_count: result.totalCount,
+      limit: result.limit,
+      goods_list: result.goodsList
     };
     return next();
   });
