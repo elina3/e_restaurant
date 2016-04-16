@@ -7,13 +7,18 @@ angular.module('EClientWeb').controller('IndexController',
         '$rootScope',
         '$scope',
       '$state',
+      '$location',
         function ($rootScope,
                   $scope,
-                  $state) {
+                  $state,
+                  $location) {
 
             $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
                 $rootScope.location = toState.name;
+                console.log($location);
             });
+
+
 
             $scope.goToView = function(viewPage){
                 switch(viewPage){

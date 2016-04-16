@@ -4,8 +4,8 @@
 
 'use strict';
 angular.module('EClientWeb').directive('eHeader', [
-    '$state', 'Auth',
-    function ($state, Auth) {
+    '$state', '$location', 'Auth',
+    function ($state, $location, Auth) {
         return {
             restrict: 'EA',
             templateUrl: 'directives/e_header/e_header.client.directive.html',
@@ -54,6 +54,8 @@ angular.module('EClientWeb').directive('eHeader', [
                 }
 
                 function init() {
+
+                    scope.navState = $location;
                     scope.navState = $state.current.name;
                     scope.grocer = Auth.getUser();
                     initCarInfo();

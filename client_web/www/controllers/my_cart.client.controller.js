@@ -8,10 +8,12 @@ angular.module('EClientWeb').controller('MyCartController',
     '$scope',
     '$state',
     '$window',
+    '$location',
     function ($rootScope,
               $scope,
               $state,
-              $window) {
+              $window,
+              $location) {
 
       $scope.pageData = {
         title: '我的购物车',
@@ -24,6 +26,13 @@ angular.module('EClientWeb').controller('MyCartController',
           count: 1
         }
       };
+
+      function init(){
+        console.log($location);
+
+      }
+
+      init();
 
       $scope.goToView = function(viewPage){
         switch(viewPage){

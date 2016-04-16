@@ -30,7 +30,7 @@ angular.module('EClientWeb').directive('eFooter', [
                 };
 
                 function init() {
-                    scope.navState = '/';
+                    scope.navState = $state.current.name;
                     scope.grocer = Auth.getUser();
                     initCarInfo();
                 }
