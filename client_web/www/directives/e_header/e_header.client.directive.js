@@ -58,6 +58,7 @@ angular.module('EClientWeb').directive('eHeader', [
                     scope.navState = $location;
                     scope.navState = $state.current.name;
                     scope.grocer = Auth.getUser();
+                    console.log(scope.grocer);
                     initCarInfo();
                 }
 

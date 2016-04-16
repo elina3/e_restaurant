@@ -36,6 +36,6 @@ angular.module('EWeb').controller('UserSignInController',
         });
       };
       $scope.goToClientIndex = function(){
-        $window.location.href = Config.clientAddress;
+        $window.location.href = Config.serverAddress;
       };
     }]);

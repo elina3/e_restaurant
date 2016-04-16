@@ -27,8 +27,8 @@ angular.module('EWeb').controller('UserIndexController',
             $state.go('goods_manager', {goods_type: 'dish'});
             return;
           case 'supermarket':
-            $state.go('goods_manager', {goods_type: 'goods'});
             return;
+            //$state.go('goods_manager', {goods_type: 'goods'});
           default:
             return;
         }

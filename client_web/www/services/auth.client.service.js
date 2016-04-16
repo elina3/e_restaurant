@@ -11,7 +11,7 @@ angular.module('EClientWeb').factory('Auth',
                 },
                 getUser: function () {
                     if (!currentUser) {
-                        currentUser = localStorageService.get('user');
+                        currentUser = localStorageService.get('client');
                     }
                     if (currentUser) {
                         return currentUser;
@@ -22,15 +22,15 @@ angular.module('EClientWeb').factory('Auth',
                 },
                 setUser: function (user) {
                     if (!user) {
-                        localStorageService.set('user', '');
+                        localStorageService.set('client', '');
                         return;
                     }
                     currentUser = user;
-                    localStorageService.set('user', user);
+                    localStorageService.set('client', user);
                 },
                 getToken: function () {
                     if (!currentToken) {
-                        currentToken = localStorageService.get('token');
+                        currentToken = localStorageService.get('client_token');
                     }
                     if (currentToken) {
                         return currentToken;
@@ -41,16 +41,16 @@ angular.module('EClientWeb').factory('Auth',
                 },
                 setToken: function (token) {
                     if (!token) {
-                        localStorageService.set('token', '');
+                        localStorageService.set('client_token', '');
                         return;
                     }
                     currentToken = token;
-                    localStorageService.set('token', token);
+                    localStorageService.set('client_token', token);
                 },
                 signOut: function () {
                     currentUser = null;
                     currentToken = null;
-                    localStorageService.set('token', currentToken);
+                    localStorageService.set('client_token', currentToken);
                 }
             };
 

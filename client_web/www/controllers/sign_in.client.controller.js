@@ -51,4 +51,8 @@ angular.module('EClientWeb').controller('SignInController',
             $state.go('/');
         }
       };
+
+      $scope.signIn = function(){
+
+      };
     }]);
