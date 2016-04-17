@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('UserManagerController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserError) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError', 'CardService',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserError, CardService) {
 
       $scope.pageConfig = {
         roles: [{id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},{id:'card_manager',text:'饭卡管理员'}],
@@ -14,6 +14,7 @@ angular.module('EWeb').controller('UserManagerController',
         groupList: [{id: '', text: '餐厅'},{id: '', text: ''}],
         popMaskShow: false,
         plat_user_panel: {
+          show_plat:false,
           users: [],
           currentEditUser: null,
           errorInfo: {
@@ -31,6 +32,24 @@ angular.module('EWeb').controller('UserManagerController',
             isShowTotalInfo: true,
             onCurrentPageChanged: function (callback) {
               loadUsers();
+            }
+          }
+        },
+
+        plat_card_panel: {
+          show_plat:false,
+          cards: [],
+          currentEditCard: null,
+          errorInfo: {
+            card_number: false
+          },
+          pagination: {
+            currentPage: 1,
+            limit: 2,
+            totalCount: 0,
+            isShowTotalInfo: true,
+            onCurrentPageChanged: function (callback) {
+              loadCards();
             }
           }
         },
@@ -55,6 +74,9 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.closePopMask = function(){
         $scope.pageConfig.popMaskShow = false;
         $scope.pageConfig.scanType = '';
+
+        $scope.pageConfig.plat_user_panel.show_plat = false;
+        $scope.pageConfig.plat_card_panel.show_plat = false;
       };
 
       function getNewUserObj(){
@@ -79,6 +101,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
         $scope.pageConfig.popMaskShow = true;
         $scope.pageConfig.addPanel = true;
+        $scope.pageConfig.plat_user_panel.show_plat=true;
       };
 
       $scope.deleteUser = function(user){
@@ -233,6 +256,121 @@ angular.module('EWeb').controller('UserManagerController',
         });
       }
 
+
+      function loadCards(){
+        $scope.pageConfig.plat_card_panel.cards = [];
+        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+          //console.log($scope.pageConfig.plat_user_panel.pagination);
+          console.log(data);
+          data.card_list.forEach(function(card){
+            $scope.pageConfig.plat_card_panel.cards.push({
+              _id: card._id,
+              card_number: card.card_number,
+              money: card.money,
+              status: card.status='disabled'?'已禁用':'已启用',
+              create_time:card.create_time,
+              update_time:card.update_time
+            });
+          });
+
+          $scope.pageConfig.plat_card_panel.pagination.totalCount = data.total_count;
+          $scope.pageConfig.plat_card_panel.pagination.limit = data.limit;
+          $scope.pageConfig.plat_card_panel.pagination.pageCount = Math.ceil($scope.pageConfig.plat_card_panel.pagination.totalCount / $scope.pageConfig.plat_card_panel.pagination.limit);
+
+        });
+      }
+
+      $scope.editCard = function(card){
+
+        if(!card){
+          $scope.pageConfig.plat_card_panel.currentEditCard = getNewCardObj();
+
+          $scope.pageConfig.scanType = 'create';
+        }else{
+          $scope.pageConfig.plat_card_panel.currentEditCard = card;
+          $scope.pageConfig.scanType = 'edit';
+        }
+        $scope.pageConfig.popMaskShow = true;
+        $scope.pageConfig.addPanel = true;
+        $scope.pageConfig.plat_card_panel.show_plat=true;
+      };
+
+      $scope.addOrEditCard = function(){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        if(!validCardInfo($scope.pageConfig.plat_card_panel.currentEditCard)){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          return;
+        }
+
+        var index = getIndexOfCards($scope.pageConfig.plat_card_panel.currentEditCard.card_number);
+        var param;
+
+        if($scope.pageConfig.scanType === 'create' && index > -1){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          $scope.$emit(GlobalEvent.onShowAlert, '该卡号已存在，请更换');
+          return;
+        }
+        param = {
+          card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
+
+        };
+        if($scope.pageConfig.scanType === 'create'){
+
+          CardService.addCard(param, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if (err) {
+              return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
+            }
+
+            clearError();
+            $scope.closePopMask();
+            $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
+            $state.reload();
+          });
+        }else{
+
+          CardService.modifyCard(param, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if (err) {
+              return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
+            }
+
+            clearError();
+            $scope.closePopMask();
+            $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
+            $state.reload();
+          });
+        }
+      };
+
+      function getNewCardObj(){
+        return {
+          card_number: ''
+
+        };
+      }
+
+      function validCardInfo(card) {
+        var isPassed = true;
+        if (!card.card_number) {
+          $scope.pageConfig.plat_card_panel.errorInfo.card_number = true;
+          isPassed = false;
+        }
+        return isPassed;
+      }
+      function getIndexOfCards(card_number){
+        for(var i=0;i<$scope.pageConfig.plat_card_panel.cards.length;i++){
+          if($scope.pageConfig.plat_card_panel.cards[i].card_number === card_number){
+            return i;
+          }
+        }
+        return -1;
+      }
+
       function init(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
         UserService.getGroups({currentPage: 1,limit: -1, skipCount: 0}, function (err, data) {
@@ -246,6 +384,7 @@ angular.module('EWeb').controller('UserManagerController',
           });
 
           loadUsers();
+          loadCards();
         });
       }
 

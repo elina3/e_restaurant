@@ -104,7 +104,70 @@
                         I am client users!
                     </div>
                     <div class="ee-tag-view">
-                        I am card users!
+                        <div class="ee-search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="add-user" ng-click="editCard()">
+                                    <img src="images/user_manager/single_add.png"/>
+                                    <span>添加饭卡</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-2">
+                                        <span>卡号</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>金额</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>状态</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>生成时间</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>更新时间</span>
+                                    </div>
+
+                                    <div class="col-xs-2">
+                                        <span>操作</span>
+                                    </div>
+                                </div>
+                                <div class="row list-info" ng-repeat="card in pageConfig.plat_card_panel.cards">
+                                    <div class="col-xs-2">
+                                        <span>{{card.card_number}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{card.money}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{card.status}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{card.create_time | date: 'yyyy-MM-dd hh:mm:ss'}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{card.update_time | date: 'yyyy-MM-dd hh:mm:ss'}}</span>
+                                    </div>
+
+                                    <div class="col-xs-2">
+                                        <div class="handle edit" ng-click="editCard(card)">
+                                            <img class="gif" ng-src="images/global/edit.gif"/>
+                                            <img class="normal" ng-src="images/global/edit.png"/>
+                                        </div>
+                                        <div class="handle stop" ng-click="deleteCard(card)">
+                                            <img class="gif" ng-src="images/global/stop.gif"/>
+                                            <img class="normal" ng-src="images/global/stop.png"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <z-pagination config="pageConfig.plat_card_panel.pagination"></z-pagination>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -165,7 +228,7 @@
                 </div>
             </div>
         </div>
-        <div class="ee-pop-panel" ng-show="pageConfig.scanType === 'edit' || pageConfig.scanType === 'create'">
+        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_user_panel.show_plat">
             <div class="ee-pop-header">
                 <div class="ee-pop-title">
                     <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}用户</span>
@@ -237,6 +300,34 @@
                     <div class="handle">
 
                         <div class="sure" ng-click="addOrEditUser()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
+
+                        <div class="cancel" ng-click="cancel()">取消</div>
+
+                        <div class="reset" ng-click="reset()" ng-show="pageConfig.scanType === 'create'">重置</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_card_panel.show_plat">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}饭卡</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">饭卡号码</span>
+                        <div class="info-value">
+                            <input placeholder="请输入饭卡号码" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.card_number"/>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.card_number}">(必填项，饭卡号)</div>
+                    </div>
+
+                    <div class="handle">
+
+                        <div class="sure" ng-click="addOrEditCard()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
 
                         <div class="cancel" ng-click="cancel()">取消</div>
 
