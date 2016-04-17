@@ -5,6 +5,7 @@
 
 angular.module('EClientWeb').constant('SystemError',
     {
+        sign_in_failed: '登录失败',
         internal_system_error: '系统错误，请联系管理员',
         undefined_access_token: '账户access_token不存在',
         invalid_access_token: '账户信息丢失，请重新登录',

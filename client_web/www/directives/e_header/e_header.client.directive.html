@@ -9,8 +9,12 @@
                     </div>
                 </div>
                 <div class="col-xs-6 col col-center info">
-                    <div class="user">
-                        <span>欢迎您：超级玛丽</span>
+                    <div class="user" ng-if="pageConfig.clientInfo">
+                        <span>欢迎您：{{pageConfig.clientInfo ? pageConfig.clientInfo.nickname: ''}}</span>
+                        <a class="change-account-button" ng-click="changeAccount()">切换帐号</a>
+                    </div>
+                    <div class="user" ng-if="!pageConfig.clientInfo">
+                        <a class="sign-in-button" ng-click="goState('sign_in')">亲，请登录</a>
                     </div>
                     <div class="nav-list">
                         <div class="nav-item"
@@ -19,7 +23,7 @@
                              ng-click="goState(nav.state)">
                             <div><span>{{nav.label}}</span></div>
 
-                            <div ng-class="{'tips-s': nav.tipsNum<=99,'tips-l':nav.tipsNum>99}" ng-show="nav.showTips">
+                            <div ng-class="{'tips-s': nav.tipsNum<=99,'tips-l':nav.tipsNum>99}" ng-show="nav.tipsNum && nav.tipsNum > 0">
                                 <div class="info">
                                     <span>{{nav.tipsNum<=99?nav.tipsNum:"99+"}}</span>
                                 </div>

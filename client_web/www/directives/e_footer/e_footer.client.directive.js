@@ -19,9 +19,10 @@ angular.module('EClientWeb').directive('eFooter', [
 
 
                 function initCarInfo() {
-                    //var carNum = GoodsService.getCartGoodsNum();
-
-                    scope.shoppingCar.count = 1;
+                    var client =  Auth.getUser();
+                    if(client){
+                        scope.shoppingCar.count = client.cart ? client.cart.total_count : 0;
+                    }
                 }
 
                 scope.goState = function (stateName) {

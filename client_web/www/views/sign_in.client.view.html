@@ -3,9 +3,8 @@
 
         <div class="wrapper">
             <div class="sign-in-header">
-                <div class="logo"><img src="images/global/logo-white.png"/></div>
+                <div class="logo" ng-click="goToView('home')"><img src="images/global/logo-white.png"/></div>
                 <div class="logo-title"><span>瑞金医院古北分院</span></div>
-                <div class="logo-title-tip"><span>餐厅管理系统</span></div>
             </div>
             <div class="sign-in-area">
                 <div class="sign-in-container">
@@ -17,7 +16,7 @@
                         <div class="input-box"><img src="images/sign_in/password.png"/><input type="password" ng-model="pageData.password" placeholder="密码"/></div>
                     </div>
                     <div class="sign-in-handle">
-                        <a class="sign-in-button" ng-click="goToView('home')">登录</a>
+                        <a class="sign-in-button" ng-click="signIn()">登录</a>
                     </div>
                 </div>
             </div>

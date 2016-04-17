@@ -48,4 +48,9 @@ angular.module('EClientWeb').controller('HomeController',
         }
       };
 
+      function init(){
+
+      }
+      init();
+
     }]);

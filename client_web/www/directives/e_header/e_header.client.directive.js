@@ -29,13 +29,17 @@ angular.module('EClientWeb').directive('eHeader', [
                         label: '购物车',
                         state: 'my_cart',
                         showTips: true,
-                        tipsNum: 1
+                        tipsNum: 0
                     },
                     {
                         label: '我的订单',
                         state: 'my_orders'
                     }
                 ];
+                scope.pageConfig = {
+                    isShowSignIn: true,
+                    clientInfo: null
+                };
 
                 scope.setTitle = function(title){
                     scope.currentTitle = title;
@@ -47,19 +51,17 @@ angular.module('EClientWeb').directive('eHeader', [
                     $state.go(stateName);
                 };
 
-                function initCarInfo() {
-                    //var carNum = GoodsService.getCartGoodsNum();
-                    //scope.navList[1].showTips = carNum > 0;
-                    //scope.navList[1].tipsNum = carNum;
-                }
+                scope.changeAccount = function(){
+                    Auth.setUser(null);
+                    $state.go('sign_in');
+                };
 
                 function init() {
-
-                    scope.navState = $location;
-                    scope.navState = $state.current.name;
-                    scope.grocer = Auth.getUser();
-                    console.log(scope.grocer);
-                    initCarInfo();
+                    scope.navState = $state.current.name ? $state.current.name : '/';
+                    scope.pageConfig.clientInfo =  Auth.getUser();
+                    if(scope.pageConfig.clientInfo){
+                        scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
+                    }
                 }
 
                 //scope.$on(GlobalEvent.onChangeCarGoods, function (e) {

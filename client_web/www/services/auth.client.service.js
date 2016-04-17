@@ -23,6 +23,7 @@ angular.module('EClientWeb').factory('Auth',
                 setUser: function (user) {
                     if (!user) {
                         localStorageService.set('client', '');
+                        currentUser = null;
                         return;
                     }
                     currentUser = user;

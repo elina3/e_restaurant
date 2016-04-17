@@ -9,11 +9,17 @@ angular.module('EClientWeb').controller('SignInController',
     '$state',
     '$window',
     'Config',
+    'ClientService',
+    'GlobalEvent',
+    'Auth',
     function ($rootScope,
               $scope,
               $state,
               $window,
-              Config) {
+              Config,
+              ClientService,
+              GlobalEvent,
+              Auth) {
 
       $scope.pageData = {
         title: '登录',
@@ -53,6 +59,27 @@ angular.module('EClientWeb').controller('SignInController',
       };
 
       $scope.signIn = function(){
+        if ($scope.pageData.username === '') {
+          $scope.$emit(GlobalEvent.onShowAlert, '请输入用户名');
+          return;
+        }
+        if ($scope.pageData.password === '') {
+          $scope.$emit(GlobalEvent.onShowAlert, '请输入密码');
+          return;
+        }
+
+        ClientService.signIn($scope.pageData, function(err, data){
+          if (err) {
+            $scope.$emit(GlobalEvent.onShowAlert, err);
+            return;
+          }
+
+          Auth.setUser(data.client);
+          console.log('client');
+          console.log(data.client);
+
+          $state.go('/');
+        });
 
       };
     }]);

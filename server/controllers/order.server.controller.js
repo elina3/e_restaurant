@@ -89,7 +89,6 @@ exports.orderBeginToTransport = function(req, res, next){
   });
 };
 
-
 exports.orderComplete = function(req, res, next){
   var order = req.order;
   orderLogic.setOrderComplete(order, function(err, newOrder){
@@ -113,7 +112,6 @@ exports.setGoodsOrderCooking = function(req, res, next){
     };
   });
 };
-
 
 exports.setGoodsOrderComplete = function(req, res, next){
   var goodsOrder = req.goods_order;

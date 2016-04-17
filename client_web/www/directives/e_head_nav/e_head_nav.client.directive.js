@@ -22,6 +22,11 @@ angular.module('EClientWeb').directive('eHeadNav', [
                     scope.config.backShow = true;
                 }
 
+                scope.changeAccount = function(){
+                    Auth.setUser(null);
+                    $state.go('sign_in');
+                };
+
                 scope.goBack = function(view){
                     if(scope.config && scope.config.backView){
                         $state.go(view);
@@ -30,6 +35,11 @@ angular.module('EClientWeb').directive('eHeadNav', [
 
                     $window.history.back();
                 };
+
+                function init() {
+                    scope.config.clientInfo =  Auth.getUser();
+                }
+                init();
             }
         };
     }]);
