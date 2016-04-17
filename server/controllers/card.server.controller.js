@@ -69,14 +69,16 @@ exports.getCardList = function(req, res, next){
   var limit = req.query.limit || req.body.limit || -1;
   var skipCount = req.query.skip_count || req.body.skip_count || -1;
 
-  cardLogic.getCardList(currentPage, limit, skipCount, function(err, cardList){
+  cardLogic.getCardList(currentPage, limit, skipCount, function(err, result){
     if(err){
       req.err = err;
       return next();
     }
 
     req.data = {
-      card_list: cardList
+      card_list: result.cardList,
+      total_count: result.totalCount,
+      limit: result.limit
     };
     return next();
   });

@@ -8,8 +8,8 @@ var cardController = require('../controllers/card');
 module.exports = function (app) {
   app.route('/card').post(cardController.addNewCard);
   app.route('/card').get(cardController.getCardDetail);
-  app.route('/card').put(cardController.updateCard);
-  app.route('/card').delete(cardController.deleteCard);
+  app.route('/card/modify').post(cardController.updateCard);
+  app.route('/card/delete').post(cardController.deleteCard);
 
   app.route('/cards_list').get(cardController.getCardList);
 };

@@ -49,7 +49,7 @@ angular.module('EWeb').factory('CardService',
             });
         },
         modifyCard: function(param, callback){
-          RequestSupport.executePut('/card', {
+          RequestSupport.executePost('/card/modify', {
             card_info: param
           })
             .then(function (data) {
@@ -69,7 +69,7 @@ angular.module('EWeb').factory('CardService',
             });
         },
         deleteCard: function(cardId, callback){
-          RequestSupport.executeDelete('/card', {
+          RequestSupport.executePost('/card/delete', {
             card_id: cardId
           })
             .then(function (data) {

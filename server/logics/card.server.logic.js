@@ -145,7 +145,11 @@ exports.getCardList = function(currentPage, limit, skipCount, callback){
           return callback({err: systemError.internal_system_error});
         }
 
-        return callback(null, cardList);
+        return callback(null, {
+          totalCount: totalCount,
+          limit: limit,
+          cardList: cardList
+        });
       });
   });
 };
