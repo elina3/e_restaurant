@@ -75,6 +75,7 @@ angular.module('EClientWeb').controller('SignInController',
           }
 
           Auth.setUser(data.client);
+          Auth.setToken(data.access_token);
           console.log('client');
           console.log(data.client);
 

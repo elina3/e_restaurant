@@ -117,6 +117,7 @@ function updateCartGoodsCount(client, goods, goodsIndex, newGoodsCount, callback
   });
 }
 
+require('../libraries/public');
 exports.addGoodsToCart = function (client, goods, increaseCount, callback) {
   if(increaseCount <= 0){
     return callback({err: clientError.wrong_goods_count_to_udpate_cart});
@@ -131,7 +132,7 @@ exports.addGoodsToCart = function (client, goods, increaseCount, callback) {
   }
 
   var oldCount = 0;
-  var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goods._id.toString());
+  var index = client.cart.cart_goods.objectIndexOf('goods_id', goods._id.toString());
   if(index > -1){
     oldCount = client.cart.cart_goods[index].count;
   }

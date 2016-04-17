@@ -9,8 +9,10 @@ angular.module('EClientWeb').factory('ResourcesService',
         function (Config) {
             return {
                 getImageUrl: function (imgName, type) {
-                    return Config.serverAddress + '/temp/goods1.jpg';
-                    //return Config.qiniuServerAddress + imgName;
+                    if(imgName){
+                        return Config.qiniuServerAddress + '/' + imgName;
+                    }
+                    return '';
                 }
             };
         }]);

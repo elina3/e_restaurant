@@ -51,7 +51,8 @@ angular.module('EClientWeb').factory('Auth',
                 signOut: function () {
                     currentUser = null;
                     currentToken = null;
-                    localStorageService.set('client_token', currentToken);
+                    localStorageService.set('client', '');
+                    localStorageService.set('client_token', '');
                 }
             };
 

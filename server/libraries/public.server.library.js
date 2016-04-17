@@ -43,7 +43,7 @@ Date.prototype.Format = function (fmt) {
   return fmt;
 };
 
-Array.prototype.ObjectIndexOf = function(objectKey, value){
+Array.prototype.objectIndexOf = function(objectKey, value){
   for(var i=0;i<this.length;i++){
     if(this[i] && this[i][objectKey] && value && this[i][objectKey].toString() === value.toString()){
       return i;

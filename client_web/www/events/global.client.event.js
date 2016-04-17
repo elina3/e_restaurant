@@ -5,6 +5,7 @@ angular.module('EClientWeb').constant('GlobalEvent',
         onShowAlert: 'onShowAlert',
         onShowAlertConfirm: 'onShowAlertConfirm',
         onLoadAreaInfoSucess: 'onLoadAreaInfoSucess',
-        onBodyClick: 'onBodyClick'
+        onBodyClick: 'onBodyClick',
+        onCartCountChange: 'onCartCountChange'
     }
 );

@@ -122,6 +122,27 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           return '未知';
 
       }
+    },
+    addGoodsToCart: function(client, goods, count, callback){
+      RequestSupport.executePost('/client/cart/add', {
+        goods_id: goods._id,
+        increase_count: count
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
     }
   };
 }]);

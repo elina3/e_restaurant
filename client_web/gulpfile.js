@@ -47,7 +47,7 @@ gulp.task('web-less', function () {
     return gulp.src([
         './www/lesses/**/*.less',
         './www/directives/**/*.less'])
-        .pipe(concat('z.less'))
+        .pipe(concat('e-client-restaurant.less'))
         .pipe(less())
         .pipe(gulp.dest('./www/dist/css'));
 });
@@ -58,7 +58,7 @@ gulp.task('web-less-minify', function () {
     return gulp.src([
         './www/lesses/**/*.less',
         './www/directives/**/*.less'])
-        .pipe(concat('z.less'))
+        .pipe(concat('e-client-restaurant.less'))
         .pipe(less())
         .pipe(minifyCss())
         .pipe(gulp.dest('./www/dist/css'));
@@ -68,14 +68,14 @@ gulp.task('web-less-minify', function () {
 gulp.task('js-concat', function () {
     console.log('js合并');
     return gulp.src(webJsFiles)
-        .pipe(jsconcat('z.js'))
+        .pipe(jsconcat('e-client-restaurant.js'))
         .pipe(gulp.dest('./www/dist/js'));
 });
 
 gulp.task('js-concat-minify', function () {
     console.log('js合并并压缩');
     return gulp.src(webJsFiles)
-        .pipe(jsconcat('z.js'))
+        .pipe(jsconcat('e-client-restaurant.js'))
         .pipe(ngmin())
         .pipe(stripDebug())
         .pipe(uglify())

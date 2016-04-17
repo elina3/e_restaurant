@@ -4,8 +4,8 @@
 
 'use strict';
 angular.module('EClientWeb').directive('eHeader', [
-    '$state', '$location', 'Auth',
-    function ($state, $location, Auth) {
+    '$state', '$location', 'Auth', '$rootScope', 'GlobalEvent',
+    function ($state, $location, Auth, $rootScope, GlobalEvent) {
         return {
             restrict: 'EA',
             templateUrl: 'directives/e_header/e_header.client.directive.html',
@@ -52,7 +52,7 @@ angular.module('EClientWeb').directive('eHeader', [
                 };
 
                 scope.changeAccount = function(){
-                    Auth.setUser(null);
+                    Auth.signOut();
                     $state.go('sign_in');
                 };
 
@@ -63,6 +63,14 @@ angular.module('EClientWeb').directive('eHeader', [
                         scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
                     }
                 }
+
+                $rootScope.$on(GlobalEvent.onCartCountChange, function (event, newClient, callback) {
+                    Auth.setUser(newClient);
+                    scope.pageConfig.clientInfo =  newClient;
+                    if(scope.pageConfig.clientInfo){
+                        scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
+                    }
+                });
 
                 //scope.$on(GlobalEvent.onChangeCarGoods, function (e) {
                 //    initCarInfo();

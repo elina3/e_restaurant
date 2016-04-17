@@ -8,10 +8,12 @@ angular.module('EClientWeb').controller('GoodsDetailController',
     '$scope',
     '$state',
     '$window',
+    '$stateParams',
     function ($rootScope,
               $scope,
               $state,
-              $window) {
+              $window,
+              $stateParams) {
 
       $scope.pageData = {
         title: '商品详情',
@@ -39,5 +41,11 @@ angular.module('EClientWeb').controller('GoodsDetailController',
             break;
         }
       };
+
+      function init(){
+        var goodsId = $stateParams.goods_id;
+        console.log(goodsId);
+      }
+      init();
 
     }]);

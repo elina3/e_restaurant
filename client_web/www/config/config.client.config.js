@@ -9,5 +9,5 @@ angular.module('EClientWeb').constant('Config', {
     managerServerAddress: 'http://' + window.location.host + '/manager',
     //serverAddress: 'https://zhuzhu1688.com',
     //serverAddress: 'https://agilepops.com',
-    qiniuServerAddress: 'https://dn-agilepops.qbox.me'
+    qiniuServerAddress: 'http://7xs3gd.com1.z0.glb.clouddn.com/'
 });

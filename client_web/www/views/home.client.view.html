@@ -3,67 +3,23 @@
 <e-head-nav config="pageData.headConfig"></e-head-nav>
 <div class="home-page-view">
     <div class="goods-list">
-        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
+        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">
             <div class="photo-area">
                 <div class="photo">
-                    <img src="temp/goods1.png">
+                    <img ng-src={{generatePhotoSrc(goods)}}>
                 </div>
             </div>
             <div class="desc">
                 <div class="wrap">
                     <div class="description">
-                        <span>呱呱叫干锅主题餐厅</span>
+                        <span>{{goods.name}}</span>
                     </div>
                     <div class="price">
-                        <span>¥12</span>
+                        <span>{{goods.price === -1 ? '待定': ('¥' + goods.price)}}</span>
                     </div>
                     <div class="handle">
-                        <div class="add">加入购物车</div>
-                        <div class="buy-now">立即购买</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
-            <div class="photo-area">
-                <div class="photo">
-                    <img src="temp/goods1.png">
-                </div>
-            </div>
-            <div class="desc">
-                <div class="wrap">
-                    <div class="description">
-                        <span>呱呱叫干锅主题餐厅</span>
-                    </div>
-                    <div class="price">
-                        <span>¥12</span>
-                    </div>
-                    <div class="handle">
-                        <div class="add">加入购物车</div>
-                        <div class="buy-now">立即购买</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: ''}, $event)">
-            <div class="photo-area">
-                <div class="photo">
-                    <img src="temp/goods1.png">
-                </div>
-            </div>
-            <div class="desc">
-                <div class="wrap">
-                    <div class="description">
-                        <span>呱呱叫干锅主题餐厅</span>
-                    </div>
-                    <div class="price">
-                        <span>¥12</span>
-                    </div>
-                    <div class="handle">
-                        <div class="add">加入购物车</div>
-                        <div class="buy-now">立即购买</div>
+                        <div class="add" ng-click="addToCart(goods, $event)">加入购物车</div>
+                        <div class="buy-now" ng-click="buyNow()">立即购买</div>
                     </div>
                 </div>
             </div>

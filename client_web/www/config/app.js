@@ -18,7 +18,7 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
           controller: 'HomeController'
       })
       .state('goods_detail', {
-          url: '/goods/detail',
+          url: '/goods/detail:goods_id',
           templateUrl: 'views/goods_detail.client.view.html',
           controller: 'GoodsDetailController'
       })

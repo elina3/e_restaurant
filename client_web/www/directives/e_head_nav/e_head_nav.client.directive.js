@@ -23,7 +23,7 @@ angular.module('EClientWeb').directive('eHeadNav', [
                 }
 
                 scope.changeAccount = function(){
-                    Auth.setUser(null);
+                    Auth.signOut();
                     $state.go('sign_in');
                 };
 

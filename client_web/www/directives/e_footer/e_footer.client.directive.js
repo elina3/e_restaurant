@@ -4,8 +4,8 @@
 
 'use strict';
 angular.module('EClientWeb').directive('eFooter', [
-    '$state', 'Auth',
-    function ($state, Auth) {
+    '$state', 'Auth', '$rootScope', 'GlobalEvent',
+    function ($state, Auth, $rootScope, GlobalEvent) {
         return {
             restrict: 'EA',
             templateUrl: 'directives/e_footer/e_footer.client.directive.html',
@@ -17,14 +17,6 @@ angular.module('EClientWeb').directive('eFooter', [
                 scope.searchName = '';
                 scope.shoppingCar = {};
 
-
-                function initCarInfo() {
-                    var client =  Auth.getUser();
-                    if(client){
-                        scope.shoppingCar.count = client.cart ? client.cart.total_count : 0;
-                    }
-                }
-
                 scope.goState = function (stateName) {
                     scope.navState = stateName;
                     $state.go(stateName);
@@ -32,9 +24,17 @@ angular.module('EClientWeb').directive('eFooter', [
 
                 function init() {
                     scope.navState = $state.current.name;
-                    scope.grocer = Auth.getUser();
-                    initCarInfo();
+                    var client =  Auth.getUser();
+                    if(client){
+                        scope.shoppingCar.count = client.cart ? client.cart.total_count : 0;
+                    }
                 }
+
+
+                $rootScope.$on(GlobalEvent.onCartCountChange, function (event, newClient, callback) {
+                    Auth.setUser(newClient);
+                    scope.shoppingCar.count = newClient.cart ? newClient.cart.total_count : 0;
+                });
 
                 //scope.$on(GlobalEvent.onChangeCarGoods, function (e) {
                 //    initCarInfo();
