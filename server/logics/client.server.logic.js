@@ -2,21 +2,24 @@
  * Created by elinaguo on 16/2/26.
  */
 'use strict';
+var async = require('async');
 var systemError = require('../errors/system');
 var clientError = require('../errors/user');
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
 var Client = appDb.model('Client');
+var Cart = appDb.model('Cart');
+var CartGoods = appDb.model('CartGoods');
 
-exports.signUp = function(clientInfo, callback){
+exports.signUp = function (clientInfo, callback) {
   Client.findOne({username: clientInfo.username})
-    .exec(function(err, client){
-      if(err){
+    .exec(function (err, client) {
+      if (err) {
         return callback({err: systemError.internal_system_error});
       }
 
-      if(client){
+      if (client) {
         return callback({err: clientError.client_exist});
       }
 
@@ -26,8 +29,8 @@ exports.signUp = function(clientInfo, callback){
       client.nickname = clientInfo.nickname;
       client.sex = clientInfo.sex;
       client.mobile_phone = clientInfo.mobile_phone;
-      client.save(function(err, newClient){
-        if(err || !newClient){
+      client.save(function (err, newClient) {
+        if (err || !newClient) {
           return callback({err: systemError.database_save_error});
         }
 
@@ -36,14 +39,14 @@ exports.signUp = function(clientInfo, callback){
     });
 };
 
-exports.signIn = function(username, password, callback){
+exports.signIn = function (username, password, callback) {
   Client.findOne({username: username})
-    .exec(function(err, client){
-      if(err){
+    .exec(function (err, client) {
+      if (err) {
         return callback({err: systemError.internal_system_error});
       }
 
-      if(!client){
+      if (!client) {
         return callback({err: clientError.client_not_exist});
       }
 
@@ -55,22 +58,145 @@ exports.signIn = function(username, password, callback){
     });
 };
 
-
-exports.getValidClientById = function(clientId, callback){
+exports.getValidClientById = function (clientId, callback) {
   Client.findOne({_id: clientId})
-    .exec(function(err, client){
-      if(err){
+    .exec(function (err, client) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
 
-      if(!client){
+      if (!client) {
         return callback({err: clientError.client_not_exist});
       }
 
-      if(client.deleted_status){
+      if (client.deleted_status) {
         return callback({err: clientError.client_deleted});
       }
 
       return callback(null, client);
     });
 };
+
+function updateCartGoodsCount(client, goods, goodsIndex, newGoodsCount, callback){
+  var isRemove = false;
+  if(newGoodsCount <= 0){
+    isRemove = true;
+  }
+
+  if(isRemove){
+    if(goodsIndex === -1){
+      return callback(null, client);
+    }
+
+    client.cart.cart_goods.splice(goodsIndex, 1);
+  }else{
+    if(goodsIndex === -1){
+      client.cart.cart_goods.push(new CartGoods({
+        goods_id: goods._id,
+        count: newGoodsCount,
+        name: goods.name,
+        price: goods.price,
+        display_photos: goods.display_photos
+      }));
+    }else {
+      client.cart.cart_goods[goodsIndex].count = newGoodsCount;
+      client.cart.cart_goods[goodsIndex].name = goods.name;
+      client.cart.cart_goods[goodsIndex].price = goods.price;
+      client.cart.cart_goods[goodsIndex].display_photos = goods.display_photos;
+    }
+  }
+
+  client.markModified('cart');
+  client.save(function(err, newClient){
+    if(err){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newClient);
+  });
+}
+
+exports.addGoodsToCart = function (client, goods, increaseCount, callback) {
+  if(increaseCount <= 0){
+    return callback({err: clientError.wrong_goods_count_to_udpate_cart});
+  }
+
+  if(!client.cart){
+    client.cart = new Cart();
+  }
+
+  if(client.cart.cart_goods){
+    client.cart.cart_goods = [];
+  }
+
+  var oldCount = 0;
+  var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goods._id.toString());
+  if(index > -1){
+    oldCount = client.cart.cart_goods[index].count;
+  }
+  var newCount = oldCount + increaseCount;
+  updateCartGoodsCount(client, goods, index, newCount, function(err, newClient){
+    if(err){
+      return callback(err);
+    }
+
+    return callback(null, newClient);
+  });
+};
+
+exports.removeGoodsFromCart = function(client, goods, removeCount, callback){
+  if(removeCount <= 0){
+    return callback({err: clientError.wrong_goods_count_to_udpate_cart});
+  }
+
+  if(!client.cart){
+    client.cart = new Cart();
+  }
+
+  if(client.cart.cart_goods){
+    client.cart.cart_goods = [];
+  }
+
+  var oldCount = 0;
+  var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goods._id.toString());
+  if(index > -1){
+    oldCount = client.cart.cart_goods[index].count;
+  }
+
+  var newCount = oldCount - removeCount;
+  updateCartGoodsCount(client, goods, index, newCount, function(err, newClient){
+    if(err){
+      return callback(err);
+    }
+
+    return callback(null, newClient);
+  });
+};
+
+exports.clearGoodsFromCart = function(client, goodsInfos, callback){
+  if(!client.cart || !client.cart.cart_goods || client.cart.cart_goods.length === 0){
+    return callback(null, true);
+  }
+
+  async.each(goodsInfos, function(goodsInfo, eachCallback){
+    var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goodsInfo._id.toString());
+    if(index === -1){
+      return eachCallback();
+    }
+
+    client.cart.cart_goods.splice(index, 1);
+    return eachCallback();
+  }, function(err){
+
+  });
+
+  client.markModified('cart');
+  client.save(function(err, newClient){
+    if(err || !newClient){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(err, newClient);
+  });
+};
+

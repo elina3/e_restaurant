@@ -24,6 +24,10 @@ var OrderSchema = new Schema({
     default: 'unpaid',
     type: String
   },
+  group_name: {
+    enum: ['餐厅', '超市'],
+    type: String
+  },
   goods_orders: [{
     type: Schema.Types.ObjectId,
     ref: 'GoodsOrder'
@@ -31,6 +35,10 @@ var OrderSchema = new Schema({
   contact: {
     type: Schema.Types.ObjectId,
     ref: 'Contact'
+  },
+  in_store_deal: {//是否在店交易
+    type: Boolean,
+    default: false
   },
   total_price: {
     type: Number
@@ -50,4 +58,22 @@ OrderSchema.plugin(timestamps, {
   updatedAt: 'update_time'
 });
 
+OrderSchema.pre('save', function (next) {
+  this.total_price = 0;
+  if(this.goods_orders &&  this.goods_orders.length > 0){
+    var totalPrice = 0;
+    this.goods_orders.forEach(function(goodsOrder){
+      totalPrice += goodsOrder.total_price;
+    });
+    this.total_price = totalPrice;
+  }
+  if(!this.contact){
+    this.in_store_deal = true;
+  }else{
+    this.in_store_deal = false;
+  }
+  next();
+});
+
 appDb.model('Order', OrderSchema);
+

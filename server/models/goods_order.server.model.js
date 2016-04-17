@@ -53,4 +53,10 @@ GoodsOrderSchema.plugin(timestamps, {
   updatedAt: 'update_time'
 });
 
+
+GoodsOrderSchema.pre('save', function (next) {
+  this.total_price = this.price * this.count;
+  next();
+});
+
 appDb.model('GoodsOrder', GoodsOrderSchema);

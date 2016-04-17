@@ -20,6 +20,10 @@ function generateOrderNumber(client, order){
 }
 
 function createContact(contactInfo, client, callback){
+  if(!contactInfo){
+    return callback(null, null);
+  }
+
   Contact.findOne({_id: contactInfo._id, client: client._id})
     .exec(function(err, contact){
       if(err){
@@ -49,8 +53,11 @@ function createContact(contactInfo, client, callback){
 }
 
 function generateGoodsOrders(orderId, orderInfo, callback){
+  if(!orderInfo.goods_infos || orderInfo.goods_infos.length === 0){
+    return callback({err: orderError.no_goods_to_order});
+  }
+
   var goodsOrderIds = [];
-  var totalPrice = 0;
   async.each(orderInfo.goods_infos, function(goodsInfo, eachCallback){
     var goodsOrder = new GoodsOrder({
       order: orderId,
@@ -58,7 +65,6 @@ function generateGoodsOrders(orderId, orderInfo, callback){
       status: 'prepare',
       price: goodsInfo.price,
       count: goodsInfo.count,
-      total_price: goodsInfo.price * goodsInfo.count,
       description: goodsInfo.description
     });
     goodsOrder.save(function(err, newGoodsOrder){
@@ -67,7 +73,6 @@ function generateGoodsOrders(orderId, orderInfo, callback){
       }
 
       goodsOrderIds.push(newGoodsOrder._id);
-      totalPrice += goodsOrder.total_price;
       return eachCallback();
     });
   }, function(err){
@@ -75,11 +80,15 @@ function generateGoodsOrders(orderId, orderInfo, callback){
       return callback(err);
     }
 
-    return callback(null, goodsOrderIds, totalPrice);
+    return callback(null, goodsOrderIds);
   });
 }
 
 exports.createOrder = function(orderInfo, client, callback){
+  if(!orderInfo){
+    return callback({err: systemError.param_null_error});
+  }
+
   createContact(orderInfo.contact, client, function(err, contact){
     if(err){
       return callback({err: systemError.internal_system_error});
@@ -92,11 +101,11 @@ exports.createOrder = function(orderInfo, client, callback){
       }
 
       order.order_number = generateOrderNumber(client, order);
+      order.group_name = '餐厅';
       order.status = 'unpaid';
-      order.contact = contact._id;
+      order.contact = contact ? contact._id : null;
       order.name = orderInfo.name;
       order.goods_orders = goodsOrderIds;
-      order.total_price = totalPrice;
       order.description = orderInfo.description;
       order.save(function(err, newOrder){
         if(err || !newOrder){
@@ -109,15 +118,107 @@ exports.createOrder = function(orderInfo, client, callback){
   });
 };
 
-exports.setOrderCooking = function(orderId, callback){
+function getOrderById(orderId, callback){
   Order.findOne({_id: orderId})
     .exec(function(err, order){
       if(err){
         return callback({err: systemError.database_query_error});
       }
 
-      if(!order){
-        return callback({err: orderError.order_not_exist});
+      return callback(null, order);
+    });
+}
+
+exports.getOrderDetailByOrderId = function(orderId, callback){
+  Order.findOne({_id: orderId})
+    .populate('goods_orders')
+    .exec(function(err, order){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, order);
+    });
+};
+
+exports.getOrderByOrderId = function(orderId, callback){
+  getOrderById(orderId, function(err, order){
+    return callback(err, order);
+  })
+};
+
+exports.setOrderCooking = function(order, callback){
+  order.status = 'cooking';
+  order.save(function(err, newOrder){
+    if(err || !newOrder){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newOrder);
+  });
+};
+
+exports.setOrderTransporting = function(order, callback){
+  order.status = 'transporting';
+  order.save(function(err, newOrder){
+    if(err || !newOrder){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newOrder);
+  });
+};
+
+exports.setOrderComplete = function(order, callback){
+  GoodsOrder.find({order: order._id}, function(err, goodsOrders){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    async.each(goodsOrders, function(goodsOrder, eachCallback){
+      if(goodsOrder.status === 'complete'){
+        return eachCallback();
+      }
+
+      goodsOrder.status = 'complete';
+      goodsOrder.save(function(err, newGoodsOrder){
+        if(err || !newGoodsOrder){
+          return eachCallback({err: systemError.database_save_error});
+        }
+
+        return eachCallback();
+      });
+    }, function(err){
+      if(err){
+        return callback(err);
+      }
+
+      order.status = 'complete';
+      order.save(function(err, newOrder){
+        if(err || !newOrder){
+          return callback({err: systemError.database_save_error});
+        }
+
+        return callback(null, true);
+      });
+    });
+  });
+};
+
+exports.setGoodsOrderCooking = function(goodsOrder, callback){
+  goodsOrder.status = 'cooking';
+  goodsOrder.save(function(err, goodsOrder){
+    if(err || !goodsOrder){
+      return callback({err: systemError.database_save_error});
+    }
+
+    getOrderById(goodsOrder.order, function(err, order){
+      if(err){
+        return callback(err);
+      }
+
+      if(order.status === 'cooking'){
+        return callback(null, true);
       }
 
       order.status = 'cooking';
@@ -126,114 +227,40 @@ exports.setOrderCooking = function(orderId, callback){
           return callback({err: systemError.database_save_error});
         }
 
-        return callback(null, newOrder);
+        return callback(null, true);
       });
 
     });
+
+  });
 };
-exports.setGoodsOrderCooking = function(goodsOrderId, callback){
-  GoodsOrder.findOne({_id: goodsOrderId})
-    .exec(function(err, goodsOrder){
+
+exports.setGoodsOrderComplete = function(goodsOrder, callback){
+  goodsOrder.status = 'complete';
+  goodsOrder.save(function(err, goodsOrder){
+    if(err || !goodsOrder){
+      return callback({err: systemError.database_save_error});
+    }
+
+    GoodsOrder.count({order: goodsOrder.order, status: {$ne: ['complete']}}, function(err, unCookingCount){
       if(err){
         return callback({err: systemError.database_query_error});
       }
 
-      goodsOrder.status = 'cooking';
-      goodsOrder.save(function(err, goodsOrder){
-        if(err || !goodsOrder){
-          return callback({err: systemError.database_save_error});
-        }
-
-        Order.findOne({_id: goodsOrder.order})
-          .exec(function(err, order){
-            if(err){
-              return callback({err: systemError.database_query_error});
-            }
-
-            if(order.status === 'cooking'){
-              return callback(null, true);
-            }
-
-            order.status = 'cooking';
-            order.save(function(err, newOrder){
-              if(err || !newOrder){
-                return callback({err: systemError.database_save_error});
-              }
-
-              return callback(null, true);
-            });
-          });
-      });
-    });
-};
-
-exports.setGoodsOrderComplete = function(goodsOrderId, callback){
-  GoodsOrder.findOne({_id: goodsOrderId})
-    .exec(function(err, goodsOrder){
-      if(err){
-        return callback({err: systemError.database_query_error});
+      if(unCookingCount > 0){
+        return callback(null, true);
       }
 
-      if(goodsOrder.status === 'complete'){
-        return callback({err: orderError.goods_cook_complete});
-      }
-
-      goodsOrder.status = 'complete';
-      goodsOrder.save(function(err, goodsOrder){
-        if(err || !goodsOrder){
-          return callback({err: systemError.database_save_error});
-        }
-
-        GoodsOrder.count({_id: goodsOrderId, status: {$ne: 'complete'}}, function(err, unCookingCount){
-          if(err){
-            return callback({err: systemError.database_query_error});
-          }
-
-          if(unCookingCount > 0){
-            return callback(null, true);
-          }
-
-          Order.findOne({_id: goodsOrder.order})
-            .exec(function(err, order){
-              if(err){
-                return callback({err: systemError.database_query_error});
-              }
-
-              if(order.status === 'transporting'){
-                return callback(null, true);
-              }
-
-              order.status = 'transporting';
-              order.save(function(err, newOrder){
-                if(err || !newOrder){
-                  return callback({err: systemError.database_save_error});
-                }
-
-                return callback(null, true);
-              });
-            });
-        });
-      });
-    });
-};
-
-exports.setOrderComplete = function(orderId, callback){
-  Order.findOne({_id: orderId})
-    .exec(function(err, order){
-      if(err){
-        return callback({err: systemError.database_query_error});
-      }
-
-      GoodsOrder.count({order: orderId, status: {$ne: 'complete'}}, function(err, unCompleteCount){
+      getOrderById(goodsOrder.order, function(err, order){
         if(err){
-          return callback({err: systemError.database_query_error});
+          return callback(err);
         }
 
-        if(unCompleteCount > 0){
-          return callback({err: orderError.goods_not_cook_complete});
+        if(order.status === 'transporting'){
+          return callback(null, true);
         }
 
-        order.status = 'complete';
+        order.status = 'transporting';
         order.save(function(err, newOrder){
           if(err || !newOrder){
             return callback({err: systemError.database_save_error});
@@ -243,39 +270,27 @@ exports.setOrderComplete = function(orderId, callback){
         });
       });
     });
+  });
 };
 
-exports.deleteOrder = function(orderId, callback){
-  Order.findOne({_id: orderId})
-    .exec(function(err, order){
-      if(err){
-        return callback({err: systemError.database_query_error});
-      }
+exports.deleteOrder = function(order, callback){
+  if(order.deleted_status){
+    return callback({err: orderError.order_deleted});
+  }
 
-      if(!order){
-        return callback({err: orderError.order_not_exist});
-      }
+  order.deleted_status = true;
+  order.save(function(err, newOrder){
+    if(err || !newOrder){
+      return callback({err: systemError.database_save_error});
+    }
 
-      if(order.deleted_status){
-        return callback({err: orderError.order_deleted});
-      }
-
-      order.deleted_status = true;
-      order.save(function(err, newOrder){
-        if(err || !newOrder){
-          return callback({err: systemError.database_save_error});
-        }
-
-        return callback(null, newOrder);
-      });
-
-    });
+    return callback(null, newOrder);
+  });
 };
 
 exports.getLatestCommonContact = function(clientId, callback){
-  Contact
-    .sort({create_time: 1})
-    .first({client: clientId})
+  Contact.sort({update_time: -1})
+    .findOne({client: clientId})
     .exec(function(err, contact){
       if(err){
         return callback({err: systemError.database_query_error});

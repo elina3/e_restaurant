@@ -11,5 +11,9 @@ module.exports = _.extend(exports, {
   order_not_paid: {type: 'order_not_paid', message: 'The order is not paid!'},
   order_paid: {type: 'order_paid', message: 'The order has been paid'},
   goods_cook_complete: {type: 'goods_cook_complete', message: 'The goods cook completed'},
-  goods_not_cook_complete: {type: 'goods_not_cook_complete', message: 'The goods not cook complete'}
+  goods_not_cook_complete: {type: 'goods_not_cook_complete', message: 'The goods not cook complete'},
+  no_goods_to_order: {type: 'no_goods_to_order', message: 'There is no goods to Order'},
+  goods_order_id_null_error: {type: 'goods_order_id_null_error', message: 'The goods order id is null'},
+  order_id_null_error: {type: 'order_id_null_error', message: 'The order id is null'},
+  goods_order_not_exist: {type: 'goods_order_not_exist', message: 'The goods order is not exist'}
 });

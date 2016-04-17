@@ -59,13 +59,14 @@ var ClientSchema = new Schema({
     type: String,
     default: 'secret'
   },
+  cart: {//购物车
+    type: Schema.Types.Mixed
+  },
   deleted_status: {
     type: Boolean,
     default: false
   }
 });
-
-
 ClientSchema.methods.hashPassword = function (password) {
   if (this.salt && password) {
     return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
@@ -73,14 +74,66 @@ ClientSchema.methods.hashPassword = function (password) {
     return password;
   }
 };
-
 ClientSchema.methods.authenticate = function (password) {
   return this.password === this.hashPassword(password);
 };
-
 ClientSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
 });
-
 appDb.model('Client', ClientSchema);
+
+
+var CartGoodsSchema = new Schema({
+  object: {
+    type: 'String',
+    default: 'CartGoods'
+  },
+  goods_id: {
+    type: Schema.Types.ObjectId
+  },
+  display_photos: [{
+    type: String
+  }],
+  count: {
+    type: Number
+  },
+  name: {
+    type: String
+  },
+  price: {
+    type: Number
+  }
+});
+appDb.model('CartGoods', CartGoodsSchema);
+var CartSchema = new Schema({
+  object: {
+    type: 'String',
+    default: 'Cart'
+  },
+  total_count: {
+    type: Number
+  },
+  total_price: {
+    type: Number
+  },
+  cart_goods: [{
+    type: Schema.Types.Mixed
+  }]
+});
+appDb.model('Cart', CartSchema);
+
+
+ClientSchema.pre('save', function (next) {
+  this.cart.total_count = 0;
+  this.cart.total_price = 0;
+  if(this.cart && this.cart.cart_goods && this.cart.cart_goods.length > 0){
+    var totalPrice = 0;
+    this.cart.cart_goods.forEach(function(goods){
+      totalPrice += (goods.price * goods.count);
+    });
+    this.cart.total_price = totalPrice;
+    this.cart.total_count = this.cart.cart_goods.length;
+  }
+  next();
+});

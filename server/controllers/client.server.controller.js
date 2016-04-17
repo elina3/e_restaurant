@@ -48,3 +48,42 @@ exports.signUp = function(req, res, next){
     return next();
   });
 };
+
+exports.addGoodsToCart = function(req, res, next){
+  var client = req.client;
+  var goods = req.goods;
+  var increaseCount = req.body.increase_count || req.query.increase_count || 0;
+
+  increaseCount = parseInt(increaseCount);
+
+  clientLogic.addGoodsToCart(client, goods, increaseCount, function(err, newClient){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      client: newClient
+    };
+    return next();
+  });
+};
+
+exports.removeGoodsFromCart = function(req, res, next){
+  var client = req.client;
+  var goods = req.goods;
+  var removeCount = req.body.remove_count || req.query.remove_count || 0;
+
+  removeCount = parseInt(removeCount);
+
+  clientLogic.removeGoodsFromCart(client, goods, removeCount, function(err, newClient){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      client: newClient
+    };
+    return next();
+  });
+};
+

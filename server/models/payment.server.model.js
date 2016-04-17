@@ -20,13 +20,16 @@ var PaymentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Order'
   },
-  client: {
+  method: {
+    enum: ['wechat', 'card'],
+    type: 'String'
+  },
+  client: {//客户端用户产生的订单
     type: Schema.Types.ObjectId,
     ref: 'Client'
   },
-  to_user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+  group_name: {
+    type: 'String'
   },
   partner_trade_no: {
     type: String

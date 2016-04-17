@@ -42,3 +42,12 @@ Date.prototype.Format = function (fmt) {
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
   return fmt;
 };
+
+Array.prototype.ObjectIndexOf = function(objectKey, value){
+  for(var i=0;i<this.length;i++){
+    if(this[i] && this[i][objectKey] && value && this[i][objectKey].toString() === value.toString()){
+      return i;
+    }
+  }
+  return -1;
+};
