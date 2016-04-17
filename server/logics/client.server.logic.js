@@ -24,6 +24,7 @@ exports.signUp = function (clientInfo, callback) {
       }
 
       client = new Client();
+      client.role = clientInfo.role ? clientInfo.role : 'normal';
       client.username = clientInfo.username ? clientInfo.username : '';
       client.password = clientInfo.password ? client.hashPassword(clientInfo.password) : '';
       client.nickname = clientInfo.nickname;
@@ -199,4 +200,131 @@ exports.clearGoodsFromCart = function(client, goodsInfos, callback){
     return callback(err, newClient);
   });
 };
+
+exports.getAllClients = function(admin, currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false
+  };
+  Client.count(query, function(err, totalCount){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if (limit === -1) {
+      limit = totalCount;
+    }
+
+    if (skipCount === -1) {
+      skipCount = limit * (currentPage - 1);
+    }
+
+    Client.find(query)
+      .sort({update_time: -1})
+      .skip(skipCount)
+      .limit(limit)
+      .exec(function(err, clients){
+        if(err){
+          return callback({err: systemError.database_query_error});
+        }
+
+        return callback(null, {
+          totalCount: totalCount,
+          limit: limit,
+          clients: clients
+        });
+      });
+  });
+};
+
+function getClientById(clientId, callback){
+  Client.findOne({_id: clientId})
+    .exec(function(err, client){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, client);
+
+    });
+};
+exports.deleteClient = function(clientId, callback){
+  getClientById(clientId, function(err, client){
+    if(err){
+      return callback(err);
+    }
+
+    if(!client){
+      return callback({err: clientError.client_not_exist});
+    }
+
+    if(client.deleted_status){
+      return callback({err: clientError.client_deleted});
+    }
+
+    client.deleted_status = true;
+    client.save(function(err, newClient){
+      if(err || !newClient){
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, newClient);
+    });
+  });
+};
+
+exports.modifyClient = function(clientInfo, callback){
+  if(!clientInfo || !clientInfo._id){
+    return callback({err: systemError.param_null_error});
+  }
+  getClientById(clientInfo._id, function(err, client){
+    if(err){
+      return callback(err);
+    }
+
+    if(!client){
+      return callback({err: clientError.client_not_exist});
+    }
+
+    if(client.deleted_status){
+      return callback({err: clientError.client_deleted});
+    }
+
+    if(clientInfo.role){
+      client.role = clientInfo.role;
+    }
+
+    if(clientInfo.password){
+      client.password = client.hashPassword(clientInfo.password);
+    }
+
+    if(clientInfo.nickname){
+      client.nickname = clientInfo.nickname;
+    }
+
+    if(clientInfo.nickname){
+      client.nickname = clientInfo.nickname;
+    }
+
+    if(clientInfo.sex){
+      client.sex = clientInfo.sex;
+    }
+    if(clientInfo.mobile_phone){
+      client.mobile_phone = clientInfo.mobile_phone;
+    }
+    client.save(function(err, newClient){
+      if(err || !newClient){
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, newClient);
+    });
+  });
+};
+
+exports.getClientDetail = function(clientId, callback){
+  getClientById(clientId, function(err, client){
+    return callback(err, client);
+  });
+};
+
 

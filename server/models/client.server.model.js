@@ -34,6 +34,11 @@ var ClientSchema = new Schema({
     enum: ['male', 'female', 'unknown'],
     default: 'unknown'
   },
+  role: {
+    type: String,
+    enum: ['normal', 'waiter', 'cashier'],
+    default: 'normal'
+  },
   city: {
     type: String
   },
@@ -125,9 +130,10 @@ appDb.model('Cart', CartSchema);
 
 
 ClientSchema.pre('save', function (next) {
-  this.cart.total_count = 0;
-  this.cart.total_price = 0;
+
   if(this.cart && this.cart.cart_goods && this.cart.cart_goods.length > 0){
+    this.cart.total_count = 0;
+    this.cart.total_price = 0;
     var totalPrice = 0;
     this.cart.cart_goods.forEach(function(goods){
       totalPrice += (goods.price * goods.count);

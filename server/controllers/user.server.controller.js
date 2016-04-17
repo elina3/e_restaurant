@@ -130,6 +130,9 @@ exports.getNormalUsers = function(req, res, next){
   var currentPage = req.query.current_page || req.body.current_page || 1;
   var limit = req.query.limit || req.body.limit || -1;
   var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  currentPage = parseInt(currentPage);
+  limit = parseInt(limit);
+  skipCount = parseInt(skipCount);
 
   userLogic.getNormalUsers(admin, currentPage, limit, skipCount, function(err, result){
     if(err){

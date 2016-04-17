@@ -49,6 +49,75 @@ exports.signUp = function(req, res, next){
   });
 };
 
+exports.getClientDetail = function(req, res, next){
+  var clientId = req.body.client_id || req.query.client_id || '';
+
+  clientLogic.getClientDetail(clientId, function(err, client){
+    if(err){
+      return next(client);
+    }
+
+    req.data = {
+      client: client
+    };
+    return next();
+  });
+};
+
+exports.modifyClient = function(req, res, next){
+  var clientInfo = req.body.client_info || req.query.client_info || null;
+
+
+  clientLogic.modifyClient(clientInfo, function(err, client){
+    if(err){
+      return next(client);
+    }
+
+    req.data = {
+      client: client
+    };
+    return next();
+  });
+};
+
+exports.deleteClient = function(req, res, next){
+  var clientId = req.body.client_id || req.query.client_id || '';
+
+  clientLogic.deleteClient(clientId, function(err, client){
+    if(err){
+      return next(client);
+    }
+
+    req.data = {
+      success: client ? true: false
+    };
+    return next();
+  });
+};
+
+exports.getClients = function(req, res, next){
+  var admin = req.admin;
+  var currentPage = req.query.current_page || req.body.current_page || 1;
+  var limit = req.query.limit || req.body.limit || -1;
+  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  currentPage = parseInt(currentPage);
+  limit = parseInt(limit);
+  skipCount = parseInt(skipCount);
+
+  clientLogic.getAllClients(admin, currentPage, limit, skipCount, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      clients: result.clients
+    };
+    return next();
+  })
+};
+
 exports.addGoodsToCart = function(req, res, next){
   var client = req.client;
   var goods = req.goods;

@@ -38,7 +38,7 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         controller: 'GoodsAddController'
       })
       .state('user_manager', {
-          url: '/user/manager',
+          url: '/user/manager:panel_type',
           templateUrl: 'templates/user/user_manager.client.view.html',
           controller: 'UserManagerController'
       })
