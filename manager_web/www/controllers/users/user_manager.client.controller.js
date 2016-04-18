@@ -507,7 +507,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
-
+          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -524,7 +524,7 @@ angular.module('EWeb').controller('UserManagerController',
           });
         }else{
 
-          CardService.modifyCard(param, function(err, data){
+          CardService.modifyCard($scope.pageConfig.plat_card_panel.currentEditCard._id,param, function(err, data){
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {
               return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
@@ -536,6 +536,21 @@ angular.module('EWeb').controller('UserManagerController',
             reloadData();
           });
         }
+      };
+
+      $scope.deleteCard = function(card){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.deleteCard(card._id, function(err, card){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            $scope.$emit(GlobalEvent.onShowAlert, CardError[err]||err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+          //$state.reload();
+          loadCards();
+        });
       };
       function getNewCardObj(){
         return {

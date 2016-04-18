@@ -174,7 +174,14 @@
                     </div>
                     <div class="ee-tag-view">
                         <div class="ee-search-bar row">
-                            <div class="left-panel col-xs-6"></div>
+                            <div class="left-panel col-xs-6">
+                                <div class='pull-left'>
+                                    <span class="info-name">查询</span>
+                                    <div class="info-value">
+                                        <input placeholder="请输入卡号" type="text" ng-model="keyword" ng-keyup="searchCards()" />
+                                    </div>
+                                </div>
+                            </div>
                             <div class="right-panel col-xs-6">
                                 <div class="add-user" ng-click="editCard()">
                                     <img src="images/user_manager/single_add.png"/>
@@ -507,6 +514,13 @@
                             <input placeholder="请输入饭卡号码" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.card_number"/>
                         </div>
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.card_number}">(必填项，饭卡号)</div>
+                    </div>
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">身份证</span>
+                        <div class="info-value">
+                            <input placeholder="请输入身份证" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.registration_number"/>
+                        </div>
                     </div>
 
                     <div class="handle">

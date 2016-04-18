@@ -48,8 +48,9 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
-        modifyCard: function(param, callback){
+        modifyCard: function(cardid,param, callback){
           RequestSupport.executePost('/card/modify', {
+            card_id:cardid,
             card_info: param
           })
             .then(function (data) {

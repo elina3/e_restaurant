@@ -221,8 +221,9 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
-        modifyCard: function(param, callback){
+        modifyCard: function(cardid,param, callback){
           RequestSupport.executePost('/card/modify', {
+            card_id:cardid,
             card_info: param
           })
             .then(function (data) {
@@ -2224,7 +2225,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
-
+          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -2241,7 +2242,7 @@ angular.module('EWeb').controller('UserManagerController',
           });
         }else{
 
-          CardService.modifyCard(param, function(err, data){
+          CardService.modifyCard($scope.pageConfig.plat_card_panel.currentEditCard._id,param, function(err, data){
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {
               return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
@@ -2253,6 +2254,21 @@ angular.module('EWeb').controller('UserManagerController',
             reloadData();
           });
         }
+      };
+
+      $scope.deleteCard = function(card){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.deleteCard(card._id, function(err, card){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            $scope.$emit(GlobalEvent.onShowAlert, CardError[err]||err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+          //$state.reload();
+          loadCards();
+        });
       };
       function getNewCardObj(){
         return {
@@ -2510,6 +2526,100 @@ angular.module('EWeb').directive('zzValidation', function ($parse) {
       };
     }
   };
+});
+
+'use strict';
+
+angular.module('EWeb').directive('zzAlertConfirmDialog', function () {
+    return {
+        restrict: 'A',
+        template: '<div class="mask" ng-show="pageConfig.show">' +
+        '<div class="zz-alert">' +
+        '<div class="zz-alert-title"> <span>{{pageConfig.title}}</span></div>' +
+        '<div class="zz-alert-content"> <span>{{pageConfig.content}}</span></div>' +
+        '<div class="row zz-alert-confirm-handle">' +
+        '<div class="col-xs-6">' +
+        '<div class="zz-btn-primary zz-alert-btn" ng-click="sure()">{{pageConfig.sure}}</div>' +
+        '</div>' +
+        '<div class="col-xs-6">' +
+        '<div class="zz-btn-primary zz-alert-btn" ng-click="cancel()">{{pageConfig.cancel}}</div> ' +
+        '</div> </div> </div></div>',
+        replace: true,
+        scope: {
+            pageConfig: '='
+        },
+        link: function (scope, element, attributes) {
+            if (!scope.pageConfig) {
+                scope.pageConfig = {
+                    show: false,
+                    title: '消息',
+                    content: '',
+                    cancel: '取消',
+                    sure: '确认',
+                    callback: null
+                };
+            }
+            scope.cancel = function () {
+                scope.pageConfig.show = false;
+                scope.pageConfig.content = '';
+            };
+
+            scope.sure = function () {
+                scope.cancel();
+                if (scope.pageConfig.callback) {
+                    scope.pageConfig.callback();
+                }
+            };
+            scope.$watch('show', function (newVal, oldVal) {
+                scope.initShow();
+            });
+            scope.initShow = function () {
+                console.log(scope.pageConfig.content);
+            };
+
+        }
+
+    };
+});
+
+'use strict';
+angular.module('EWeb').directive('zzAlertDialog', function () {
+    return {
+        restrict: 'EA',
+        template: '<div class="mask" ng-show="pageConfig.show"><div class="zz-alert">' +
+        '<div class="zz-alert-title"> <span>{{pageConfig.title}}</span></div>' +
+        '<div class="zz-alert-content"> <span>{{pageConfig.content}}</span></div>' +
+        '<div class="zz-alert-handle">' +
+        '<div class="zz-btn-primary zz-alert-btn" ng-click="closed()">{{pageConfig.okLabel}}</div>' +
+        ' </div></div></div>',
+        replace: true,
+        scope: {
+            pageConfig: '='
+        },
+        link: function (scope, element, attributes) {
+            if (!scope.pageConfig) {
+                scope.pageConfig = {
+                    title: '消息',
+                    content: '内容',
+                    okLabel: '确定',
+                    show: true,
+                    callback: null
+                };
+            }
+            scope.closed = function () {
+                scope.pageConfig.show = false;
+                if (scope.pageConfig.callback) {
+                    scope.pageConfig.callback();
+                }
+            };
+            scope.$watch('show', function (newVal, oldVal) {
+                scope.initShow();
+            });
+            scope.initShow = function () {
+                console.log(scope.pageConfig.content);
+            };
+        }
+    };
 });
 
 /**
@@ -2871,97 +2981,3 @@ angular.module('EWeb').directive('zPagination', [function () {
         }
     };
 }]);
-
-'use strict';
-
-angular.module('EWeb').directive('zzAlertConfirmDialog', function () {
-    return {
-        restrict: 'A',
-        template: '<div class="mask" ng-show="pageConfig.show">' +
-        '<div class="zz-alert">' +
-        '<div class="zz-alert-title"> <span>{{pageConfig.title}}</span></div>' +
-        '<div class="zz-alert-content"> <span>{{pageConfig.content}}</span></div>' +
-        '<div class="row zz-alert-confirm-handle">' +
-        '<div class="col-xs-6">' +
-        '<div class="zz-btn-primary zz-alert-btn" ng-click="sure()">{{pageConfig.sure}}</div>' +
-        '</div>' +
-        '<div class="col-xs-6">' +
-        '<div class="zz-btn-primary zz-alert-btn" ng-click="cancel()">{{pageConfig.cancel}}</div> ' +
-        '</div> </div> </div></div>',
-        replace: true,
-        scope: {
-            pageConfig: '='
-        },
-        link: function (scope, element, attributes) {
-            if (!scope.pageConfig) {
-                scope.pageConfig = {
-                    show: false,
-                    title: '消息',
-                    content: '',
-                    cancel: '取消',
-                    sure: '确认',
-                    callback: null
-                };
-            }
-            scope.cancel = function () {
-                scope.pageConfig.show = false;
-                scope.pageConfig.content = '';
-            };
-
-            scope.sure = function () {
-                scope.cancel();
-                if (scope.pageConfig.callback) {
-                    scope.pageConfig.callback();
-                }
-            };
-            scope.$watch('show', function (newVal, oldVal) {
-                scope.initShow();
-            });
-            scope.initShow = function () {
-                console.log(scope.pageConfig.content);
-            };
-
-        }
-
-    };
-});
-
-'use strict';
-angular.module('EWeb').directive('zzAlertDialog', function () {
-    return {
-        restrict: 'EA',
-        template: '<div class="mask" ng-show="pageConfig.show"><div class="zz-alert">' +
-        '<div class="zz-alert-title"> <span>{{pageConfig.title}}</span></div>' +
-        '<div class="zz-alert-content"> <span>{{pageConfig.content}}</span></div>' +
-        '<div class="zz-alert-handle">' +
-        '<div class="zz-btn-primary zz-alert-btn" ng-click="closed()">{{pageConfig.okLabel}}</div>' +
-        ' </div></div></div>',
-        replace: true,
-        scope: {
-            pageConfig: '='
-        },
-        link: function (scope, element, attributes) {
-            if (!scope.pageConfig) {
-                scope.pageConfig = {
-                    title: '消息',
-                    content: '内容',
-                    okLabel: '确定',
-                    show: true,
-                    callback: null
-                };
-            }
-            scope.closed = function () {
-                scope.pageConfig.show = false;
-                if (scope.pageConfig.callback) {
-                    scope.pageConfig.callback();
-                }
-            };
-            scope.$watch('show', function (newVal, oldVal) {
-                scope.initShow();
-            });
-            scope.initShow = function () {
-                console.log(scope.pageConfig.content);
-            };
-        }
-    };
-});
