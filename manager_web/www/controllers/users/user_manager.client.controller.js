@@ -450,9 +450,9 @@ angular.module('EWeb').controller('UserManagerController',
       //</editor-fold>
 
       //<editor-fold desc="饭卡相关">
-      function loadCards(){
+      function loadCards(keyword){
         $scope.pageConfig.plat_card_panel.cards = [];
-        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,function(err, data){
+        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,keyword,function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -552,6 +552,12 @@ angular.module('EWeb').controller('UserManagerController',
           loadCards();
         });
       };
+
+      $scope.searchCards=function(){
+        console.log($scope.keyword);
+        loadCards($scope.keyword);
+      };
+
       function getNewCardObj(){
         return {
           card_number: ''

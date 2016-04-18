@@ -115,9 +115,16 @@ exports.deleteCard = function(cardId, callback){
   });
 };
 
-exports.getCardList = function(currentPage, limit, skipCount, callback){
-  var query = {
-    deleted_status: false
+exports.getCardList = function(currentPage, limit, skipCount,keyword, callback){
+
+  var query;
+  if(!keyword)
+    query = {
+      deleted_status: false
+    };
+  else query={
+    deleted_status:false,
+    card_number:new RegExp(keyword)
   };
   Card.count(query, function(err, totalCount){
     if(err){
