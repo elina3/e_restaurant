@@ -68,8 +68,8 @@ exports.getCardList = function(req, res, next){
   var currentPage = req.query.current_page || req.body.current_page || 1;
   var limit = req.query.limit || req.body.limit || -1;
   var skipCount = req.query.skip_count || req.body.skip_count || -1;
-
-  cardLogic.getCardList(currentPage, limit, skipCount, function(err, result){
+  var keyword= req.query.keyword || req.body.keyword;
+  cardLogic.getCardList(currentPage, limit, skipCount, keyword,function(err, result){
     if(err){
       req.err = err;
       return next();

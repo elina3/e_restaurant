@@ -450,9 +450,9 @@ angular.module('EWeb').controller('UserManagerController',
       //</editor-fold>
 
       //<editor-fold desc="饭卡相关">
-      function loadCards(){
+      function loadCards(keyword){
         $scope.pageConfig.plat_card_panel.cards = [];
-        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,function(err, data){
+        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,keyword,function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -507,7 +507,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
-
+          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -524,7 +524,7 @@ angular.module('EWeb').controller('UserManagerController',
           });
         }else{
 
-          CardService.modifyCard(param, function(err, data){
+          CardService.modifyCard($scope.pageConfig.plat_card_panel.currentEditCard._id,param, function(err, data){
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {
               return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
@@ -537,6 +537,27 @@ angular.module('EWeb').controller('UserManagerController',
           });
         }
       };
+
+      $scope.deleteCard = function(card){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.deleteCard(card._id, function(err, card){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err){
+            $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+          //$state.reload();
+          loadCards();
+        });
+      };
+
+      $scope.searchCards=function(){
+        console.log($scope.keyword);
+        loadCards($scope.keyword);
+      };
+
       function getNewCardObj(){
         return {
           card_number: ''

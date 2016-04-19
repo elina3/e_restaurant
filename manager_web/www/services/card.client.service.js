@@ -7,11 +7,12 @@ angular.module('EWeb').factory('CardService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getCards: function(param, callback){
+        getCards: function(param,keyword, callback){
           RequestSupport.executeGet('/cards_list', {
             current_page: param.currentPage,
             limit: param.limit,
-            skip_count: param.skipCount
+            skip_count: param.skipCount,
+              keyword:keyword
           })
             .then(function (data) {
               if (!callback) {
@@ -48,8 +49,9 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
-        modifyCard: function(param, callback){
+        modifyCard: function(cardid,param, callback){
           RequestSupport.executePost('/card/modify', {
+            card_id:cardid,
             card_info: param
           })
             .then(function (data) {

@@ -73,18 +73,14 @@ exports.updateCardById = function(cardId, cardInfo, callback){
     return callback({err: cardError.card_number_null});
   }
 
-  if(!cardInfo.money || parseFloat(cardInfo.money) < 0){
-    return callback({err: cardError.card_money_null});
-  }
-
   getCardDetailById(cardId, function(err, card){
     if(err){
       return callback(err);
     }
 
     Card.update({_id: cardId},{$set: {card_number: cardInfo.card_number,
-      money: cardInfo.money
-     }}, function(err){
+      registration_number: cardInfo.registration_number
+    }}, function(err){
       if(err){
         return callback({err: systemError.internal_system_error});
       }
@@ -119,9 +115,16 @@ exports.deleteCard = function(cardId, callback){
   });
 };
 
-exports.getCardList = function(currentPage, limit, skipCount, callback){
-  var query = {
-    deleted_status: false
+exports.getCardList = function(currentPage, limit, skipCount,keyword, callback){
+
+  var query;
+  if(!keyword)
+    query = {
+      deleted_status: false
+    };
+  else query={
+    deleted_status:false,
+    card_number:new RegExp(keyword)
   };
   Card.count(query, function(err, totalCount){
     if(err){
