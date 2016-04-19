@@ -161,11 +161,7 @@ exports.updateGoodsToCart = function(req, res, next){
 exports.removeGoodsFromCart = function(req, res, next){
   var client = req.client;
   var goods = req.goods;
-  var removeCount = req.body.remove_count || req.query.remove_count || 0;
-
-  removeCount = parseInt(removeCount);
-
-  clientLogic.removeGoodsFromCart(client, goods, removeCount, function(err, newClient){
+  clientLogic.removeGoodsFromCart(client, goods, function(err, newClient){
     if(err){
       return next(err);
     }

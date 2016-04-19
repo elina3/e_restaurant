@@ -39,10 +39,10 @@
             </div>
 
             <button class="app-delete">删除</button>
-            <div class="col-xs-1"><span ng-click="deleteGoodsFormCart(goods)">{{goods.price * goods.count}}</span></div>
+            <div class="col-xs-1"><span>{{goods.price * goods.count}}</span></div>
             <div class="col-xs-1">
                     <span>
-                        <input type="button" value="删除"/>
+                        <input type="button" ng-click="deleteGoodsFormCart(goods)" value="删除"/>
                     </span>
             </div>
         </div>

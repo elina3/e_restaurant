@@ -169,27 +169,25 @@ exports.updateGoodsCountToCart = function(client, goods, updateCount, callback){
   });
 };
 
-exports.removeGoodsFromCart = function(client, goods, removeCount, callback){
-  if(removeCount <= 0){
-    return callback({err: clientError.wrong_goods_count_to_udpate_cart});
-  }
+exports.removeGoodsFromCart = function(client, goods, callback){
 
   if(!client.cart){
     client.cart = new Cart();
+    return callback(null, client);
   }
 
-  if(client.cart.cart_goods){
+  if(!client.cart.cart_goods){
     client.cart.cart_goods = [];
+    return callback(null, client);
   }
 
-  var oldCount = 0;
-  var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goods._id.toString());
-  if(index > -1){
-    oldCount = client.cart.cart_goods[index].count;
+
+  var index = client.cart.cart_goods.objectIndexOf('goods_id', goods._id.toString());
+  if(index === -1){
+    return callback(null, client);
   }
 
-  var newCount = oldCount - removeCount;
-  updateCartGoodsCount(client, goods, index, newCount, function(err, newClient){
+  updateCartGoodsCount(client, goods, index, 0, function(err, newClient){
     if(err){
       return callback(err);
     }

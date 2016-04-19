@@ -13,6 +13,7 @@ angular.module('EClientWeb').controller('MyCartController',
     'ResourcesService',
     'ClientService',
     'GlobalEvent',
+    'MyCartError',
     function ($rootScope,
               $scope,
               $state,
@@ -21,7 +22,8 @@ angular.module('EClientWeb').controller('MyCartController',
               Auth,
               ResourcesService,
               ClientService,
-              GlobalEvent) {
+              GlobalEvent,
+              MyCartError) {
 
       function getClient(){
         var client = Auth.getUser();
@@ -33,6 +35,7 @@ angular.module('EClientWeb').controller('MyCartController',
         return client;
       }
 
+      //<editor-fold desc="购物车商品数量调整">
       $scope.numberChanged = function(cartGoods){
         if(!cartGoods.count){
           return;
@@ -48,8 +51,9 @@ angular.module('EClientWeb').controller('MyCartController',
         if(client){
           ClientService.updateGoodsCountToCart(client, cartGoods, cartGoods.count, function(err, data){
             if(err || !data.client){
-              console.log(err);
-              return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
+              var errorMessage = MyCartError[err] || err;
+              return $scope.$emit(GlobalEvent.onShowAlert,(errorMessage ? ',':'') + '加入购物车失败！');
+
             }
             if(data.client.cart){
               $scope.pageData.cart.total_price = data.client.cart.total_price;
@@ -64,8 +68,8 @@ angular.module('EClientWeb').controller('MyCartController',
         if(client){
           ClientService.updateGoodsCountToCart(client, cartGoods, cartGoods.count, function(err, data){
             if(err || !data.client){
-              console.log(err);
-              return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
+              var errorMessage = MyCartError[err] || err;
+              return $scope.$emit(GlobalEvent.onShowAlert,(errorMessage ? ',':'') + '加入购物车失败！');
             }
             if(data.client.cart){
               $scope.pageData.cart.total_price = data.client.cart.total_price;
@@ -83,8 +87,8 @@ angular.module('EClientWeb').controller('MyCartController',
         if(client){
           ClientService.updateGoodsCountToCart(client, cartGoods, cartGoods.count, function(err, data){
             if(err || !data.client){
-              console.log(err);
-              return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
+              var errorMessage = MyCartError[err] || err;
+              return $scope.$emit(GlobalEvent.onShowAlert,(errorMessage ? ',':'') + '加入购物车失败！');
             }
             if(data.client.cart){
               $scope.pageData.cart.total_price = data.client.cart.total_price;
@@ -96,18 +100,22 @@ angular.module('EClientWeb').controller('MyCartController',
       $scope.deleteGoodsFormCart = function(cartGoods){
         var client = getClient();
         ClientService.removeGoodsFromCart(client, cartGoods, function(err, data){
-          if(err || !data.client){
+          if(err || !data || !data.client){
             console.log(err);
-            return $scope.$emit(GlobalEvent.onShowAlert, '移出购物车失败！'+err);
+            var errorMessage = MyCartError[err] || err;
+            return $scope.$emit(GlobalEvent.onShowAlert,(errorMessage ? ',':'') + '移出购物车失败！');
           }
+
           if(data.client.cart){
-            $scope.pageData.cart.total_price = data.client.cart.total_price;
+            $scope.pageData.cart = data.client.cart;
           }else{
+            $scope.pageData.cart.cart_goods = [];
             $scope.pageData.cart.total_price = 0;
           }
           $scope.$emit(GlobalEvent.onCartCountChange, data.client);
         });
       };
+      //</editor-fold>
 
       $scope.generatePhotoSrc = function (photoKey) {
         if(photoKey){
@@ -127,6 +135,12 @@ angular.module('EClientWeb').controller('MyCartController',
           count: 1
         },
         cart: {}
+      };
+
+
+      $scope.generateOrder = function(){
+        var client = getClient();
+        //ClientService.generateOrderSummary
       };
 
 

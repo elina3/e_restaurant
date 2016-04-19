@@ -165,9 +165,9 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           return callback(SystemError.network_error);
         });
     },
-    removeGoodsFromCart: function(client, goods, callback){
-      RequestSupport.executePost('/client/cart/delete', {
-        goods_id: goods._id
+    removeGoodsFromCart: function(client, cartGoods, callback){
+      RequestSupport.executePost('/client/cart/remove', {
+        goods_id: cartGoods.goods_id
       })
         .then(function (data) {
           if (!callback) {
