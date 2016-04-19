@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-xs-6 photo">
                     <div class="top">
-                        <img src="temp/goods1.png"/>
+                        <img ng-src="{{generatePhotoSrc(pageData.goods.display_photos[0])}}"/>
                     </div>
                     <div class="photo-nav">
 
@@ -16,40 +16,28 @@
                 </div>
                 <div class="col-xs-6 info">
                     <div class="goods-name">
-                        <span>呱呱叫干锅主题餐厅</span>
+                        <span>{{pageData.goods.name}}</span>
                     </div>
                     <div class="base">
-                        <!--<div class="row promotions" ng-show="goodInfo.promotions">-->
-                            <!--<div class="col-20 normal "><span>促销:</span></div>-->
-                            <!--<div class="col-80 normal right">-->
-                                <!--<span>{{goodInfo.promotions}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="row origin">-->
-                            <!--<div class="col-20 normal "><span>来源:</span></div>-->
-                            <!--<div class="col-80 normal right">-->
-                                <!--<span>{{goodInfo.source}}</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
                         <div class="row">
                             <div class="col-xs-2 normal"><span>价格:</span></div>
                             <div class="col-xs-3 normal goods-price right">
-                                <span>￥12</span>
+                                <span>{{pageData.goods.price === -1 ?  '待定' :'￥' + pageData.goods.price}}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-2 normal"><span>数量:</span></div>
                             <div class="col-xs-10 normal right">
                                 <div class="count-box">
-                                    <div class="left">
+                                    <div class="left" ng-click="minusNumber()">
                                         <span>-</span>
                                     </div>
                                     <div class="middle">
-                                        <input ng-model="pageData.goods.count"
+                                        <input ng-model="pageData.count"
                                                zz-validation zz-validation-type="number"
                                                 >
                                     </div>
-                                    <div class="right">
+                                    <div class="right" ng-click="addNumber()">
                                         <span>+</span></div>
                                 </div>
                             </div>
@@ -57,7 +45,7 @@
                     </div>
 
                     <div class="add-car-button">
-                        <input class="add" type="button" value="加入购物车"/>
+                        <input class="add" type="button" value="加入购物车" ng-click="addToCart()"/>
                         <input class="buy-now" type="button" value="立即购买" ng-click="goToView('orderDetail')"/>
                     </div>
                 </div>
@@ -67,18 +55,12 @@
             <div class="description-text">
                 <p class="title">图文详情</p>
                 <pre class="content">
-品牌: 超能
-是否含磷: 不含磷
-适用对象: 棉麻织物 洗衣粉
-分类: 普通型
-净含量: 1500g(含)-2000g(含)
-型号: 洗衣粉去渍365倍净焕彩600g
+{{pageData.goods.description}}
                 </pre>
 
             </div>
             <div class="description-photo">
-                <img src="temp/goods2.png"/>
-                <img src="temp/goods1.png"/>
+                <img  ng-repeat="photoKey in pageData.goods.description_photos" ng-src="{{generatePhotoSrc(photoKey)}}"/>
             </div>
         </div>
     </div>

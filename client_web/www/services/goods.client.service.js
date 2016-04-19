@@ -27,6 +27,26 @@ angular.module('EClientWeb').factory('GoodsService',
               }
               callback(SystemError.network_error);
             });
+        }, getGoodsDetail: function(goodsId, callback){
+          RequestSupport.executeGet('/client/goods', {
+            goods_id: goodsId
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
         }
       };
     }]);

@@ -137,6 +137,27 @@ exports.addGoodsToCart = function(req, res, next){
   });
 };
 
+exports.updateGoodsToCart = function(req, res, next){
+  var client = req.client;
+  var goods = req.goods;
+  var count = req.body.count || req.query.count || 0;
+
+  count = parseInt(count);
+
+  clientLogic.updateGoodsCountToCart(client, goods, count, function(err, newClient){
+    if(err){
+      return next(err);
+    }
+
+    console.log(newClient);
+
+    req.data = {
+      client: newClient
+    };
+    return next();
+  });
+};
+
 exports.removeGoodsFromCart = function(req, res, next){
   var client = req.client;
   var goods = req.goods;

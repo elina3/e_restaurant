@@ -143,6 +143,47 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
         function (err) {
           return callback(SystemError.network_error);
         });
+    },
+    updateGoodsCountToCart: function(client, cartGoods, count, callback){
+      RequestSupport.executePost('/client/cart/update', {
+        goods_id: cartGoods.goods_id,
+        count: count
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
+    },
+    removeGoodsFromCart: function(client, goods, callback){
+      RequestSupport.executePost('/client/cart/delete', {
+        goods_id: goods._id
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
     }
   };
 }]);

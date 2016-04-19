@@ -25,7 +25,7 @@ var GoodsSchema = new Schema({
     default: ''
   },
   status: {
-    enum: ['none', 'opening', 'sold_out', 'on_sale'],//未开放，开放中，售罄，热卖中
+    enum: ['none', 'sold_out', 'on_sale'],//未开放，开放中，售罄，热卖中
     default: 'none',
     type: String
   },

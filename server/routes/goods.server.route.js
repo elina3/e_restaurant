@@ -15,5 +15,6 @@ module.exports = function (app) {
   app.route('/goods_list').get(authFilter.requireUser, goodsController.getGoodsList);
 
 
-  app.route('/client/goods/list').get(goodsController.getGoodsList);
+  app.route('/client/goods/list').get(goodsController.getOpeningGoodsList);
+  app.route('/client/goods').get(goodsController.getGoodsDetail);
 };

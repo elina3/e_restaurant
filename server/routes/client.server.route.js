@@ -17,5 +17,6 @@ module.exports = function (app) {
 
   app.route('/client/sign_in').post(clientController.signIn);
   app.route('/client/cart/add').post(authFilter.requireClient, goodsFilter.requireGoods, clientController.addGoodsToCart);
+  app.route('/client/cart/update').post(authFilter.requireClient, goodsFilter.requireGoods, clientController.updateGoodsToCart);
   app.route('/client/cart/remove').post(authFilter.requireClient, goodsFilter.requireGoods, clientController.removeGoodsFromCart);
 };

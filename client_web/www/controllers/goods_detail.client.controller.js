@@ -9,11 +9,21 @@ angular.module('EClientWeb').controller('GoodsDetailController',
     '$state',
     '$window',
     '$stateParams',
+    'GoodsService',
+    'GlobalEvent',
+    'ResourcesService',
+    'ClientService',
+    'Auth',
     function ($rootScope,
               $scope,
               $state,
               $window,
-              $stateParams) {
+              $stateParams,
+              GoodsService,
+              GlobalEvent,
+              ResourcesService,
+              ClientService,
+              Auth) {
 
       $scope.pageData = {
         title: '商品详情',
@@ -22,10 +32,7 @@ angular.module('EClientWeb').controller('GoodsDetailController',
           backView: '',
           backShow: true
         },
-        goods: {
-          price: 12,
-          count: 1
-        }
+        count: 1
       };
 
       $scope.goToView = function(viewPage){
@@ -42,9 +49,61 @@ angular.module('EClientWeb').controller('GoodsDetailController',
         }
       };
 
+      $scope.addNumber = function(){
+        $scope.pageData.count = parseInt($scope.pageData.count);
+        $scope.pageData.count++;
+      };
+      $scope.minusNumber = function(){
+        $scope.pageData.count = parseInt($scope.pageData.count);
+        $scope.pageData.count--;
+      };
+
+      $scope.generatePhotoSrc = function (photoKey) {
+        if(photoKey){
+          return ResourcesService.getImageUrl(photoKey);
+        }
+        return '';
+      };
+
+
+      function getClient(){
+        var client = Auth.getUser();
+        if(!client){
+          $scope.$emit(GlobalEvent.onShowAlert, '亲，请登录！');
+          $state.go('sign_in');
+          return null;
+        }
+        return client;
+      }
+
+      $scope.addToCart = function(){
+        var client = getClient();
+        if(client){
+          ClientService.addGoodsToCart(client, $scope.pageData.goods, $scope.pageData.count, function(err, data){
+            if(err){
+              console.log(err);
+              return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
+            }
+
+
+            $scope.$emit(GlobalEvent.onCartCountChange, data.client);
+          });
+        }
+      };
+
       function init(){
         var goodsId = $stateParams.goods_id;
-        console.log(goodsId);
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        GoodsService.getGoodsDetail(goodsId, function(err,data){
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, '获取商品详情失败，请刷新页面重试！');
+          }
+
+          $scope.pageData.goods = data.goods;
+        });
       }
       init();
 

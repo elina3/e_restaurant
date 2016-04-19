@@ -127,7 +127,7 @@ exports.addGoodsToCart = function (client, goods, increaseCount, callback) {
     client.cart = new Cart();
   }
 
-  if(client.cart.cart_goods){
+  if(!client.cart.cart_goods){
     client.cart.cart_goods = [];
   }
 
@@ -138,6 +138,29 @@ exports.addGoodsToCart = function (client, goods, increaseCount, callback) {
   }
   var newCount = oldCount + increaseCount;
   updateCartGoodsCount(client, goods, index, newCount, function(err, newClient){
+    if(err){
+      return callback(err);
+    }
+
+    return callback(null, newClient);
+  });
+};
+
+exports.updateGoodsCountToCart = function(client, goods, updateCount, callback){
+  if(updateCount <= 0){
+    return callback({err: clientError.wrong_goods_count_to_udpate_cart});
+  }
+
+  if(!client.cart){
+    client.cart = new Cart();
+  }
+
+  if(!client.cart.cart_goods){
+    client.cart.cart_goods = [];
+  }
+  var index = client.cart.cart_goods.objectIndexOf('goods_id', goods._id.toString());
+
+  updateCartGoodsCount(client, goods, index, updateCount, function(err, newClient){
     if(err){
       return callback(err);
     }

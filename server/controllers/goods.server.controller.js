@@ -88,3 +88,26 @@ exports.getGoodsList = function(req, res, next){
     return next();
   });
 };
+
+exports.getOpeningGoodsList = function(req, res, next){
+  var currentPage = req.query.current_page || req.body.current_page || 1;
+  var limit = req.query.limit || req.body.limit || -1;
+  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  currentPage = parseInt(currentPage);
+  skipCount = parseInt(skipCount);
+  limit = parseInt(limit);
+
+  goodsLogic.getOpeningGoodsList(currentPage, limit, skipCount, function(err, result){
+    if(err){
+      req.err = err;
+      return next();
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      goods_list: result.goodsList
+    };
+    return next();
+  });
+};

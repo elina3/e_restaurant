@@ -44,7 +44,7 @@ function getGoodsDetailById(goodsId, callback){
       }
 
       if(!goods){
-        return callback({err: systemError.goods_not_exist});
+        return callback({err: goodsError.goods_not_exist});
       }
 
       if(goods.deleted_status){
@@ -83,6 +83,7 @@ exports.updateGoodsById = function(goodsId, goodsInfo, user, callback){
       description_photos: goodsInfo.description_photos,
       create_user: user._id,
       create_group: user.group,
+      status: goodsInfo.status,
       deleted_status: false}}, function(err){
       if(err){
         return callback({err: systemError.internal_system_error});
@@ -110,10 +111,8 @@ exports.deleteGoods = function(goodsId, callback){
   });
 };
 
-exports.getGoodsList = function(currentPage, limit, skipCount, callback){
-  var query = {
-    deleted_status: false
-  };
+function queryGoodsList(query, currentPage, limit, skipCount, callback){
+
   Goods.count(query, function(err, totalCount){
     if(err){
       return callback({err: systemError.internal_system_error});
@@ -145,3 +144,21 @@ exports.getGoodsList = function(currentPage, limit, skipCount, callback){
   });
 };
 
+exports.getGoodsList = function(currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false
+  };
+  queryGoodsList(query, currentPage, limit, skipCount, function(err, result){
+    return callback(err, result);
+  });
+};
+
+exports.getOpeningGoodsList = function(currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false,
+    status: {$nin: ['none']}
+  };
+  queryGoodsList(query, currentPage, limit, skipCount, function(err, result){
+    return callback(err, result);
+  });
+};
