@@ -462,9 +462,10 @@ angular.module('EWeb').controller('UserManagerController',
           data.card_list.forEach(function(card){
             $scope.pageConfig.plat_card_panel.cards.push({
               _id: card._id,
+              registration_number:card.registration_number,
               card_number: card.card_number,
               money: card.money,
-              status: card.status='disabled'?'已禁用':'已启用',
+              status: card.status=='disabled'?'已禁用':'已启用',
               create_time:card.create_time,
               update_time:card.update_time
             });
@@ -507,7 +508,8 @@ angular.module('EWeb').controller('UserManagerController',
         }
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
-          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number
+          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number,
+          money:$scope.pageConfig.plat_card_panel.currentEditCard.money
         };
         if($scope.pageConfig.scanType === 'create'){
 

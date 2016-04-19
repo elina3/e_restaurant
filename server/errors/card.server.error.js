@@ -12,6 +12,7 @@ module.exports = _.extend(exports, {
   card_not_exist: {type: 'card_not_exist', message: 'This card does not exist!'},
   card_deleted: {type: 'card_deleted', message: 'This card has been deleted'},
   card_money_null: {type: 'card_money_null', message: 'The card has no money'},
+  card_money_negative: {type:'card_money_negative', message:'The card money is not allowed unsigned'},
   card_number_null: {type: 'card_number_null', message: 'The card number is null'},
   card_id_null: {type: 'card_id_null', message: 'The card id is null'},
   card_exist: {type: 'card_exist', message: 'The card is exist!'},
