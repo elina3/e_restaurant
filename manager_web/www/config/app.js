@@ -46,6 +46,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         url: '/user/index',
         templateUrl: 'templates/user/user_index.client.view.html',
         controller: 'UserIndexController'
+      })
+      .state('smarket_manager', {
+        url: '/supermarket/manager',
+        templateUrl: 'templates/supermarket/supermarket_manager.client.view.html',
+        controller: 'SMarketManagerController'
       });
 
     $urlRouterProvider.otherwise('/user/sign_in');
@@ -94,4 +99,3 @@ eWeb.config(['$httpProvider', function ($httpProvider) {
         return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
     }];
 }]);
-
