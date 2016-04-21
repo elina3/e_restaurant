@@ -21,8 +21,8 @@
                 <span>{{col.text}}</span>
               </div>
             </div>
-            <div class="row list-info" ng-repeat="record in pageConfig.table.data">
-              <div ng-init="col=table.cols[$index]" class={{col.cla}}>
+            <div class="row list-info" ng-repeat="record in table.data">
+              <div ng-repeat="col in table.cols" ng-if="col.id != ''" class={{col.cla}}>
                   <span>{{record[col.id]}}</span>
               </div>
               <div class="col-xs-2">

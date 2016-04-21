@@ -35,15 +35,15 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
       cla: 'col-xs-2',
       text: '电话'
     }, {
-      id: 'role.text',
+      id: 'roleText',
       cla: 'col-xs-1',
       text: '角色'
     }, {
-      id: 'sex.text',
+      id: 'sexText',
       cla: 'col-xs-1',
       text: '性别'
     }, {
-      id: 'group.text',
+      id: 'groupText',
       cla: 'col-xs-2',
       text: '组别'
     }, {
@@ -55,28 +55,16 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
       username: 'wang',
       nickname: 'xiao',
       mobile_phone: '12345678901',
-      role: {
-        text: '普通用户'
-      },
-      sex: {
-        text: '男'
-      },
-      group: {
-        text: '医生'
-      }
+      roleText: '普通用户',
+      sexText: '男',
+      groupText: '医生'
     }, {
       username: 'wang',
       nickname: 'xiao',
       mobile_phone: '12345678901',
-      role: {
-        text: '普通用户'
-      },
-      sex: {
-        text: '男'
-      },
-      group: {
-        text: '医生'
-      }
+      roleText: '普通用户',
+      sexText: '男',
+      groupText: '医生'
     }],
     addRecord: function () {
       console.log( 'wxc: add record ' + this.id );
@@ -105,11 +93,11 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
       cla: 'col-xs-2',
       text: '用户名'
     }, {
-      id: 'role.text',
+      id: 'roleText',
       cla: 'col-xs-1',
       text: '角色'
     }, {
-      id: 'group.text',
+      id: 'groupText',
       cla: 'col-xs-2',
       text: '用户名'
     }, {
