@@ -16,6 +16,14 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
     $scope.pageConfig.currentTableIndex = index;
     var len = $scope.pageConfig.tables.length;
   };
+
+  $scope.popupConfig = {};
+  $scope.popupConfig.type = 0;
+  $scope.popupConfig.text = '';
+  $scope.popupConfig.closePopMask = function(){
+    $scope.popupConfig.type = 0;
+  };
+
   $scope.pageConfig.tables = [{ // user table
     id: 1,
     showStr:{
@@ -66,16 +74,24 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
       sexText: '男',
       groupText: '医生'
     }],
-    addRecord: function () {
+    addRecord: function(){
+      $scope.popupConfig.type = 1;
+      $scope.popupConfig.text = '增加用户';
       console.log( 'wxc: add record ' + this.id );
     },
-    deleteRecord: function (record) {
+    deleteRecord: function( record ){
+      $scope.popupConfig.type = 2;
+      $scope.popupConfig.text = record.nickname;
       console.log( 'wxc: delete record ' + this.id + ' ' + record );
     },
-    editRecord: function(record){
+    editRecord: function( record ){
+      $scope.popupConfig.type = 3;
+      $scope.popupConfig.text = record.nickname;
       console.log( 'wxc: edit record ' + this.id + ' ' + record );
     },
-    scanRecord: function (record) {
+    scanRecord: function( record ){
+      $scope.popupConfig.type = 4;
+      $scope.popupConfig.text = record.nickname;
       console.log( 'wxc: scan record ' + this.id + ' ' + record );
     }
   }, { // table 2
