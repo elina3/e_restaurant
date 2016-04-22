@@ -1,0 +1,49 @@
+<div class="ee-wrapper">
+  <div class="ee-tag-panel">
+    <ul class="ee-tag-header">
+      <li ng-repeat="table in pageConfig.tables" ng-class="{'last':$index===pageConfig.tables.length - 1,'current':pageConfig.currentTableIndex===$index}" ng-click="pageConfig.selectedTable($index)">{{table.showStr.name}}</li>
+    </ul>
+    <div class="ee-tag-body">
+      <div class="ee-tag-view" ng-repeat="table in pageConfig.tables" ng-class="$index < pageConfig.currentTableIndex ? 'move-left' : ''">
+        <div class="ee-search-bar row">
+          <div class="left-panel col-xs-6"></div>
+          <div class="right-panel col-xs-6">
+            <div class="add-user" ng-click="table.addRecord()">
+              <img src="images/user_manager/single_add.png"/>
+              <span>{{table.showStr.add}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="ee-table-list">
+          <div class="content">
+            <div class="row list-header">
+              <div ng-repeat="col in table.cols" class={{col.cla}}>
+                <span>{{col.text}}</span>
+              </div>
+            </div>
+            <div class="row list-info" ng-repeat="record in table.data">
+              <div ng-repeat="col in table.cols" ng-if="col.id != ''" class={{col.cla}}>
+                  <span>{{record[col.id]}}</span>
+              </div>
+              <div class="col-xs-2">
+                <div class="handle edit" ng-click="table.editRecord(record)">
+                  <img class="gif" ng-src="images/global/edit.gif"/>
+                  <img class="normal" ng-src="images/global/edit.png"/>
+                </div>
+                <div class="handle stop" ng-click="table.deleteRecord(record)">
+                  <img class="gif" ng-src="images/global/stop.gif"/>
+                  <img class="normal" ng-src="images/global/stop.png"/>
+                </div>
+                <div class="handle" ng-click="table.scanRecord(record)">
+                  <img class="gif" ng-src="images/global/scan.gif"/>
+                  <img class="normal" ng-src="images/global/scan.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <z-pagination config="pageConfig.plat_user_panel.pagination"></z-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

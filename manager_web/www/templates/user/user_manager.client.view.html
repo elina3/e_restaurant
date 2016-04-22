@@ -523,6 +523,13 @@
                         </div>
                     </div>
 
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">金额</span>
+                        <div class="info-value">
+                            <input placeholder="请输入非负整数" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.money"/>
+                        </div>
+                    </div>
+
                     <div class="handle">
 
                         <div class="sure" ng-click="addOrEditCard()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>

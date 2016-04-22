@@ -65,6 +65,7 @@ exports.getCardById = function(cardId, callback){
 };
 
 exports.updateCardById = function(cardId, cardInfo, callback){
+  var status='disabled';
   if(!cardId){
     return callback({err: cardError.card_id_null});
   }
@@ -73,13 +74,20 @@ exports.updateCardById = function(cardId, cardInfo, callback){
     return callback({err: cardError.card_number_null});
   }
 
+  if(cardInfo.money<0){
+    return callback({err: cardError.card_money_negative});
+  }
+  else if(cardInfo.money>0){
+    status='enabled';
+  }
+
   getCardDetailById(cardId, function(err, card){
     if(err){
       return callback(err);
     }
 
     Card.update({_id: cardId},{$set: {card_number: cardInfo.card_number,
-      registration_number: cardInfo.registration_number
+      registration_number: cardInfo.registration_number, money:cardInfo.money, status:status
     }}, function(err){
       if(err){
         return callback({err: systemError.internal_system_error});
