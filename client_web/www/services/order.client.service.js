@@ -1,16 +1,14 @@
 /**
- * Created by elinaguo on 16/4/17.
- */
+* Created by elinaguo on 16/4/20.
+*/
 'use strict';
-angular.module('EClientWeb').factory('GoodsService',
+angular.module('EClientWeb').factory('OrderService',
   ['RequestSupport', 'SystemError',
     function (RequestSupport, SystemError) {
       return {
-        getGoodsList: function (param, callback) {
-          RequestSupport.executeGet('/client/goods/list', {
-            skip_count: param.skip_count,
-            limit: param.limit,
-            goods_ids: param.goods_ids
+        getOrderDetail: function (orderId, callback) {
+          RequestSupport.executeGet('/client/order', {
+            order_id: orderId
           })
             .then(function (data) {
               if (!callback) {
@@ -28,9 +26,33 @@ angular.module('EClientWeb').factory('GoodsService',
               }
               callback(SystemError.network_error);
             });
-        }, getGoodsDetail: function(goodsId, callback){
-          RequestSupport.executeGet('/client/goods', {
-            goods_id: goodsId
+        },
+        createOrder: function (orderInfo, callback) {
+          RequestSupport.executePost('/client/order', {
+            order_info: orderInfo
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
+        },
+        pay: function(orderId, cardNumber, amount, callback){
+          RequestSupport.executePost('/client/order/pay', {
+            order_id: orderId,
+            card_number: cardNumber,
+            amount: amount
           })
             .then(function (data) {
               if (!callback) {
@@ -49,5 +71,6 @@ angular.module('EClientWeb').factory('GoodsService',
               callback(SystemError.network_error);
             });
         }
+
       };
     }]);

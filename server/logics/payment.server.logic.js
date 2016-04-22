@@ -51,9 +51,16 @@ exports.pay = function(client, order, method, card, amount, callback){
             return callback({err: paymentError.update_order_to_paid_error});
           }
 
-          return callback(null, {
-            payment: payment,
-            cardInfo: newCard
+          order.paid = true;
+          order.save(function(err, newOrder){
+            if(err || !newOrder){
+              return callback({err: systemError.database_save_error});
+            }
+
+            return callback(null, {
+              payment: payment,
+              cardInfo: newCard
+            });
           });
         });
       });

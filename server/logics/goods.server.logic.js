@@ -153,11 +153,15 @@ exports.getGoodsList = function(currentPage, limit, skipCount, callback){
   });
 };
 
-exports.getOpeningGoodsList = function(currentPage, limit, skipCount, callback){
+exports.getOpeningGoodsList = function(filter, currentPage, limit, skipCount, callback){
   var query = {
     deleted_status: false,
     status: {$nin: ['none']}
   };
+  if(filter.goods_ids && filter.goods_ids.length > 0){
+    query._id = {$in: filter.goods_ids};
+  }
+
   queryGoodsList(query, currentPage, limit, skipCount, function(err, result){
     return callback(err, result);
   });

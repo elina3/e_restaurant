@@ -15,5 +15,7 @@ module.exports = _.extend(exports, {
   no_goods_to_order: {type: 'no_goods_to_order', message: 'There is no goods to Order'},
   goods_order_id_null_error: {type: 'goods_order_id_null_error', message: 'The goods order id is null'},
   order_id_null_error: {type: 'order_id_null_error', message: 'The order id is null'},
-  goods_order_not_exist: {type: 'goods_order_not_exist', message: 'The goods order is not exist'}
+  goods_order_not_exist: {type: 'goods_order_not_exist', message: 'The goods order is not exist'},
+  no_contact_info: {type: 'no_contact_info', message: 'There is no contact info!'},
+  uncompleted_contact: {type: 'uncompleted_contact', message: 'There is un completed contact!'}
 });

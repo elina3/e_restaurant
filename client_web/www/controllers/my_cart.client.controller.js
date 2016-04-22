@@ -138,12 +138,6 @@ angular.module('EClientWeb').controller('MyCartController',
       };
 
 
-      $scope.generateOrder = function(){
-        var client = getClient();
-        //ClientService.generateOrderSummary
-      };
-
-
       function init(){
         var client = getClient();
         $scope.pageData.cart = client.cart;
@@ -159,7 +153,23 @@ angular.module('EClientWeb').controller('MyCartController',
           case 'signIn':
             $state.go('sign_in');
             break;
+          case 'myOrder':
+            $state.go('my_order');
         }
       };
 
+      $scope.goToOrderDetail = function(){
+        if(!$scope.pageData.cart || !$scope.pageData.cart.cart_goods || $scope.pageData.cart.cart_goods.length === 0){
+          return $scope.$emit(GlobalEvent.onShowAlert,'没有任何物品需要结算，请去挑选商品');
+        }
+
+        var goodsInfos = [];
+        $scope.pageData.cart.cart_goods.forEach(function(cartGoods){
+          goodsInfos.push({
+            _id: cartGoods.goods_id,
+            count: cartGoods.count
+          });
+        });
+        $state.go('order_detail', {goods_infos: JSON.stringify(goodsInfos)});
+      };
     }]);

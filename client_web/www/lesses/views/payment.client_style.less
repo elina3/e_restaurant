@@ -1,0 +1,194 @@
+.payment-page-view{
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  margin: 0 auto;
+
+  .payment-panel{
+    display: table;
+    width: 100%;
+    height: 100%;
+
+    .payment-panel-wrapper{
+      display: table-cell;
+      width: 50%;
+      margin: 0 auto;
+      height: inherit;
+
+      vertical-align: middle;
+      text-align: center;
+
+      >*{
+        background: #fff;
+      }
+      span.price {
+        color: @font-color-red;
+      }
+      .payment-info{
+        padding: 0 10px;
+        overflow: hidden;
+        height: 40px;
+        line-height: 40px;
+        font-size: 18px;
+        text-align: left;
+      }
+
+      .order-info{
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid @border-line-color-normal-web;
+        width: 100%;
+        text-align: left;
+        div{
+          margin: 20px 0;
+        }
+        span{
+          margin-right: 20px;
+        }
+      }
+      .payment-content{
+        display: block;
+        overflow: hidden;
+        background: #fff;
+        padding: 20px 0;
+
+
+        .payment-method, .payment-pay{
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+
+          width: 50%;
+        }
+
+        .payment-method{
+          .cart-method,.scan-code-method{
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: left;
+          }
+        }
+
+        .payment-pay{
+          width: 40%;
+          float: right;
+          text-align: left;
+          .price {
+
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 2px;
+            span{
+              color: @font-color-red;
+            }
+          }
+
+
+          .card-number{
+            padding: 0;
+            input[type=text]{
+              width: 100%;
+              outline: none;
+              padding: 0 10px;
+              height: 30px;
+              line-height: 30px;
+              border: 1px solid @border-line-color-normal-web;
+            }
+          }
+
+          .handle{
+            margin-top: 10px;
+            height: 40px;
+
+            button{
+              border: none;
+              background: @font-color-red;
+              color: #fff;
+              width: 100%;
+              height: 30px;
+              line-height: 30px;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+}
+
+
+@media (max-width: 568px) {
+  .payment-page-view {
+    width: 100%;
+    padding: 0 10px;
+    .payment-content{
+      .payment-method,.payment-pay{
+        padding: 10px !important;
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+        margin: 0 auto;
+      }
+
+      .payment-method{
+        padding: 0 20px;
+      }
+
+      .payment-pay{
+        .handle{
+          display: none;
+        }
+      }
+
+    }
+  }
+}
+
+@media (max-width: 768px)  and (min-width: 568px) {
+  .payment-page-view {
+    width: 100%;
+    padding: 0 10px;
+    .payment-content{
+      .payment-method,.payment-pay{
+        padding: 10px !important;
+        display: block !important;
+        float: left !important;
+        width: 100% !important;
+        margin: 0 auto;
+      }
+      .payment-method{
+        padding: 0 20px;
+      }
+
+      .payment-pay{
+        .handle{
+          display: none;
+        }
+      }
+
+    }
+  }
+}
+
+@media (min-width: 769px) and (max-width: 960px) {
+  .payment-page-view {
+    width: 960px;
+  }
+}
+
+@media (min-width: 960px) and (max-width: 1160px) {
+  .payment-page-view {
+    width: 960px;
+  }
+}
+
+@media (min-width: 1160px) {
+  .payment-page-view {
+    width: 1160px;
+  }
+}

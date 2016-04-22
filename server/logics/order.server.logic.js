@@ -15,73 +15,53 @@ var Contact = appDb.model('Contact');
 function generateOrderNumber(client, order){
   var nowString = new Date().Format('yyyyMMdd');
   var clientString = client._id.toString().substr(18,6);
-  var orderIdString = order._id.toString().substring(18, 6);
+  var orderIdString = order._id.toString().substr(18, 6);
   return nowString + clientString + orderIdString;
 }
 
-function createContact(contactInfo, client, callback){
-  if(!contactInfo){
+function generateContact(orderInfo, callback){
+  if(orderInfo.in_store_deal){
     return callback(null, null);
   }
 
-  Contact.findOne({_id: contactInfo._id, client: client._id})
-    .exec(function(err, contact){
-      if(err){
-        return callback({err: systemError.internal_system_error});
-      }
+  if(!orderInfo.contact){
+    return callback({err: orderError.no_contact_info});
+  }
 
-      if(!contact){
-        contact = new Contact({
-          client: client._id,
-          name: contactInfo.name,
-          address: contactInfo.address,
-          mobile: contactInfo.mobile,
-          email: contactInfo.email,
-          deleted_status: false
-        });
-      }
+  if(!orderInfo.contact.name || !orderInfo.contact.address || !orderInfo.contact.mobile_phone){
+    return callback({err: orderError.uncompleted_contact});
+  }
 
-      contact.common = false;
-      contact.save(function(err, newContact){
-        if(err || !newContact){
-          return callback({err: systemError.database_save_error});
-        }
+  var contact = new Contact({
+    name: orderInfo.contact.name,
+    address: orderInfo.contact.address,
+    mobile: orderInfo.contact.mobile_phone,
+    email: orderInfo.contact.email
+  });
 
-        return callback(null, newContact);
-      });
-    });
+  return callback(null, contact);
 }
 
-function generateGoodsOrders(orderId, orderInfo, callback){
+function generateGoodsOrders(orderInfo, callback){
   if(!orderInfo.goods_infos || orderInfo.goods_infos.length === 0){
     return callback({err: orderError.no_goods_to_order});
   }
 
-  var goodsOrderIds = [];
-  async.each(orderInfo.goods_infos, function(goodsInfo, eachCallback){
+  var goodsOrders = [];
+  orderInfo.goods_infos.forEach(function(goodsInfo, eachCallback){
     var goodsOrder = new GoodsOrder({
-      order: orderId,
-      goods: goodsInfo._id,
+      goods_id: goodsInfo._id,
+      name: goodsInfo.name,
+      description: goodsInfo.description,
+      display_photos: goodsInfo.display_photos,
       status: 'prepare',
       price: goodsInfo.price,
-      count: goodsInfo.count,
-      description: goodsInfo.description
+      count: goodsInfo.count
     });
-    goodsOrder.save(function(err, newGoodsOrder){
-      if(err || !newGoodsOrder){
-        return eachCallback({err: systemError.database_save_error});
-      }
-
-      goodsOrderIds.push(newGoodsOrder._id);
-      return eachCallback();
-    });
-  }, function(err){
-    if(err){
-      return callback(err);
-    }
-
-    return callback(null, goodsOrderIds);
+    goodsOrders.push(goodsOrder);
   });
+
+  return callback(null, goodsOrders);
 }
 
 exports.createOrder = function(orderInfo, client, callback){
@@ -89,24 +69,26 @@ exports.createOrder = function(orderInfo, client, callback){
     return callback({err: systemError.param_null_error});
   }
 
-  createContact(orderInfo.contact, client, function(err, contact){
+  generateContact(orderInfo, function(err, contact){
     if(err){
-      return callback({err: systemError.internal_system_error});
+      return callback(err);
     }
 
-    var order = new Order({});
-    generateGoodsOrders(order._id.toString(), orderInfo, function(err, goodsOrderIds, totalPrice){
+    generateGoodsOrders(orderInfo, function(err, goodsOrders){
       if(err){
         return callback(err);
       }
 
+      var order = new Order({
+        group_name : '餐厅',
+        status : 'unpaid',
+        contact : contact ? contact : null,
+        in_store_deal : contact ? false : true,
+        name : orderInfo.name,
+        goods_orders : goodsOrders,
+        description : orderInfo.description
+      });
       order.order_number = generateOrderNumber(client, order);
-      order.group_name = '餐厅';
-      order.status = 'unpaid';
-      order.contact = contact ? contact._id : null;
-      order.name = orderInfo.name;
-      order.goods_orders = goodsOrderIds;
-      order.description = orderInfo.description;
       order.save(function(err, newOrder){
         if(err || !newOrder){
           return callback({err: systemError.database_save_error});

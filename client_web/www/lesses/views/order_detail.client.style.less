@@ -19,6 +19,27 @@
     background-color: @background-color-gray;
     font-size: @font-size-title-normal-app;
 
+    .address-check-box{
+      overflow: hidden;
+      height: 40px;
+      input, label{
+        display: inline-block;
+        overflow: hidden;
+        float: left;
+
+        margin: 0;
+
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 40px;
+      }
+      input{
+        font-size: 20px;
+      }
+      label{
+        width: 10%;
+      }
+    }
     span {
       margin-right: 30px;
     }
@@ -26,6 +47,42 @@
       font-size: @font-size-title-normal-web;
       color: @font-color-deep-dark;
       margin-top: 10px;
+
+      .address-item{
+        display: block;
+        overflow: hidden;
+        margin: 5px 0;
+
+        label{
+          width: 10%;
+          line-height: 35px;
+          font-size: 16px;
+          text-align: left;
+          font-weight: normal;
+          color: #666;
+        }
+        input{
+          padding: 0 10px;
+          outline: none;
+          border: none;
+          height: 35px;
+          line-height: 35px;
+          font-size: 16px;
+          color: #666;
+          &.detail{
+            width:80%;
+          }
+        }
+        input[disabled]{
+          background: transparent;
+        }
+        label, input{
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+        }
+
+      }
     }
     .remark {
       >*{
@@ -47,7 +104,7 @@
           padding: 5px;
           width: 100%;
           outline: none;
-          border: 1px solid @font-size-title-normal-web;
+          border: none;
         }
       }
     }
@@ -243,7 +300,6 @@
   }
 }
 
-
 @media (max-width: 568px) {
   .order-detail-page-view {
     width: 100%;
@@ -252,6 +308,30 @@
     }
     .address{
       background: #fff;
+      padding: 0 10px !important;
+
+      .address-check-box{
+        label{
+          width: 50px;
+        }
+      }
+      .address-info{
+        height: 140px;
+        .address-item{
+          label{
+            width: 50px;
+          }
+          input{
+            border: 1px solid @border-line-color-normal-web;
+            &.detail{
+              width: auto;
+            }
+          }
+          input[disabled]{
+            border: none;
+          }
+        }
+      }
 
       .remark{
         display: none;
@@ -279,6 +359,11 @@
           overflow: hidden;
           width: 100%;
           height: 120px;
+          padding: 0 5px;
+
+          .photo{
+            padding:0 5px !important;
+          }
 
           .goods-name{
             display: none !important;
@@ -320,12 +405,39 @@
     .address{
       background: #fff;
       margin-top: 10px;
+      .address-check-box{
+        label{
+          width: 50px;
+        }
+      }
+      .address-info{
+        height: 140px;
+        .address-item{
+          label{
+            width: 50px;
+          }
+          input{
+            border: 1px solid @border-line-color-normal-web;
+            &.detail{
+              width: auto;
+            }
+          }
+        }
+      }
+
       .remark{
         display: none;
       }
     }
     .order-list{
       margin-top: 10px;
+      .goods-info{
+        padding: 0 5px;
+
+        .photo{
+          padding: 0 5px !important;
+        }
+      }
     }
 
     .app-remark{

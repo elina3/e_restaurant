@@ -51,13 +51,13 @@
     <div class="car-total">
         <span>合计:</span>
         <span class="price">￥{{pageData.cart.total_price}}</span>
-        <input type="button" class="pay" ng-click="goToView('orderDetail')" value="结算"/>
+        <input type="button" class="pay" ng-click="goToOrderDetail()" value="结算"/>
     </div>
 </div>
 <div class="car-footer row">
     <p class="total-price col-xs-6">合计： <span class="count">￥{{pageData.cart.total_price}}</span></p>
 
-    <p class="pay col-xs-6" ng-click="goToView('orderDetail')">结算</p>
+    <p class="pay col-xs-6" ng-click="goToOrderDetail()">结算</p>
 </div>
 
 <e-footer></e-footer>

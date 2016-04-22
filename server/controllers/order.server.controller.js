@@ -4,26 +4,42 @@
 
 'use strict';
 var orderLogic = require('../logics/order');
+var clientLogic = require('../logics/client');
 var paymentLogic = require('../logics/payment');
 exports.generateOrder = function(req, res, next){
   var client = req.client;
   var orderInfo = req.body.order_info || req.query.order_info || null;
 
+  orderInfo.in_store_deal = orderInfo.in_store_deal.toString().toLowerCase() === 'true' ? true: false;
   orderLogic.createOrder(orderInfo, client, function(err, newOrder){
     if(err){
       return next(err);
     }
 
-    client.clearGoodsFromCart(orderInfo.goods_infos, function(err, newClient){
+    clientLogic.clearGoodsFromCart(client, orderInfo.goods_infos, function(err, newClient){
       if(err){
         return next(err);
       }
 
-      req.data = {
-        order: newOrder,
-        client: newClient
-      };
-      return next();
+      if(orderInfo.in_store_deal){
+        req.data = {
+          order: newOrder,
+          client: newClient
+        };
+        return next();
+      }
+
+      clientLogic.updateContact(newClient, orderInfo.contact, function(err, newClient){
+        if(err){
+          return next(err);
+        }
+
+        req.data = {
+          order: newOrder,
+          client: newClient
+        };
+        return next();
+      });
     });
   });
 };

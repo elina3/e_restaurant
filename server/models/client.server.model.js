@@ -12,6 +12,32 @@ var mongoose = require('mongoose'),
   timestamps = require('mongoose-timestamp'),
   crypto = require('crypto');
 
+var ContactSchema = new Schema({
+  object:{
+    type:String,
+    default:'Contact'
+  },
+  name: {
+    type: String,
+    trim: true
+  },
+  address: {
+    type: String,
+    trim: true
+  },
+  mobile_phone: {
+    type: String
+  },
+  email: {
+    type: String
+  },
+  usual: {
+    type: Boolean,
+    default: false
+  }
+});
+
+appDb.model('Contact', ContactSchema);
 
 var ClientSchema = new Schema({
   object:{
@@ -67,6 +93,9 @@ var ClientSchema = new Schema({
   cart: {//购物车
     type: Schema.Types.Mixed
   },
+  contacts: [{
+    type: Schema.Types.Mixed
+  }],
   deleted_status: {
     type: Boolean,
     default: false
@@ -130,6 +159,10 @@ appDb.model('Cart', CartSchema);
 
 
 ClientSchema.pre('save', function (next) {
+  if(this.cart){
+    this.cart.total_count = 0;
+    this.cart.total_price = 0;
+  }
 
   if(this.cart && this.cart.cart_goods && this.cart.cart_goods.length > 0){
     this.cart.total_count = 0;

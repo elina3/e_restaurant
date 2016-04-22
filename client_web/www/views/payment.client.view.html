@@ -1,0 +1,56 @@
+<e-header></e-header>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="payment-page-view">
+    <div class="payment-panel">
+        <div class="payment-panel-wrapper">
+            <div class="payment-info">
+                <label>订单号：</label><span>{{pageData.order.order_number}}</span>
+            </div>
+            <div class="order-info">
+                <div><span>商品</span></div>
+                <div  ng-repeat="goodsOrder in pageData.order.goods_orders">
+                    <span>{{goodsOrder.name}}</span>
+                    <span class="price">{{goodsOrder.price}}元／个</span>
+                    <span>{{goodsOrder.count}} 个</span>
+                </div>
+                <div><span>共计{{pageData.order.goods_orders.length}}件商品</span></div>
+
+
+            </div>
+            <div class="payment-content">
+                <div class="payment-method">
+                    <div class="cart-method">
+                        <label>饭卡支付</label>
+                        <input name="cartMethod"
+                               ng-checked="pageData.paymentInfo.method === 'card'"
+                               type="radio" value="card"
+                               ng-model="pageData.paymentInfo.method"/>
+                    </div>
+                    <div class="scan-code-method" ng-hide="true">
+                        <label>微信扫码支付</label>
+                        <input disabled name="cartMethod" type="radio" value="wechat" ng-model="pageData.paymentInfo.method"/>
+                    </div>
+                </div>
+                <div class="payment-pay">
+                    <div class="price">
+                        <label>支付金额：</label><span>{{pageData.order.total_price}}</span>
+                    </div>
+                    <div class="card-number">
+                        <input type="text" placeholder="请填入卡号" ng-model="pageData.paymentInfo.card_number"/>
+                    </div>
+
+                    <div class="handle">
+                        <button ng-click="pay()">确认支付</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="car-footer row">
+    <p class="total-price col-xs-6" ng-show="!pageData.order.paid" >合计： <span class="count">￥12</span></p>
+    <p class="pay col-xs-6" ng-show="!pageData.order.paid" ng-click="pay()">确认支付</p>
+    <p class="total-price col-xs-12" ng-show="pageData.order.paid">合计： <span class="count">￥12</span></p>
+</div>
+
+<e-footer></e-footer>
