@@ -17,7 +17,7 @@ angular.module('EWeb').controller('GoodsManagerController',
           newCreate: false,
           pagination: {
             currentPage: 1,
-            limit: 2,
+            limit: 10,
             totalCount: 0,
             onCurrentPageChanged: function (callback) {
               loadGoodsList();
