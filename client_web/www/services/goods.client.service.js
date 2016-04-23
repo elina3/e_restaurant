@@ -8,7 +8,7 @@ angular.module('EClientWeb').factory('GoodsService',
       return {
         getGoodsList: function (param, callback) {
           RequestSupport.executeGet('/client/goods/list', {
-            skip_count: param.skip_count,
+            skip_count: param.skipCount,
             limit: param.limit,
             goods_ids: param.goods_ids
           })

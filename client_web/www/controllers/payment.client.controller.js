@@ -74,18 +74,19 @@ angular.module('EClientWeb').controller('PaymentController',
       init();
 
       $scope.pay = function(){
+        getClient();
         if(!$scope.pageData.paymentInfo.card_number){
           return $scope.$emit(GlobalEvent.onShowAlert, '请输入卡号！');
         }
 
-        OrderService.pay($scope.pageData.orderDetail.order_number,
+        OrderService.pay($scope.pageData.order._id,
           $scope.pageData.paymentInfo.card_number,
-          $scope.pageData.orderDetail.total_price ,function(err, data){
+          $scope.pageData.order.total_price ,function(err, data){
           if(err){
             return $scope.$emit(GlobalEvent.onShowAlert, '支付失败，请重新支付！' + err);
           }
 
-          return $state.go('my_order');
+          return $state.go('my_orders');
         });
       };
     }]);

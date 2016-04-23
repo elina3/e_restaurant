@@ -166,3 +166,18 @@ exports.getOpeningGoodsList = function(filter, currentPage, limit, skipCount, ca
     return callback(err, result);
   });
 };
+
+exports.getGoodsInfos = function(goodsIds, callback){
+  var query = {
+    deleted_status: false,
+    _id: {$in: goodsIds}
+  };
+  queryGoodsList(query, 1, -1, -1, function(err, result){
+    if(err){
+      return callback(err);
+    }
+
+    return callback(null, result.goodsList)
+
+  });
+};

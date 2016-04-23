@@ -8,10 +8,12 @@
             </div>
             <div class="order-info">
                 <div><span>商品</span></div>
-                <div  ng-repeat="goodsOrder in pageData.order.goods_orders">
-                    <span>{{goodsOrder.name}}</span>
-                    <span class="price">{{goodsOrder.price}}元／个</span>
-                    <span>{{goodsOrder.count}} 个</span>
+                <div class="goods-info row"  ng-repeat="goodsOrder in pageData.order.goods_orders">
+
+                        <span class="col-xs-4">{{goodsOrder.name}}</span>
+                        <span class="col-xs-4 price">{{goodsOrder.price}}元／个</span>
+                        <span class="col-xs-4">{{goodsOrder.count}} 个</span>
+
                 </div>
                 <div><span>共计{{pageData.order.goods_orders.length}}件商品</span></div>
 

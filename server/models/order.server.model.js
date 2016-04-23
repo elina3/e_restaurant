@@ -62,6 +62,13 @@ var OrderSchema = new Schema({
     enum: ['餐厅', '超市'],
     type: String
   },
+  client: {
+    type: Schema.Types.ObjectId,
+    ref: 'Client'
+  },
+  client_info: {
+    type: Schema.Types.Mixed
+  },
   goods_orders: [{
     type: Schema.Types.Mixed
   }],

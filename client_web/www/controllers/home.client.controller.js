@@ -32,8 +32,8 @@ angular.module('EClientWeb').controller('HomeController',
         },
         goodsList: [],
         pagination: {
-          skip_count: 0,
-          total_count: 0,
+          skipCount: 0,
+          totalCount: 0,
           limit: 20
         }
       };
@@ -118,9 +118,9 @@ angular.module('EClientWeb').controller('HomeController',
             return;
           }
           $scope.pageData.pagination.totalCount = data.total_count;
+          $scope.pageData.pagination.skipCount += data.goods_list.length;
           $scope.pageData.pagination.limit = data.limit;
-          $scope.pageData.goodsList = data.goods_list;
-          console.log(data.goods_list);
+          $scope.pageData.goodsList = $scope.pageData.goodsList.concat(data.goods_list);
         });
       }
 
@@ -130,4 +130,7 @@ angular.module('EClientWeb').controller('HomeController',
 
       init();
 
+      $scope.loadMore = function(){
+        loadGoods();
+      };
     }]);

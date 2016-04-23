@@ -36,12 +36,12 @@ exports.pay = function(client, order, method, card, amount, callback){
     payment.method = method;
     payment.amount = parseFloat(amount);
     payment.save(function(err, payment){
-      if(err || payment){
+      if(err || !payment){
         return callback({err: systemError.database_save_error});
       }
 
       cardLogic.pay(card,  payment.amount, function(err, newCard){
-        if(err){
+        if(err || !newCard){
           return callback(err);
         }
 

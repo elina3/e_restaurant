@@ -12,7 +12,7 @@
       font-size: 20px;
     }
   }
-  .order-list {
+  .order-info {
     margin-bottom: 60px;
     input {
       border: none;
@@ -81,6 +81,7 @@
       }
       .status{
 
+        text-align: center;
         display: table;
       }
 
@@ -101,6 +102,7 @@
     }
 
     .top {
+      overflow: hidden;
       background-color: @border-line-color-normal-app;
       span {
         line-height: 40px;
@@ -113,8 +115,10 @@
       .right {
         padding-right: 20px;
         text-align: right;
+
+        .overflow();
         .status{
-          display: none;
+          color: @font-color-red;
         }
       }
 
@@ -146,7 +150,6 @@
 
     }
   }
-
 }
 
 
@@ -157,13 +160,16 @@
       display: none;
     }
 
-    .order-list{
+    .order-info{
 
       margin-top: 10px;
       .top{
+        overflow: hidden;
         background: #fff;
         border-bottom: 1px solid @border-line-color-normal-app;
         .right{
+
+          .overflow();
 
           .time{
             display: none !important;
@@ -180,14 +186,48 @@
         height: 110px;
 
         .goods-items{
-          display: block;
+          display: inline-block;
           overflow: hidden;
-          width: 100%;
+          float: left;
+          width: 70%;
+
+          .goods-item{
+            .photo{
+              width: 50%;
+            }
+            .goods-des{
+              padding: 0;
+              margin: 0;
+
+              width: 40% !important;
+              .min-size-show{
+                display: inline-block;
+                float: left;
+                width: 40%;
+              }
+            }
+            .goods-price{
+              display: none !important;
+            }
+            .count{
+              display: none !important;
+            }
+          }
         }
 
-        .price, .status{
-          display: none;
+        .price{display: inline-block;
+          overflow: hidden;
+          float: left;
+          width: 12%;
+          font-size: 16px;
+          line-height: 110px;
         }
+        .status{display: inline-block;
+          overflow: hidden;
+          float: left;
+          line-height: 110px;
+        }
+
       }
 
       .sum{
@@ -197,14 +237,39 @@
   }
 }
 
-@media (max-width: 768px)  and (min-width: 568px) {
+@media (max-width: 770px)  and (min-width: 568px) {
   .my-orders-page-view {
     width: 100%;
     .info-title{
       display: none;
     }
-    .order-list{
+    .order-info{
       margin-top: 10px;
+
+
+
+      .goods-items{
+        .goods-item{
+          .photo{
+            width: 50%;
+          }
+          .goods-des{
+            padding: 0;
+            margin: 0;
+
+            width: 50%;
+            .min-size-show{
+              display: none !important;
+            }
+          }
+          .goods-price{
+            display: none;
+          }
+          .count{
+            display: none;
+          }
+        }
+      }
     }
   }
 }
@@ -212,17 +277,29 @@
 @media (min-width: 769px) and (max-width: 960px) {
   .my-orders-page-view {
     width: 960px;
+
+    .min-size-show{
+      display: none;
+    }
   }
 }
 
 @media (min-width: 960px) and (max-width: 1160px) {
   .my-orders-page-view {
     width: 960px;
+
+    .min-size-show{
+      display: none;
+    }
   }
 }
 
 @media (min-width: 1160px) {
   .my-orders-page-view {
     width: 1160px;
+
+    .min-size-show{
+      display: none;
+    }
   }
 }

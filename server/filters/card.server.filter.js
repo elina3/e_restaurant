@@ -6,15 +6,14 @@ var cardError = require('../errors/card');
 var cardLogic = require('../logics/card');
 
 exports.requireCard = function(req, res, next){
-  var cardId;
-  cardId = req.body.card_id || req.query.card_id || '';
+  var cardNumber = req.body.card_number || req.query.card_number || '';
 
 
-  if(!cardId){
-    return res.send({err: cardError.card_id_null})
+  if(!cardNumber){
+    return res.send({err: cardError.card_number_null})
   }
 
-  cardLogic.getCardById(cardId, function(err, card){
+  cardLogic.getCardByNumber(cardNumber, function(err, card){
     if(err){
       return next(err);
     }

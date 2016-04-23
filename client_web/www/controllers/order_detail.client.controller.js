@@ -121,7 +121,7 @@ angular.module('EClientWeb').controller('OrderDetailController',
               description: goods.description,
               price: goods.price,
               count: count,
-              display_photo: goods.display_photos[0]
+              display_photos: goods.display_photos
             });
             totalPrice += (goods.price * count);
           });
@@ -206,5 +206,13 @@ angular.module('EClientWeb').controller('OrderDetailController',
 
           return $state.go('payment', {order_id: data.order._id});
         });
+      };
+
+      $scope.goMyCart = function(){
+        $state.go('my_cart');
+      };
+
+      $scope.translateOrderStatus = function(){
+        return OrderService.translateOrderStatus($scope.pageData.orderDetail.status);
       };
     }]);

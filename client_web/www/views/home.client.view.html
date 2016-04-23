@@ -6,7 +6,7 @@
         <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">
             <div class="photo-area">
                 <div class="photo">
-                    <img ng-src={{generatePhotoSrc(goods)}}>
+                    <img err-src="images/global/default_goods.png"  ng-src={{generatePhotoSrc(goods)}}>
                 </div>
             </div>
             <div class="desc">
@@ -23,6 +23,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">
+        <div class="load-area">
+            <span class="click-button" ng-show="pageData.pagination.totalCount > pageData.pagination.skipCount" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="pageData.pagination.totalCount <= pageData.pagination.skipCount">已全部加载</span>
         </div>
     </div>
 </div>

@@ -86,7 +86,11 @@ exports.createOrder = function(orderInfo, client, callback){
         in_store_deal : contact ? false : true,
         name : orderInfo.name,
         goods_orders : goodsOrders,
-        description : orderInfo.description
+        description : orderInfo.description,
+        client: client._id,
+        client_info: {
+          nickname: client.nickname
+        }
       });
       order.order_number = generateOrderNumber(client, order);
       order.save(function(err, newOrder){
@@ -127,6 +131,42 @@ exports.getOrderByOrderId = function(orderId, callback){
   getOrderById(orderId, function(err, order){
     return callback(err, order);
   })
+};
+
+exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
+  var query = {deleted_status: false, client: client._id};
+  Order.count(query)
+    .exec(function(err, totalCount){
+      if(err){
+        return callback({err: systemError.database_query_error})
+      }
+
+      if (limit === -1) {
+        limit = totalCount;
+      }
+
+      if (skipCount === -1) {
+        skipCount = limit * (currentPage - 1);
+      }
+
+      Order.find(query)
+        .sort({create_time: -1})
+        .skip(skipCount)
+        .limit(limit)
+        .exec(function(err, orders){
+          if(err){
+            return callback({err: systemError.database_query_error})
+          }
+
+
+          return callback(null, {
+            totalCount: totalCount,
+            limit: limit,
+            orders: orders
+          });
+        });
+
+    });
 };
 
 exports.setOrderCooking = function(order, callback){

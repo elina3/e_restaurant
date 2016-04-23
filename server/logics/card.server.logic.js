@@ -58,6 +58,17 @@ function getCardDetailById(cardId, callback){
     });
 }
 
+exports.getCardByNumber = function(cardNumber, callback){
+  Card.findOne({card_number: cardNumber})
+    .exec(function(err, card){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, card);
+    });
+};
+
 exports.getCardById = function(cardId, callback){
   getCardDetailById(cardId, function(err, card){
     return callback(err, card);

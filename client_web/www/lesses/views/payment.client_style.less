@@ -41,11 +41,16 @@
         border: 1px solid @border-line-color-normal-web;
         width: 100%;
         text-align: left;
-        div{
+        div.goods-info{
           margin: 20px 0;
-        }
-        span{
-          margin-right: 20px;
+          overflow: hidden;
+
+          span{
+            display: inline-block;
+            overflow: hidden;
+            float: left;
+            max-width: 200px;
+          }
         }
       }
       .payment-content{
@@ -83,6 +88,7 @@
             margin-bottom: 2px;
             span{
               color: @font-color-red;
+              font-size: 18px;
             }
           }
 
@@ -127,6 +133,7 @@
     width: 100%;
     padding: 0 10px;
     .payment-content{
+      margin-bottom: 100px;
       .payment-method,.payment-pay{
         padding: 10px !important;
         display: block !important;
@@ -154,6 +161,7 @@
     width: 100%;
     padding: 0 10px;
     .payment-content{
+      margin-bottom: 100px;
       .payment-method,.payment-pay{
         padding: 10px !important;
         display: block !important;
