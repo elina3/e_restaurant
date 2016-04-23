@@ -38,6 +38,10 @@ angular.module('EWeb').controller('UserManagerController',
           }
         },
         plat_card_panel: {
+          keyword: {
+            card_number: '',
+            registration_id: ''
+          },
           show_plat:false,
           cards: [],
           currentEditCard: null,
@@ -450,9 +454,9 @@ angular.module('EWeb').controller('UserManagerController',
       //</editor-fold>
 
       //<editor-fold desc="饭卡相关">
-      function loadCards(keyword){
+      function loadCards(){
         $scope.pageConfig.plat_card_panel.cards = [];
-        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,keyword,function(err, data){
+        CardService.getCards($scope.pageConfig.plat_card_panel.pagination,$scope.pageConfig.plat_card_panel.keyword,function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -556,8 +560,7 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       $scope.searchCards=function(){
-        console.log($scope.keyword);
-        loadCards($scope.keyword);
+        loadCards();
       };
 
       function getNewCardObj(){

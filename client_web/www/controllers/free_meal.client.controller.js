@@ -150,6 +150,7 @@ angular.module('EClientWeb').controller('FreeMealController',
       };
 
       function init(){
+        getClient();
         $scope.$emit(GlobalEvent.onShowLoading, true);
         GoodsService.getFirstFreeMealGoodsDetail(function(err,data){
 

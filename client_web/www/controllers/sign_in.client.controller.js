@@ -23,8 +23,8 @@ angular.module('EClientWeb').controller('SignInController',
 
       $scope.pageData = {
         title: '登录',
-        password: '123456',
-        username: '18321740710'
+        password: '',
+        username: ''
       };
 
 

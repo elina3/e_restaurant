@@ -134,17 +134,17 @@ exports.deleteCard = function(cardId, callback){
   });
 };
 
-exports.getCardList = function(currentPage, limit, skipCount,keyword, callback){
+exports.getCardList = function(currentPage, limit, skipCount,cardNumber, registrationId, callback){
 
-  var query;
-  if(!keyword)
-    query = {
-      deleted_status: false
-    };
-  else query={
-    deleted_status:false,
-    card_number:new RegExp(keyword)
+  var query = {
+    deleted_status: false
   };
+  if(cardNumber)
+    query.card_number = {$regex: cardNumber, $options: '$i'};
+
+  if(registrationId)
+    query.registration_number = {$regex: registrationId, $options: '$i'};
+
   Card.count(query, function(err, totalCount){
     if(err){
       return callback({err: systemError.internal_system_error});

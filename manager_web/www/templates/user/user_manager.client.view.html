@@ -176,10 +176,9 @@
                         <div class="ee-search-bar row">
                             <div class="left-panel col-xs-6">
                                 <div class='pull-left'>
-                                    <span class="info-name">查询</span>
-                                    <div class="info-value">
-                                        <input placeholder="请输入卡号" type="text" ng-model="keyword" ng-keyup="searchCards()" />
-                                    </div>
+                                    <label class="info-name">查询:</label>
+                                    <input placeholder="请输入卡号" type="text" ng-model="pageConfig.plat_card_panel.keyword.card_number" ng-keyup="searchCards()" />
+                                    <input placeholder="请输入证件号" type="text" ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-keyup="searchCards()" />
                                 </div>
                             </div>
                             <div class="right-panel col-xs-6">
