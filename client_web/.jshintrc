@@ -74,7 +74,8 @@
     "ActiveXObject",
     "canvasResize",
     "async",
-    "BMap"
+    "BMap",
+    "wx"
   ],
   "indent": 4,
   // Specify indentation spacing

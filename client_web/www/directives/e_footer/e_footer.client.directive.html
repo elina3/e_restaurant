@@ -1,11 +1,17 @@
 <div class="e-footer">
     <div class="tab-bar">
-        <div class="tab-item home col-xs-4" ng-class="{'current': navState==='/'}">
+        <div class="tab-item home col-xs-3" ng-class="{'current': navState==='/'}">
             <a ng-click="goState('/')">
                 首页
             </a>
         </div>
-        <div class="tab-item shopping-cart col-xs-4" ng-class="{'current': navState==='my_cart'}">
+
+        <div class="tab-item free-meal col-xs-3" ng-class="{'current': navState==='free_meal'}">
+            <a ng-click="goState('free_meal')">
+                自由餐
+            </a>
+        </div>
+        <div class="tab-item shopping-cart col-xs-3" ng-class="{'current': navState==='my_cart'}">
             <a ng-click="goState('my_cart')">
                 购物车
             </a>
@@ -16,7 +22,7 @@
 
             </div>
         </div>
-        <div class="tab-item my-orders  col-xs-4" ng-class="{'current': navState==='my_orders'}">
+        <div class="tab-item my-orders  col-xs-3" ng-class="{'current': navState==='my_orders'}">
             <a ng-click="goState('my_orders')">
                 我的订单
             </a>
