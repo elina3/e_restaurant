@@ -31,7 +31,7 @@ angular.module('EClientWeb').controller('FreeMealController',
         title: '自由餐页面',
         headConfig: {
           title: '自由餐页面',
-          backView: '',
+          backView: '/',
           backShow: true
         },
         card_number: '',

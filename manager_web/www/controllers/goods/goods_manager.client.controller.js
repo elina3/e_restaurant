@@ -257,7 +257,6 @@ angular.module('EWeb').controller('GoodsManagerController',
         return GoodsService.translateGoodsStatus(status);
       };
 
-
       function initPageConfig(){
         switch($stateParams.goods_type){
           case 'goods':
@@ -292,7 +291,6 @@ angular.module('EWeb').controller('GoodsManagerController',
       }
 
       init();
-
       //<editor-fold desc="图片上传相关">
       function generalImgUrl(imgName) {
         return Config.qiniuServerAddress + imgName;
