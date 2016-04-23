@@ -35,7 +35,11 @@ angular.module('EClientWeb').controller('MyOrdersController',
       };
 
       function loadOrders(){
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.getMyOrders($scope.pageData.pagination, function(err, data){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if(err || !data.orders){
             return $scope.$emit(GlobalEvent.onShowAlert, '获取数据失败，请刷新页面重试');
           }

@@ -60,6 +60,7 @@ angular.module('EWeb').controller('GoodsManagerController',
             var goodsObj = {
               _id: goods._id,
               name: goods.name,
+              type: goods.type,
               price: goods.price,
               unit: goods.unit,
               discount: goods.discount,
@@ -111,6 +112,7 @@ angular.module('EWeb').controller('GoodsManagerController',
       function getNewGoodsObj(){
         return {
           name: '',
+          type: 'normal',
           description: '',
           statusObj: {id: 'none', text: '未开放'},
           price: 0,
@@ -183,6 +185,7 @@ angular.module('EWeb').controller('GoodsManagerController',
       function generateUploadGoodsInfo(){
         var goodsInfo = {
           _id: $scope.pageConfig.goodsPanel.currentEditGoods._id,
+          type: $scope.pageConfig.goodsPanel.currentEditGoods.type,
           name: $scope.pageConfig.goodsPanel.currentEditGoods.name,
           status: $scope.pageConfig.goodsPanel.currentEditGoods.statusObj.id,
           price: parseFloat($scope.pageConfig.goodsPanel.currentEditGoods.price),

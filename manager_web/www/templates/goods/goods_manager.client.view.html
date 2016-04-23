@@ -42,7 +42,7 @@
                                         <span>状态</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>折扣</span>
+                                        <span>类型</span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span>操作</span>
@@ -59,8 +59,11 @@
                                         <span>{{goods.statusObj.text}}</span>
                                     </div>
                                     <div class="col-xs-2">
+                                        <!--<span class="type">-->
+                                            <!--{{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}-->
+                                        <!--</span>-->
                                         <span class="type">
-                                            {{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}
+                                        {{goods.type === 'free_meal' ? '工作餐': '普通'}}
                                         </span>
                                     </div>
                                     <div class="col-xs-2">
@@ -111,6 +114,17 @@
                 </div>
                 <div class="ee-pop-body">
                     <div class="ee-goods-detail-area">
+                        <div class="goods-type">
+                            <p class="area-title">商品类型</p>
+                            <div class="goods-type-item">
+                                <label>普通</label>
+                                <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'normal'" name="goodsType" value="normal"  type="radio"/>
+                            </div>
+                            <div class="goods-type-item">
+                                <label>工作餐</label>
+                                <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'free_meal'" name="goodsType" value="free_meal"   type="radio"/>
+                            </div>
+                        </div>
                         <div class="goods-display-photo-area">
                             <p class="area-title">照片显示</p>
                             <div class="row ee-photo-box">

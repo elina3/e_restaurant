@@ -11,7 +11,7 @@ angular.module('EWeb').service('RequestSupport',
                   return {err: SystemError.data_is_null};
               }
               if (data.err) {
-                  return {err: data.err.type, message: data.err.message};
+                  return {err: data.err.type, message: data.err.message, zh_message: data.err.zh_message};
               }
               if (data.error) {
                   return {err: data.error.type};

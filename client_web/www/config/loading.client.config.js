@@ -5,5 +5,5 @@
 'use strict';
 
 angular.module('EClientWeb').constant('ZLoadingConfig', {
-    template: '<img ng-src="img/global/load.gif"/>'
+    template: '<img ng-src="images/global/load.gif"/>'
 });

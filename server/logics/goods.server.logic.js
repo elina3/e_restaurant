@@ -13,10 +13,10 @@ exports.addGoods = function(goodsInfo, user, callback){
   if(!goodsInfo.name){
     return callback({err: goodsError.goods_name_null});
   }
-
   var goods = new Goods({
     name: goodsInfo.name,
     description: goodsInfo.description,
+    type: goodsInfo.type || 'normal',
     status: goodsInfo.status,
     price: goodsInfo.price ? parseFloat(goodsInfo.price) : -1,
     unit: goodsInfo.unit ? goodsInfo.unit : '盒',
@@ -77,6 +77,7 @@ exports.updateGoodsById = function(goodsId, goodsInfo, user, callback){
 
     Goods.update({_id: goodsId},{$set: {name: goodsInfo.name,
       description: goodsInfo.description,
+      type: goodsInfo.type || 'normal',
       price: goodsInfo.price? parseFloat(goodsInfo.price):-1,
       discount: goodsInfo.discount ? parseFloat(goodsInfo.discount): 1,
       display_photos: goodsInfo.display_photos,
@@ -156,7 +157,8 @@ exports.getGoodsList = function(currentPage, limit, skipCount, callback){
 exports.getOpeningGoodsList = function(filter, currentPage, limit, skipCount, callback){
   var query = {
     deleted_status: false,
-    status: {$nin: ['none']}
+    status: {$nin: ['none']},
+    type: {$ne: 'free_meal'}
   };
   if(filter.goods_ids && filter.goods_ids.length > 0){
     query._id = {$in: filter.goods_ids};
@@ -180,4 +182,15 @@ exports.getGoodsInfos = function(goodsIds, callback){
     return callback(null, result.goodsList)
 
   });
+};
+
+exports.getFirstFreeMealGoods = function(callback){
+   Goods.find({deleted_status: false, type: 'free_meal'})
+     .exec(function(err, freeMeals){
+       if(err || !freeMeals){
+         return callback({err: systemError.database_query_error});
+       }
+
+       return callback(null, freeMeals[0]);
+     });
 };

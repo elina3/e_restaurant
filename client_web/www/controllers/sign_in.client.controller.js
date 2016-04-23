@@ -68,7 +68,9 @@ angular.module('EClientWeb').controller('SignInController',
           return;
         }
 
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         ClientService.signIn($scope.pageData, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
             return;

@@ -181,7 +181,7 @@ exports.pay = function(card, amount, callback){
     return callback(null, card);
   }
 
-  if(card.amount < card.amount){
+  if(card.money < amount){
     return callback({err: cardError.insufficient_balance});
   }
 
@@ -189,7 +189,7 @@ exports.pay = function(card, amount, callback){
     return callback({err: cardError.card_disabled});
   }
 
-  card.amount = card.amount - amount;
+  card.money =card.money - amount;
   card.save(function(err, newCard){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});

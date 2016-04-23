@@ -74,7 +74,11 @@ angular.module('EClientWeb').controller('OrderDetailController',
       };
 
       function loadOrderDetail(orderId) {
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.getOrderDetail(orderId, function (err, data) {
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data.order) {
             $scope.$emit(GlobalEvent.onShowAlert, '获取订单信息失败！' + err);
           }
@@ -90,12 +94,13 @@ angular.module('EClientWeb').controller('OrderDetailController',
           $scope.pageData.orderDetail.goods_infos = [];
           data.order.goods_orders.forEach(function (goodsOrder) {
             $scope.pageData.orderDetail.goods_infos.push({
-              _id: goodsOrder.goods,
-              name: goodsOrder.goods_info.name,
-              description: goodsOrder.goods_info.description,
+              _id: goodsOrder.goods_id,
+              name: goodsOrder.name,
+              description: goodsOrder.description,
               price: goodsOrder.price,
               count: goodsOrder.count,
-              display_photo: goodsOrder.goods_info.display_photo
+              status: goodsOrder.status,
+              display_photos: goodsOrder.display_photos
             });
           });
         });
@@ -108,7 +113,11 @@ angular.module('EClientWeb').controller('OrderDetailController',
           goodsIdList.push(goodsInfo._id);
           goodsDic[goodsInfo._id] = goodsInfo.count;
         });
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         GoodsService.getGoodsList({goods_ids: goodsIdList}, function (err, data) {
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data) {
             $scope.$emit(GlobalEvent.onShowAlert, '获取商品信息失败！' + err);
           }
@@ -188,7 +197,10 @@ angular.module('EClientWeb').controller('OrderDetailController',
           return;
         }
 
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.createOrder($scope.pageData.orderDetail, function (err, data) {
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data || !data.order || !data.client) {
             return $scope.$emit(GlobalEvent.onShowAlert, '订单生成失败！请刷新页面重试' + err);
           }

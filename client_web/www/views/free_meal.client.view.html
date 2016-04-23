@@ -1,1 +1,72 @@
-<div class="wrapper" style="margin: 30px auto;"><a style="font-size: 18px; line-height: 20px;cursor: pointer;" ng-click="goBack()">返回</a><strong style="margin-left: 10px; font-size: 18px; line-height: 20px;">{{pageData.title}}</strong></div>
+
+<e-header></e-header>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="free-meal-page-view">
+
+    <div class="goods-box">
+        <div class='row goods-info'>
+            <div class="row">
+                <div class="col-xs-6 photo">
+                    <div class="top">
+                        <img err-src="images/global/default_goods.png"   ng-src="{{generatePhotoSrc(pageData.goods.display_photos[0])}}"/>
+                    </div>
+                    <div class="photo-nav">
+
+                    </div>
+                </div>
+                <div class="col-xs-6 info">
+                    <div class="goods-name">
+                        <span>{{pageData.goods.name}}</span>
+                    </div>
+                    <div class="base">
+                        <div class="row">
+                            <div class="col-xs-2 normal"><span>参考价格:</span></div>
+                            <div class="col-xs-3 normal goods-price right">
+                                <span>{{pageData.goods.price === -1 ?  '待定' :'￥' + pageData.goods.price}}</span>
+                            </div>
+                        </div>
+                        <div class="row" ng-show="false">
+                            <div class="col-xs-2 normal"><span>数量:</span></div>
+                            <div class="col-xs-10 normal right">
+                                <div class="count-box">
+                                    <div class="left" ng-click="minusNumber()">
+                                        <span>-</span>
+                                    </div>
+                                    <div class="middle">
+                                        <input ng-model="pageData.count"
+                                               zz-validation zz-validation-type="number"
+                                                >
+                                    </div>
+                                    <div class="right" ng-click="addNumber()">
+                                        <span>+</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="add-car-button">
+                        <div><label>输入金额</label><input class="input-box" ng-model="pageData.price"/></div>
+                        <div><label>输入卡号</label><input class="input-box" ng-model="pageData.card_number"/></div>
+                        <input class="buy-now" type="button" value="立即购买" ng-click="pay()"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="good-detail">
+            <div class="description-text">
+                <p class="title">图文详情</p>
+                <pre class="content">
+{{pageData.goods.description}}
+                </pre>
+
+            </div>
+            <div class="description-photo">
+                <img err-src="images/global/default_goods.png"   ng-repeat="photoKey in pageData.goods.description_photos" ng-src="{{generatePhotoSrc(photoKey)}}"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<e-footer></e-footer>
+

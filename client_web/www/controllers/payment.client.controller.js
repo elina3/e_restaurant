@@ -53,7 +53,11 @@ angular.module('EClientWeb').controller('PaymentController',
       };
 
       function loadOrderDetail(orderId) {
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+
         OrderService.getOrderDetail(orderId, function (err, data) {
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data.order) {
             $scope.$emit(GlobalEvent.onShowAlert, '获取订单信息失败！' + err);
           }
@@ -79,12 +83,15 @@ angular.module('EClientWeb').controller('PaymentController',
           return $scope.$emit(GlobalEvent.onShowAlert, '请输入卡号！');
         }
 
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.pay($scope.pageData.order._id,
           $scope.pageData.paymentInfo.card_number,
           $scope.pageData.order.total_price ,function(err, data){
-          if(err){
-            return $scope.$emit(GlobalEvent.onShowAlert, '支付失败，请重新支付！' + err);
-          }
+
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if(err){
+              return $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
 
           return $state.go('my_orders');
         });
