@@ -18,27 +18,27 @@
 
                     <div class="ee-detail-info-one">
                         <span>用户名</span>
-                        <strong>{{pageConfig.plat_client_panel.currentEditClient.username}}</strong>
+                        <strong>{{popupConfig.data.username}}</strong>
                     </div>
                     <div class="ee-detail-info-two">
                         <span>手机号</span>
-                        <strong>{{pageConfig.plat_client_panel.currentEditClient.mobile_phone}}</strong>
+                        <strong>{{popupConfig.data.mobile_phone}}</strong>
                     </div>
                 </div>
                 <div class="detail-row">
                     <div class="ee-detail-info-one">
                         <span>性别</span>
-                        <strong>{{pageConfig.plat_client_panel.currentEditClient.sex.text}}</strong>
+                        <strong>{{popupConfig.data.sex.text}}</strong>
                     </div>
                     <div class="ee-detail-info-two">
                         <span>角色</span>
-                        <strong>{{pageConfig.plat_client_panel.currentEditClient.role.text}}</strong>
+                        <strong>{{popupConfig.data.role.text}}</strong>
                     </div>
                 </div>
                 <div class="detail-row">
                     <div class="ee-detail-info-two">
                         <span>证件号</span>
-                        <strong>{{pageConfig.plat_client_panel.currentEditClient.description}}</strong>
+                        <strong>{{popupConfig.data.description}}</strong>
                     </div>
                 </div>
             </div>
@@ -63,28 +63,28 @@
                 <div class="info-item">
                     <span class="info-name">用户名</span>
                     <div class="info-value">
-                        <input placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.username"/>
+                        <input placeholder="请输入用户名" type="text" ng-model="popupConfig.data.username"/>
                     </div>
                     <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.username}">(必填项，手机号)</div>
                 </div>
                 <div class="info-item">
                     <span class="info-name">密码</span>
                     <div class="info-value">
-                        <input placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_client_panel.currentEditClient.password"/>
+                        <input placeholder="请输入密码（至少6位数字）" type="password" ng-model="popupConfig.data.password"/>
                     </div>
                     <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.password}">(必填项,至少六个字符)</div>
                 </div>
                 <div class="info-item">
                     <span class="info-name">昵称</span>
                     <div class="info-value">
-                        <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.nickname"/>
+                        <input placeholder="请输入昵称" type="text" ng-model="popupConfig.data.nickname"/>
                     </div>
                     <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.nickname}">(必填项)</div>
                 </div>
                 <div class="info-item">
                     <span class="info-name">性别</span>
                     <div class="info-value">
-                        <z-dropdown z-dropdown-model="pageConfig.plat_client_panel.currentEditClient.sex"
+                        <z-dropdown z-dropdown-model="popupConfig.data.sex"
                                     z-dropdown-options="pageConfig.sexs"
                                     z-dropdown-label="请选择性别"
                                 >
@@ -94,14 +94,14 @@
                 <div class="info-item">
                     <span class="info-name">手机号</span>
                     <div class="info-value">
-                        <input placeholder="请输入手机号" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.mobile_phone"/>
+                        <input placeholder="请输入手机号" type="text" ng-model="popupConfig.data.mobile_phone"/>
                     </div>
                     <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.mobile_phone}">(必填项)</div>
                 </div>
                 <div class="info-item">
                     <span class="info-name">角色</span>
                     <div class="info-value">
-                        <z-dropdown z-dropdown-model="pageConfig.plat_client_panel.currentEditClient.role"
+                        <z-dropdown z-dropdown-model="popupConfig.data.role"
                                     z-dropdown-options="pageConfig.clientRoles"
                                     z-dropdown-label="请选择角色"
                                 >
@@ -111,11 +111,11 @@
                 </div>
                 <div class="handle">
 
-                    <div class="sure" ng-click="addOrEditClient()">{{pageConfig.clientScanType === 'edit'?'确定':'添加'}}</div>
+                    <div class="sure" ng-click="popupConfig.submit()">{{pageConfig.clientScanType === 'edit'?'确定':'添加'}}</div>
 
-                    <div class="cancel" ng-click="cancelClient()">取消</div>
+                    <div class="cancel" ng-click="popupConfig.cancel()">取消</div>
 
-                    <div class="reset" ng-click="resetClient()" ng-show="pageConfig.clientScanType === 'create'">重置</div>
+                    <div class="reset" ng-click="popupConfig.reset()" ng-show="popupConfig.type === 1">重置</div>
                 </div>
             </div>
         </div>
