@@ -48,6 +48,25 @@ angular.module('EClientWeb').factory('GoodsService',
               }
               callback(SystemError.network_error);
             });
+        },
+        getFirstFreeMealGoodsDetail: function(callback){
+          RequestSupport.executeGet('/client/goods/free_meal', {})
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
         }
       };
     }]);

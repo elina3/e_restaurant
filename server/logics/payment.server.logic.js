@@ -33,7 +33,9 @@ exports.pay = function(client, order, method, card, amount, callback){
       return callback({err: paymentError.not_support_method});
     }
 
-    payment.method = method;
+
+      payment.card_number = card.card_number;
+        payment.method = method;
     payment.amount = parseFloat(amount);
     payment.save(function(err, payment){
       if(err || !payment){
@@ -51,6 +53,7 @@ exports.pay = function(client, order, method, card, amount, callback){
             return callback({err: paymentError.update_order_to_paid_error});
           }
 
+          order.status = 'paid';
           order.paid = true;
           order.save(function(err, newOrder){
             if(err || !newOrder){

@@ -24,6 +24,11 @@ var GoodsSchema = new Schema({
     type: String,
     default: ''
   },
+  type: {
+    enum: ['free_meal', 'normal'],
+    type: String,
+    default: false
+  },
   status: {
     enum: ['none', 'sold_out', 'on_sale'],//未开放，开放中，售罄，热卖中
     default: 'none',

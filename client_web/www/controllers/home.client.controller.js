@@ -78,7 +78,10 @@ angular.module('EClientWeb').controller('HomeController',
       $scope.addToCart = function(goods, event){
         var client = getClient();
         if(client){
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
           ClientService.addGoodsToCart(client, goods, 1, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
             if(err){
               console.log(err);
               return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
@@ -93,20 +96,6 @@ angular.module('EClientWeb').controller('HomeController',
             event.stopPropagation();
           }
         }
-      };
-
-      $scope.buyNow = function(goods){
-        alert('buy now');
-        //if(validSignIn()){
-        //  ClientService.addGoodsToCart(goods, client, 1, function(err, data){
-        //    if(err){
-        //      console.log(err);
-        //      return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
-        //    }
-        //
-        //    $scope.$emit(GlobalEvent.onCartCountChange, data.client);
-        //  });
-        //}
       };
 
       function loadGoods(){
@@ -132,5 +121,17 @@ angular.module('EClientWeb').controller('HomeController',
 
       $scope.loadMore = function(){
         loadGoods();
+      };
+      $scope.buyNow = function(goods, event){
+        var goodsInfos = [{
+          _id: goods._id,
+          count: 1
+        }];
+        $state.go('order_detail', {goods_infos: JSON.stringify(goodsInfos)});
+        if(event){
+          if (event) {
+            event.stopPropagation();
+          }
+        }
       };
     }]);

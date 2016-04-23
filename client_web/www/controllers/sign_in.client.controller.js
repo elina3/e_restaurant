@@ -23,8 +23,8 @@ angular.module('EClientWeb').controller('SignInController',
 
       $scope.pageData = {
         title: '登录',
-        password: '123456',
-        username: '18321740710'
+        password: '',
+        username: ''
       };
 
 
@@ -68,7 +68,9 @@ angular.module('EClientWeb').controller('SignInController',
           return;
         }
 
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         ClientService.signIn($scope.pageData, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
             return;

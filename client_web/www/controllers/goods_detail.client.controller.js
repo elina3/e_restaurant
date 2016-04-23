@@ -32,39 +32,9 @@ angular.module('EClientWeb').controller('GoodsDetailController',
           backView: '',
           backShow: true
         },
+        goods: null,
         count: 1
       };
-
-      $scope.goToView = function(viewPage){
-        switch(viewPage){
-          case 'goodsCart':
-            $state.go('my_cart');
-            break;
-          case 'orderDetail':
-            $state.go('order_detail');
-            break;
-          case 'signIn':
-            $state.go('sign_in');
-            break;
-        }
-      };
-
-      $scope.addNumber = function(){
-        $scope.pageData.count = parseInt($scope.pageData.count);
-        $scope.pageData.count++;
-      };
-      $scope.minusNumber = function(){
-        $scope.pageData.count = parseInt($scope.pageData.count);
-        $scope.pageData.count--;
-      };
-
-      $scope.generatePhotoSrc = function (photoKey) {
-        if(photoKey){
-          return ResourcesService.getImageUrl(photoKey);
-        }
-        return '';
-      };
-
 
       function getClient(){
         var client = Auth.getUser();
@@ -76,10 +46,29 @@ angular.module('EClientWeb').controller('GoodsDetailController',
         return client;
       }
 
+      $scope.generatePhotoSrc = function (photoKey) {
+        if(photoKey){
+          return ResourcesService.getImageUrl(photoKey);
+        }
+        return '';
+      };
+
+      $scope.addNumber = function(){
+        $scope.pageData.count = parseInt($scope.pageData.count);
+        $scope.pageData.count++;
+      };
+      $scope.minusNumber = function(){
+        $scope.pageData.count = parseInt($scope.pageData.count);
+        $scope.pageData.count--;
+      };
       $scope.addToCart = function(){
         var client = getClient();
         if(client){
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
           ClientService.addGoodsToCart(client, $scope.pageData.goods, $scope.pageData.count, function(err, data){
+
+            $scope.$emit(GlobalEvent.onShowLoading, false);
             if(err){
               console.log(err);
               return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
@@ -89,6 +78,13 @@ angular.module('EClientWeb').controller('GoodsDetailController',
             $scope.$emit(GlobalEvent.onCartCountChange, data.client);
           });
         }
+      };
+      $scope.buyNow = function(){
+        var goodsInfos = [{
+          _id: $scope.pageData.goods._id,
+          count: $scope.pageData.count
+        }];
+        $state.go('order_detail', {goods_infos: JSON.stringify(goodsInfos)});
       };
 
       function init(){

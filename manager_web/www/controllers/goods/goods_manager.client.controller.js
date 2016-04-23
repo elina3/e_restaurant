@@ -17,7 +17,7 @@ angular.module('EWeb').controller('GoodsManagerController',
           newCreate: false,
           pagination: {
             currentPage: 1,
-            limit: 2,
+            limit: 10,
             totalCount: 0,
             onCurrentPageChanged: function (callback) {
               loadGoodsList();
@@ -60,6 +60,7 @@ angular.module('EWeb').controller('GoodsManagerController',
             var goodsObj = {
               _id: goods._id,
               name: goods.name,
+              type: goods.type,
               price: goods.price,
               unit: goods.unit,
               discount: goods.discount,
@@ -111,6 +112,7 @@ angular.module('EWeb').controller('GoodsManagerController',
       function getNewGoodsObj(){
         return {
           name: '',
+          type: 'normal',
           description: '',
           statusObj: {id: 'none', text: '未开放'},
           price: 0,
@@ -183,6 +185,7 @@ angular.module('EWeb').controller('GoodsManagerController',
       function generateUploadGoodsInfo(){
         var goodsInfo = {
           _id: $scope.pageConfig.goodsPanel.currentEditGoods._id,
+          type: $scope.pageConfig.goodsPanel.currentEditGoods.type,
           name: $scope.pageConfig.goodsPanel.currentEditGoods.name,
           status: $scope.pageConfig.goodsPanel.currentEditGoods.statusObj.id,
           price: parseFloat($scope.pageConfig.goodsPanel.currentEditGoods.price),
@@ -254,7 +257,6 @@ angular.module('EWeb').controller('GoodsManagerController',
         return GoodsService.translateGoodsStatus(status);
       };
 
-
       function initPageConfig(){
         switch($stateParams.goods_type){
           case 'goods':
@@ -289,7 +291,6 @@ angular.module('EWeb').controller('GoodsManagerController',
       }
 
       init();
-
       //<editor-fold desc="图片上传相关">
       function generalImgUrl(imgName) {
         return Config.qiniuServerAddress + imgName;

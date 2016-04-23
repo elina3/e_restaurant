@@ -70,17 +70,20 @@ angular.module('EWeb').directive('zHeader',
 
                     scope.quit = function () {
                         scope.menuOpened = false;
-                        console.log('quit：' + scope.menuOpened);
-                        scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
-                            if (status) {
-                                UserService.signOut(function (err, data) {
-                                    if (err) {
-                                        return scope.$emit(GlobalEvent.onShowAlert, err);
-                                    }
-                                    $state.go('user_index');
-                                });
-                            }
-                        });
+                        Auth.setUser(null);
+                        Auth.setToken('');
+                        $state.go('user_sign_in');
+                        //console.log('quit：' + scope.menuOpened);
+                        //scope.$emit(GlobalEvent.onShowAlertConfirm, {content: '您真的要退出吗？'}, function (status) {
+                        //    if (status) {
+                        //        UserService.signOut(function (err, data) {
+                        //            if (err) {
+                        //                return scope.$emit(GlobalEvent.onShowAlert, err);
+                        //            }
+                        //            $state.go('user_index');
+                        //        });
+                        //    }
+                        //});
                     };
 
                     scope.backHome = function () {

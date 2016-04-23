@@ -112,3 +112,17 @@ exports.getOpeningGoodsList = function(req, res, next){
     return next();
   });
 };
+
+exports.getFirstFreeMealGoods = function(req, res, next){
+  goodsLogic.getFirstFreeMealGoods(function(err, goods){
+    if(err){
+      req.err = err;
+      return next();
+    }
+
+    req.data = {
+      goods: goods
+    };
+    return next();
+  });
+};

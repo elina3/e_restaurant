@@ -12,7 +12,8 @@ angular.module('EWeb').factory('CardService',
             current_page: param.currentPage,
             limit: param.limit,
             skip_count: param.skipCount,
-              keyword:keyword
+            card_number: keyword.card_number,
+            registration_id: keyword.registration_id
           })
             .then(function (data) {
               if (!callback) {

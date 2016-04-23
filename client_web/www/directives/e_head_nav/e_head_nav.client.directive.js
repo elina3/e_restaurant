@@ -18,7 +18,7 @@ angular.module('EClientWeb').directive('eHeadNav', [
                     scope.config = {};
                 }
 
-                if(scope.config.backShow === undefined || scope.config.backShow === null){
+                if(scope.config.backShow === '' || scope.config.backShow === undefined || scope.config.backShow === null){
                     scope.config.backShow = true;
                 }
 
@@ -27,9 +27,9 @@ angular.module('EClientWeb').directive('eHeadNav', [
                     $state.go('sign_in');
                 };
 
-                scope.goBack = function(view){
+                scope.goBack = function(){
                     if(scope.config && scope.config.backView){
-                        $state.go(view);
+                        $state.go(scope.config.backView);
                         return;
                     }
 

@@ -16,8 +16,8 @@
             <div class="ee-tag-panel">
                 <ul class="ee-tag-header">
                     <li ng-class="{'current': pageConfig.currentTag === 'goods'}" ng-click="changeTag('goods')">{{pageConfig.type === 'restaurant' ? '菜品': '商品'}}管理</li>
-                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单管理</li>
-                    <li class="last" ng-if="false" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计图</li>
+                    <li ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单管理</li>
+                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计图</li>
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'orders' || pageConfig.currentTag === 'statistics' ? 'move-left' : ''">
@@ -42,7 +42,7 @@
                                         <span>状态</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>折扣</span>
+                                        <span>类型</span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span>操作</span>
@@ -59,8 +59,11 @@
                                         <span>{{goods.statusObj.text}}</span>
                                     </div>
                                     <div class="col-xs-2">
+                                        <!--<span class="type">-->
+                                            <!--{{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}-->
+                                        <!--</span>-->
                                         <span class="type">
-                                            {{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}
+                                        {{goods.type === 'free_meal' ? '工作餐': '普通'}}
                                         </span>
                                     </div>
                                     <div class="col-xs-2">
@@ -79,21 +82,10 @@
                         </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
-                        orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders orders
+                       <div style="width: 200px; margin: 200px auto;">该功能正在努力开发中。。。</div>
                     </div>
                     <div class="ee-tag-view">
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
-                        statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic statistic
+                        <div style="width: 200px; margin: 200px auto;">该功能正在努力开发中。。。</div>
                     </div>
                 </div>
             </div>
@@ -111,6 +103,17 @@
                 </div>
                 <div class="ee-pop-body">
                     <div class="ee-goods-detail-area">
+                        <div class="goods-type">
+                            <p class="area-title">商品类型</p>
+                            <div class="goods-type-item">
+                                <label>普通</label>
+                                <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'normal'" name="goodsType" value="normal"  type="radio"/>
+                            </div>
+                            <div class="goods-type-item">
+                                <label>工作餐</label>
+                                <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'free_meal'" name="goodsType" value="free_meal"   type="radio"/>
+                            </div>
+                        </div>
                         <div class="goods-display-photo-area">
                             <p class="area-title">照片显示</p>
                             <div class="row ee-photo-box">
