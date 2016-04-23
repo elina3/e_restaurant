@@ -202,25 +202,57 @@ exports.clearGoodsFromCart = function(client, goodsInfos, callback){
   }
 
   async.each(goodsInfos, function(goodsInfo, eachCallback){
-    var index = client.cart.cart_goods.ObjectIndexOf('goods_id', goodsInfo._id.toString());
+    var index = client.cart.cart_goods.objectIndexOf('goods_id', goodsInfo._id.toString());
     if(index === -1){
       return eachCallback();
     }
 
     client.cart.cart_goods.splice(index, 1);
     return eachCallback();
-  }, function(err){
+  }, function(){
+    client.markModified('cart');
+    client.save(function(err, newClient){
+      if(err || !newClient){
+        return callback({err: systemError.database_save_error});
+      }
 
+      return callback(err, newClient);
+    });
+  });
+};
+
+exports.updateContact = function(client, contact, callback){
+
+  if(!contact){
+    return callback(null, client);
+  }
+
+  if(!client.contacts){
+    client.contacts = [];
+  }
+
+  var index = -1;
+  client.contacts.forEach(function(oldContact, i){
+    if(oldContact.name === contact.name || oldContact.address === contact.address || oldContact.mobile_phone === contact.mobile_phone){
+      index = i;
+    }
   });
 
-  client.markModified('cart');
+  if(index > -1){
+    return callback(null, client);
+  }
+
+  client.contacts.unshift(contact);//前端插入
+  client.markModified('contacts');
   client.save(function(err, newClient){
     if(err || !newClient){
       return callback({err: systemError.database_save_error});
     }
 
-    return callback(err, newClient);
+    return callback(null, newClient);
   });
+
+
 };
 
 exports.getAllClients = function(admin, currentPage, limit, skipCount, callback){

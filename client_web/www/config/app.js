@@ -38,9 +38,14 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
           controller: 'MyOrdersController'
       })
       .state('order_detail', {
-          url: '/orders/:order_id',
+          url: '/orders/:order_id/:goods_infos',
           templateUrl: 'views/order_detail.client.view.html',
           controller: 'OrderDetailController'
+      })
+      .state('payment', {
+          url: '/payment/:order_id',
+          templateUrl: 'views/payment.client.view.html',
+          controller: 'PaymentController'
       })
       .state('sign_in', {
           url: '/client/sign_in',

@@ -96,8 +96,9 @@ exports.getOpeningGoodsList = function(req, res, next){
   currentPage = parseInt(currentPage);
   skipCount = parseInt(skipCount);
   limit = parseInt(limit);
+  var goodsIds = req.query.goods_ids || req.body.goods_ids || [];
 
-  goodsLogic.getOpeningGoodsList(currentPage, limit, skipCount, function(err, result){
+  goodsLogic.getOpeningGoodsList({goods_ids: goodsIds}, currentPage, limit, skipCount, function(err, result){
     if(err){
       req.err = err;
       return next();

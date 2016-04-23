@@ -2,18 +2,31 @@
 <e-header></e-header>
 <e-head-nav config="pageData.headConfig"></e-head-nav>
 <div class="order-detail-page-view">
+    <div class="info-title" ng-show="pageData.orderDetail.order_number">
+        <span>订单号：{{pageData.orderDetail.order_number}}</span>
+        <strong>{{translateOrderStatus()}}</strong>
+    </div>
     <div class="info-title">
-        <span>确认收货</span>
+        <span>{{pageData.scan ? '':'确认'}}收货信息</span>
     </div>
     <div class="address">
-        <div>
-            <span>收货人：郭姗姗</span>
-            <span>18321740710</span>
+        <div class="address-check-box">
+            <label>店内用餐</label><input disabled class="address-check-box" ng-model="pageData.orderDetail.in_store_deal" type="checkbox"/>
         </div>
 
-        <div class="address-info">收货地址：201栋 病床4号</div>
+        <div class="address-info" ng-show="!pageData.orderDetail.in_store_deal">
+            <div class="address-item">
+                <label>收货人</label><input class="name" ng-model="pageData.orderDetail.contact.name"/>
+            </div>
+            <div class="address-item">
+                <label>电话</label><input class="phone" ng-model="pageData.orderDetail.contact.mobile_phone" />
+            </div>
+            <div class="address-item">
+                <label>地址</label><input class="detail" ng-model="pageData.orderDetail.contact.address"/>
+            </div>
+        </div>
         <div class="remark row">
-            <span class="key">备注信息：</span>
+            <span class="key">备注信息</span>
             <span class="value">
                 <input type="text" ng-model="orderObj.remarks" />
             </span>
@@ -21,93 +34,65 @@
     </div>
 
     <div class="info-title">
-        <span>确认订单信息</span>
+        <span>{{pageData.scan ? '':'确认'}}订单信息</span>
     </div>
-    <div class="order-list">
+    <div class="order-list" ng-show='pageData.orderDetail.goods_infos && pageData.orderDetail.goods_infos.length > 0'>
         <div class="header row">
             <div class="col-xs-6"><span>商品</span></div>
             <div class="col-xs-2"><span>单价</span></div>
             <div class="col-xs-2"><span>数量</span></div>
             <div class="col-xs-2"><span>总价</span></div>
         </div>
-        <div class="order-item rowcenter">
+        <div class="order-item rowcenter" ng-repeat="goodsInfo in  pageData.orderDetail.goods_infos">
             <div class="col-xs-6 goods-info">
                 <div class="row">
                     <div class="col-xs-6 photo">
-                        <img src="temp/goods1.png"/>
+                        <img err-src="images/global/default_goods.png"   ng-src="{{generatePhotoSrc(goodsInfo.display_photos[0])}}"/>
                     </div>
                     <div class="col-xs-6 goods-name">
-                        <div class="center-content"><span>呱呱叫干锅主题餐厅</span></div>
+                        <div class="center-content"><span>{{goodsInfo.name}}</span></div>
                     </div>
                     <div class="col-xs-6 description">
-                        <p class="text">呱呱叫干锅主题餐厅</p>
+                        <p class="text">{{goodsInfo.description}}</p>
                         <div class="buy-info">
-                            <span class="sales-price">￥12</span>
-                            <span class="number">X 1</span>
+                            <span class="sales-price">￥{{goodsInfo.price}}</span>
+                            <span class="number">X {{goodsInfo.count}}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
-            <div class="col-xs-2"><div class="center-content"><span>1</span></div></div>
-            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>{{goodsInfo.price}}</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>{{goodsInfo.count}}</span></div></div>
+            <div class="col-xs-2"><div class="center-content"><span>{{goodsInfo.price * goodsInfo.count}}</span></div></div>
             <div class="summation">
-                <span class="total-number">共计1件商品</span>
+                <span class="total-number">共计{{goodsInfo.count}}件商品</span>
                 <span class="total-text">合计：</span>
-                <span class="total-price">￥12</span>
-            </div>
-        </div>
-
-        <div class="order-item rowcenter">
-            <div class="col-xs-6 goods-info">
-                <div class="row">
-                    <div class="col-xs-6 photo">
-                        <img src="temp/goods1.png"/>
-                    </div>
-                    <div class="col-xs-6 goods-name">
-                        <div class="center-content"><span>呱呱叫干锅主题餐厅</span></div>
-                    </div>
-                    <div class="col-xs-6 description">
-                        <p class="text">呱呱叫干锅主题餐厅</p>
-                        <div class="buy-info">
-                            <span class="sales-price">￥12</span>
-                            <span class="number">X 1</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
-            <div class="col-xs-2"><div class="center-content"><span>1</span></div></div>
-            <div class="col-xs-2"><div class="center-content"><span>12</span></div></div>
-            <div class="summation">
-                <span class="total-number">共计1件商品</span>
-                <span class="total-text">合计：</span>
-                <span class="total-price">￥12</span>
+                <span class="total-price">￥{{goodsInfo.price * goodsInfo.count}}</span>
             </div>
         </div>
     </div>
 
     <div class="app-remark">
-        <textarea rows="3" cols="35" placeholder="订单备注" ng-model="orderObj.remarks"></textarea>
+        <textarea rows="3" cols="35" placeholder="订单备注" ng-model="pageData.orderDetail.description"></textarea>
     </div>
     <div class="order-total">
                 <span class="back">
-                    <a ui-sref="shopping_car">
+                    <a ng-click="goMyCart('myCart')">
                         <img ng-src="images/global/back.png"/>
                         返回购物车
                     </a>
                 </span>
-        <span>共计1件商品:</span>
+        <span>共计{{pageData.orderDetail.goods_infos.length}}件商品:</span>
         <span>合计:</span>
-        <span class="price">￥12</span>
-        <input type="button" class="pay" ng-click="summation.submitOrder()" value="确认下单"/>
+        <span class="price">￥{{pageData.orderDetail.total_price}}</span>
+        <input type="button" ng-show="!pageData.scan" class="pay" ng-click="submitOrder()" value="确认下单"/>
     </div>
 </div>
 
 <div class="car-footer row">
-    <p class="total-price col-xs-6">合计： <span class="count">￥12</span></p>
-
-    <p class="pay col-xs-6" ng-click="goToView('orderDetail')">结算</p>
+    <p class="total-price col-xs-6" ng-show="!pageData.scan" >合计： <span class="count">￥12</span></p>
+    <p class="pay col-xs-6" ng-show="!pageData.scan"  ng-click="submitOrder()">确认下单</p>
+    <p class="total-price col-xs-12" ng-show="pageData.scan" >合计： <span class="count">￥12</span></p>
 </div>
 
 <e-footer></e-footer>

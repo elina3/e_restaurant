@@ -465,7 +465,7 @@ angular.module('EWeb').controller('UserManagerController',
               registration_number:card.registration_number,
               card_number: card.card_number,
               money: card.money,
-              status: card.status=='disabled'?'已禁用':'已启用',
+              status: card.status==='disabled'?'已禁用':'已启用',
               create_time:card.create_time,
               update_time:card.update_time
             });

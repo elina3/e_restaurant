@@ -4,26 +4,43 @@
 
 'use strict';
 var orderLogic = require('../logics/order');
+var clientLogic = require('../logics/client');
 var paymentLogic = require('../logics/payment');
+var goodsLogic = require('../logics/goods');
 exports.generateOrder = function(req, res, next){
   var client = req.client;
   var orderInfo = req.body.order_info || req.query.order_info || null;
 
+  orderInfo.in_store_deal = orderInfo.in_store_deal.toString().toLowerCase() === 'true' ? true: false;
   orderLogic.createOrder(orderInfo, client, function(err, newOrder){
     if(err){
       return next(err);
     }
 
-    client.clearGoodsFromCart(orderInfo.goods_infos, function(err, newClient){
+    clientLogic.clearGoodsFromCart(client, orderInfo.goods_infos, function(err, newClient){
       if(err){
         return next(err);
       }
 
-      req.data = {
-        order: newOrder,
-        client: newClient
-      };
-      return next();
+      if(orderInfo.in_store_deal){
+        req.data = {
+          order: newOrder,
+          client: newClient
+        };
+        return next();
+      }
+
+      clientLogic.updateContact(newClient, orderInfo.contact, function(err, newClient){
+        if(err){
+          return next(err);
+        }
+
+        req.data = {
+          order: newOrder,
+          client: newClient
+        };
+        return next();
+      });
     });
   });
 };
@@ -31,6 +48,26 @@ exports.generateOrder = function(req, res, next){
 exports.getOrderDetail = function(req, res, next){
   req.data = {order: req.order};
   return next();
+};
+
+exports.getMyOrders  = function(req, res, next){
+  var client = req.client;
+  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
+  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
+  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+
+  orderLogic.getMyOrders(client, currentPage, limit, skipCount, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      limit: result.limit,
+      total_count: result.totalCount,
+      orders: result.orders
+    }
+    return next();
+  });
 };
 
 exports.payOrder = function(req, res, next){
