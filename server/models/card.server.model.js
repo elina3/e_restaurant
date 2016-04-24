@@ -16,25 +16,34 @@ var CardSchema = new Schema({
     type:String,
     default:'Card'
   },
-  card_number: {
+  id_number: {//证件id
     type: String,
     trim: true
   },
+  card_number: {
+    type: String,
+    trim: true,
+  },
   status: {
-    enum: ['enabled', 'disabled'],
+    enum: ['disabled', 'enabled', 'frozen', 'revoked', 'close'],//不可用，启用，冻结，撤销，退卡关闭
     default: 'disabled',
     type: String
   },
-  registration_number: {//省份证id
-    type: String
-  },
-  money: {
-    type: Number,//money unit: yuan
+  amount: {
+    type: Number,//余额（元）
     default:0
   },
   deleted_status: {
     type: Boolean,
     default: false
+  },
+  create_user: {
+    type: Schema.Types.ObjectId,
+    ref:'User'
+  },
+  recent_modify_user: {
+    type: Schema.Types.ObjectId,
+    ref:'User'
   }
 });
 

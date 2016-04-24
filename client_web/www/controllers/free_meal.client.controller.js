@@ -81,7 +81,7 @@ angular.module('EClientWeb').controller('FreeMealController',
       function parseNumber(numberString){
         var price = 0;
         try{
-          price = parseFloat(numberString) || 0;
+          price = parseFloat(numberString);
           price = isNaN(price) ? 0 : price;
           if(price <= 0){
             return 0;
@@ -122,30 +122,37 @@ angular.module('EClientWeb').controller('FreeMealController',
           description: '甜不辣'
         };
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.createOrder(orderDetail, function (err, data) {
-          if (err || !data || !data.order || !data.client){
+        OrderService.card($scope.pageData.card_number, function(err, data){
+          if (err || !data || !data.card){
             $scope.$emit(GlobalEvent.onShowLoading, false);
-            return $scope.$emit(GlobalEvent.onShowAlert, '订单生成失败！请刷新页面重试' + err);
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
 
-          Auth.setUser(data.client);
-          $scope.$emit(GlobalEvent.onCartCountChange, data.client);
-          var orderNumber = data.order.order_number;
-
-          OrderService.pay(data.order._id,
-            $scope.pageData.card_number,
-            orderDetail.total_price, function(err, data){
-
+          OrderService.createOrder(orderDetail, function (err, data) {
+            if (err || !data || !data.order || !data.client){
               $scope.$emit(GlobalEvent.onShowLoading, false);
-              if(err){
-                return $scope.$emit(GlobalEvent.onShowAlert, err);
-              }
-              console.log(data);
+              return $scope.$emit(GlobalEvent.onShowAlert, '订单生成失败！请刷新页面重试' + err);
+            }
 
-              var money = data.payment.cardInfo.money;
-              $scope.$emit(GlobalEvent.onShowAlert, '您的订单['+orderNumber+']支付成功!     您的卡号['+$scope.pageData.card_number+']扣款'+orderDetail.total_price+'元!    卡内余额：' + money + '元！');
-              $scope.pageData.card_number = '';
-            });
+            Auth.setUser(data.client);
+            $scope.$emit(GlobalEvent.onCartCountChange, data.client);
+            var orderNumber = data.order.order_number;
+
+            OrderService.pay(data.order._id,
+              $scope.pageData.card_number,
+              orderDetail.total_price, function(err, data){
+
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if(err){
+                  return $scope.$emit(GlobalEvent.onShowAlert, err);
+                }
+                console.log(data);
+
+                var money = data.payment.cardInfo.amount;
+                $scope.$emit(GlobalEvent.onShowAlert, '您的订单['+orderNumber+']支付成功!     您的卡号['+$scope.pageData.card_number+']扣款'+orderDetail.total_price+'元!    卡内余额：' + money + '元！');
+                $scope.pageData.card_number = '';
+              });
+          });
         });
       };
 

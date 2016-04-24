@@ -130,7 +130,7 @@ exports.getOrderDetailByOrderId = function(orderId, callback){
 exports.getOrderByOrderId = function(orderId, callback){
   getOrderById(orderId, function(err, order){
     return callback(err, order);
-  })
+  });
 };
 
 exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
@@ -138,7 +138,7 @@ exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
   Order.count(query)
     .exec(function(err, totalCount){
       if(err){
-        return callback({err: systemError.database_query_error})
+        return callback({err: systemError.database_query_error});
       }
 
       if (limit === -1) {
@@ -155,7 +155,7 @@ exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
         .limit(limit)
         .exec(function(err, orders){
           if(err){
-            return callback({err: systemError.database_query_error})
+            return callback({err: systemError.database_query_error});
           }
 
 

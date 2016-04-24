@@ -300,7 +300,7 @@ function getClientById(clientId, callback){
       return callback(null, client);
 
     });
-};
+}
 exports.deleteClient = function(clientId, callback){
   getClientById(clientId, function(err, client){
     if(err){

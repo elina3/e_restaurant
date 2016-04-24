@@ -21,7 +21,7 @@ angular.module('EWeb').factory('CardService',
               }
 
               if (data.err) {
-                return callback(data.err);
+                return callback(data.zh_message || data.err);
               }
 
               callback(null, data);
@@ -40,7 +40,7 @@ angular.module('EWeb').factory('CardService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -61,7 +61,7 @@ angular.module('EWeb').factory('CardService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -81,7 +81,7 @@ angular.module('EWeb').factory('CardService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -97,9 +97,14 @@ angular.module('EWeb').factory('CardService',
               return '已开通';
             case 'disabled':
               return '未开通';
+            case 'frozen':
+              return '已冻结';
+            case 'revoked':
+              return '已作废';
+            case 'close':
+              return '已关闭';
             default:
               return '未开通';
-
           }
         }
       };

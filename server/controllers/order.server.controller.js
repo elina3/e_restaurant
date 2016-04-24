@@ -65,7 +65,7 @@ exports.getMyOrders  = function(req, res, next){
       limit: result.limit,
       total_count: result.totalCount,
       orders: result.orders
-    }
+    };
     return next();
   });
 };

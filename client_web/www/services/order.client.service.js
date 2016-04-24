@@ -15,7 +15,7 @@ angular.module('EClientWeb').factory('OrderService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }
@@ -36,7 +36,7 @@ angular.module('EClientWeb').factory('OrderService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }
@@ -51,7 +51,7 @@ angular.module('EClientWeb').factory('OrderService',
         pay: function(orderId, cardNumber, amount, callback){
           RequestSupport.executePost('/client/order/pay', {
             order_id: orderId,
-            card_number: cardNumber,
+            card_keyword: cardNumber,
             amount: amount
           })
             .then(function (data) {
@@ -81,7 +81,28 @@ angular.module('EClientWeb').factory('OrderService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
+        },
+        card: function(cardNumber,callback){
+          RequestSupport.executeGet('/client/card', {
+            card_keyword: cardNumber,
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }

@@ -56,7 +56,7 @@ exports.requireGoodsOrder = function(req, res, next){
     return res.send({err: orderError.goods_order_id_null_error});
   }
 
-  orderLogic.getOrderByOrderId(goods_order_id, function(err, goodsOrder){
+  orderLogic.getOrderByOrderId(goodsOrderId, function(err, goodsOrder){
     if(err){
       return next(err);
     }

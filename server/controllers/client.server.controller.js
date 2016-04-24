@@ -115,7 +115,7 @@ exports.getClients = function(req, res, next){
       clients: result.clients
     };
     return next();
-  })
+  });
 };
 
 exports.addGoodsToCart = function(req, res, next){

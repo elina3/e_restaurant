@@ -145,6 +145,6 @@ exports.getNormalUsers = function(req, res, next){
       users: result.users
     };
     return next();
-  })
+  });
 };
 

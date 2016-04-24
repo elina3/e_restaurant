@@ -51,3 +51,28 @@ Array.prototype.objectIndexOf = function(objectKey, value){
   }
   return -1;
 };
+
+exports.amountParse = function(numberString){
+  var amount = -1;
+  try{
+    amount = parseFloat(numberString);
+    amount = isNaN(amount) ? -1 : amount;
+    if(amount < 0){
+      amount = -1;
+    }
+  }catch(e){
+    amount = -1;
+  }
+  return amount;
+};
+
+exports.numberParse = function(numberString){
+  var amount = null;
+  try{
+    amount = parseFloat(numberString);
+    amount = isNaN(amount) ? -1 : amount;
+  }catch(e){
+    amount = null;
+  }
+  return amount;
+};

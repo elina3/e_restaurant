@@ -9,6 +9,7 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
+        cardStatuses: [{id: 'enabled', text: '已开启'}, {id: 'disabled', text: '已禁用'},{id: 'frozen', text: '已冻结'},{id: 'close', text: '已关闭'},{id: 'revoked', text: '已作废'}],
         roles: [{id:'card_manager',text:'饭卡管理员'}],
         groups: [],
         sexs: [{id: 'male', text: '男'},{id: 'female', text: '女'}],
@@ -45,6 +46,7 @@ angular.module('EWeb').controller('UserManagerController',
           show_plat:false,
           cards: [],
           currentEditCard: null,
+          add_money: 0,
           errorInfo: {
             card_number: false
           },
@@ -461,15 +463,14 @@ angular.module('EWeb').controller('UserManagerController',
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
-          //console.log($scope.pageConfig.plat_user_panel.pagination);
           console.log(data);
           data.card_list.forEach(function(card){
             $scope.pageConfig.plat_card_panel.cards.push({
               _id: card._id,
-              registration_number:card.registration_number,
+              id_number:card.id_number,
               card_number: card.card_number,
-              money: card.money,
-              status: card.status==='disabled'?'已禁用':'已启用',
+              amount: card.amount,
+              status: CardService.translateCardStatus(card.status),
               create_time:card.create_time,
               update_time:card.update_time
             });
@@ -495,6 +496,20 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.addPanel = true;
         $scope.pageConfig.plat_card_panel.show_plat=true;
       };
+
+      function parseNumber(numberString){
+        var price = -1;
+        try{
+          price = parseFloat(numberString);
+          price = isNaN(price) ? -1 : price;
+          if(price < 0){
+            return -1;
+          }
+        }catch(e){
+          price = -1;
+        }
+        return price;
+      }
       $scope.addOrEditCard = function(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
         if(!validCardInfo($scope.pageConfig.plat_card_panel.currentEditCard)){
@@ -510,10 +525,23 @@ angular.module('EWeb').controller('UserManagerController',
           $scope.$emit(GlobalEvent.onShowAlert, '该卡号已存在，请更换');
           return;
         }
+
+        var addMondy = parseNumber($scope.pageConfig.plat_card_panel.add_money);
+        if(addMondy < 0){
+          $scope.$emit(GlobalEvent.onShowAlert, '请输入正确金额');
+          return ;
+        }
+
+        var money = parseNumber($scope.pageConfig.plat_card_panel.currentEditCard.amount);
+        if(money < 0){
+          $scope.$emit(GlobalEvent.onShowAlert, '卡内余额解析出错！');
+          return ;
+        }
+
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
-          registration_number: $scope.pageConfig.plat_card_panel.currentEditCard.registration_number,
-          money:$scope.pageConfig.plat_card_panel.currentEditCard.money
+          id_number: $scope.pageConfig.plat_card_panel.currentEditCard.id_number,
+          amount:money + addMondy
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -536,6 +564,8 @@ angular.module('EWeb').controller('UserManagerController',
               return $scope.$emit(GlobalEvent.onShowAlert, UserError[err] || err);
             }
 
+            $scope.pageConfig.plat_card_panel.currentEditCard.amount = 0;
+            $scope.pageConfig.plat_card_panel.add_money = 0;
             clearError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
@@ -554,7 +584,6 @@ angular.module('EWeb').controller('UserManagerController',
           }
 
           $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-          //$state.reload();
           loadCards();
         });
       };
@@ -565,13 +594,20 @@ angular.module('EWeb').controller('UserManagerController',
 
       function getNewCardObj(){
         return {
-          card_number: ''
+          card_number: '',
+          id_number: '',
+          amount: 0
         };
       }
       function validCardInfo(card) {
         var isPassed = true;
         if (!card.card_number) {
           $scope.pageConfig.plat_card_panel.errorInfo.card_number = true;
+          isPassed = false;
+        }
+
+        if (!card.id_number) {
+          $scope.pageConfig.plat_card_panel.errorInfo.id_number = true;
           isPassed = false;
         }
         return isPassed;

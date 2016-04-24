@@ -143,7 +143,7 @@ function queryGoodsList(query, currentPage, limit, skipCount, callback){
         });
       });
   });
-};
+}
 
 exports.getGoodsList = function(currentPage, limit, skipCount, callback){
   var query = {
@@ -179,7 +179,7 @@ exports.getGoodsInfos = function(goodsIds, callback){
       return callback(err);
     }
 
-    return callback(null, result.goodsList)
+    return callback(null, result.goodsList);
 
   });
 };

@@ -12,7 +12,7 @@ module.exports = function (app) {
   app.route('/client/order').post(authFilter.requireClient, orderController.generateOrder);
   app.route('/client/order').get(authFilter.requireClient, orderFilter.requireOrderDetail, orderController.getOrderDetail);
 
-  app.route('/client/order/pay').post(authFilter.requireClient, orderFilter.requireOrder, cardFilter.requireCard, orderController.payOrder);
+  app.route('/client/order/pay').post(authFilter.requireClient,  orderFilter.requireOrder, cardFilter.requireCardByIDNumberOrCardNumber, orderController.payOrder);
   app.route('/client/my_orders').get(authFilter.requireClient, orderController.getMyOrders);
 
 

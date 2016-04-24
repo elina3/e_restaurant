@@ -177,8 +177,8 @@
                             <div class="left-panel col-xs-6">
                                 <div class='pull-left'>
                                     <label class="info-name">查询:</label>
-                                    <input placeholder="请输入卡号" type="text" ng-model="pageConfig.plat_card_panel.keyword.card_number" ng-keyup="searchCards()" />
-                                    <input placeholder="请输入证件号" type="text" ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-keyup="searchCards()" />
+                                    <input placeholder="请输入卡号" type="text" ng-model="pageConfig.plat_card_panel.keyword.card_number" ng-change="searchCards()" />
+                                    <input placeholder="请输入证件号" type="text" ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-change="searchCards()" />
                                 </div>
                             </div>
                             <div class="right-panel col-xs-6">
@@ -191,10 +191,10 @@
                         <div class="ee-table-list">
                             <div class="content">
                                 <div class="row list-header">
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-3">
                                         <span>卡号</span>
                                     </div>
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-1">
                                         <span>金额</span>
                                     </div>
                                     <div class="col-xs-2">
@@ -212,11 +212,11 @@
                                     </div>
                                 </div>
                                 <div class="row list-info" ng-repeat="card in pageConfig.plat_card_panel.cards">
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-3">
                                         <span>{{card.card_number}}</span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <span>{{card.money}}</span>
+                                    <div class="col-xs-1">
+                                        <span>{{card.amount}}</span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span>{{card.status}}</span>
@@ -249,7 +249,6 @@
         </div>
     </div>
 </div>
-
 <div class="ee-pop-mask" ng-show="pageConfig.popMaskShow">
     <div class="ee-pop-wrapper">
         <div class="ee-pop-panel" ng-show="pageConfig.clientScanType === 'scan'">
@@ -507,7 +506,7 @@
             </div>
             <div class="ee-pop-body">
                 <div class="ee-user-manager-view-new-user">
-                    <div class="info-item">
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'">
                         <span class="info-name">饭卡号码</span>
                         <div class="info-value">
                             <input placeholder="请输入饭卡号码" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.card_number"/>
@@ -515,17 +514,42 @@
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.card_number}">(必填项，饭卡号)</div>
                     </div>
 
-                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
-                        <span class="info-name">身份证</span>
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'">
+                        <span class="info-name">证件号</span>
                         <div class="info-value">
-                            <input placeholder="请输入身份证" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.registration_number"/>
+                            <input placeholder="请输入证件号" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.id_number"/>
                         </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.id_number}">(必填项，证件号)</div>
                     </div>
 
                     <div class="info-item" ng-show="pageConfig.scanType==='edit'">
-                        <span class="info-name">金额</span>
+                        <span class="info-name">饭卡号: </span>
                         <div class="info-value">
-                            <input placeholder="请输入非负整数" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.money"/>
+                            {{pageConfig.plat_card_panel.currentEditCard.card_number}}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">证件号: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.id_number}}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">卡内余额: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.amount}}
+                        </div>
+                    </div>
+
+
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                        <span class="info-name">添加金额: </span>
+                        <div class="info-value">
+                            <input placeholder="请添加金额（单位：元）" type="text" ng-model="pageConfig.plat_card_panel.add_money"/>
                         </div>
                     </div>
 
