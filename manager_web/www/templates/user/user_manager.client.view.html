@@ -197,17 +197,14 @@
                                     <div class="col-xs-1">
                                         <span>金额</span>
                                     </div>
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-1">
                                         <span>状态</span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span>生成时间</span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <span>更新时间</span>
-                                    </div>
 
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-5">
                                         <span>操作</span>
                                     </div>
                                 </div>
@@ -218,17 +215,13 @@
                                     <div class="col-xs-1">
                                         <span>{{card.amount}}</span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <span>{{card.status}}</span>
+                                    <div class="col-xs-1">
+                                        <span>{{card.status_display}}</span>
                                     </div>
                                     <div class="col-xs-2">
                                         <span>{{card.create_time | date: 'yyyy-MM-dd hh:mm:ss'}}</span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <span>{{card.update_time | date: 'yyyy-MM-dd hh:mm:ss'}}</span>
-                                    </div>
-
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-5">
                                         <div class="handle edit" ng-click="editCard(card)">
                                             <img class="gif" ng-src="images/global/edit.gif"/>
                                             <img class="normal" ng-src="images/global/edit.png"/>
@@ -237,7 +230,16 @@
                                             <img class="gif" ng-src="images/global/stop.gif"/>
                                             <img class="normal" ng-src="images/global/stop.png"/>
                                         </div>
-
+                                        <div class="handle text" ng-click="closeCard(card)">
+                                            <span>退卡</span>
+                                        </div>
+                                        <div class="handle text" ng-click="changeCardStatus(card)">
+                                            <span ng-show="card.status !== 'frozen'">挂失</span>
+                                            <span ng-show="card.status ==='frozen'">取消挂失</span>
+                                        </div>
+                                        <div class="handle text" ng-click="replaceCard(card)">
+                                            <span>补卡</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -497,10 +499,11 @@
                 </div>
             </div>
         </div>
-        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_card_panel.show_plat">
+        <div class="ee-pop-panel" ng-show="(pageConfig.scanType === 'replace_card' || pageConfig.scanType === 'edit' || pageConfig.scanType === 'create') && pageConfig.plat_card_panel.show_plat">
             <div class="ee-pop-header">
                 <div class="ee-pop-title">
-                    <span>{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}饭卡</span>
+                    <span ng-show="pageConfig.scanType !== 'replace_card'">{{pageConfig.scanType === 'edit' ? '编辑':'新增'}}饭卡</span>
+                    <span ng-show="pageConfig.scanType === 'replace_card'">补卡</span>
                     <div class="close" ng-click="closePopMask()"></div>
                 </div>
             </div>
@@ -522,7 +525,7 @@
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.id_number}">(必填项，证件号)</div>
                     </div>
 
-                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">饭卡号: </span>
                         <div class="info-value">
                             {{pageConfig.plat_card_panel.currentEditCard.card_number}}
@@ -530,7 +533,7 @@
                     </div>
 
 
-                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">证件号: </span>
                         <div class="info-value">
                             {{pageConfig.plat_card_panel.currentEditCard.id_number}}
@@ -538,7 +541,7 @@
                     </div>
 
 
-                    <div class="info-item" ng-show="pageConfig.scanType==='edit'">
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">卡内余额: </span>
                         <div class="info-value">
                             {{pageConfig.plat_card_panel.currentEditCard.amount}}
@@ -553,13 +556,21 @@
                         </div>
                     </div>
 
+                    <div class="info-item" ng-show="pageConfig.scanType==='replace_card'">
+                        <span class="info-name">新饭卡号: </span>
+                        <div class="info-value">
+                            <input placeholder="请输入新卡号" type="text" ng-model="pageConfig.plat_card_panel.new_card_number"/>
+                        </div>
+                    </div>
+
                     <div class="handle">
 
-                        <div class="sure" ng-click="addOrEditCard()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
+                        <div class="sure" ng-show="pageConfig.scanType !== 'replace_card'"  ng-click="addOrEditCard()">{{pageConfig.scanType === 'edit'?'确定':'添加'}}</div>
 
-                        <div class="cancel" ng-click="cancel()">取消</div>
+                        <div class="cancel" ng-show="pageConfig.scanType !== 'replace_card'"  ng-click="cancel()">取消</div>
 
                         <div class="reset" ng-click="reset()" ng-show="pageConfig.scanType === 'create'">重置</div>
+                        <div class="sure" ng-show="pageConfig.scanType === 'replace_card'" ng-click="saveReplaceCard()">补卡</div>
                     </div>
                 </div>
             </div>

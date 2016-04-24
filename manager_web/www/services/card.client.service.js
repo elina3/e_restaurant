@@ -91,6 +91,87 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
+        closeCard: function(cardId, callback){
+          RequestSupport.executePost('/card/close', {
+            card_id: cardId
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        freezeCard: function(cardId, callback){
+          RequestSupport.executePost('/card/freeze', {
+            card_id: cardId
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        cancelFreezeCard: function(cardId, callback){
+          RequestSupport.executePost('/card/cancel_freeze', {
+            card_id: cardId
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        replaceCard: function(cardId, newCardNumber, callback){
+          RequestSupport.executePost('/card/replace', {
+            card_id: cardId,
+            new_card_number: newCardNumber
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         translateCardStatus: function(status){
           switch(status){
             case 'enabled':

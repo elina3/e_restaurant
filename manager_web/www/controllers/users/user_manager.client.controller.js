@@ -470,7 +470,8 @@ angular.module('EWeb').controller('UserManagerController',
               id_number:card.id_number,
               card_number: card.card_number,
               amount: card.amount,
-              status: CardService.translateCardStatus(card.status),
+              status: card.status,
+              status_display: CardService.translateCardStatus(card.status),
               create_time:card.create_time,
               update_time:card.update_time
             });
@@ -492,6 +493,18 @@ angular.module('EWeb').controller('UserManagerController',
           $scope.pageConfig.plat_card_panel.currentEditCard = card;
           $scope.pageConfig.scanType = 'edit';
         }
+        $scope.pageConfig.popMaskShow = true;
+        $scope.pageConfig.addPanel = true;
+        $scope.pageConfig.plat_card_panel.show_plat=true;
+      };
+
+      $scope.replaceCard = function(card){
+        if(!card){
+          return;
+        }
+        $scope.pageConfig.plat_card_panel.currentEditCard = card;
+        $scope.pageConfig.scanType = 'replace_card';
+
         $scope.pageConfig.popMaskShow = true;
         $scope.pageConfig.addPanel = true;
         $scope.pageConfig.plat_card_panel.show_plat=true;
@@ -585,6 +598,65 @@ angular.module('EWeb').controller('UserManagerController',
 
           $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
           loadCards();
+        });
+      };
+
+      $scope.closeCard = function(card){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.closeCard(card._id, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err || !data){
+            $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '退卡成功！');
+          loadCards();
+        });
+      };
+
+      $scope.changeCardStatus = function(card){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        if(card.status !== 'frozen'){
+          CardService.freezeCard(card._id, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if(err || !data){
+              $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            $scope.$emit(GlobalEvent.onShowAlert, '您的饭卡已挂失！');
+            loadCards();
+          });
+        }else{
+          CardService.cancelFreezeCard(card._id, function(err, data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if(err || !data){
+              $scope.$emit(GlobalEvent.onShowAlert, err);
+            }
+
+            $scope.$emit(GlobalEvent.onShowAlert, '您的饭卡已重新开启！');
+            loadCards();
+          });
+        }
+      };
+
+      $scope.saveReplaceCard = function(){
+        if(!$scope.pageConfig.plat_card_panel.new_card_number){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请输入新的卡号！');
+        }
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.replaceCard($scope.pageConfig.plat_card_panel.currentEditCard._id,
+          $scope.pageConfig.plat_card_panel.new_card_number,
+          function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err || !data){
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          $scope.$emit(GlobalEvent.onShowAlert, '补卡成功！');
+
+          clearError();
+          $scope.closePopMask();
+            loadCards();
         });
       };
 

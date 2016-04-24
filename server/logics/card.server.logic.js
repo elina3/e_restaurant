@@ -355,17 +355,17 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
   }
 
   Card.findOne({card_number: newCardNumber})
-    .exec(function(err, card){
+    .exec(function(err, findCard){
       if(err){
         return callback({err: systemError.database_query_error});
       }
 
-      if(card && !card.deleted_status){
+      if(findCard && !findCard.deleted_status){
         return callback({err: cardError.new_card_exist});
       }
 
-      if(card && !card.deleted_status && card.status !== 'disabled'){
-        return callback({err: cardError['card_' + card.status]});
+      if(findCard && !findCard.deleted_status && findCard.status !== 'disabled'){
+        return callback({err: cardError['card_' + findCard.status]});
       }
 
 
@@ -381,21 +381,28 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
           return callback({err: systemError.database_save_error});
         }
 
-        card.status = 'revoked';
-        card.deleted_status = true;
-        card.amount = 0;
-        card.save(function(err, card){
-          if(err || !card){
+        addHistory(user, card, savedCard, 'create', 0, savedCard.amount, '补卡新卡', function(err, history){
+          if(err){
+            err.zh_message += '添加补卡新卡历史记录失败！';
             return callback({err: systemError.database_save_error});
           }
 
-          addHistory(user, card, savedCard, 'replace', 0, savedCard.amount, '补卡', function(err, history){
-            if(err){
-              err.zh_message += '添加补卡历史记录失败！';
+          card.status = 'revoked';
+          card.deleted_status = true;
+          card.amount = 0;
+          card.save(function(err, card){
+            if(err || !card){
               return callback({err: systemError.database_save_error});
             }
 
-            return callback(null, savedCard);
+            addHistory(user, card, savedCard, 'replace', 0, savedCard.amount, '补卡', function(err, history){
+              if(err){
+                err.zh_message += '添加补卡历史记录失败！';
+                return callback({err: systemError.database_save_error});
+              }
+
+              return callback(null, savedCard);
+            });
           });
         });
       });
