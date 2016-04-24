@@ -21,6 +21,15 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
   $scope.popupConfig.closePopMask = function(){
     $scope.popupConfig.type = 0;
   };
+
+  var duplicateObj = function( resObj ){
+    var rtn = {};
+    for( var key in resObj ){
+      rtn[ key ] = typeof( resObj[ key ] ) === 'object' ? duplicateObj( resObj[ key ] ) : resObj[ key ];
+    }
+    return rtn;
+  };
+
   $scope.popupConfig.data = {};
   $scope.popupConfig.reset = null;
   $scope.popupConfig.cancel = null;
@@ -79,8 +88,14 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
       $scope.popupConfig.type = 1;
       $scope.popupConfig.text = '增加用户';
       $scope.popupConfig.data = {};
-      function callbackSubmit(){
-        console.log( 'wxc: submit add: ' + $scope.popupConfig.data );
+      console.log( 'wxc: up data: ' + this.data );
+      function getCallbackSubmit( data ){
+        return function(){
+          // todo; // check the popup data.
+          data.push( $scope.popupConfig.data ); // add the new record to table.
+          $scope.popupConfig.data = {};
+          console.log( 'wxc: submit add: ' + $scope.popupConfig.data );
+        };
       }
       function callbackCancel(){
         $scope.popupConfig.closePopMask();
@@ -90,7 +105,7 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
         $scope.popupConfig.data = {};
         console.log( 'wxc: reset add: ' + $scope.popupConfig.data );
       }
-      $scope.popupConfig.submit = callbackSubmit;
+      $scope.popupConfig.submit = getCallbackSubmit( this.data );
       $scope.popupConfig.cancel = callbackCancel;
       $scope.popupConfig.reset = callbackReset;
       console.log( 'wxc: add record ' + this.id );
@@ -103,6 +118,22 @@ function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, UserErr
     editRecord: function( record ){
       $scope.popupConfig.type = 3;
       $scope.popupConfig.text = record.nickname;
+      var resRecord = duplicateObj( record );
+      $scope.popupConfig.data = record;
+      function getCallbackSubmit( data ){
+        return function(){
+          // todo; // find and replace the record.
+          // data.push( $scope.popupConfig.data ); // add the new record to table.
+          $scope.popupConfig.data = {};
+          console.log( 'wxc: submit add: ' + $scope.popupConfig.data );
+        };
+      }
+      function callbackCancel(){
+        $scope.popupConfig.data = duplicateObj( resRecord );
+        console.log( 'wxc: cancel edit: ' + resRecord.toString() );
+      }
+      $scope.popupConfig.submit = getCallbackSubmit( this.data );
+      $scope.popupConfig.cancel = callbackCancel;
       console.log( 'wxc: edit record ' + this.id + ' ' + record );
     },
     scanRecord: function( record ){
