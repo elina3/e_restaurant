@@ -47,6 +47,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         templateUrl: 'templates/user/user_index.client.view.html',
         controller: 'UserIndexController'
       })
+      .state('card_history', {
+        url: '/user/card/history',
+        templateUrl: 'templates/user/card_history.client.view.html',
+        controller: 'CardHistoryController'
+      })
       .state('smarket_manager', {
         url: '/supermarket/manager',
         templateUrl: 'templates/supermarket/supermarket_manager.client.view.html',

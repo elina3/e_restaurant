@@ -409,3 +409,41 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
     });
 };
 
+exports.getCardHistories = function(currentPage, limit, skipCount, keyword, callback){
+
+var query = {};
+  if(keyword)
+    query.$or = [{card_number: {$regex: keyword, $options: '$i'}},
+      {id_number: {$regex: keyword, $options: '$i'}}];
+
+
+  CardHistory.count(query, function(err, totalCount){
+    if(err){
+      return callback({err: systemError.internal_system_error});
+    }
+
+    if (limit === -1) {
+      limit = totalCount;
+    }
+
+    if (skipCount === -1) {
+      skipCount = limit * (currentPage - 1);
+    }
+
+    CardHistory.find(query)
+      .sort({update_time: -1})
+      .skip(skipCount)
+      .limit(limit)
+      .exec(function(err, cardHistories){
+        if(err){
+          return callback({err: systemError.internal_system_error});
+        }
+
+        return callback(null, {
+          totalCount: totalCount,
+          limit: limit,
+          cardHistories: cardHistories
+        });
+      });
+  });
+};

@@ -1,0 +1,76 @@
+<z-header></z-header>
+<div class="ee-card-history-page-view">
+    <div class="ee-user-manager">
+        <div class="ee-banner">
+            <div class="ee-wrapper">
+                <div class="row ee-title">
+                    <div class="col-xs-6">
+                        <span class="ee-banner-back" ng-click="goBack()">< </span>
+                        <span class="ee-banner-content">饭卡历史记录查询</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-user-manager-body">
+            <div class="ee-wrapper">
+                <div class="ee-search-bar row">
+                    <div class="left-panel col-xs-6">
+                        <div class='pull-left'>
+                            <label class="info-name">查询:</label>
+                            <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" ng-change="searchKey()" />
+                        </div>
+                    </div>
+                </div>
+                <div class="ee-table-list">
+                    <div class="content">
+                        <div class="row list-header">
+                            <div class="col-xs-3">
+                                <span>证件号</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>卡号</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>描述</span>
+                            </div>
+
+                            <div class="col-xs-1">
+                                <span>金额更换</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>新卡</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>时间</span>
+                            </div>
+                        </div>
+                        <div class="row list-info" ng-repeat="cardHistory in pageData.cardHistories">
+                            <div class="col-xs-3">
+                                <span>{{cardHistory.id_number}}</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>{{cardHistory.card_number}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{cardHistory.description}}</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>{{cardHistory.amount}}-{{cardHistory.new_amount}}</span>
+                            </div>
+                            <div class="col-xs-1" title="{{cardHistory.new_card_number?cardHistory.new_card_number : '--'}}">
+                                <span>{{cardHistory.new_card_number?cardHistory.new_card_number : '--'}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{cardHistory.create_time | date: 'yy-MM-dd hh:mm'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <z-pagination config="pageData.pagination"></z-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>茂玥科技  版权所有</span>
+</div>

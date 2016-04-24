@@ -142,3 +142,23 @@ exports.replaceCard = function (req, res, next) {
     return next();
   });
 };
+
+exports.getCardHistories = function(req, res, next){
+  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
+  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
+  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+  var keyword = req.query.keyword || req.body.keyword || '';
+  cardLogic.getCardHistories(currentPage, limit, skipCount, keyword, function (err, result) {
+    if (err) {
+      req.err = err;
+      return next();
+    }
+
+    req.data = {
+      card_history_list: result.cardHistories,
+      total_count: result.totalCount,
+      limit: result.limit
+    };
+    return next();
+  });
+};

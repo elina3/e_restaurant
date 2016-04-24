@@ -428,6 +428,7 @@ angular.module('EWeb').controller('UserManagerController',
       };
       function loadUsers(){
         $scope.pageConfig.plat_user_panel.users = [];
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         UserService.getUsers($scope.pageConfig.plat_user_panel.pagination,function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
@@ -717,4 +718,10 @@ angular.module('EWeb').controller('UserManagerController',
         });
       }
       init();
+
+      $scope.goState = function(state){
+        if(state){
+          $state.go(state);
+        }
+      };
     }]);
