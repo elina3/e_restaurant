@@ -82,10 +82,29 @@
                         </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
-                       <div style="width: 200px; margin: 200px auto;">该功能正在努力开发中。。。</div>
+                       <div style="width: 200px; margin: 200px auto;">
+                           <p>筛选订单，更改订单状态等功能</p>
+                           <span>正在努力开发中。。。</span>
+                       </div>
                     </div>
-                    <div class="ee-tag-view">
-                        <div style="width: 200px; margin: 200px auto;">该功能正在努力开发中。。。</div>
+                    <div class="ee-tag-view ee-statistic-panel">
+                        <div class="ee-statistic-summary">
+                            <div>
+
+                                <label>今日营业额：</label>
+                                <span class="amount today">{{pageConfig.statisticPanel.today_amount}}</span>元
+                            </div>
+                            <div>
+
+                                <label>总营业额：</label>
+                                <span class="amount">{{pageConfig.statisticPanel.total_amount}}</span>元
+                            </div>
+                        </div>
+                        <div style="width: 200px; margin: 200px auto;">
+
+                            <p>筛选查看营业额等功能</p>
+                            <span>正在努力开发中。。。</span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -25,4 +25,6 @@ module.exports = function (app) {
 
   app.route('/user/order/goods_cook').post(authFilter.requireUser, orderFilter.requireGoodsOrder, orderController.setGoodsOrderCooking);
   app.route('/user/order/goods_complete').post(authFilter.requireUser, orderFilter.requireGoodsOrder, orderController.setGoodsOrderComplete);
+
+  app.route('/user/order/today_amount').get(orderController.getTodayAmount);
 };

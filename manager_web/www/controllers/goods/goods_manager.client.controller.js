@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config',
-    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config) {
+  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService',
+    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService) {
 
       $scope.pageConfig = {
         qiniuToken: '',
@@ -38,6 +38,10 @@ angular.module('EWeb').controller('GoodsManagerController',
             totalCount: 0
           },
           orderList: []
+        },
+        statisticPanel: {
+          total_amount: 0,
+          today_amount: 0
         },
         panel: {
           showMask: false,
@@ -106,8 +110,25 @@ angular.module('EWeb').controller('GoodsManagerController',
       };
 
       $scope.changeTag = function(tagName){
+        if(tagName === $scope.pageConfig.currentTag){
+          return;
+        }
+
         $scope.pageConfig.currentTag = tagName;
+        if(tagName === 'statistics'){
+          loadTodayAmount();
+        }
       };
+
+      function loadTodayAmount(){
+        OrderService.loadTodayAmount(function(err, result){
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, '获取营业额信息失败！');
+          }
+          $scope.pageConfig.statisticPanel.total_amount = result.total_amount;
+          $scope.pageConfig.statisticPanel.today_amount = result.today_amount;
+        });
+      }
 
       function getNewGoodsObj(){
         return {

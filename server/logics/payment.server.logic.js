@@ -70,3 +70,41 @@ exports.pay = function(client, order, method, card, amount, callback){
     });
   });
 };
+
+exports.getTodayAmount  = function(callback){
+  var query = {paid: true, deleted_status: false};
+  Payment.aggregate([
+    {$match: query},
+    {$group: {
+      _id: '$object',
+      totalAmount: {$sum: '$amount'}
+    }}
+  ], function(err, results){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    var totalAmount = results[0] ? results[0].totalAmount: 0;
+    var startTime = new Date(new Date().toLocaleDateString());
+    query.update_time = {$gte: startTime};
+    Payment.aggregate([
+      {$match: query},
+      {$group: {
+        _id: '$object',
+        totalAmount: {$sum: '$amount'}
+      }}
+    ], function(err, results){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      var todayAmount = results[0] ? results[0].totalAmount: 0;
+
+      return callback(err, {
+        total_amount: totalAmount,
+        today_amount: todayAmount
+
+      });
+    });
+  });
+};

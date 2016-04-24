@@ -14,7 +14,7 @@ var cardError = require('../errors/card');
 
 function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback){
   var cardHistory = new CardHistory({
-    create_user: user._id,
+    create_user: user? user._id:null,
     card: oldCard._id,
     id_number: oldCard.id_number,
     card_number: oldCard.card_number,
@@ -297,12 +297,21 @@ exports.pay = function(card, amountString, callback){
     return callback({err: cardError.insufficient_balance});
   }
 
+  var oldAmount = card.amount;
   card.amount = card.amount - amount;
   card.save(function(err, newCard){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});
     }
-    return callback(null, newCard);
+
+    addHistory(null, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
+      if(err){
+        err.zh_message += '添加消费历史记录失败！';
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, newCard);
+    });
   });
 };
 

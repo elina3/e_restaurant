@@ -161,3 +161,14 @@ exports.setGoodsOrderComplete = function(req, res, next){
     };
   });
 };
+
+exports.getTodayAmount = function(req, res, next){
+  paymentLogic.getTodayAmount(function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = result;
+    return next();
+  });
+};
