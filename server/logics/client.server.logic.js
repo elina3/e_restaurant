@@ -198,7 +198,7 @@ exports.removeGoodsFromCart = function(client, goods, callback){
 
 exports.clearGoodsFromCart = function(client, goodsInfos, callback){
   if(!client.cart || !client.cart.cart_goods || client.cart.cart_goods.length === 0){
-    return callback(null, true);
+    return callback(null, client);
   }
 
   async.each(goodsInfos, function(goodsInfo, eachCallback){

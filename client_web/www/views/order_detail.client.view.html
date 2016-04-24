@@ -86,6 +86,8 @@
         <span>合计:</span>
         <span class="price">￥{{pageData.orderDetail.total_price}}</span>
         <input type="button" ng-show="!pageData.scan" class="pay" ng-click="submitOrder()" value="确认下单"/>
+        <input type="button" ng-show="pageData.scan && !pageData.orderDetail.paid" class="pay" ng-click="goState('payment', {order_id: pageData.orderDetail._id})" value="去支付"/>
+
     </div>
 </div>
 

@@ -30,7 +30,7 @@ exports.generateOrder = function(req, res, next){
         return next();
       }
 
-      clientLogic.updateContact(newClient, orderInfo.contact, function(err, newClient){
+      clientLogic.updateContact(newClient, orderInfo.contact, function(err, newClientContact){
         if(err){
           return next(err);
         }

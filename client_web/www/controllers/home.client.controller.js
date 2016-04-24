@@ -123,6 +123,16 @@ angular.module('EClientWeb').controller('HomeController',
         loadGoods();
       };
       $scope.buyNow = function(goods, event){
+
+        if(!getClient()){
+          if(event){
+            if (event) {
+              event.stopPropagation();
+            }
+          }
+          return;
+        }
+
         var goodsInfos = [{
           _id: goods._id,
           count: 1

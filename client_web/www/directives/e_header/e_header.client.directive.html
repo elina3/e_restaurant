@@ -3,19 +3,20 @@
         <div class="nav-wrap">
             <div class="row row-center">
                 <div class="col-xs-6 col col-center">
-                    <div class="tel">
-                        <img src="images/global/phone.png"/>
-                        <span>咨询电话：400-886-9256</span>
-                    </div>
-                </div>
-                <div class="col-xs-6 col col-center info">
-                    <div class="user" ng-if="pageConfig.clientInfo">
-                        <span>欢迎您：{{pageConfig.clientInfo ? pageConfig.clientInfo.nickname: ''}}</span>
-                        <a class="change-account-button" ng-click="changeAccount()">切换帐号</a>
-                    </div>
                     <div class="user" ng-if="!pageConfig.clientInfo">
                         <a class="sign-in-button" ng-click="goState('sign_in')">亲，请登录</a>
                     </div>
+                    <div class="user" ng-if="pageConfig.clientInfo">
+                        <a class="change-account-button" ng-click="changeAccount()">切换帐号</a>
+                        <span>欢迎您：{{pageConfig.clientInfo ? pageConfig.clientInfo.nickname: ''}}</span>
+                    </div>
+                    <!--<div class="tel">-->
+                        <!--<img src="images/global/phone.png"/>-->
+                        <!--<span>咨询电话：400-886-9256</span>-->
+                    <!--</div>-->
+                </div>
+                <div class="col-xs-6 col col-center info">
+
                     <div class="nav-list">
                         <div class="nav-item"
                              ng-repeat="nav in navList"
@@ -42,7 +43,7 @@
             <div class="row row-center">
                 <div class="col-50 col-center logo">
                     <a ui-sref="/"><img ng-src="images/global/logo.png"/></a>
-                    <span><img ng-src="images/global/logo-tips.png"/></span>
+                    <!--<span><img ng-src="images/global/logo-tips.png"/></span>-->
                 </div>
                 <div class="col-50 col-center">
                     <!--<div class="search">-->

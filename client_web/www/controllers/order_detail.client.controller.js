@@ -213,11 +213,18 @@ angular.module('EClientWeb').controller('OrderDetailController',
           $scope.pageData.scan = true;
 
           Auth.setUser(data.client);
+          console.log(data.client);
           $scope.$emit(GlobalEvent.onCartCountChange, data.client);
           $scope.$emit(GlobalEvent.onShowAlert, '订单创建成功！');
 
           return $state.go('payment', {order_id: data.order._id});
         });
+      };
+
+      $scope.goState = function(state, param){
+        if(state){
+          return $state.go(state, param);
+        }
       };
 
       $scope.goMyCart = function(){

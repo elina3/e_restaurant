@@ -9,7 +9,6 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
-        cardStatuses: [{id: 'enabled', text: '已开启'}, {id: 'disabled', text: '已禁用'},{id: 'frozen', text: '已冻结'},{id: 'close', text: '已关闭'},{id: 'revoked', text: '已作废'}],
         roles: [{id:'card_manager',text:'饭卡管理员'}],
         groups: [],
         sexs: [{id: 'male', text: '男'},{id: 'female', text: '女'}],
