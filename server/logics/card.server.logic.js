@@ -50,32 +50,24 @@ exports.addCard = function(user, cardInfo,  callback){
     return callback({err: cardError.wrong_amount});
   }
 
-  Card.findOne({card_number: cardInfo.card_number})
+  Card.findOne({card_number: cardInfo.card_number, deleted_status: false})
     .exec(function(err, card){
       if(err){
         return callback({err: systemError.database_query_error});
       }
 
-      if(card && !card.deleted_status){
+      if(card){
         return callback({err: cardError.card_number_exist});
       }
 
-      if(card && !card.deleted_status && card.status !== 'disabled'){
-        return callback({err: cardError['card_' + card.status]});
-      }
-
-      Card.findOne({id_number: cardInfo.id_number})
+      Card.findOne({id_number: cardInfo.id_number, deleted_status: false})
         .exec(function(err, card){
           if(err){
             return callback({err: systemError.database_query_error});
           }
 
-          if(card && !card.deleted_status){
+          if(card){
             return callback({err: cardError.id_number_exist});
-          }
-
-          if(card && !card.deleted_status && card.status !== 'disabled'){
-            return callback({err: cardError['card_' + card.status]});
           }
 
           if(!card){
@@ -363,20 +355,15 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
     return callback({err: cardError.need_new_card_number});
   }
 
-  Card.findOne({card_number: newCardNumber})
+  Card.findOne({card_number: newCardNumber, deleted_status: false})
     .exec(function(err, findCard){
       if(err){
         return callback({err: systemError.database_query_error});
       }
 
-      if(findCard && !findCard.deleted_status){
-        return callback({err: cardError.new_card_exist});
-      }
-
-      if(findCard && !findCard.deleted_status && findCard.status !== 'disabled'){
+      if(findCard){
         return callback({err: cardError['card_' + findCard.status]});
       }
-
 
       var newCard = new Card({
         card_number: newCardNumber,
