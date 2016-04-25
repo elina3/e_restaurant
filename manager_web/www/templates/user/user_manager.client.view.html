@@ -195,23 +195,29 @@
                             <div class="content">
                                 <div class="row list-header">
                                     <div class="col-xs-3">
+                                        <span>证件号号</span>
+                                    </div>
+                                    <div class="col-xs-3">
                                         <span>卡号</span>
                                     </div>
                                     <div class="col-xs-1">
-                                        <span>金额</span>
+                                        <span>余额</span>
                                     </div>
                                     <div class="col-xs-1">
                                         <span>状态</span>
                                     </div>
-                                    <div class="col-xs-2">
+                                    <div class="col-xs-1">
                                         <span>生成时间</span>
                                     </div>
 
-                                    <div class="col-xs-5">
+                                    <div class="col-xs-3">
                                         <span>操作</span>
                                     </div>
                                 </div>
                                 <div class="row list-info" ng-repeat="card in pageConfig.plat_card_panel.cards">
+                                    <div class="col-xs-3">
+                                        <span>{{card.id_number}}</span>
+                                    </div>
                                     <div class="col-xs-3">
                                         <span>{{card.card_number}}</span>
                                     </div>
@@ -221,10 +227,10 @@
                                     <div class="col-xs-1">
                                         <span>{{card.status_display}}</span>
                                     </div>
-                                    <div class="col-xs-2">
-                                        <span>{{card.create_time | date: 'yyyy-MM-dd hh:mm:ss'}}</span>
+                                    <div class="col-xs-1">
+                                        <span>{{card.create_time | date: 'yy-MM-dd hh:mm'}}</span>
                                     </div>
-                                    <div class="col-xs-5">
+                                    <div class="col-xs-3">
                                         <div class="handle edit" ng-click="editCard(card)">
                                             <img class="gif" ng-src="images/global/edit.gif"/>
                                             <img class="normal" ng-src="images/global/edit.png"/>

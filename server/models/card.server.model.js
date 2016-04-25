@@ -44,7 +44,11 @@ var CardSchema = new Schema({
   recent_modify_user: {
     type: Schema.Types.ObjectId,
     ref:'User'
-  }
+  },
+  close: {
+    type: Boolean,
+    default: false
+  },
 });
 
 CardSchema.plugin(timestamps, {
