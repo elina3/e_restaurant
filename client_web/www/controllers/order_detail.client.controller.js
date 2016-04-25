@@ -88,6 +88,7 @@ angular.module('EClientWeb').controller('OrderDetailController',
           $scope.pageData.orderDetail.in_store_deal = data.order.in_store_deal;
           $scope.pageData.orderDetail.total_price = data.order.total_price;
           $scope.pageData.orderDetail.description = data.order.description;
+          $scope.pageData.orderDetail.paid = data.order.paid;
           if (!data.order.in_store_deal && data.order.contact) {
             $scope.pageData.orderDetail.contact = data.order.contact;
           }

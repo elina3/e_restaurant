@@ -94,7 +94,9 @@
 <div class="car-footer row">
     <p class="total-price col-xs-6" ng-show="!pageData.scan" >合计： <span class="count">￥12</span></p>
     <p class="pay col-xs-6" ng-show="!pageData.scan"  ng-click="submitOrder()">确认下单</p>
-    <p class="total-price col-xs-12" ng-show="pageData.scan" >合计： <span class="count">￥12</span></p>
+    <p class="total-price col-xs-12" ng-show="pageData.orderDetail.paid" >合计： <span class="count">￥12</span></p>
+    <p class="total-price col-xs-6" ng-show="pageData.scan && !pageData.orderDetail.paid" >合计： <span class="count">￥12</span></p>
+    <p class="pay col-xs-6" ng-show="pageData.scan && !pageData.orderDetail.paid" ng-click="goState('payment', {order_id: pageData.orderDetail._id})">去支付</p>
 </div>
 
 <e-footer></e-footer>
