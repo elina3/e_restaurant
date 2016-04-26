@@ -26,7 +26,7 @@ angular.module('EClientWeb').controller('HomeController',
       $scope.pageData = {
         title: '首页',
         headConfig: {
-          title: '瑞金古北分院食堂',
+          title: '瑞金医院古北分院餐厅',
           backView: '／',
           backShow: false
         },
