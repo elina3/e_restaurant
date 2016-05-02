@@ -17,6 +17,12 @@
     .goods-info {
       border-bottom: 1px solid @border-line-color-normal-web;
       padding-bottom: 20px;
+      height: 100%;
+      .row{
+        .photo{
+          height: 240px;
+        }
+      }
     }
 
     .good-detail {
@@ -50,10 +56,17 @@
         }
       }
     }
-
     .photo {
+      height: 100%;
       .top {
-        padding: 10px;
+        padding: 0px;
+        height: 100%;
+
+        .image-container{
+          width: 320px;
+
+          height: 100%;
+        }
       }
       img {
         display: block;
@@ -254,9 +267,27 @@
   .goods-detail-page-view {
     width: 100%;
     .goods-box{
+      padding: 0;
+      margin: 0;
       border: none;
-      margin-top: 0;
       .goods-info{
+
+        .photo{
+          padding: 0;
+
+          height: 240px !important;
+
+          .top{
+            padding: 0;
+            width: 100%;
+
+            .image-container{
+              width: 100% !important;
+              height: 100%;
+            }
+          }
+        }
+
         .photo, .info{
           display: block;
           overflow: hidden;

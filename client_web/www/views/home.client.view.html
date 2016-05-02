@@ -5,14 +5,15 @@
     <div class="goods-list">
         <div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">
             <div class="photo-area">
-                <div class="photo">
-                    <img err-src="images/global/default_goods.png"  ng-src={{generatePhotoSrc(goods)}}>
-                </div>
+                <e-image image-key="goods.display_photos[0]"></e-image>
+                <!--<div class="photo">-->
+                    <!--<img err-src="images/global/default_goods.png"  ng-src={{generatePhotoSrc(goods)}}>-->
+                <!--</div>-->
             </div>
             <div class="desc">
                 <div class="wrap">
                     <div class="description">
-                        <span>{{goods.name}}</span>
+                        {{goods.name}}
                     </div>
                     <div class="price">
                         <span>{{goods.price === -1 ? '待定': ('¥' + goods.price)}}</span>

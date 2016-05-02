@@ -17,6 +17,10 @@
     .goods-info {
       border-bottom: 1px solid @border-line-color-normal-web;
       padding-bottom: 20px;
+      height: 270px;
+      .row{
+        height: 100%;
+      }
     }
 
     .good-detail {
@@ -52,8 +56,16 @@
     }
 
     .photo {
+      height: 100%;
       .top {
-        padding: 10px;
+        padding: 0px;
+        height: 100%;
+
+        .image-container{
+          width: 320px;
+
+          height: 100%;
+        }
       }
       img {
         display: block;
@@ -258,8 +270,28 @@
   .free-meal-page-view {
     width: 100%;
     .goods-box{
+      padding: 0 !important;
+      margin: 0 !important;
       border: none;
       .goods-info{
+
+        padding: 0;
+          height: 350px;
+
+
+        .photo{
+          padding: 0;
+          .top{
+            padding: 0;
+            width: 100%;
+
+            .image-container{
+              width: 100% !important;
+              height: 100%;
+            }
+          }
+        }
+
         .photo, .info{
           display: block;
           overflow: hidden;
@@ -292,6 +324,12 @@
     width: 100%;
     .goods-box{
       border: none;
+
+      .image-container{
+        width: 280px;
+
+        height: 100%;
+      }
     }
   }
 }
