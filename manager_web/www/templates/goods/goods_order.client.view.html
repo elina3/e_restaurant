@@ -10,92 +10,76 @@
             </div>
         </div>
     </div>
-    <div class="search-bar"></div>
+    <div class="search-bar row">
+        <div class="filter col-xs-3">
+            <z-dropdown z-dropdown-model="currentStatus"
+                        z-dropdown-options="statuses"
+                        z-dropdown-label="所有状态"
+                    >
+            </z-dropdown>
+        </div>
+        <div class="col-xs-2">
+            <div class="search" ng-click="search()">筛选</div>
+        </div>
+    </div>
     <div class="order-list">
-        <div class="order-item">
+        <div class="order-item" ng-repeat="order in orders">
             <div class="order">
                 <div class="order-title row">
-                    <div class="order-number col-xs-6"><span>订单号：ES123478790324324324</span></div>
-                    <div class="order-status col-xs-6"><span class="status">准备中</span></div>
+                    <div class="order-number col-xs-6"><span>订单号：{{order.order_number}}</span></div>
+                    <div class="order-status col-xs-6"><span class="status">{{translateOrderStatus(order.status)}}</span></div>
                 </div>
                 <div class="order-user-info">
-                    <div class="order-contact" ng-show="false">
+                    <div class="order-contact" ng-show="order.in_store_deal">
                         <div class="contact-item">
                             <span>店内用餐</span>
                         </div>
                     </div>
-                    <div class="order-contact" ng-show="true">
+                    <div class="order-contact" ng-show="!order.in_store_deal">
                         <div class="contact-item">
-                            <label>收货人:</label><span>郭姗姗</span>
+                            <label>收货人:</label><span>{{order.contact.name}}</span>
                         </div>
                         <div class="contact-item">
-                            <label>电话:</label><span>18321740710</span>
+                            <label>电话:</label><span>{{order.contact.mobile}}</span>
                         </div>
                         <div class="contact-item">
-                            <label>地址:</label><span>上海市浦东新区城市经典铭筑408弄</span>
+                            <label>地址:</label><span>{{order.contact.address}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="order-goods-list">
-                    <div class="order-goods row">
+                    <div class="order-goods row" ng-repeat="goods in order.goods_orders">
                         <div class="image-container col-xs-3">
-                            <div class="image-item" ng-style="generateStyle('')"></div>
+                            <div class="image-item" ng-style="generateStyle(goods.display_photos[0])"></div>
                         </div>
                         <div class="goods-info col-xs-9 row">
                             <div class="info-item name col-xs-5">
                                 <span>黄焖鸡米饭</span>
                             </div>
-                            <div class="info-item price col-xs-2"><span>36</span></div>
-                            <div class="info-item count col-xs-2"><span>✕1</span></div>
-                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
+                            <div class="info-item price col-xs-2"><span>{{goods.price}}</span></div>
+                            <div class="info-item count col-xs-2"><span>✕{{goods.count}}</span></div>
+                            <div class="info-item status col-xs-2"><span>{{translateGoodsOrderStatus(goods.status)}}</span></div>
                         </div>
                     </div>
-                    <div class="order-goods row">
-                        <div class="image-container col-xs-3">
-                            <div class="image-item" ng-style="generateStyle('')"></div>
-                        </div>
-                        <div class="goods-info col-xs-9 row">
-                            <div class="info-item name col-xs-5">
-                                <span>黄焖鸡米饭</span>
-                            </div>
-                            <div class="info-item price col-xs-2"><span>36</span></div>
-                            <div class="info-item count col-xs-2"><span>✕1</span></div>
-                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
-                        </div>
-                    </div>
-                    <div class="order-goods row">
-                        <div class="image-container col-xs-3">
-                            <div class="image-item" ng-style="generateStyle('')"></div>
-                        </div>
-                        <div class="goods-info col-xs-9 row">
-                            <div class="info-item name col-xs-5">
-                                <span>黄焖鸡米饭</span>
-                            </div>
-                            <div class="info-item price col-xs-2"><span>36</span></div>
-                            <div class="info-item count col-xs-2"><span>✕1</span></div>
-                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
-                        </div>
-                    </div>
-
                     <div class="order-goods-summary row">
-                        <time class="col-xs-6">成交于：2016-10-1 20:00:00</time>
-                        <span class="col-xs-6">总共2个菜，共<strong>72</strong>元</span>
+                        <time class="col-xs-6">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
+                        <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，共 <strong>{{order.total_price}}</strong> 元</span>
                     </div>
                 </div>
             </div>
             <div class="order-handle">
                 <div class="buttons">
-                    <div class="button cook">烹饪</div>
-                    <div class="button delivery">配送</div>
-                    <div class="button complete">完成</div>
+                    <div class="button cook" ng-show="order.status === 'paid'" ng-click="cook(order)">烹饪</div>
+                    <div class="button delivery" ng-show="order.status === 'paid' || order.status === 'cooking'" ng-click="delivery(order)">配送</div>
+                    <div class="button complete" ng-show="order.status === 'paid' || order.status === 'cooking' || order.status === 'transporting'" ng-click="complete(order)">完成</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="e-load-more">
+    <div class="e-load-more" ng-show="pagination.totalCount > pagination.limit">
         <div class="load-area">
-            <span class="click-button" ng-click="loadMore()">点击加载更多</span>
-            <span class="load-result" ng-show="false">已全部加载</span>
+            <span class="click-button" ng-show="pagination.totalCount > pagination.skipCount" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="pagination.totalCount <= pagination.skipCount">已全部加载</span>
         </div>
     </div>
 </div>

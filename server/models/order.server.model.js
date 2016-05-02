@@ -58,6 +58,10 @@ var OrderSchema = new Schema({
     default: 'unpaid',
     type: String
   },
+  group: {
+    type: Schema.Types.ObjectId,
+    ref: 'Group'
+  },
   group_name: {
     enum: ['餐厅', '超市'],
     type: String

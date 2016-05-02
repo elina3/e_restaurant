@@ -70,6 +70,27 @@ exports.getMyOrders  = function(req, res, next){
   });
 };
 
+exports.getOrders = function(req, res, next){
+  var user = req.user;
+  var status = req.query.status || '';
+  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
+  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
+  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+
+  orderLogic.getOrders(status, currentPage, limit, skipCount, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      limit: result.limit,
+      total_count: result.totalCount,
+      orders: result.orders
+    };
+    return next();
+  });
+};
+
 exports.payOrder = function(req, res, next){
   var client = req.client;
   var order = req.order;
@@ -111,6 +132,7 @@ exports.orderBeginToCook = function(req, res, next){
     req.data = {
       success: newOrder ? true: false
     };
+    return next();
   });
 };
 
@@ -123,6 +145,7 @@ exports.orderBeginToTransport = function(req, res, next){
     req.data = {
       success: newOrder ? true: false
     };
+    return next();
   });
 };
 
@@ -135,6 +158,7 @@ exports.orderComplete = function(req, res, next){
     req.data = {
       success: newOrder ? true: false
     };
+    return next();
   });
 };
 

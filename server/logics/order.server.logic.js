@@ -133,8 +133,7 @@ exports.getOrderByOrderId = function(orderId, callback){
   });
 };
 
-exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
-  var query = {deleted_status: false, client: client._id};
+function queryOrders(query, currentPage, limit, skipCount, callback){
   Order.count(query)
     .exec(function(err, totalCount){
       if(err){
@@ -150,7 +149,7 @@ exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
       }
 
       Order.find(query)
-        .sort({create_time: -1})
+        .sort({status: -1})
         .skip(skipCount)
         .limit(limit)
         .exec(function(err, orders){
@@ -167,6 +166,25 @@ exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
         });
 
     });
+}
+
+exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
+  var query = {deleted_status: false, client: client._id};
+  queryOrders(query, currentPage, limit, skipCount, function(err, result){
+    return callback(err, result);
+  });
+};
+
+exports.getOrders = function(status, currentPage, limit, skipCount, callback){
+  var query = {
+    deleted_status: false
+  };
+  if(status){
+    query.status = status;
+  }
+  queryOrders(query, currentPage, limit, skipCount, function(err, result){
+    return callback(err, result);
+  });
 };
 
 exports.setOrderCooking = function(order, callback){
