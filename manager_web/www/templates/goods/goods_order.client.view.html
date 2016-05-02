@@ -1,0 +1,104 @@
+<z-header></z-header>
+<div class="goods-order-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">餐厅订单管理</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="search-bar"></div>
+    <div class="order-list">
+        <div class="order-item">
+            <div class="order">
+                <div class="order-title row">
+                    <div class="order-number col-xs-6"><span>订单号：ES123478790324324324</span></div>
+                    <div class="order-status col-xs-6"><span class="status">准备中</span></div>
+                </div>
+                <div class="order-user-info">
+                    <div class="order-contact" ng-show="false">
+                        <div class="contact-item">
+                            <span>店内用餐</span>
+                        </div>
+                    </div>
+                    <div class="order-contact" ng-show="true">
+                        <div class="contact-item">
+                            <label>收货人:</label><span>郭姗姗</span>
+                        </div>
+                        <div class="contact-item">
+                            <label>电话:</label><span>18321740710</span>
+                        </div>
+                        <div class="contact-item">
+                            <label>地址:</label><span>上海市浦东新区城市经典铭筑408弄</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-goods-list">
+                    <div class="order-goods row">
+                        <div class="image-container col-xs-3">
+                            <div class="image-item" ng-style="generateStyle('')"></div>
+                        </div>
+                        <div class="goods-info col-xs-9 row">
+                            <div class="info-item name col-xs-5">
+                                <span>黄焖鸡米饭</span>
+                            </div>
+                            <div class="info-item price col-xs-2"><span>36</span></div>
+                            <div class="info-item count col-xs-2"><span>✕1</span></div>
+                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
+                        </div>
+                    </div>
+                    <div class="order-goods row">
+                        <div class="image-container col-xs-3">
+                            <div class="image-item" ng-style="generateStyle('')"></div>
+                        </div>
+                        <div class="goods-info col-xs-9 row">
+                            <div class="info-item name col-xs-5">
+                                <span>黄焖鸡米饭</span>
+                            </div>
+                            <div class="info-item price col-xs-2"><span>36</span></div>
+                            <div class="info-item count col-xs-2"><span>✕1</span></div>
+                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
+                        </div>
+                    </div>
+                    <div class="order-goods row">
+                        <div class="image-container col-xs-3">
+                            <div class="image-item" ng-style="generateStyle('')"></div>
+                        </div>
+                        <div class="goods-info col-xs-9 row">
+                            <div class="info-item name col-xs-5">
+                                <span>黄焖鸡米饭</span>
+                            </div>
+                            <div class="info-item price col-xs-2"><span>36</span></div>
+                            <div class="info-item count col-xs-2"><span>✕1</span></div>
+                            <div class="info-item status col-xs-2"><span>烹饪中</span></div>
+                        </div>
+                    </div>
+
+                    <div class="order-goods-summary row">
+                        <time class="col-xs-6">成交于：2016-10-1 20:00:00</time>
+                        <span class="col-xs-6">总共2个菜，共<strong>72</strong>元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="order-handle">
+                <div class="buttons">
+                    <div class="button cook">烹饪</div>
+                    <div class="button delivery">配送</div>
+                    <div class="button complete">完成</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="e-load-more">
+        <div class="load-area">
+            <span class="click-button" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="false">已全部加载</span>
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

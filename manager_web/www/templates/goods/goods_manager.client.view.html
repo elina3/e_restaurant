@@ -16,8 +16,8 @@
             <div class="ee-tag-panel">
                 <ul class="ee-tag-header">
                     <li ng-class="{'current': pageConfig.currentTag === 'goods'}" ng-click="changeTag('goods')">{{pageConfig.type === 'restaurant' ? '菜品': '商品'}}管理</li>
-                    <li ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单管理</li>
-                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计图</li>
+                    <li ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单查询</li>
+                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计</li>
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'orders' || pageConfig.currentTag === 'statistics' ? 'move-left' : ''">
@@ -82,10 +82,14 @@
                         </div>
                     </div>
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
-                       <div style="width: 200px; margin: 200px auto;">
-                           <p>筛选订单，更改订单状态等功能</p>
-                           <span>正在努力开发中。。。</span>
-                       </div>
+                        <div class="search-bar row">
+                            <div class="left-panel col-xs-6"></div>
+                            <div class="right-panel col-xs-6">
+                                <div class="handle-button" ng-click="goToOrderManager()">
+                                    <span>去管理</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="ee-tag-view ee-statistic-panel">
                         <div class="ee-statistic-summary">
@@ -138,7 +142,9 @@
                             <div class="row ee-photo-box">
                                 <div class="photo" ng-repeat="(k,v) in pageConfig.goodsPanel.currentEditGoods.display_photos">
                                     <div class="closed" ng-click="abort(k,pageConfig.goodsPanel.currentEditGoods.display_photos)"></div>
-                                    <img ng-src="{{v.img}}"/>
+                                    <div class="image-container">
+                                        <div class="image-item" ng-style="generateStyle(v.photo_key)"></div>
+                                    </div>
                                     <ol ng-show="v.progress && v.progress.p!==100">
                                         <li>
                                             正在上传......{{v.progress.p}}%
@@ -179,8 +185,9 @@
                             <p class="area-title">描述照片显示</p>
                             <div  class="row ee-photo-box">
                                 <div class="photo" ng-repeat="(k,v) in pageConfig.goodsPanel.currentEditGoods.description_photos">
-                                    <img ng-src="{{v.img}}"/>
-
+                                    <div class="image-container">
+                                        <div class="image-item" ng-style="generateStyle(v.photo_key)"></div>
+                                    </div>
                                     <div class="closed" ng-click="abort(k,pageConfig.goodsPanel.currentEditGoods.description_photos)"></div>
                                     <ol ng-show="v.progress && v.progress.p!==100">
                                         <li>

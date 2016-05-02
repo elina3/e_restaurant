@@ -60,102 +60,12 @@
             <span class="large">￥{{order.total_price}}</span>
         </div>
     </div>
-    <!--<div class="order-info">-->
-        <!--<div class="row top">-->
-            <!--<div class="col-xs-8 left">-->
-                <!--<span>订单号: D201605170010001</span>-->
-            <!--</div>-->
-            <!--<div class="col-xs-4 right">-->
-                <!--<span class="status">厨师烹饪中</span>-->
-                <!--<span class="time">成交于 2016-12-1 12:00</span>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="row order">-->
-            <!--<div class="col-xs-8 goods-items">-->
-                <!--<div class="row goods-item"-->
-                     <!--ng-click="goToView('orderDetail')">-->
-                    <!--<div class="col-xs-3 photo">-->
-                        <!--<img src="temp/goods1.png"/>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-4 goods-des">-->
-                        <!--<div class="center-box">-->
-                            <!--<p>呱呱叫干锅主题餐厅</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-2 goods-price">-->
-                        <!--<div class="center-box">-->
-                            <!--<span>￥12</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-1 count">-->
-                        <!--<div class="center-box">-->
-                            <!--<span>x1</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-xs-2 price">-->
-                <!--<div class="center-box">-->
-                    <!--<span>￥12</span>-->
-                <!--</div>-->
-
-            <!--</div>-->
-            <!--<div class="col-xs-2 status">-->
-                <!--<div class="center-box state">-->
-                    <!--<span>厨师烹饪中</span>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="row order">-->
-            <!--<div class="col-xs-8 goods-items">-->
-                <!--<div class="row goods-item"-->
-                     <!--ng-click="goToView('orderDetail')">-->
-                    <!--<div class="col-xs-3 photo">-->
-                        <!--<img src="temp/goods1.png"/>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-4 goods-des">-->
-                        <!--<div class="center-box">-->
-                            <!--<p>呱呱叫干锅主题餐厅</p>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-2 goods-price">-->
-                        <!--<div class="center-box">-->
-                            <!--<span>￥12</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="col-xs-1 count">-->
-                        <!--<div class="center-box">-->
-                            <!--<span>x1</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="col-xs-2 price">-->
-                <!--<div class="center-box">-->
-                    <!--<span>￥12</span>-->
-                <!--</div>-->
-
-            <!--</div>-->
-            <!--<div class="col-xs-2 status">-->
-                <!--<div class="center-box state">-->
-                    <!--<span>厨师烹饪中</span>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="sum">-->
-            <!--<span >共计2件商品</span>-->
-            <!--<span>合计：</span>-->
-            <!--<span class="large">￥24</span>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">-->
-        <!--<div class="load-area">-->
-            <!--<span class="click-button" ng-show="pageData.pagination.totalCount > pageData.pagination.skipCount" ng-click="loadMore()">点击加载更多</span>-->
-            <!--<span class="load-result" ng-show="pageData.pagination.totalCount <= pageData.pagination.skipCount">已全部加载</span>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">
+        <div class="load-area">
+            <span class="click-button" ng-show="pageData.pagination.totalCount > pageData.pagination.skipCount" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="pageData.pagination.totalCount <= pageData.pagination.skipCount">已全部加载</span>
+        </div>
+    </div>
 </div>
 
 <e-footer></e-footer>

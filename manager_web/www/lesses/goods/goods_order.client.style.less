@@ -1,0 +1,192 @@
+.goods-order-page-view{
+
+  .ee-banner {
+    background: @task-photos-theme-color;
+  }
+
+  @font-color-red: #fc4b20;
+  .search-bar{
+    width: 100%;
+    height: 50px;
+  }
+
+  .order-list{
+    width: 100%;
+
+    .order-item{
+      position: relative;
+      margin-bottom: 45px;
+      background: #fff;
+      &:hover{
+        .order-handle{
+          display: block !important;
+        }
+      }
+    }
+    .order{
+      width: 100%;
+
+      padding: 5px 2.5%;
+
+      border-bottom: 1px solid @border-normal-color;
+
+      .order-title{
+
+        overflow: hidden;
+
+        width: 100%;
+        height: 40px;
+
+        line-height: 40px;
+        font-size: 14px;
+
+
+        .order-number{
+          display: inline-block;
+          overflow: hidden;
+
+          padding: 0;
+          text-align: left;
+          color: #333;
+
+          .ellipsis();
+        }
+        .order-status{
+          display: inline-block;
+          overflow: hidden;
+          float: right;
+          padding: 0;
+          color: @font-color-red;
+          text-align: right;
+        }
+
+      }
+      .order-user-info{
+        margin: 5px 0;
+        font-size: 12px;
+        color: #999;
+
+        .contact-item{
+          height: 20px;
+          line-height: 20px;
+
+          label{
+            font-weight: normal;
+            width: 50px;
+          }
+        }
+      }
+      .order-goods-list{
+        width: 100%;
+        overflow: hidden;
+        .order-goods{
+          display: block;
+          overflow: hidden;
+          line-height: 30px;
+
+          font-size: 12px;
+          height: 100px;
+          .image-container {
+            display: inline-block;
+            float: left;
+            overflow: hidden;
+
+            max-width: 120px;
+            height: 100px;
+            background-color: white;
+            padding: 0 0px 5px 0 !important;
+
+            .image-item {
+              width: 100%;
+              height: 100%;
+              background-color: #f2f2f2;
+              border: 1px solid #e4e4e4;
+            }
+          }
+          .goods-info{
+            display: inline-block;
+            float: left;
+            height: 100%;
+
+            .info-item{
+              display: table;
+              height: 100px;
+              span{
+                display: table-cell;
+
+                vertical-align: middle;
+                height: inherit;
+              }
+            }
+            &.name{
+              .ellipsis();
+            }
+          }
+        }
+        .order-goods-summary{
+          height: 40px;
+          line-height: 40px;
+          font-size: 12px;
+          strong{
+            color: @font-color-red;
+          }
+          span{
+            text-align: right;
+            color: #999;
+            padding: 0;
+          }
+          time{
+            text-align: left;
+            color: #999;
+            padding: 0;
+          }
+        }
+      }
+    }
+    .order-handle{
+      position: absolute;
+      bottom: -40px;
+      left: 0;
+
+      display: none;
+      overflow: hidden;
+
+      width: 100%;
+      height: 40px;
+
+      .buttons{
+        display: inline-block;
+        float: right;
+        margin-right: 2%;
+
+        .button{
+          display: inline-block;
+          float: left;
+          overflow: hidden;
+
+          text-align: center;
+          line-height: 40px;
+
+          width: 100px;
+          height: 40px;
+          margin-left: 10px;
+
+          border: 1px solid @border-normal-color;
+          border-top: none;
+
+          background: #fff;
+
+          &:hover{
+            cursor: pointer;
+          }
+
+          &.complete{
+            border: none;
+            background: @font-color-red;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

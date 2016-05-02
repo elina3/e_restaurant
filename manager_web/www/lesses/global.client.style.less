@@ -24,6 +24,13 @@ ul{
   }
 }
 
+.ellipsis() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
 .zz-view {
   height: 100%;
 }
@@ -263,7 +270,6 @@ ul{
   @photo-size: 160px;
   .photo, .photo_select{
     display: inline-block;
-    overflow: hidden;
     float: left;
 
     width: @photo-size;
@@ -287,8 +293,10 @@ ul{
 
     .closed {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: -5px;
+      right: -5px;
+
+      display: none;
 
       width: 20px;
       height: 20px;
@@ -302,6 +310,21 @@ ul{
         background: url(../../images/global/clean_down.png) no-repeat;
       }
     }
+    &:hover{
+      .closed{
+        display: block;
+      }
+    }
+
+    .image-container{
+      width: @photo-size;
+      height: @photo-size;
+      max-width: @photo-size;
+      .image-item{
+        border-radius: 5px;
+      }
+    }
+
 
   }
   .photo_select {
@@ -339,6 +362,49 @@ ul{
 .wrapper{
   width: 95%;
   margin: 0 auto;
+}
+
+.e-load-more{
+  width: 100%;
+  margin: 20px auto;
+  margin-bottom: 50px;
+
+  height: 40px;
+  .load-area{
+    border: 1px solid @border-normal-color;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+
+    .click-button{
+      cursor: pointer;
+      color: #999;
+      &:hover{
+        color: #666;
+      }
+    }
+    .load-result{
+      color: #ccc;
+    }
+  }
+
+}
+.image-container {
+  display: inline-block;
+  float: left;
+  overflow: hidden;
+
+  max-width: 120px;
+  height: 100px;
+  background-color: white;
+  padding: 0 0px 5px 0 !important;
+
+  .image-item {
+    width: 100%;
+    height: 100%;
+    background-color: #f2f2f2;
+    border: 1px solid #e4e4e4;
+  }
 }
 .ee-pop-mask{
   position: fixed;

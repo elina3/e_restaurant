@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$scope', '$stateParams', '$window', '$rootScope',  'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService',
-    function ($scope, $stateParams, $window, $rootScope, GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService) {
+  ['$scope', '$stateParams', '$window', '$rootScope', 'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService',
+    function ($scope, $stateParams, $window, $rootScope,  GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService) {
 
       $scope.pageConfig = {
         qiniuToken: '',
@@ -281,15 +281,15 @@ angular.module('EWeb').controller('GoodsManagerController',
       function initPageConfig(){
         switch($stateParams.goods_type){
           case 'goods':
-            $scope.pageConfig.title = '超市管理';
+            $scope.pageConfig.title = '超市';
             $scope.pageConfig.type = 'supermarket';
             break;
           case 'dish':
-            $scope.pageConfig.title = '餐厅管理';
+            $scope.pageConfig.title = '餐厅';
             $scope.pageConfig.type = 'restaurant';
             break;
           default:
-            $scope.pageConfig.title = '餐厅管理';
+            $scope.pageConfig.title = '餐厅';
             $scope.pageConfig.type = 'restaurant';
             break;
         }
@@ -354,4 +354,19 @@ angular.module('EWeb').controller('GoodsManagerController',
         target.splice(index, 1);
       };
       //</editor-fold>
+
+      function generateUrl(src) {
+        return Config.qiniuServerAddress + src;
+      }
+
+      $scope.generateStyle = function (src) {
+        return {
+          'background': 'url(' + generateUrl(src) + ') no-repeat center top',
+          'background-size': 'cover'
+        };
+      };
+
+      $scope.goToOrderManager = function(){
+        $state.go('goods_order');
+      };
     }]);
