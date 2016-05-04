@@ -53,9 +53,9 @@ angular.module('EClientWeb').service('RequestSupport',
                         });
                     return q.promise;
                 },
-                executeGetByPath: function (path) {
+                executeGetByPath: function (path, params) {
                     var q = $q.defer();
-                    $http.get(path)
+                    $http.get(path, {params: params})
                         .success(function (data) {
                             q.resolve(handleData(data));
                         })

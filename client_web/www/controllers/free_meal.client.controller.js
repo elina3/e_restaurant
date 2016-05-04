@@ -149,7 +149,8 @@ angular.module('EClientWeb').controller('FreeMealController',
                 console.log(data);
 
                 var money = data.payment.cardInfo.amount;
-                $scope.$emit(GlobalEvent.onShowAlert, '您的订单['+orderNumber+']支付成功!     您的卡号['+$scope.pageData.card_number+']扣款'+orderDetail.total_price+'元!    卡内余额：' + money + '元！');
+                var message = '您的订单['+orderNumber+']支付成功!您的卡号['+$scope.pageData.card_number+']扣款'+orderDetail.total_price+'元!    卡内余额：' + money + '元！';
+                $scope.$emit(GlobalEvent.onShowAlert, message);
                 $scope.pageData.card_number = '';
               });
           });
