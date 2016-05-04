@@ -87,7 +87,13 @@ angular.module('EWeb').directive('zHeader',
                     };
 
                     scope.backHome = function () {
-                        $state.go('user_index');
+                        if(!scope.user){
+                            return $state.go('sign_in');
+                        }
+
+                        if(scope.user && scope.user.role === 'admin'){
+                            $state.go('user_index');
+                        }
                     };
                 }
             };
