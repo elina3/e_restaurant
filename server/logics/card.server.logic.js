@@ -78,6 +78,8 @@ exports.addCard = function(user, cardInfo,  callback){
             });
           }
 
+          card.type = !cardInfo.type ? 'normal' : cardInfo.type;
+          card.discount = card.type === 'staff' ? 0.25 : 1;
           card.amount = amount;
           card.status = 'enabled';
           card.deleted_status = false;

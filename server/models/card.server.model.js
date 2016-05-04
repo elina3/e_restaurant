@@ -29,6 +29,15 @@ var CardSchema = new Schema({
     default: 'disabled',
     type: String
   },
+  type: {
+    enum: ['normal', 'staff'],
+    type: String,
+    default: 'normal'
+  },
+  discount: {
+    type: Number,
+    default: 1
+  },
   amount: {
     type: Number,//余额（元）
     default:0

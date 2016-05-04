@@ -440,7 +440,7 @@
                     <div class="info-item">
                         <span class="info-name">用户名</span>
                         <div class="info-value">
-                            <input placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.username"/>
+                            <input ng-disabled="pageConfig.scanType === 'edit'" placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_user_panel.currentEditUser.username"/>
                         </div>
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.username}">(必填项，员工号)</div>
                     </div>
@@ -534,6 +534,18 @@
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.id_number}">(必填项，证件号)</div>
                     </div>
 
+                    <div class="info-item" ng-show = "pageConfig.scanType === 'create'">
+                        <span class="info-name">类型</span>
+                        <div class="info-value">
+                            <z-dropdown z-dropdown-model="pageConfig.plat_card_panel.currentEditCard.type"
+                                        z-dropdown-options="pageConfig.cardTypes"
+                                        z-dropdown-label="请选择类型"
+                                    >
+                            </z-dropdown>
+                        </div>
+                        <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.type}">(必选)</div>
+                    </div>
+
                     <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">饭卡号: </span>
                         <div class="info-value">
@@ -549,6 +561,12 @@
                         </div>
                     </div>
 
+                    <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
+                        <span class="info-name">类型: </span>
+                        <div class="info-value">
+                            {{pageConfig.plat_card_panel.currentEditCard.type.text}}
+                        </div>
+                    </div>
 
                     <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">卡内余额: </span>

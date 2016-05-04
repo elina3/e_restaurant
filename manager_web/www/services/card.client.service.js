@@ -187,6 +187,16 @@ angular.module('EWeb').factory('CardService',
             default:
               return '未开通';
           }
+        },
+        translateCardType: function(type){
+          switch(type){
+            case 'normal':
+              return '普通';
+            case 'staff':
+              return '员工';
+            default:
+              return '普通';
+          }
         }
       };
     }]);

@@ -9,7 +9,8 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
-        roles: [{id:'card_manager',text:'饭卡管理员'}],
+        roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}],
+        cardTypes: [{id: 'normal', text: '普通'},{id: 'staff', text: '员工'}],
         groups: [],
         sexs: [{id: 'male', text: '男'},{id: 'female', text: '女'}],
         currentTag: 'platform-user',
@@ -47,7 +48,9 @@ angular.module('EWeb').controller('UserManagerController',
           currentEditCard: null,
           add_money: 0,
           errorInfo: {
-            card_number: false
+            card_number: false,
+            id_number: false,
+            type: false
           },
           pagination: {
             currentPage: 1,
@@ -471,6 +474,7 @@ angular.module('EWeb').controller('UserManagerController',
               card_number: card.card_number,
               amount: card.amount,
               status: card.status,
+              type: {id: card.type, text: CardService.translateCardType(card.type)},
               status_display: CardService.translateCardStatus(card.status),
               create_time:card.create_time,
               update_time:card.update_time
@@ -554,7 +558,8 @@ angular.module('EWeb').controller('UserManagerController',
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
           id_number: $scope.pageConfig.plat_card_panel.currentEditCard.id_number,
-          amount:money + addMondy
+          amount:money + addMondy,
+          type: $scope.pageConfig.plat_card_panel.currentEditCard.type.id
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -668,7 +673,8 @@ angular.module('EWeb').controller('UserManagerController',
         return {
           card_number: '',
           id_number: '',
-          amount: 0
+          amount: 0,
+          type: {id: 'normal', text: CardService.translateCardType('normal')}
         };
       }
       function validCardInfo(card) {
@@ -680,6 +686,11 @@ angular.module('EWeb').controller('UserManagerController',
 
         if (!card.id_number) {
           $scope.pageConfig.plat_card_panel.errorInfo.id_number = true;
+          isPassed = false;
+        }
+
+        if(!card.type){
+          $scope.pageConfig.plat_card_panel.errorInfo.type = true;
           isPassed = false;
         }
         return isPassed;

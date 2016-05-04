@@ -6,20 +6,20 @@ var self = exports;
 exports.isNullOrEmpty = function (value) {
   return (value === undefined || value === null || value === '');
 };
-exports.isTrue = function(value){
+exports.isTrue = function (value) {
   if (self.isNullOrEmpty(value))
     return false;
 
   return (value.toString().toLowerCase() === 'true');
 };
 
-exports.isString = function(value){
+exports.isString = function (value) {
   return Object.prototype.toString.call(value) === "[object String]";
 };
 
-Array.prototype.objectIndexOf = function(objectKey, value){
-  for(var i=0;i<this.length;i++){
-    if(this[i] && this[i][objectKey] && value && this[i][objectKey].toString() === value.toString()){
+Array.prototype.objectIndexOf = function (objectKey, value) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] && this[i][objectKey] && value && this[i][objectKey].toString() === value.toString()) {
       return i;
     }
   }
@@ -55,26 +55,26 @@ Date.prototype.Format = function (fmt) {
 };
 
 //数字解析，解析不出来返回null
-exports.parseIntNumber = function(numberString){
+exports.parseIntNumber = function (numberString) {
   var number;
-  try{
+  try {
     number = parseInt(numberString);
     //isFinite() 用于检查其参数值是否是有限.  true表示有限，false表示无限大
     number = !isNaN(number) && isFinite(number) ? number : null;
-  }catch(e){
+  } catch (e) {
     number = null;
   }
   return number;
 };
 
 //正整数解析
-exports.parsePositiveIntNumber = function(numberString){
+exports.parsePositiveIntNumber = function (numberString) {
   var number = self.parseIntNumber(numberString);
-  if(number === null){
+  if (number === null) {
     return null;
   }
 
-  if(number <= 0){
+  if (number <= 0) {
     return null;
   }
 
@@ -82,40 +82,54 @@ exports.parsePositiveIntNumber = function(numberString){
 };
 
 //非负整数解析（正整数和0）
-exports.parseNonNegativeIntNumber = function(numberString){
+exports.parseNonNegativeIntNumber = function (numberString) {
   var number = self.parseIntNumber(numberString);
-  if(number === null){
+  if (number === null) {
     return null;
   }
 
-  if(number < 0){
+  if (number < 0) {
     return null;
   }
 
   return number;
 };
 
-function parseFloatNumber(numberText){
+function parseFloatNumber(numberText) {
   var number;
-  try{
+  try {
     number = parseFloat(numberText);
     //isFinite() 用于检查其参数值是否是有限.  true表示有限，false表示无限大
     number = !isNaN(number) && isFinite(number) ? number : null;
-  }catch(e){
+  } catch (e) {
     number = null;
   }
   return number;
 }
 
-exports.parseLocation = function(centerLocationParams){
-  if(!Array.isArray(centerLocationParams) || centerLocationParams.length !== 2){
+exports.amountParse = function (numberString) {
+  var amount = -1;
+  try {
+    amount = parseFloat(numberString);
+    amount = isNaN(amount) ? -1 : amount;
+    if (amount < 0) {
+      amount = -1;
+    }
+  } catch (e) {
+    amount = -1;
+  }
+  return amount;
+};
+
+exports.parseLocation = function (centerLocationParams) {
+  if (!Array.isArray(centerLocationParams) || centerLocationParams.length !== 2) {
     return [];
   }
 
   var longitude = parseFloatNumber(centerLocationParams[0]);
   var latitude = parseFloatNumber(centerLocationParams[1]);
 
-  if(longitude < 0 && latitude < 0){
+  if (longitude < 0 && latitude < 0) {
     return [];
   }
 
@@ -123,7 +137,7 @@ exports.parseLocation = function(centerLocationParams){
 };
 
 //是否为布尔值
-exports.isBoolean = function(value){
+exports.isBoolean = function (value) {
   if (self.isNullOrEmpty(value))
     return false;
 
@@ -131,11 +145,11 @@ exports.isBoolean = function(value){
   return (valueString === 'true' || valueString === 'false');
 };
 //布尔值解析
-exports.booleanParse = function(value){
+exports.booleanParse = function (value) {
   if (self.isNullOrEmpty(value))
     return null;
 
   var valueString = value.toString().toLowerCase();
-  return valueString === 'true' ? true: (valueString === 'false'?false: null);
+  return valueString === 'true' ? true : (valueString === 'false' ? false : null);
 };
 
