@@ -3,6 +3,7 @@
  */
 'use strict';
 var cardLogic = require('../logics/card');
+var publicLib = require('../libraries/public');
 exports.addNewCard = function (req, res, next) {
   var user = req.user;
   var cardInfo = req.body.card_info || req.query.card_info || {};
@@ -59,11 +60,13 @@ exports.deleteCard = function (req, res, next) {
 };
 
 exports.getCardList = function (req, res, next) {
-  var currentPage = req.query.current_page || req.body.current_page || 1;
-  var limit = req.query.limit || req.body.limit || -1;
-  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
+
   var cardNumber = req.query.card_number || req.body.card_number || '';
   var idNumber = req.query.id_number || req.body.id_number || '';
+
   cardLogic.getCardList(currentPage, limit, skipCount, cardNumber, idNumber, function (err, result) {
     if (err) {
       req.err = err;

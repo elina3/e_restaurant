@@ -6,7 +6,7 @@
 var orderLogic = require('../logics/order');
 var clientLogic = require('../logics/client');
 var paymentLogic = require('../logics/payment');
-var goodsLogic = require('../logics/goods');
+var publicLib = require('../libraries/public');
 exports.generateOrder = function(req, res, next){
   var client = req.client;
   var orderInfo = req.body.order_info || req.query.order_info || null;
@@ -73,9 +73,9 @@ exports.getMyOrders  = function(req, res, next){
 exports.getOrders = function(req, res, next){
   var user = req.user;
   var status = req.query.status || '';
-  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
-  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
-  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
   orderLogic.getOrders(status, currentPage, limit, skipCount, function(err, result){
     if(err){

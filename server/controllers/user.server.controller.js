@@ -2,7 +2,8 @@
  * Created by elinaguo on 16/2/25.
  */
 'use strict';
-var cryptoLib = require('../libraries/crypto');
+var cryptoLib = require('../libraries/crypto'),
+  publicLib = require('../libraries/public');
 var userLogic  = require('../logics/user');
 var systemError = require('../errors/system');
 
@@ -25,9 +26,9 @@ exports.createGroup = function(req, res, next){
 
 exports.getGroups = function(req, res, next){
   var user = req.user;
-  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
-  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
-  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
   var query = {
     hospital: user.hospital
   };
@@ -127,12 +128,9 @@ exports.deleteUser = function(req, res, next){
 
 exports.getNormalUsers = function(req, res, next){
   var admin = req.admin;
-  var currentPage = req.query.current_page || req.body.current_page || 1;
-  var limit = req.query.limit || req.body.limit || -1;
-  var skipCount = req.query.skip_count || req.body.skip_count || -1;
-  currentPage = parseInt(currentPage);
-  limit = parseInt(limit);
-  skipCount = parseInt(skipCount);
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
   userLogic.getNormalUsers(admin, currentPage, limit, skipCount, function(err, result){
     if(err){

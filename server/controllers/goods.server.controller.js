@@ -3,6 +3,7 @@
  */
 'use strict';
 var goodsLogic = require('../logics/goods');
+var publicLib = require('../libraries/public');
 exports.addNewGoods = function(req, res, next){
   var goodsInfo = req.body.goods_info || req.query.goods_info || {};
   var user = req.user;
@@ -67,12 +68,9 @@ exports.deleteGoods = function(req, res, next){
 };
 
 exports.getGoodsList = function(req, res, next){
-  var currentPage = req.query.current_page || req.body.current_page || 1;
-  var limit = req.query.limit || req.body.limit || -1;
-  var skipCount = req.query.skip_count || req.body.skip_count || -1;
-  currentPage = parseInt(currentPage);
-  skipCount = parseInt(skipCount);
-  limit = parseInt(limit);
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
   goodsLogic.getGoodsList(currentPage, limit, skipCount, function(err, result){
     if(err){
@@ -90,9 +88,10 @@ exports.getGoodsList = function(req, res, next){
 };
 
 exports.getOpeningGoodsList = function(req, res, next){
-  var currentPage = req.query.current_page || req.body.current_page || 1;
-  var limit = req.query.limit || req.body.limit || -1;
-  var skipCount = req.query.skip_count || req.body.skip_count || -1;
+  var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
+  var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
+  var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
+
   currentPage = parseInt(currentPage);
   skipCount = parseInt(skipCount);
   limit = parseInt(limit);
