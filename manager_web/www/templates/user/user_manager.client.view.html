@@ -4,7 +4,7 @@
         <div class="ee-wrapper">
             <div class="row ee-title">
                 <div class="col-xs-6">
-                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span ng-hide="user.role==='card_manager'" class="ee-banner-back" ng-click="goBack()">< </span>
                     <span class="ee-banner-content">用户管理</span>
                 </div>
             </div>
@@ -14,12 +14,12 @@
         <div class="ee-wrapper">
             <div class="ee-tag-panel">
                 <ul class="ee-tag-header">
-                    <li ng-class="{'current': pageConfig.currentTag === 'platform-user'}" ng-click="changeTag('platform-user')">平台用户</li>
-                    <li ng-class="{'current': pageConfig.currentTag === 'client-user'}" ng-click="changeTag('client-user')">客户端用户</li>
-                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
+                    <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'platform-user'}" ng-click="changeTag('platform-user')">平台用户</li>
+                    <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'client-user'}" ng-click="changeTag('client-user')">客户端用户</li>
+                    <li ng-show="user.role==='admin' || user.role === 'card_manager'" class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
                 </ul>
                 <div class="ee-tag-body">
-                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
+                    <div class="ee-tag-view" ng-show="user.role==='admin'" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
                         <div class="ee-search-bar row">
                             <div class="left-panel col-xs-6"></div>
                             <div class="right-panel col-xs-6">
@@ -100,7 +100,7 @@
                             <z-pagination config="pageConfig.plat_user_panel.pagination"></z-pagination>
                         </div>
                     </div>
-                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
+                    <div class="ee-tag-view" ng-show="user.role==='admin'" ng-class="pageConfig.currentTag === 'card-user' ? 'move-left': ''">
                         <div class="ee-search-bar row">
                             <div class="left-panel col-xs-6"></div>
                             <div class="right-panel col-xs-6">
@@ -172,7 +172,7 @@
                             <z-pagination config="pageConfig.plat_client_panel.pagination"></z-pagination>
                         </div>
                     </div>
-                    <div class="ee-tag-view">
+                    <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'">
                         <div class="ee-search-bar row">
                             <div class="left-panel col-xs-6">
                                 <div class='pull-left'>

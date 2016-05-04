@@ -32,7 +32,18 @@ angular.module('EWeb').controller('UserSignInController',
           }
 
 
-          $state.go('user_index');
+
+          switch(user.role){
+            case 'admin':
+              return $state.go('user_index');
+            case 'card_manager':
+              return $state.go('user_manager', {panel_type: 'card-user'});
+            case 'cooker':
+            case 'delivery':
+              return $state.go('goods_order');
+            default:
+              return $state.go('user_index');
+          }
         });
       };
       $scope.goToClientIndex = function(){

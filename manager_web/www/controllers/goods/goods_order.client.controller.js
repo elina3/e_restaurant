@@ -3,11 +3,13 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsOrderController',
-  ['$scope', '$window', '$rootScope', 'GlobalEvent', '$state', 'QiNiuService', 'Config','OrderService',
-    function ($scope, $window, $rootScope,  GlobalEvent, $state, QiNiuService, Config, OrderService) {
+  ['$scope', '$window', '$rootScope', 'GlobalEvent', '$state', 'QiNiuService', 'Config', 'OrderService', 'Auth',
+    function ($scope, $window, $rootScope, GlobalEvent, $state, QiNiuService, Config, OrderService, Auth) {
 
+      var user = Auth.getUser();
+      $scope.isShowBack = user.role === 'cooker' || user.role === 'delivery' ? false : true;
       $scope.orders = [];
-      $scope.currentStatus = {id:''};
+      $scope.currentStatus = {id: ''};
       $scope.statuses = [
         {id: '', text: '所有状态'},
         {id: 'unpaid', text: '未支付'},
@@ -34,7 +36,7 @@ angular.module('EWeb').controller('GoodsOrderController',
       }
 
       $scope.generateStyle = function (src) {
-        if(!src){
+        if (!src) {
           return;
         }
         return {
@@ -43,60 +45,60 @@ angular.module('EWeb').controller('GoodsOrderController',
         };
       };
 
-      $scope.translateOrderStatus = function(status){
+      $scope.translateOrderStatus = function (status) {
         return OrderService.translateOrderStatus(status);
       };
 
-      $scope.translateGoodsOrderStatus = function(status){
+      $scope.translateGoodsOrderStatus = function (status) {
         return OrderService.translateGoodsOrderStatus(status);
       };
 
-      $scope.cook = function(order){
+      $scope.cook = function (order) {
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.cookOrder(order._id, function(err, result){
+        OrderService.cookOrder(order._id, function (err, result) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err || !result.success){
+          if (err || !result.success) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
           }
           $state.reload();
         });
       };
 
-      $scope.delivery = function(order){
+      $scope.delivery = function (order) {
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.deliveryOrder(order._id, function(err, result){
+        OrderService.deliveryOrder(order._id, function (err, result) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err || !result.success){
+          if (err || !result.success) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
           }
           $state.reload();
         });
       };
 
-      $scope.complete = function(order){
+      $scope.complete = function (order) {
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.completeOrder(order._id, function(err, result){
+        OrderService.completeOrder(order._id, function (err, result) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err || !result.success){
+          if (err || !result.success) {
             $scope.$emit(GlobalEvent.onShowAlert, err);
           }
           $state.reload();
         });
       };
 
-      $scope.loadMore = function(){
+      $scope.loadMore = function () {
         loadOrders();
       };
 
-      $scope.search = function(){
+      $scope.search = function () {
         $scope.pagination.currentPage = 1;
         $scope.pagination.skipCount = 0;
         $scope.pagination.totalCount = 0;
         loadOrders();
       };
 
-      function loadOrders(){
-        OrderService.getOrders($scope.pagination, $scope.currentStatus.id, function(err, data){
+      function loadOrders() {
+        OrderService.getOrders($scope.pagination, $scope.currentStatus.id, function (err, data) {
           console.log(data);
           $scope.orders = data.orders;
           $scope.pagination.skipCount += data.orders.length;
@@ -107,8 +109,9 @@ angular.module('EWeb').controller('GoodsOrderController',
         });
       }
 
-      function init(){
+      function init() {
         loadOrders();
       }
+
       init();
     }]);

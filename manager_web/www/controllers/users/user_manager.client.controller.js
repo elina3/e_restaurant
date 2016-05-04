@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('UserManagerController',
-  ['$window', '$rootScope', '$stateParams', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError', 'CardService', 'ClientService',
-    function ($window, $rootScope, $stateParams, $scope, GlobalEvent, $state, UserService, UserError, CardService, ClientService) {
+  ['$window', '$rootScope', '$stateParams', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError', 'CardService', 'ClientService', 'Auth',
+    function ($window, $rootScope, $stateParams, $scope, GlobalEvent, $state, UserService, UserError, CardService, ClientService, Auth) {
 
       $scope.pageConfig = {
         clientScanType: '',
@@ -84,6 +84,8 @@ angular.module('EWeb').controller('UserManagerController',
           }
         }
       };
+
+      $scope.user = Auth.getUser();
 
       $scope.goBack = function () {
         $window.history.back();
@@ -709,6 +711,10 @@ angular.module('EWeb').controller('UserManagerController',
         var panelType = $stateParams.panel_type;
         if(panelType){
           $scope.pageConfig.currentTag = panelType;
+        }else if($scope.user.role === 'admin'){
+          $scope.pageConfig.currentTag = 'platform-user';
+        }else{
+          $scope.pageConfig.currentTag = 'card-user';
         }
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
@@ -722,9 +728,11 @@ angular.module('EWeb').controller('UserManagerController',
             $scope.pageConfig.groups.push({id: group._id, text: group.name});
           });
 
-          loadUsers();
+          if($scope.user.role === 'admin'){
+            loadUsers();
+            loadClients();
+          }
           loadCards();
-          loadClients();
         });
       }
       init();

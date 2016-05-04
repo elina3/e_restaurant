@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('UserIndexController',
-  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService',
-    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService) {
+  ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
+    function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
 
       $scope.pageConfig = {
         groupList: []

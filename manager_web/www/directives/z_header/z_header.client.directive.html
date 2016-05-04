@@ -8,7 +8,7 @@
                     <!--<img ng-src="images/global/header_logo.png"/>-->
                 </span>
 
-                <div class="z-header-menu">
+                <div class="z-header-menu" ng-show="user.role === 'admin'">
                     <strong ng-mouseover="toggleMainMenuOpen($event)"
                             ></strong>
 
