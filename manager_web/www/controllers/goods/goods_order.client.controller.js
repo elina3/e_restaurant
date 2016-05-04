@@ -3,13 +3,13 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsOrderController',
-  ['$scope', '$window', '$rootScope', 'GlobalEvent', '$state', 'QiNiuService', 'Config', 'OrderService', 'Auth',
-    function ($scope, $window, $rootScope, GlobalEvent, $state, QiNiuService, Config, OrderService, Auth) {
+  ['$scope', '$window', '$stateParams',  '$rootScope', 'GlobalEvent', '$state', 'QiNiuService', 'Config', 'OrderService', 'Auth',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, QiNiuService, Config, OrderService, Auth) {
 
       var user = Auth.getUser();
       $scope.isShowBack = user.role === 'cooker' || user.role === 'delivery' ? false : true;
       $scope.orders = [];
-      $scope.currentStatus = {id: ''};
+      $scope.currentStatus = {id: '', text: '所有状态'};
       $scope.statuses = [
         {id: '', text: '所有状态'},
         {id: 'unpaid', text: '未支付'},
@@ -94,10 +94,32 @@ angular.module('EWeb').controller('GoodsOrderController',
         $scope.pagination.currentPage = 1;
         $scope.pagination.skipCount = 0;
         $scope.pagination.totalCount = 0;
-        loadOrders();
+
+        if($stateParams.filter && $stateParams.filter.status === $scope.currentStatus.id){
+          loadOrders();
+        }else{
+          $state.go('goods_order', {filter: JSON.stringify({status: $scope.currentStatus.id})});
+        }
       };
 
+      function getStatusIndex(statusId){
+        for(var i =0;i<$scope.statuses.length;i++){
+          if($scope.statuses[i].id===statusId){
+            return i;
+          }
+        }
+        return -1;
+      }
+
       function loadOrders() {
+        var currentFilter = $stateParams.filter;
+        if(currentFilter){
+          currentFilter = JSON.parse(currentFilter);
+          var index = getStatusIndex(currentFilter.status);
+          if(index > -1){
+            $scope.currentStatus = $scope.statuses[index];
+          }
+        }
         OrderService.getOrders($scope.pagination, $scope.currentStatus.id, function (err, data) {
           console.log(data);
           $scope.orders = data.orders;

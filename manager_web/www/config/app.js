@@ -33,7 +33,7 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
           controller: 'GoodsManagerController'
       })
       .state('goods_order', {
-        url: '/goods/orders',
+        url: '/goods/orders:filter',
         templateUrl: 'templates/goods/goods_order.client.view.html',
         controller: 'GoodsOrderController'
       })
