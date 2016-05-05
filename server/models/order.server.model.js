@@ -83,8 +83,14 @@ var OrderSchema = new Schema({
     type: Boolean,
     default: false
   },
-  total_price: {
+  total_price: {//应收总金额
     type: Number
+  },
+  actual_amount: {//实收总金额
+    type: Number
+  },
+  has_discount: {
+    type: Boolean
   },
   description: {
     type: String,
@@ -97,6 +103,18 @@ var OrderSchema = new Schema({
   paid: {
     type: Boolean,
     default: false
+  },
+  pay_time: {
+    type: Date
+  },
+  cook_time: {
+    type: Date
+  },
+  delivery_time: {
+    type: Date
+  },
+  complete_time: {
+    type: Date
   }
 });
 
@@ -119,6 +137,11 @@ OrderSchema.pre('save', function (next) {
     this.in_store_deal = true;
   }else{
     this.in_store_deal = false;
+  }
+
+  this.has_discount = false;
+  if(this.paid && this.actual_amount !== this.total_price){
+    this.has_discount = true;
   }
   next();
 });

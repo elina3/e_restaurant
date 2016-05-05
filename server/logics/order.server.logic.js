@@ -133,7 +133,7 @@ exports.getOrderByOrderId = function(orderId, callback){
   });
 };
 
-function queryOrders(query, currentPage, limit, skipCount, callback){
+function queryOrders(query, sort, currentPage, limit, skipCount, callback){
   Order.count(query)
     .exec(function(err, totalCount){
       if(err){
@@ -148,8 +148,14 @@ function queryOrders(query, currentPage, limit, skipCount, callback){
         skipCount = limit * (currentPage - 1);
       }
 
+      if(!sort){
+        sort = {
+          create_time: -1
+        };
+      }
+
       Order.find(query)
-        .sort({status: -1})
+        .sort(sort)
         .skip(skipCount)
         .limit(limit)
         .exec(function(err, orders){
@@ -170,7 +176,7 @@ function queryOrders(query, currentPage, limit, skipCount, callback){
 
 exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
   var query = {deleted_status: false, client: client._id};
-  queryOrders(query, currentPage, limit, skipCount, function(err, result){
+  queryOrders(query, {create_time: -1}, currentPage, limit, skipCount, function(err, result){
     return callback(err, result);
   });
 };
@@ -182,13 +188,18 @@ exports.getOrders = function(status, currentPage, limit, skipCount, callback){
   if(status){
     query.status = status;
   }
-  queryOrders(query, currentPage, limit, skipCount, function(err, result){
+  queryOrders(query, {create_time: -1}, currentPage, limit, skipCount, function(err, result){
     return callback(err, result);
   });
 };
 
 exports.setOrderCooking = function(order, callback){
+  order.goods_orders.forEach(function(goodsOrder){
+    goodsOrder.status = 'cooking';
+  });
+  order.markModified('goods_orders');
   order.status = 'cooking';
+  order.cook_time = new Date();
   order.save(function(err, newOrder){
     if(err || !newOrder){
       return callback({err: systemError.database_save_error});
@@ -199,7 +210,12 @@ exports.setOrderCooking = function(order, callback){
 };
 
 exports.setOrderTransporting = function(order, callback){
+  order.goods_orders.forEach(function(goodsOrder){
+    goodsOrder.status = 'complete';
+  });
+  order.markModified('goods_orders');
   order.status = 'transporting';
+  order.delivery_time = new Date();
   order.save(function(err, newOrder){
     if(err || !newOrder){
       return callback({err: systemError.database_save_error});
@@ -210,38 +226,18 @@ exports.setOrderTransporting = function(order, callback){
 };
 
 exports.setOrderComplete = function(order, callback){
-  GoodsOrder.find({order: order._id}, function(err, goodsOrders){
-    if(err){
-      return callback({err: systemError.database_query_error});
+  order.goods_orders.forEach(function(goodsOrder){
+    goodsOrder.status = 'complete';
+  });
+  order.markModified('goods_orders');
+  order.status = 'complete';
+  order.complete_time = new Date();
+  order.save(function(err, newOrder){
+    if(err || !newOrder){
+      return callback({err: systemError.database_save_error});
     }
 
-    async.each(goodsOrders, function(goodsOrder, eachCallback){
-      if(goodsOrder.status === 'complete'){
-        return eachCallback();
-      }
-
-      goodsOrder.status = 'complete';
-      goodsOrder.save(function(err, newGoodsOrder){
-        if(err || !newGoodsOrder){
-          return eachCallback({err: systemError.database_save_error});
-        }
-
-        return eachCallback();
-      });
-    }, function(err){
-      if(err){
-        return callback(err);
-      }
-
-      order.status = 'complete';
-      order.save(function(err, newOrder){
-        if(err || !newOrder){
-          return callback({err: systemError.database_save_error});
-        }
-
-        return callback(null, true);
-      });
-    });
+    return callback(null, true);
   });
 };
 

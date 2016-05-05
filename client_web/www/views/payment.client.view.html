@@ -50,9 +50,10 @@
     </div>
 </div>
 <div class="car-footer row">
-    <p class="total-price col-xs-6" ng-show="!pageData.order.paid" >合计： <span class="count">￥12</span></p>
+    <p class="total-price col-xs-6" ng-show="!pageData.order.paid" >合计： <span class="count">￥{{pageData.order.total_price}}</span></p>
     <p class="pay col-xs-6" ng-show="!pageData.order.paid" ng-click="pay()">确认支付</p>
-    <p class="total-price col-xs-12" ng-show="pageData.order.paid">合计： <span class="count">￥12</span></p>
+    <p class="total-price col-xs-6" ng-show="pageData.order.paid">合计： <span class="count">￥{{pageData.order.total_price}}</span></p>
+    <p class="total-price col-xs-6" ng-show="pageData.order.paid">实付： <span class="count">￥{{pageData.order.actual_amount}}</span></p>
 </div>
 
 <e-footer></e-footer>

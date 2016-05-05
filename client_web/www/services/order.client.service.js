@@ -71,6 +71,29 @@ angular.module('EClientWeb').factory('OrderService',
               callback(SystemError.network_error);
             });
         },
+        freeMealPay: function(orderId, cardNumber, amount, callback){
+          RequestSupport.executePost('/client/order/free_meal_pay', {
+            order_id: orderId,
+            card_keyword: cardNumber,
+            amount: amount
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
+        },
         getMyOrders: function(pagination, callback){
           RequestSupport.executeGet('/client/my_orders', {
             skip_count: pagination.skipCount,

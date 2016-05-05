@@ -13,7 +13,28 @@
     }
   }
   .order-info {
+    position: relative;
     margin-bottom: 60px;
+    overflow: hidden;
+
+    .discount-icon{
+      position: absolute;
+      margin: -5px 0 0 -20px;
+      width:60px;
+      height:30px;
+      background-color: @font-color-red;
+      color: #fff;
+      font-size: 14px;
+      text-align: center;
+      line-height: 40px;
+      /* Rotate div */
+      transform:rotate(-45deg);
+      -ms-transform:rotate(-45deg); /* Internet Explorer */
+      -moz-transform:rotate(-45deg); /* Firefox */
+      -webkit-transform:rotate(-45deg); /* Safari 和 Chrome */
+      -o-transform:rotate(-45deg); /* Opera */
+    }
+
     input {
       border: none;
       background-color: @background-color-red;
@@ -156,6 +177,7 @@
 @media (max-width: 568px) {
   .my-orders-page-view {
     width: 100%;
+    margin-bottom: 80px;
     .info-title{
       display: none;
     }
@@ -240,13 +262,12 @@
 @media (max-width: 770px)  and (min-width: 568px) {
   .my-orders-page-view {
     width: 100%;
+    margin-bottom: 80px;
     .info-title{
       display: none;
     }
     .order-info{
       margin-top: 10px;
-
-
 
       .goods-items{
         .goods-item{

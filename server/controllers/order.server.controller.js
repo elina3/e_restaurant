@@ -110,6 +110,31 @@ exports.payOrder = function(req, res, next){
   });
 };
 
+exports.payFreeMealOrder = function(req,res,next){
+  var client = req.client;
+  var order = req.order;
+  var card = req.card;
+  var amount = req.body.amount || req.query.amount || 0;
+  var method = req.body.method || req.query.method || 'card';
+
+  paymentLogic.pay(client, order, method, card, amount, function(err, payment){
+    if(err){
+      return next(err);
+    }
+
+    orderLogic.setOrderComplete(order, function(err, newOrder){
+      if(err){
+        return next(err);
+      }
+
+      req.data = {
+        payment: payment
+      };
+      return next();
+    });
+  });
+};
+
 exports.deleteOrder = function(req, res, next){
   var order = req.order;
   orderLogic.deleteOrder(order, function(err, newOrder){

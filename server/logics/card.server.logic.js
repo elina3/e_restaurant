@@ -273,7 +273,24 @@ exports.getCardList = function(currentPage, limit, skipCount, cardNumber, idNumb
   });
 };
 
-exports.pay = function(card, amountString, callback){
+function getActualAmount(card, amount, paymentStatisticThisMonth){
+  if(card.type === 'normal'){
+    return amount;
+  }
+
+  if(paymentStatisticThisMonth.totalAmount >= 300){
+    return amount;
+  }
+
+  if(amount <= (300 - paymentStatisticThisMonth.totalAmount)){
+    return amount * card.discount;
+  }
+
+  var discountMoney = 300 - paymentStatisticThisMonth.totalAmount;
+  return (amount - discountMoney) + discountMoney * card.discount;
+}
+
+exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
   if(card.deleted_status){
     return callback({err: cardError.card_deleted});
   }
@@ -287,12 +304,14 @@ exports.pay = function(card, amountString, callback){
     return callback({err: cardError.wrong_amount});
   }
 
-  if(card.amount < amount){
+  var actualAmount = getActualAmount(card, amount, paymentStatisticThisMonth);
+
+  if(card.amount < actualAmount){
     return callback({err: cardError.insufficient_balance});
   }
 
   var oldAmount = card.amount;
-  card.amount = card.amount - amount;
+  card.amount = card.amount - actualAmount;
   card.save(function(err, newCard){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});
@@ -304,7 +323,10 @@ exports.pay = function(card, amountString, callback){
         return callback({err: systemError.database_save_error});
       }
 
-      return callback(null, newCard);
+      return callback(null, {
+        card: newCard,
+        actualAmount: actualAmount
+      });
     });
   });
 };

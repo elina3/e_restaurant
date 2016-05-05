@@ -7,6 +7,7 @@
     </div>
 
     <div class="order-info" ng-repeat="order in pageData.orders">
+        <div class="discount-icon" ng-show="order.has_discount">折扣</div>
         <div class="row top">
             <div class="col-xs-8 left">
                 <span>订单号: {{order.order_number}}</span>
@@ -55,9 +56,13 @@
             </div>
         </div>
         <div class="sum">
-            <span >共计{{order.total_count}}件商品</span>
-            <span>合计：</span>
-            <span class="large">￥{{order.total_price}}</span>
+            <span >共计{{order.goods_orders.length}}件商品</span>
+            <span ng-show="!order.paid">合计：</span>
+            <span ng-show="!order.paid" class="large">￥{{order.total_price}}</span>
+
+            <span ng-show="order.paid" style="margin-right: 10px;">合计:￥{{order.total_price}}</span>
+            <span ng-show="order.paid">实付：</span>
+            <span ng-show="order.paid" class="large">￥{{order.actual_amount}}</span>
         </div>
     </div>
     <div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">

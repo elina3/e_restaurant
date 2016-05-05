@@ -34,8 +34,24 @@ var PaymentSchema = new Schema({
   partner_trade_no: {
     type: String
   },
-  amount: {
+  amount: {//实收
     type: Number
+  },
+  total_amount: {//应收
+    type: Number
+  },
+  has_discount: {
+    type: Number
+  },
+  card: {
+    type: Schema.Types.ObjectId,
+    ref: 'Card'
+  },
+  card_number: {
+    type: String
+  },
+  card_id_number: {//饭卡的证件号（工号／身份证号等），主要用语查询
+    type: String
   },
   spbill_create_ip: {
     type: String
@@ -47,6 +63,9 @@ var PaymentSchema = new Schema({
     type: Boolean,
     default: false
   },
+  pay_time: {
+    type: Date
+  },
   deleted_status: {
     type: Boolean,
     default: false
@@ -56,6 +75,15 @@ var PaymentSchema = new Schema({
 PaymentSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
+});
+
+
+PaymentSchema.pre('save', function (next) {
+  this.has_discount = false;
+  if(this.paid && this.total_amount !== this.amount){
+    this.has_discount = true;
+  }
+  next();
 });
 
 appDb.model('Payment', PaymentSchema);

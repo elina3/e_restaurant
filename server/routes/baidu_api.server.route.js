@@ -1,7 +1,7 @@
 /**
  * Created by elinaguo on 16/5/3.
  */
-
+'use strict';
 var baiduApiController = require('../controllers/baidu_api');
 
 module.exports = function (app) {

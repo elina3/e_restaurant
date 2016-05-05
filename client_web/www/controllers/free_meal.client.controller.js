@@ -138,7 +138,7 @@ angular.module('EClientWeb').controller('FreeMealController',
             $scope.$emit(GlobalEvent.onCartCountChange, data.client);
             var orderNumber = data.order.order_number;
 
-            OrderService.pay(data.order._id,
+            OrderService.freeMealPay(data.order._id,
               $scope.pageData.card_number,
               orderDetail.total_price, function(err, data){
 
