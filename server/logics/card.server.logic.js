@@ -460,12 +460,9 @@ var query = {};
     query.$or = [{card_number: filter.keyword},
       {id_number: filter.keyword}];
 
-  if(filter.startTime){
-    query.create_time = {$gte: filter.startTime};
-  }
 
-  if(filter.endTime){
-    query.create_time = {$lte: filter.endTime};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
   }
 
   CardHistory.count(query, function(err, totalCount){
@@ -507,12 +504,8 @@ exports.getCardStatistics = function(filter, callback){
   }
 
 
-  if(filter.startTime){
-    query.create_time = {$gte: filter.startTime};
-  }
-
-  if(filter.endTime){
-    query.create_time = {$lte: filter.endTime};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
   }
 
   CardStatistic.aggregate([{
@@ -558,12 +551,8 @@ exports.getTotalCardBalance = function(filter, callback){
       {id_number: filter.keyword}];
   }
 
-  if(filter.startTime){
-    query.update_time = {$gte: filter.startTime};
-  }
-
-  if(filter.endTime){
-    query.update_time = {$lte: filter.endTime};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{update_time: {$gte: filter.startTime}},{update_time:{$lte: filter.endTime}}];
   }
 
   Card.aggregate([{

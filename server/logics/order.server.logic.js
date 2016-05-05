@@ -196,12 +196,8 @@ exports.getOrders = function(filter, currentPage, limit, skipCount, callback){
     query.has_discount = filter.hasDiscount;
   }
 
-  if(filter.startTime){
-    query.create_time = {$gte: filter.startTime};
-  }
-
-  if(filter.endTime){
-    query.create_time = {$lte: filter.endTime};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
   }
 
   if(filter.clientUsername){
@@ -378,12 +374,8 @@ exports.getOrderStatistics = function(filter, callback){
     query.has_discount = filter.hasDiscount;
   }
 
-  if(filter.startTime){
-    query.create_time = {$gte: filter.startTime};
-  }
-
-  if(filter.endTime){
-    query.create_time = {$lte: filter.endTime};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
   }
 
   if(filter.clientUsername){

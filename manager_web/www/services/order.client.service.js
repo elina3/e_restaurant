@@ -32,7 +32,9 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
         card_number: filter.card_number,
         card_id_number: filter.card_id_number,
         has_discount: filter.has_discount,
-        client_username: filter.client_username
+        client_username: filter.client_username,
+        start_time_stamp: filter.start_time_stamp,
+        end_time_stamp: filter.end_time_stamp
       })
         .then(function (data) {
           if (!callback) {

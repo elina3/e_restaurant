@@ -42,7 +42,19 @@ angular.module('EWeb').controller('GoodsOrderController',
           card_number: $scope.filter.card_number,
           card_id_number: $scope.filter.card_id_number,
           client_username: $scope.filter.client_username,
+          start_time_stamp: -1,
+          end_time_stamp: -1
         };
+
+        if($scope.pageShow.createTimeRange){
+          if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
+            filter.start_time_stamp = $scope.pageShow.createTimeRange.startDate._d.getTime();
+          }
+          if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
+            filter.end_time_stamp = $scope.pageShow.createTimeRange.endDate._d.getTime();
+          }
+        }
+
         if($scope.filter.order_type &&  $scope.filter.order_type.id !== ''){
           filter.has_discount = $scope.filter.order_type.id;
         }
