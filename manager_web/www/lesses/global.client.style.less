@@ -606,6 +606,11 @@ ul{
   cursor: pointer;
   border: 1px solid @border-normal-color;
   padding: 7px 33px 7px 15px;
+
+  span{
+    display: block;
+    .ellipsis();
+  }
   .z-select-panel {
     position: absolute;
     top: 101%;
@@ -625,6 +630,7 @@ ul{
       width: 100%;
       padding: 6px 15px;
       cursor: pointer;
+      .ellipsis();
       a {
         display: block;
         padding: 10px;

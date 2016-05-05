@@ -7,7 +7,8 @@ var eWeb = angular.module('EWeb', [
     'ngAnimate',
     'ngMessages',
     'LocalStorageModule',
-    'base64'
+    'base64',
+    'daterangepicker'
 ]);
 
 eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {

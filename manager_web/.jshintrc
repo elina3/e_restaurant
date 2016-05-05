@@ -71,6 +71,7 @@
     "DocumentTouch",
     "Highcharts",
     "$",
+    "moment",
     "ActiveXObject"
   ],
   "indent": 4,

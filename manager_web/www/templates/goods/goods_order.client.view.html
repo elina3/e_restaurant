@@ -10,16 +10,61 @@
             </div>
         </div>
     </div>
-    <div class="search-bar row">
-        <div class="filter col-xs-3">
-            <z-dropdown z-dropdown-model="currentStatus"
-                        z-dropdown-options="statuses"
-                        z-dropdown-label="所有状态"
-                    >
-            </z-dropdown>
+    <div class="search-bar">
+        <div class="row">
+            <div class="filter-item col-xs-4">
+                <input class="input-text" ng-model="filter.card_number" placeholder="请输入卡号"/>
+            </div>
+            <div class="filter-item col-xs-4">
+                <input class="input-text"  ng-model="filter.card_id_number" placeholder="请输入证件号"/>
+            </div>
+            <div class="filter-item col-xs-4">
+                <input class="input-text"  ng-model="filter.create_username" placeholder="请输入创建人账号"/>
+            </div>
         </div>
-        <div class="col-xs-2">
-            <div class="search" ng-click="search()">筛选</div>
+        <div class="row">
+            <div class="filter-item col-xs-4">
+                <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                       ng-model="pageShow.createTimeRange"
+                       min="pageShow.createTimeMinTime"
+                       options="pageShow.dateOptions"
+
+                       placeholder="点击选择时间"
+                        />
+            </div>
+
+            <div class="filter-item col-xs-2">
+                <z-dropdown z-dropdown-model="currentStatus"
+                            z-dropdown-options="statuses"
+                            z-dropdown-label="所有状态"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item col-xs-2">
+                <z-dropdown z-dropdown-model="filter.order_type"
+                            z-dropdown-options="orderTypes"
+                            z-dropdown-label="所有折扣"
+                        >
+                </z-dropdown>
+            </div>
+
+            <div class="filter-item col-xs-2">
+                <div class="search" ng-click="search()">筛选</div>
+            </div>
+        </div>
+    </div>
+    <div class="statistics-panel">
+
+        <div class="row" ng-show="pageShow.createTimeRange.startDate">
+            <div class="col-xs-12">
+                <label>时间：</label><time>{{(pageShow.createTimeRange.startDate).format('YY/MM/DD HH:mm')}}~{{(pageShow.createTimeRange.endDate).format('YY/MM/DD HH:mm')}}</time>
+            </div>
+        </div>
+        <div class="row">
+            <div class="statistic"><label>订单应收总销售额：</label><strong>10022515</strong> 元</div>
+            <div class="statistic"><label>订单实际总销售额：</label><strong>803414</strong> 元</div>
+            <div class="statistic"><label>差额：</label><strong>100</strong> 元</div>
+
         </div>
     </div>
     <div class="order-list">
@@ -65,7 +110,6 @@
                     <div class="order-goods-summary row">
                         <time class="col-xs-6">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
                         <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，合计 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
-
                     </div>
                 </div>
             </div>
