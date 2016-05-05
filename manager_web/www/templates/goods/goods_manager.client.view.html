@@ -7,6 +7,11 @@
                     <span class="ee-banner-back" ng-click="goBack()">< </span>
                     <span class="ee-banner-content">{{pageConfig.title}}</span>
                 </div>
+                <div class="col-xs-6">
+                    <div class="handle-button" ng-click="goToOrderManager()">
+                        <span>订单管理</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -15,9 +20,9 @@
         <div class="ee-wrapper">
             <div class="ee-tag-panel">
                 <ul class="ee-tag-header">
-                    <li ng-class="{'current': pageConfig.currentTag === 'goods'}" ng-click="changeTag('goods')">{{pageConfig.type === 'restaurant' ? '菜品': '商品'}}管理</li>
-                    <li ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单查询</li>
-                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计</li>
+                    <li class="last" ng-class="{'current': pageConfig.currentTag === 'goods'}" ng-click="changeTag('goods')">{{pageConfig.type === 'restaurant' ? '菜品': '商品'}}管理</li>
+                    <li ng-show="false" ng-class="{'current': pageConfig.currentTag === 'orders'}" ng-click="changeTag('orders')">订单查询</li>
+                    <li ng-show="false" class="last" ng-class="{'current': pageConfig.currentTag === 'statistics'}" ng-click="changeTag('statistics')">统计</li>
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'orders' || pageConfig.currentTag === 'statistics' ? 'move-left' : ''">
@@ -81,7 +86,7 @@
                             <z-pagination config="pageConfig.goodsPanel.pagination"></z-pagination>
                         </div>
                     </div>
-                    <div class="ee-tag-view" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
+                    <div class="ee-tag-view"  ng-show="false" ng-class="pageConfig.currentTag === 'statistics' ? 'move-left': ''">
                         <div class="search-bar row">
                             <div class="left-panel col-xs-6"></div>
                             <div class="right-panel col-xs-6">
@@ -91,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ee-tag-view ee-statistic-panel">
+                    <div class="ee-tag-view ee-statistic-panel"  ng-show="false">
                         <div class="ee-statistic-summary">
                             <div>
 
