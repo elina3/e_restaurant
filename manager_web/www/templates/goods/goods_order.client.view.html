@@ -55,7 +55,7 @@
                         </div>
                         <div class="goods-info col-xs-9 row">
                             <div class="info-item name col-xs-5">
-                                <span>黄焖鸡米饭</span>
+                                <span>{{goods.name}}</span>
                             </div>
                             <div class="info-item price col-xs-2"><span>{{goods.price}}</span></div>
                             <div class="info-item count col-xs-2"><span>✕{{goods.count}}</span></div>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="order-goods-summary row">
                         <time class="col-xs-6">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
-                        <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，共 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
+                        <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，合计 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
 
                     </div>
                 </div>
