@@ -100,12 +100,19 @@ exports.getOrders = function(req, res, next){
       return next(err);
     }
 
-    req.data = {
-      limit: result.limit,
-      total_count: result.totalCount,
-      orders: result.orders
-    };
-    return next();
+    orderLogic.getOrderStatistics(filter, function(err, statistics){
+      if(err){
+        return next(err);
+      }
+
+      req.data = {
+        limit: result.limit,
+        total_count: result.totalCount,
+        orders: result.orders,
+        statistics: statistics
+      };
+      return next();
+    });
   });
 };
 

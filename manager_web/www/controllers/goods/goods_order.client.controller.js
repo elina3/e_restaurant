@@ -23,6 +23,11 @@ angular.module('EWeb').controller('GoodsOrderController',
         {id: false, text: '普通订单'}
       ];
 
+      $scope.statistic = {
+        totalAmount: 0,
+        totalActualAmount: 0
+      };
+
       $scope.filter = {
         card_number: '',
         start_time: '',
@@ -49,6 +54,7 @@ angular.module('EWeb').controller('GoodsOrderController',
           $scope.pagination.totalCount = data.total_count;
           $scope.pagination.limit = data.limit;
           $scope.pagination.pageCount = Math.ceil($scope.pagination.totalCount / $scope.pagination.limit);
+          $scope.statistic = data.statistics;
         });
       }
 

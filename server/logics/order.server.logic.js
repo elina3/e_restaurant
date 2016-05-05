@@ -364,3 +364,62 @@ exports.getLatestCommonContact = function(clientId, callback){
       return callback(null, contact);
     });
 };
+
+exports.getOrderStatistics = function(filter, callback){
+  var query = {
+    deleted_status: false
+  };
+
+  if(filter.status){
+    query.status = filter.status;
+  }
+
+  if(filter.hasDiscount !== null){
+    query.has_discount = filter.hasDiscount;
+  }
+
+  if(filter.startTime){
+    query.create_time = {$gte: filter.startTime};
+  }
+
+  if(filter.endTime){
+    query.create_time = {$lte: filter.endTime};
+  }
+
+  if(filter.clientUsername){
+    query['client_info.username'] = filter.clientUsername;
+  }
+
+  if(filter.cardIdNumber){
+    query.card_id_number = filter.cardIdNumber;
+  }
+
+  if(filter.cardNumber){
+    query.card_number = filter.cardNumber;
+  }
+
+  Order.aggregate([{
+    $match: query
+  },{
+    $group: {
+      _id: '$object',
+      totalAmount: {$sum: '$total_price'},
+      totalActualAmount: {$sum: '$actual_amount'}
+    }
+  }], function(err, result){
+    if(err || !result){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(result.length === 0){
+      return callback(null, {
+        totalAmount: 0,
+        totalActualAmount: 0
+      });
+    }
+
+    delete result[0]._id;
+
+    return callback(null, result[0]);
+  });
+};
