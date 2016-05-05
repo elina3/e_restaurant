@@ -560,7 +560,7 @@ angular.module('EWeb').controller('UserManagerController',
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
           id_number: $scope.pageConfig.plat_card_panel.currentEditCard.id_number,
-          amount:money + addMondy,
+          amount: addMondy,
           type: $scope.pageConfig.plat_card_panel.currentEditCard.type.id
         };
         if($scope.pageConfig.scanType === 'create'){
