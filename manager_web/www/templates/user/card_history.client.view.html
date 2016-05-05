@@ -11,16 +11,43 @@
                 </div>
             </div>
         </div>
+
+        <div class="search-bar">
+            <div class="row">
+
+                <div class="filter-item col-xs-3">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="pageShow.createTimeRange"
+                           min="pageShow.createTimeMinTime"
+                           options="pageShow.dateOptions"
+
+                           placeholder="点击选择时间"
+                            />
+                </div>
+                <div class="filter-item col-xs-6">
+                    <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" ng-change="searchKey()" />
+                </div>
+                <div class="filter-item col-xs-3">
+                    <div class="search" ng-click="search()">筛选</div>
+                </div>
+            </div>
+        </div>
+        <div class="statistics-panel">
+
+            <div class="row" ng-show="pageShow.createTimeRange.startDate">
+                <div class="statistic center">
+                    <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
+                </div>
+            </div>
+            <div class="row">
+                <div class="statistic"><label>退卡总金额：</label><strong>10022515</strong> 元</div>
+                <div class="statistic"><label>充值总金额：</label><strong>803414</strong> 元</div>
+                <div class="statistic"><label>总余额：</label><strong>100</strong> 元</div>
+            </div>
+        </div>
+
         <div class="ee-user-manager-body">
             <div class="ee-wrapper">
-                <div class="ee-search-bar row">
-                    <div class="left-panel col-xs-6">
-                        <div class='pull-left'>
-                            <label class="info-name">查询:</label>
-                            <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" ng-change="searchKey()" />
-                        </div>
-                    </div>
-                </div>
                 <div class="ee-table-list">
                     <div class="content">
                         <div class="row list-header">

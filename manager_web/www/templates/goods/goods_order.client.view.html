@@ -56,8 +56,8 @@
     <div class="statistics-panel">
 
         <div class="row" ng-show="pageShow.createTimeRange.startDate">
-            <div class="col-xs-12">
-                <label>时间：</label><time>{{(pageShow.createTimeRange.startDate).format('YY/MM/DD HH:mm')}}~{{(pageShow.createTimeRange.endDate).format('YY/MM/DD HH:mm')}}</time>
+            <div class="statistic center">
+                <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
             </div>
         </div>
         <div class="row">
