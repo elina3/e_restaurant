@@ -23,12 +23,16 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
           return callback(SystemError.network_error);
         });
     },
-    getOrders: function(param, status, callback){
+    getOrders: function(param, filter, callback){
       RequestSupport.executeGet('/user/order_list', {
         current_page: param.currentPage,
         limit: param.limit,
         skip_count: param.skipCount,
-        status: status
+        status: filter.status,
+        card_number: filter.card_number,
+        card_id_number: filter.card_id_number,
+        has_discount: filter.has_discount,
+        client_username: filter.client_username
       })
         .then(function (data) {
           if (!callback) {

@@ -89,7 +89,9 @@ exports.createOrder = function(orderInfo, client, callback){
         description : orderInfo.description,
         client: client._id,
         client_info: {
-          nickname: client.nickname
+          nickname: client.nickname,
+          username: client.username,
+          mobile: client.mobile_phone
         }
       });
       order.order_number = generateOrderNumber(client, order);
@@ -181,13 +183,40 @@ exports.getMyOrders = function(client, currentPage, limit, skipCount, callback){
   });
 };
 
-exports.getOrders = function(status, currentPage, limit, skipCount, callback){
+exports.getOrders = function(filter, currentPage, limit, skipCount, callback){
   var query = {
     deleted_status: false
   };
-  if(status){
-    query.status = status;
+
+  if(filter.status){
+    query.status = filter.status;
   }
+
+  if(filter.hasDiscount !== null){
+    query.has_discount = filter.hasDiscount;
+  }
+
+  if(filter.startTime){
+    query.create_time = {$gte: filter.startTime};
+  }
+
+  if(filter.endTime){
+    query.create_time = {$lte: filter.endTime};
+  }
+
+  if(filter.clientUsername){
+
+    query['client_info.username'] = filter.clientUsername;
+  }
+
+  if(filter.cardIdNumber){
+    query.card_id_number = filter.cardIdNumber;
+  }
+
+  if(filter.cardNumber){
+    query.card_number = filter.cardNumber;
+  }
+
   queryOrders(query, {create_time: -1}, currentPage, limit, skipCount, function(err, result){
     return callback(err, result);
   });

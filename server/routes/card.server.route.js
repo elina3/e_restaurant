@@ -21,6 +21,6 @@ module.exports = function (app) {
   app.route('/cards_list').get(authFilter.requireUser, cardController.getCardList);
   app.route('/client/card').get(cardFilter.requireCardByIDNumberOrCardNumber, cardController.getCardDetail);
 
-  app.route('/cards_history_list').get(cardController.getCardHistories);
-  app.route('/card/statistics').get(cardController.getCardStatistics)
+  app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);
+  app.route('/card/statistics').get(authFilter.requireUser, cardController.getCardStatistics)
 };

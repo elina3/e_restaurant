@@ -18,18 +18,48 @@ angular.module('EWeb').controller('GoodsOrderController',
         {id: 'transporting', text: '配送中'},
         {id: 'complete', text: '已完成'}];
       $scope.orderTypes = [
-        {id: '', text: '所有'},
-        {id: 'discount_order', text: '折扣订单'},
-        {id: 'normal_order', text: '普通订单'}
+        {id: '', text: '所有类型'},
+        {id: true, text: '折扣订单'},
+        {id: false, text: '普通订单'}
       ];
 
       $scope.filter = {
         card_number: '',
         start_time: '',
         card_id_number: '',
-        create_username: '',
-        order_type: null
+        client_username: '',
+        order_type: {id: '', text: '所有类型'}
       };
+
+      function loadOrders() {
+        var filter = {
+          status: $scope.currentStatus.id,
+          card_number: $scope.filter.card_number,
+          card_id_number: $scope.filter.card_id_number,
+          client_username: $scope.filter.client_username,
+        };
+        if($scope.filter.order_type &&  $scope.filter.order_type.id !== ''){
+          filter.has_discount = $scope.filter.order_type.id;
+        }
+        OrderService.getOrders($scope.pagination, filter, function (err, data) {
+          console.log(data);
+          $scope.orders = data.orders;
+          $scope.pagination.skipCount += data.orders.length;
+
+          $scope.pagination.totalCount = data.total_count;
+          $scope.pagination.limit = data.limit;
+          $scope.pagination.pageCount = Math.ceil($scope.pagination.totalCount / $scope.pagination.limit);
+        });
+      }
+
+      $scope.search = function () {
+        $scope.pagination.currentPage = 1;
+        $scope.pagination.skipCount = 0;
+        $scope.pagination.totalCount = 0;
+        $scope.pagination.pageCount = 0;
+        loadOrders();
+      };
+
       $scope.pagination = {
         currentPage: 1,
         limit: 10,
@@ -39,8 +69,6 @@ angular.module('EWeb').controller('GoodsOrderController',
           loadOrders();
         }
       };
-
-
       $scope.pageShow = {
         createTimeRange: '',
         createTimeMinTime: moment().format('YY/MM/DD HH:mm'),
@@ -127,76 +155,6 @@ angular.module('EWeb').controller('GoodsOrderController',
       $scope.loadMore = function () {
         loadOrders();
       };
-
-
-      $scope.search = function () {
-        $scope.pagination.currentPage = 1;
-        $scope.pagination.skipCount = 0;
-        $scope.pagination.totalCount = 0;
-
-        if ($stateParams.filter && $stateParams.filter.status === $scope.currentStatus.id) {
-          loadOrders();
-        } else {
-          $state.go('goods_order', {
-            filter: JSON.stringify({
-              status: $scope.currentStatus.id,
-              card_number: $scope.filter.card_number,
-              start_time: $scope.filter.start_time,
-              card_id_number: $scope.filter.card_id_number,
-              create_username: $scope.filter.create_username,
-              order_type: $scope.filter.id
-            })
-          });
-        }
-      };
-
-      function getStatusIndex(statusId) {
-        for (var i = 0; i < $scope.statuses.length; i++) {
-          if ($scope.statuses[i].id === statusId) {
-            return i;
-          }
-        }
-        return -1;
-      }
-      function getOrderTypeIndex(orderTypeId) {
-        for (var i = 0; i < $scope.orderTypes.length; i++) {
-          if ($scope.orderTypes[i].id === orderTypeId) {
-            return i;
-          }
-        }
-        return -1;
-      }
-
-      function loadOrders() {
-        var currentFilter = $stateParams.filter;
-        if (currentFilter) {
-          currentFilter = JSON.parse(currentFilter);
-          var statusIndex = getStatusIndex(currentFilter.status);
-          if (statusIndex > -1) {
-            $scope.currentStatus = $scope.statuses[statusIndex];
-          }
-
-          var orderTypeIndex = getOrderTypeIndex(currentFilter.order_type);
-          if(orderTypeIndex > -1){
-            $scope.filter.order_type = $scope.orderTypes[orderTypeIndex];
-          }
-
-          $scope.filter.card_number = currentFilter.card_number;
-          $scope.filter.start_time = currentFilter.start_time;
-          $scope.filter.card_id_number = currentFilter.card_id_number;
-          $scope.filter.create_username = currentFilter.create_username;
-        }
-
-        OrderService.getOrders($scope.pagination, $scope.currentStatus.id, function (err, data) {
-          console.log(data);
-          $scope.orders = data.orders;
-          $scope.pagination.skipCount += data.orders.length;
-
-          $scope.pagination.totalCount = data.total_count;
-          $scope.pagination.limit = data.limit;
-          $scope.pagination.pageCount = Math.ceil($scope.pagination.totalCount / $scope.pagination.limit);
-        });
-      }
 
       function init() {
         loadOrders();

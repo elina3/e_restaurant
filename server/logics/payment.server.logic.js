@@ -124,6 +124,8 @@ exports.pay = function (client, order, method, card, amount, callback) {
         order.paid = true;
         order.pay_time = payTime;
         order.has_discount = hasDiscount;
+        order.card_id_number = payResult.card.id_number;
+        order.card_number = payResult.card.card_number;
         order.save(function (err, newOrder) {
           if (err || !newOrder) {
             return callback({err: systemError.database_save_error});

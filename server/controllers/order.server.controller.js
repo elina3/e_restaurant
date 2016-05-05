@@ -72,12 +72,30 @@ exports.getMyOrders  = function(req, res, next){
 
 exports.getOrders = function(req, res, next){
   var user = req.user;
+
   var status = req.query.status || '';
+  var cardIdNumber = req.query.card_id_number || '';
+  var cardNumber = req.query.card_number || '';
+  var clientUsername = req.query.client_username || '';
+  var hasDiscount = publicLib.booleanParse(req.query.has_discount);
+  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
+  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+
   var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
   var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
   var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
-  orderLogic.getOrders(status, currentPage, limit, skipCount, function(err, result){
+  var filter = {
+    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
+    endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    cardIdNumber: cardIdNumber,
+    cardNumber: cardNumber,
+    clientUsername: clientUsername,
+    hasDiscount: hasDiscount,
+    status: status
+  };
+
+  orderLogic.getOrders(filter, currentPage, limit, skipCount, function(err, result){
     if(err){
       return next(err);
     }

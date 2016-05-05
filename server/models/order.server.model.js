@@ -115,6 +115,12 @@ var OrderSchema = new Schema({
   },
   complete_time: {
     type: Date
+  },
+  card_number: {
+    type: String
+  },
+  card_id_number: {
+    type: String
   }
 });
 
