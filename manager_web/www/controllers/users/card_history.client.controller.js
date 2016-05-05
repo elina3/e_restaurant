@@ -4,11 +4,14 @@
 
 'use strict';
 angular.module('EWeb').controller('CardHistoryController',
-  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'CardHistoryService', 'Config', '$window',
-    function ($rootScope, $scope, GlobalEvent, $state, CardHistoryService, Config, $window) {
+  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'CardHistoryService', 'Config', '$window', 'CardService',
+    function ($rootScope, $scope, GlobalEvent, $state, CardHistoryService, Config, $window, CardService) {
 
       $scope.pageData = {
         keyword: '',
+        statistics: {
+
+        },
         pagination: {
           currentPage: 1,
           limit: 10,
@@ -44,7 +47,6 @@ angular.module('EWeb').controller('CardHistoryController',
         }
       };
 
-
       $scope.searchKey = function(){
         loadCardHistories();
       };
@@ -52,20 +54,44 @@ angular.module('EWeb').controller('CardHistoryController',
         $window.history.back();
       };
 
-
       function loadCardHistories(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
+
+        var filter = {
+          keyword: $scope.pageData.keyword,
+          startTimeStamp: -1,
+          endTimeStamp: -1
+        };
+
+        if($scope.pageShow.createTimeRange){
+          if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
+            filter.startTimeStamp = $scope.pageShow.createTimeRange.startDate._d.getTime();
+          }
+          if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
+            filter.endTimeStamp = $scope.pageShow.createTimeRange.endDate._d.getTime();
+          }
+        }
+
         CardHistoryService.getCardHistories($scope.pageData.pagination,
-          $scope.pageData.keyword,function(err, data){
-          $scope.$emit(GlobalEvent.onShowLoading, false);
+          filter,function(err, data){
           if(err || !data){
+            $scope.$emit(GlobalEvent.onShowLoading, false);
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
+            $scope.pageData.cardHistories = data.card_history_list;
+            $scope.pageData.pagination.totalCount = data.total_count;
+            $scope.pageData.pagination.limit = data.limit;
+            $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
+            CardService.getStatistics(filter, function(err, data){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err || !data){
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
 
-          $scope.pageData.cardHistories = data.card_history_list;
-          $scope.pageData.pagination.totalCount = data.total_count;
-          $scope.pageData.pagination.limit = data.limit;
-          $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
+              $scope.pageData.statistics.total_card_balance = data.total_card_balance;
+              $scope.pageData.statistics.total_recharge_amount = data.total_recharge_amount;
+              $scope.pageData.statistics.total_close_amount = data.total_close_amount;
+            });
         });
       }
 

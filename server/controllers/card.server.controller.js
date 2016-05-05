@@ -146,12 +146,20 @@ exports.replaceCard = function (req, res, next) {
   });
 };
 
-exports.getCardHistories = function(req, res, next){
+exports.getCardHistories = function (req, res, next) {
   var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
   var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
   var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
-  var keyword = req.query.keyword || req.body.keyword || '';
-  cardLogic.getCardHistories(currentPage, limit, skipCount, keyword, function (err, result) {
+
+  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
+  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+  var keyword = req.query.keyword || '';
+  var filter = {
+    startTimeStamp: startTimeStamp === -1 ? null : new Date(startTimeStamp),
+    endTimeStamp: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    keyword: keyword
+  }
+  cardLogic.getCardHistories(currentPage, limit, skipCount, filter, function (err, result) {
     if (err) {
       req.err = err;
       return next();
@@ -163,5 +171,34 @@ exports.getCardHistories = function(req, res, next){
       limit: result.limit
     };
     return next();
+  });
+};
+
+exports.getCardStatistics = function (req, res, next) {
+  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
+  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+  var keyword = req.query.keyword || '';
+  var filter = {
+    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
+    endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    keyword: keyword
+  };
+  cardLogic.getCardStatistics(filter, function (err, result) {
+    if (err) {
+      return next(err);
+    }
+
+    cardLogic.getTotalCardBalance(filter, function (err, totalCardBalance) {
+      if (err) {
+        return next(err);
+      }
+
+      req.data = {
+        total_card_balance: totalCardBalance,
+        total_recharge_amount: result.totalRechargeAmount,
+        total_close_amount: result.totalCloseAmount
+      };
+      return next();
+    });
   });
 };

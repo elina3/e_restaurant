@@ -25,10 +25,10 @@
                             />
                 </div>
                 <div class="filter-item col-xs-6">
-                    <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" ng-change="searchKey()" />
+                    <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" />
                 </div>
                 <div class="filter-item col-xs-3">
-                    <div class="search" ng-click="search()">筛选</div>
+                    <div class="search" ng-click="searchKey()">筛选</div>
                 </div>
             </div>
         </div>
@@ -40,9 +40,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="statistic"><label>退卡总金额：</label><strong>10022515</strong> 元</div>
-                <div class="statistic"><label>充值总金额：</label><strong>803414</strong> 元</div>
-                <div class="statistic"><label>总余额：</label><strong>100</strong> 元</div>
+                <div class="statistic"><label>总余额：</label><strong>{{pageData.statistics.total_card_balance}}</strong> 元</div>
+                <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount}}</strong> 元</div>
+                <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount}}</strong> 元</div>
             </div>
         </div>
 

@@ -6,8 +6,9 @@ var mongooseLib = require('../libraries/mongoose');
 var publicLib = require('../libraries/public');
 var businessEnum = require('../enums/business');
 var appDb = mongooseLib.appDb;
-var CardHistory = appDb.model('CardHistory');
-var Card = appDb.model('Card');
+var CardHistory = appDb.model('CardHistory'),
+  Card = appDb.model('Card'),
+  CardStatistic = appDb.model('CardStatistic');
 
 var systemError = require('../errors/system');
 var cardError = require('../errors/card');
@@ -33,6 +34,25 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     }
 
     return callback(null, newCardHistory);
+  });
+}
+
+function addCardStatistic(user, card, action, amount, description, callback){
+  var cardStatistic = new CardStatistic({
+    create_user: user? user._id:null,
+    card: card._id,
+    id_number: card.id_number,
+    card_number: card.card_number,
+    action: action,
+    amount: amount,
+    description: description
+  });
+  cardStatistic.save(function(err, newCardStatistic){
+    if(err || !newCardStatistic){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newCardStatistic);
   });
 }
 
@@ -180,15 +200,15 @@ exports.updateCardInfo = function(user, card, cardInfo, callback){
     return callback({err: cardError.card_number_null});
   }
 
-  var amount = publicLib.amountParse(cardInfo.amount);
-  if(amount < 0){
+  var addAmount = publicLib.amountParse(cardInfo.amount);
+  if(addAmount < 0){
     return callback({err: cardError.wrong_amount});
   }
 
   var oldAmount = card.amount;
-  var newAmount = amount;
+  var newAmount = oldAmount + addAmount;
 
-  card.amount = amount;
+  card.amount = newAmount;
   card.recent_modify_user = user._id;
   card.save(function(err, newCard){
     if(err || !newCard){
@@ -201,7 +221,9 @@ exports.updateCardInfo = function(user, card, cardInfo, callback){
         return callback({err: systemError.database_save_error});
       }
 
-      return callback(null, newCard);
+      addCardStatistic(user, newCard, 'recharge', addAmount, '充值', function(err, result){
+        return callback(err, newCard);
+      });
     });
   });
 };
@@ -365,7 +387,9 @@ exports.closeCard = function(user, card, callback){
         return callback({err: systemError.database_save_error});
       }
 
-      return callback(null, newCard);
+      addCardStatistic(user, newCard, 'close', oldAmount, '退卡', function(err, result){
+        return callback(err, newCard);
+      });
     });
   });
 };
@@ -429,13 +453,20 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
     });
 };
 
-exports.getCardHistories = function(currentPage, limit, skipCount, keyword, callback){
+exports.getCardHistories = function(currentPage, limit, skipCount, filter, callback){
 
 var query = {};
-  if(keyword)
-    query.$or = [{card_number: {$regex: keyword, $options: '$i'}},
-      {id_number: {$regex: keyword, $options: '$i'}}];
+  if(filter.keyword)
+    query.$or = [{card_number: filter.keyword},
+      {id_number: filter.keyword}];
 
+  if(filter.startTime){
+    query.create_time = {$gte: filter.startTime};
+  }
+
+  if(filter.endTime){
+    query.create_time = {$lte: filter.endTime};
+  }
 
   CardHistory.count(query, function(err, totalCount){
     if(err){
@@ -451,7 +482,7 @@ var query = {};
     }
 
     CardHistory.find(query)
-      .sort({update_time: -1})
+      .sort({create_time: -1})
       .skip(skipCount)
       .limit(limit)
       .exec(function(err, cardHistories){
@@ -467,3 +498,95 @@ var query = {};
       });
   });
 };
+
+exports.getCardStatistics = function(filter, callback){
+  var query = {};
+  if(filter.keyword){
+      query.$or = [{card_number: filter.keyword},
+        {id_number: filter.keyword}];
+  }
+
+
+  if(filter.startTime){
+    query.create_time = {$gte: filter.startTime};
+  }
+
+  if(filter.endTime){
+    query.create_time = {$lte: filter.endTime};
+  }
+
+  CardStatistic.aggregate([{
+    $match: query
+  }, {
+    $group: {
+      _id: '$action',
+      action: {$first: '$action'},
+      totalAmount: {$sum: '$amount'}
+    }
+  }], function(err, result){
+    if(err || !result){
+      return callback({err: systemError.database_query_error});
+    }
+    var amountResult = {
+      totalRechargeAmount: 0,
+      totalCloseAmount: 0
+    };
+    if(result.length === 0){
+      return callback(null, amountResult);
+    }
+
+
+    result.forEach(function(item){
+      if(item.action === 'recharge'){
+        amountResult.totalRechargeAmount = item.totalAmount;
+      }
+      if(item.action === 'close'){
+        amountResult.totalCloseAmount = item.totalAmount;
+      }
+    });
+    return callback(null, amountResult);
+  });
+};
+
+exports.getTotalCardBalance = function(filter, callback){
+  var query = {
+    deleted_status: false,
+    status: {$in: ['enabled', 'frozen']}
+  };
+  if(filter.keyword){
+    query.$or = [{card_number: filter.keyword},
+      {id_number: filter.keyword}];
+  }
+
+  if(filter.startTime){
+    query.update_time = {$gte: filter.startTime};
+  }
+
+  if(filter.endTime){
+    query.update_time = {$lte: filter.endTime};
+  }
+
+  Card.aggregate([{
+    $match: query
+  }, {
+    $group: {
+      _id: '$status',
+      totalAmount: {$sum: '$amount'}
+    }
+  }], function(err, result){
+    if(err || !result){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if(result.length === 0){
+      return callback(null, 0);
+    }
+
+    var totalBalance = 0;
+    result.forEach(function(item){
+      totalBalance += item.totalAmount;
+    });
+    return callback(null, totalBalance);
+  });
+};
+

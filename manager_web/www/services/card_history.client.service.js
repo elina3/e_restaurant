@@ -7,12 +7,14 @@ angular.module('EWeb').factory('CardHistoryService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getCardHistories: function(param,keyword, callback){
+        getCardHistories: function(param,filter, callback){
           RequestSupport.executeGet('/cards_history_list', {
             current_page: param.currentPage,
             limit: param.limit,
             skip_count: param.skipCount,
-            keyword: keyword
+            start_time_stamp: filter.startTimeStamp,
+            end_time_stamp: filter.endTimeStamp,
+            keyword: filter.keyword
           })
             .then(function (data) {
               if (!callback) {

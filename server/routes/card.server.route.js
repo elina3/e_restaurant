@@ -19,6 +19,8 @@ module.exports = function (app) {
   app.route('/card/replace').post(authFilter.requireUser, cardFilter.requireCard, cardController.replaceCard);
 
   app.route('/cards_list').get(authFilter.requireUser, cardController.getCardList);
-  app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);
   app.route('/client/card').get(cardFilter.requireCardByIDNumberOrCardNumber, cardController.getCardDetail);
+
+  app.route('/cards_history_list').get(cardController.getCardHistories);
+  app.route('/card/statistics').get(cardController.getCardStatistics)
 };
