@@ -230,3 +230,16 @@ exports.batchRechargeCard = function(req, res, next){
     return next();
   });
 };
+
+exports.importCards = function(req, res, next){
+  var cardList = req.body.card_list || [];
+  var user = req.user;
+  cardLogic.importStaffCards(user, cardList, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = result;
+    return next();
+  });
+};

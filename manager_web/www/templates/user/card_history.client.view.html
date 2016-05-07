@@ -40,7 +40,6 @@
             </div>
         </div>
         <div class="statistics-panel">
-
             <div class="row" ng-show="pageShow.createTimeRange.startDate">
                 <div class="statistic center">
                     <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
@@ -101,6 +100,15 @@
                     <z-pagination config="pageData.pagination"></z-pagination>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="z-header-button import">
+                <span>批量添加</span>
+                <input id="card-filename" class="filename" type="file"
+                       onchange="angular.element(this).scope().onFileSelect(this)">
+            </div>
+            <button class=" col-lg-2 col-md-4" ng--click="batchImportCards()" >导入</button>
         </div>
     </div>
 </div>

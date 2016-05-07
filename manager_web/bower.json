@@ -27,6 +27,7 @@
     "angular-ui-router": "~0.2.13",
     "angularytics": "~0.3.0",
     "bootstrap": "~3.3.4",
+    "js-xlsx": "~0.8.0",
     "qiniu": "~1.0.15-beta"
   },
   "devDependencies": {

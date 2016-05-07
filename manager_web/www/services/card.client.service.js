@@ -50,6 +50,26 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
+        batchImportCards: function(param, callback){
+          RequestSupport.executePost('/cards/import', {
+            card_list: param.card_list
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         modifyCard: function(cardid,param, callback){
           RequestSupport.executePost('/card/modify', {
             card_id:cardid,

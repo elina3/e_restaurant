@@ -27,6 +27,16 @@
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
+    <!--excel start-->
+    <script lang="javascript" src="lib/js-xlsx/shim.js"></script>
+    <script lang="javascript" src="lib/js-xlsx/jszip.js"></script>
+    <script lang="javascript" src="lib/js-xlsx/xlsx.js"></script>
+    <script lang="javascript" src="lib/js-xlsx/ods.js"></script>
+    <script lang="javascript" src="libraries/js-xlsx/Blob.js"></script>
+    <script lang="javascript" src="libraries/js-xlsx/FileSaver.js"></script>
+    <script lang="javascript" src="libraries/js-xlsx/Export2Excel.js"></script>
+    <!--excel end-->
+
     <!--custom-->
     <script src="dist/js/e-restaurant.js"></script>
     <link rel="stylesheet" href="dist/css/e-restaurant.css">
@@ -35,6 +45,7 @@
 <body ng-controller="IndexController" ng-click="clickBody($event)">
 
 <dialog-confirm-box></dialog-confirm-box>
+<div zz-loading></div>
 <zz-alert-dialog page-config="pageConfig.alertConfig"></zz-alert-dialog>
 <zz-alert-confirm-dialog page-config="pageConfig.alertConfirmConfig"></zz-alert-confirm-dialog>
 <div ui-view class="root-ui-wiew"></div>

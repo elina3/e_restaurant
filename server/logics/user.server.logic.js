@@ -173,7 +173,7 @@ exports.signUp = function(userInfo, callback){
             return callback({err: systemError.internal_system_error});
           }
 
-          if(user && user.deleted_status){
+          if(user && !user.deleted_status){
             return callback({err: userError.user_exist});
           }
 

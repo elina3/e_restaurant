@@ -126,6 +126,82 @@ exports.addCard = function(user, cardInfo,  callback){
     });
 };
 
+exports.importStaffCards = function(user, cardList, callback){
+  var cards = [];
+  var existCards = [];
+  async.eachSeries(cardList,
+    function(cardInfo, eachCallback){
+    if(!cardInfo.card_number){
+      return eachCallback({err: cardError.card_number_null});
+    }
+
+    if(!cardInfo.id_number){
+      return eachCallback({err: cardError.id_number_null});
+    }
+
+    Card.findOne({card_number: cardInfo.card_number})
+      .exec(function(err, card){
+        if(err){
+          return eachCallback({err: systemError.database_query_error});
+        }
+
+        if(card && !card.deleted_status){
+          existCards.push(card);
+          return eachCallback();
+        }
+
+        Card.findOne({id_number: cardInfo.id_number})
+          .exec(function(err, card){
+            if(err){
+              return eachCallback({err: systemError.database_query_error});
+            }
+
+            if(card && !card.deleted_status){
+              existCards.push(card);
+              return eachCallback();
+            }
+
+            if(!card){
+              card = new Card({
+                id_number: cardInfo.id_number,
+                card_number: cardInfo.card_number,
+                create_user: user._id,
+                amount: 0,
+                type: 'staff',
+                discount: 0.25
+              });
+            }
+
+            card.nickname = cardInfo.nickname;
+            card.status = 'enabled';
+            card.deleted_status = false;
+            card.recent_modify_user = user._id;
+            card.save(function(err, newCard){
+              if(err || !newCard){
+                return eachCallback({err: systemError.database_save_error});
+              }
+
+              addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function(err, history){
+                if(err){
+                  err.zh_message += '添加新卡注册历史记录失败！';
+                  return eachCallback({err: systemError.database_save_error});
+                }
+
+                cards.push(newCard);
+                return eachCallback(null, newCard);
+              });
+            });
+          });
+      });
+
+  }, function(err){
+    return callback(err, {
+      cards: cards,
+      existCards: existCards
+    });
+  });
+};
+
 function getCardDetailById(cardId, callback){
   Card.findOne({_id: cardId})
     .exec(function(err, card){
