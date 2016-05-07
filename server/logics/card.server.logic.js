@@ -332,23 +332,15 @@ exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
     return callback({err: cardError.insufficient_balance});
   }
 
-  var oldAmount = card.amount;
   card.amount = card.amount - actualAmount;
   card.save(function(err, newCard){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(null, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
-      if(err){
-        err.zh_message += '添加消费历史记录失败！';
-        return callback({err: systemError.database_save_error});
-      }
-
-      return callback(null, {
-        card: newCard,
-        actualAmount: actualAmount
-      });
+    return callback(null, {
+      card: newCard,
+      actualAmount: actualAmount
     });
   });
 };
@@ -360,7 +352,7 @@ exports.changeCardStatus = function(user, card, status, callback){
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(user, newCard, null, 'change_status', card.amount, newCard.amount, '变更卡状态为：'+status, function(err, history){
+    addHistory(user, newCard, null, 'change_status', card.amount, newCard.amount, '变更卡状态为：' + status, function(err, history){
       if(err){
         err.zh_message += '添加变更卡状态历史记录失败！';
         return callback({err: systemError.database_save_error});
@@ -425,7 +417,7 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
           return callback({err: systemError.database_save_error});
         }
 
-        addHistory(user, card, savedCard, 'create', 0, savedCard.amount, '补卡新卡', function(err, history){
+        addHistory(user, card, savedCard, 'recreate', 0, savedCard.amount, '补卡新卡', function(err, history){
           if(err){
             err.zh_message += '添加补卡新卡历史记录失败！';
             return callback({err: systemError.database_save_error});
@@ -463,6 +455,10 @@ var query = {};
 
   if(filter.startTime && filter.endTime){
     query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  }
+
+  if(filter.action){
+    query.action = filter.action;
   }
 
   CardHistory.count(query, function(err, totalCount){

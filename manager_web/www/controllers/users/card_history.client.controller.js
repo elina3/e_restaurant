@@ -9,6 +9,15 @@ angular.module('EWeb').controller('CardHistoryController',
 
       $scope.pageData = {
         keyword: '',
+        action: {id: '', text: '不限'},
+        actions: [{id: '', text: '不限'},
+          {id: 'create', text: '注册新卡'},
+          {id: 'recharge', text: '充值'},
+          {id: 'delete', text: '删除卡'},
+          {id: 'change_status', text: '卡变更'},
+          {id: 'close', text: '退卡'},
+          {id: 'recreate', text: '补卡新卡'},
+          {id: 'replace', text: '补卡'}],
         statistics: {
 
         },
@@ -60,7 +69,8 @@ angular.module('EWeb').controller('CardHistoryController',
         var filter = {
           keyword: $scope.pageData.keyword,
           startTimeStamp: -1,
-          endTimeStamp: -1
+          endTimeStamp: -1,
+          action: $scope.pageData.action.id
         };
 
         if($scope.pageShow.createTimeRange){

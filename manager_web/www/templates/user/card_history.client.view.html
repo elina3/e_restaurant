@@ -24,7 +24,14 @@
                            placeholder="点击选择时间"
                             />
                 </div>
-                <div class="filter-item col-xs-6">
+                <div class="filter-item col-xs-3">
+                    <z-dropdown z-dropdown-model="pageData.action"
+                                z-dropdown-options="pageData.actions"
+                                z-dropdown-label="请选择类型"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item col-xs-3">
                     <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" />
                 </div>
                 <div class="filter-item col-xs-3">

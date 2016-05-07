@@ -154,10 +154,12 @@ exports.getCardHistories = function (req, res, next) {
   var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
   var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
   var keyword = req.query.keyword || '';
+  var action = req.query.action || '';
   var filter = {
     startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
     endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
-    keyword: keyword
+    keyword: keyword,
+    action: action
   }
   cardLogic.getCardHistories(currentPage, limit, skipCount, filter, function (err, result) {
     if (err) {

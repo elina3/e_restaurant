@@ -14,7 +14,8 @@ angular.module('EWeb').factory('CardHistoryService',
             skip_count: param.skipCount,
             start_time_stamp: filter.startTimeStamp,
             end_time_stamp: filter.endTimeStamp,
-            keyword: filter.keyword
+            keyword: filter.keyword,
+            action: filter.action
           })
             .then(function (data) {
               if (!callback) {
