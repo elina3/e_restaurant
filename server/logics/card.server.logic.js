@@ -2,7 +2,7 @@
  * Created by elinaguo on 16/2/23.
  */
 'use strict';
-var async = require('../')
+var async = require('async');
 var mongooseLib = require('../libraries/mongoose');
 var publicLib = require('../libraries/public');
 var businessEnum = require('../enums/business');
