@@ -6,6 +6,10 @@ angular.module('EWeb').controller('UserManagerController',
   ['$window', '$rootScope', '$stateParams', '$scope', 'GlobalEvent', '$state', 'UserService', 'UserError', 'CardService', 'ClientService', 'Auth',
     function ($window, $rootScope, $stateParams, $scope, GlobalEvent, $state, UserService, UserError, CardService, ClientService, Auth) {
 
+      if(!Auth.getUser()){
+        $state.go('user_sign_in');
+        return;
+      }
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
@@ -518,6 +522,7 @@ angular.module('EWeb').controller('UserManagerController',
               _id: card._id,
               id_number:card.id_number,
               card_number: card.card_number,
+              nickname: card.nickname,
               amount: card.amount,
               status: card.status,
               type: {id: card.type, text: CardService.translateCardType(card.type)},
@@ -605,7 +610,8 @@ angular.module('EWeb').controller('UserManagerController',
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
           id_number: $scope.pageConfig.plat_card_panel.currentEditCard.id_number,
           amount: addMondy,
-          type: $scope.pageConfig.plat_card_panel.currentEditCard.type.id
+          type: $scope.pageConfig.plat_card_panel.currentEditCard.type.id,
+          nickname: $scope.pageConfig.plat_card_panel.currentEditCard.nickname
         };
         if($scope.pageConfig.scanType === 'create'){
 
@@ -728,7 +734,8 @@ angular.module('EWeb').controller('UserManagerController',
           card_number: '',
           id_number: '',
           amount: 0,
-          type: {id: 'normal', text: CardService.translateCardType('normal')}
+          type: {id: 'normal', text: CardService.translateCardType('normal')},
+          nickname:''
         };
       }
       function validCardInfo(card) {

@@ -4,7 +4,7 @@
 'use strict';
 var async = require('async');
 var systemError = require('../errors/system');
-var clientError = require('../errors/user');
+var clientError = require('../errors/client');
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
@@ -19,17 +19,21 @@ exports.signUp = function (clientInfo, callback) {
         return callback({err: systemError.internal_system_error});
       }
 
-      if (client) {
+      if (client && !client.deleted_status) {
         return callback({err: clientError.client_exist});
       }
 
-      client = new Client();
+      if(!client){
+        client = new Client();
+      }
+
       client.role = clientInfo.role ? clientInfo.role : 'normal';
       client.username = clientInfo.username ? clientInfo.username : '';
       client.password = clientInfo.password ? client.hashPassword(clientInfo.password) : '';
       client.nickname = clientInfo.nickname;
       client.sex = clientInfo.sex;
       client.mobile_phone = clientInfo.mobile_phone;
+      client.deleted_status = false;
       client.save(function (err, newClient) {
         if (err || !newClient) {
           return callback({err: systemError.database_save_error});
@@ -49,6 +53,10 @@ exports.signIn = function (username, password, callback) {
 
       if (!client) {
         return callback({err: clientError.client_not_exist});
+      }
+
+      if(client.deleted_status){
+        return callback({err: clientError.client_deleted});
       }
 
       if (!client.authenticate(password)) {

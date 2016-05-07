@@ -36,6 +36,15 @@ angular.module('EWeb').controller('GoodsOrderController',
         order_type: {id: '', text: '所有类型'}
       };
 
+      $scope.pagination = {
+        currentPage: 1,
+        limit: 2,
+        totalCount: 0,
+        skipCount: 0,
+        onCurrentPageChanged: function (callback) {
+          loadOrders();
+        }
+      };
       function loadOrders() {
         var filter = {
           status: $scope.currentStatus.id,
@@ -58,9 +67,13 @@ angular.module('EWeb').controller('GoodsOrderController',
         if($scope.filter.order_type &&  $scope.filter.order_type.id !== ''){
           filter.has_discount = $scope.filter.order_type.id;
         }
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.getOrders($scope.pagination, filter, function (err, data) {
-          console.log(data);
-          $scope.orders = data.orders;
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err || !data.orders){
+            $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+          $scope.orders = $scope.orders.concat(data.orders);
           $scope.pagination.skipCount += data.orders.length;
 
           $scope.pagination.totalCount = data.total_count;
@@ -75,18 +88,10 @@ angular.module('EWeb').controller('GoodsOrderController',
         $scope.pagination.skipCount = 0;
         $scope.pagination.totalCount = 0;
         $scope.pagination.pageCount = 0;
+        $scope.orders = [];
         loadOrders();
       };
 
-      $scope.pagination = {
-        currentPage: 1,
-        limit: 10,
-        totalCount: 0,
-        skipCount: 0,
-        onCurrentPageChanged: function (callback) {
-          loadOrders();
-        }
-      };
       $scope.pageShow = {
         createTimeRange: '',
         createTimeMinTime: moment().format('YY/MM/DD HH:mm'),

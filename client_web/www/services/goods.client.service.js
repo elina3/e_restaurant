@@ -17,7 +17,7 @@ angular.module('EClientWeb').factory('GoodsService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }
@@ -37,7 +37,7 @@ angular.module('EClientWeb').factory('GoodsService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }
@@ -56,7 +56,7 @@ angular.module('EClientWeb').factory('GoodsService',
                 return data;
               } else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 callback(null, data);
               }

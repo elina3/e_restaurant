@@ -5,7 +5,10 @@
 angular.module('EWeb').controller('UserIndexController',
   ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
     function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
-
+      if(!Auth.getUser()){
+        $state.go('user_sign_in');
+        return;
+      }
       $scope.pageConfig = {
         groupList: []
       };
@@ -33,7 +36,9 @@ angular.module('EWeb').controller('UserIndexController',
             return;
         }
       };
+
       function init(){
+
         $scope.$emit(GlobalEvent.onShowLoading, true);
         UserService.getGroups({currentPage: 1,limit: -1, skipCount: 0}, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);

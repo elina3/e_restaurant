@@ -14,7 +14,7 @@ angular.module('EWeb').factory('ClientService', ['RequestSupport', 'SystemError'
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -34,7 +34,7 @@ angular.module('EWeb').factory('ClientService', ['RequestSupport', 'SystemError'
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -55,7 +55,7 @@ angular.module('EWeb').factory('ClientService', ['RequestSupport', 'SystemError'
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -75,7 +75,7 @@ angular.module('EWeb').factory('ClientService', ['RequestSupport', 'SystemError'
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -97,7 +97,7 @@ angular.module('EWeb').factory('ClientService', ['RequestSupport', 'SystemError'
           }
 
           if (data.err) {
-            return callback(data.err);
+            return callback(data.zh_message || data.err);
           }
 
           callback(null, data);

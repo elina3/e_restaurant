@@ -189,10 +189,24 @@
 
 @media (max-width: @media-min-screen) {
   .z-header-view {
+
     .right{
-      display: none !important;
+      width: 20%;
+
+      .icon{
+        display: none !important;
+      }
+
+      .user span{
+        display: none !important;
+      }
+      .z-header-menu{
+        display: inline-block;
+      }
     }
     .left{
+
+      width: 80%;
       .z-header-menu{
         display: none !important;
       }
@@ -205,13 +219,21 @@
 @media (max-width: @media-min-screen) {
   .z-header-view {
     .right{
-      display: none !important;
+      width: 20%;
+      .icon{
+        display: none !important;
+      }
+      .user span{
+        display: none !important;
+      }
+      .z-header-menu{
+        display: inline-block;
+      }
     }
     .left{
       .z-header-menu{
         display: none !important;
       }
-
     }
   }
 }

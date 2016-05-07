@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="filter-item col-xs-4">
+            <div class="filter-item  col-xs-4">
                 <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
                        ng-model="pageShow.createTimeRange"
                        min="pageShow.createTimeMinTime"
@@ -33,22 +33,23 @@
                         />
             </div>
 
-            <div class="filter-item col-xs-2">
+            <div class="filter-item   col-xs-4">
                 <z-dropdown z-dropdown-model="currentStatus"
                             z-dropdown-options="statuses"
                             z-dropdown-label="所有状态"
                         >
                 </z-dropdown>
             </div>
-            <div class="filter-item col-xs-2">
+            <div class="filter-item  col-xs-4">
                 <z-dropdown z-dropdown-model="filter.order_type"
                             z-dropdown-options="orderTypes"
                             z-dropdown-label="所有折扣"
                         >
                 </z-dropdown>
             </div>
-
-            <div class="filter-item col-xs-2">
+        </div>
+        <div class="row">
+            <div class="filter-item col-xs-4">
                 <div class="search" ng-click="search()">筛选</div>
             </div>
         </div>
@@ -69,47 +70,50 @@
     </div>
     <div class="order-list">
         <div class="order-item" ng-repeat="order in orders">
-            <div class="discount-icon" ng-show="order.has_discount">折扣</div>
-            <div class="order">
-                <div class="order-title row">
-                    <div class="order-number col-xs-6"><span>订单号：{{order.order_number}}</span></div>
-                    <div class="order-status col-xs-6"><span class="status">{{translateOrderStatus(order.status)}}</span></div>
-                </div>
-                <div class="order-user-info">
-                    <div class="order-contact" ng-show="order.in_store_deal">
-                        <div class="contact-item">
-                            <span>店内用餐</span>
-                        </div>
+            <div class="goods-orders">
+
+                <div class="discount-icon" ng-show="order.has_discount">折扣</div>
+                <div class="order">
+                    <div class="order-title row">
+                        <div class="order-number col-xs-6"><span>订单号：{{order.order_number}}</span></div>
+                        <div class="order-status col-xs-6"><span class="status">{{translateOrderStatus(order.status)}}</span></div>
                     </div>
-                    <div class="order-contact" ng-show="!order.in_store_deal">
-                        <div class="contact-item">
-                            <label>收货人:</label><span>{{order.contact.name}}</span>
-                        </div>
-                        <div class="contact-item">
-                            <label>电话:</label><span>{{order.contact.mobile}}</span>
-                        </div>
-                        <div class="contact-item">
-                            <label>地址:</label><span>{{order.contact.address}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-goods-list">
-                    <div class="order-goods row" ng-repeat="goods in order.goods_orders">
-                        <div class="image-container col-xs-3">
-                            <div class="image-item" ng-style="generateStyle(goods.display_photos[0])"></div>
-                        </div>
-                        <div class="goods-info col-xs-9 row">
-                            <div class="info-item name col-xs-5">
-                                <span>{{goods.name}}</span>
+                    <div class="order-user-info">
+                        <div class="order-contact" ng-show="order.in_store_deal">
+                            <div class="contact-item">
+                                <span>店内用餐</span>
                             </div>
-                            <div class="info-item price col-xs-2"><span>{{goods.price}}</span></div>
-                            <div class="info-item count col-xs-2"><span>✕{{goods.count}}</span></div>
-                            <div class="info-item status col-xs-2"><span>{{translateGoodsOrderStatus(goods.status)}}</span></div>
+                        </div>
+                        <div class="order-contact" ng-show="!order.in_store_deal">
+                            <div class="contact-item">
+                                <label>收货人:</label><span>{{order.contact.name}}</span>
+                            </div>
+                            <div class="contact-item">
+                                <label>电话:</label><span>{{order.contact.mobile}}</span>
+                            </div>
+                            <div class="contact-item">
+                                <label>地址:</label><span>{{order.contact.address}}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="order-goods-summary row">
-                        <time class="col-xs-6">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
-                        <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，合计 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
+                    <div class="order-goods-list">
+                        <div class="order-goods row" ng-repeat="goods in order.goods_orders">
+                            <div class="image-container col-xs-3">
+                                <div class="image-item" ng-style="generateStyle(goods.display_photos[0])"></div>
+                            </div>
+                            <div class="goods-info col-xs-9 row">
+                                <div class="info-item name col-xs-5">
+                                    <span>{{goods.name}}</span>
+                                </div>
+                                <div class="info-item price col-xs-2"><span>{{goods.price}}</span></div>
+                                <div class="info-item count col-xs-2"><span>✕{{goods.count}}</span></div>
+                                <div class="info-item status col-xs-2"><span>{{translateGoodsOrderStatus(goods.status)}}</span></div>
+                            </div>
+                        </div>
+                        <div class="order-goods-summary row">
+                            <time class="col-xs-6">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
+                            <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，合计 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
+                        </div>
                     </div>
                 </div>
             </div>

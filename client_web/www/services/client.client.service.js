@@ -14,7 +14,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -34,7 +34,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -55,7 +55,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -76,7 +76,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             if(!data.client){
@@ -101,7 +101,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
 
           if (data.err) {
-            return callback(data.err);
+            return callback(data.zh_message || data.err);
           }
 
           callback(null, data);
@@ -134,7 +134,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -155,7 +155,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);
@@ -175,7 +175,7 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           }
           else {
             if (data.err) {
-              return callback(data.err);
+              return callback(data.zh_message || data.err);
             }
 
             callback(null, data);

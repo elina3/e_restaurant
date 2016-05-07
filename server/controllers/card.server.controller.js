@@ -192,7 +192,8 @@ exports.getCardStatistics = function (req, res, next) {
 
     req.data = {
       total_recharge_amount: result.totalRechargeAmount,
-      total_close_amount: result.totalCloseAmount
+      total_close_amount: result.totalCloseAmount,
+      total_delete_amount: result.totalDeleteAmount
     };
     return next();
   });

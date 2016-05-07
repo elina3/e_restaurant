@@ -3,9 +3,12 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$scope', '$stateParams', '$window', '$rootScope', 'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService',
-    function ($scope, $stateParams, $window, $rootScope,  GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService) {
-
+  ['$scope', '$stateParams', '$window', '$rootScope', 'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService', 'Auth',
+    function ($scope, $stateParams, $window, $rootScope,  GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService, Auth) {
+      if(!Auth.getUser()){
+        $state.go('user_sign_in');
+        return;
+      }
       $scope.pageConfig = {
         qiniuToken: '',
         title: '',

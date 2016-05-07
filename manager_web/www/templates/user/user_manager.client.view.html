@@ -550,6 +550,8 @@
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_card_panel.errorInfo.type}">(必选)</div>
                     </div>
 
+
+
                     <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">饭卡号: </span>
                         <div class="info-value">
@@ -572,6 +574,7 @@
                         </div>
                     </div>
 
+
                     <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">卡内余额: </span>
                         <div class="info-value">
@@ -579,6 +582,12 @@
                         </div>
                     </div>
 
+                    <div class="info-item" ng-show="pageConfig.scanType==='create'||pageConfig.scanType==='edit' ">
+                        <span class="info-name">昵称</span>
+                        <div class="info-value">
+                            <input placeholder="请输入昵称" type="text" ng-model="pageConfig.plat_card_panel.currentEditCard.nickname"/>
+                        </div>
+                    </div>
 
                     <div class="info-item" ng-show="pageConfig.scanType==='edit'">
                         <span class="info-name">添加金额: </span>

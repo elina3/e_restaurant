@@ -98,6 +98,7 @@ exports.addCard = function(user, cardInfo,  callback){
             });
           }
 
+          card.nickname = cardInfo.nickname;
           card.type = !cardInfo.type ? 'normal' : cardInfo.type;
           card.discount = card.type === 'staff' ? 0.25 : 1;
           card.amount = amount;
@@ -208,6 +209,7 @@ exports.updateCardInfo = function(user, card, cardInfo, callback){
   var oldAmount = card.amount;
   var newAmount = oldAmount + addAmount;
 
+  card.nickname = cardInfo.nickname;
   card.amount = newAmount;
   card.recent_modify_user = user._id;
   card.save(function(err, newCard){
@@ -243,13 +245,15 @@ exports.deleteCard = function(user, card, callback){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});
     }
-    addHistory(user, newCard, null, 'delete', card.amount, card.amount, '删除卡', function(err, history){
+    addHistory(user, newCard, null, 'delete', newCard.amount, newCard.amount, '删除卡', function(err, history){
       if(err){
         err.zh_message += '添加删除卡历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
 
-      return callback(null, newCard);
+      addCardStatistic(user, newCard, 'delete', newCard.amount, '删除', function(err, result){
+        return callback(err, newCard);
+      });
     });
   });
 };
@@ -518,7 +522,8 @@ exports.getCardStatistics = function(filter, callback){
     }
     var amountResult = {
       totalRechargeAmount: 0,
-      totalCloseAmount: 0
+      totalCloseAmount: 0,
+      totalDeleteAmount: 0
     };
     if(result.length === 0){
       return callback(null, amountResult);
@@ -531,6 +536,9 @@ exports.getCardStatistics = function(filter, callback){
       }
       if(item.action === 'close'){
         amountResult.totalCloseAmount = item.totalAmount;
+      }
+      if(item.action === 'delete'){
+        amountResult.totalDeleteAmount = item.totalAmount;
       }
     });
     return callback(null, amountResult);

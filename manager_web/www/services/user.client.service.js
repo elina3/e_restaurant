@@ -19,7 +19,7 @@ angular.module('EWeb').factory('UserService',
               }
 
               if (data.err) {
-                return callback(data.err);
+                return callback(data.zh_message || data.err);
               }
 
               callback(null, data);
@@ -38,7 +38,7 @@ angular.module('EWeb').factory('UserService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -58,7 +58,7 @@ angular.module('EWeb').factory('UserService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -78,7 +78,7 @@ angular.module('EWeb').factory('UserService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
 
                 callback(null, data);
@@ -99,7 +99,7 @@ angular.module('EWeb').factory('UserService',
               }
               else {
                 if (data.err) {
-                  return callback(data.err);
+                  return callback(data.zh_message || data.err);
                 }
                 Auth.setUser(data.user);
                 Auth.setToken(data.access_token);
@@ -142,7 +142,7 @@ angular.module('EWeb').factory('UserService',
               }
 
               if (data.err) {
-                return callback(data.err);
+                return callback(data.zh_message || data.err);
               }
 
               callback(null, data);

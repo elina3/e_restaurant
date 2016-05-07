@@ -68,6 +68,11 @@ angular.module('EWeb').directive('zHeader',
                         return UserService.translateUserRole(role);
                     };
 
+                    if(!scope.user){
+                        $state.go('user_sign_in');
+                        return;
+                    }
+
                     scope.quit = function () {
                         scope.menuOpened = false;
                         Auth.setUser(null);

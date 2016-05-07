@@ -19,7 +19,7 @@ angular.module('EWeb').factory('GoodsService',
               }
 
               if (data.err) {
-                return callback(data.err);
+                return callback(data.zh_message || data.err);
               }
 
               callback(null, data);

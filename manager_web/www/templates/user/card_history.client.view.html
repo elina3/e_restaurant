@@ -47,8 +47,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount}}</strong> 元</div>
-                <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount}}</strong> 元</div>
+                <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount || 0}}</strong> 元</div>
+                <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount || 0}}</strong> 元</div>
+                <div class="statistic"><label>删除卡总余额：</label><strong>{{pageData.statistics.total_delete_amount || 0}}</strong> 元</div>
             </div>
         </div>
 

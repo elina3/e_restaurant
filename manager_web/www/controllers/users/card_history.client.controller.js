@@ -4,9 +4,12 @@
 
 'use strict';
 angular.module('EWeb').controller('CardHistoryController',
-  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'CardHistoryService', 'Config', '$window', 'CardService',
-    function ($rootScope, $scope, GlobalEvent, $state, CardHistoryService, Config, $window, CardService) {
-
+  ['$rootScope', '$scope', 'GlobalEvent', '$state', 'CardHistoryService', 'Config', '$window', 'CardService', 'Auth',
+    function ($rootScope, $scope, GlobalEvent, $state, CardHistoryService, Config, $window, CardService, Auth) {
+      if(!Auth.getUser()){
+        $state.go('user_sign_in');
+        return;
+      }
       $scope.pageData = {
         keyword: '',
         action: {id: '', text: '不限'},
@@ -100,6 +103,7 @@ angular.module('EWeb').controller('CardHistoryController',
 
               $scope.pageData.statistics.total_recharge_amount = data.total_recharge_amount;
               $scope.pageData.statistics.total_close_amount = data.total_close_amount;
+              $scope.pageData.statistics.total_delete_amount = data.total_delete_amount;
             });
         });
       }

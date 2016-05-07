@@ -24,6 +24,9 @@ var CardSchema = new Schema({
     type: String,
     trim: true,
   },
+  nickname: {
+    type: String
+  },
   status: {
     enum: ['disabled', 'enabled', 'frozen', 'revoked', 'close'],//不可用，启用，冻结，撤销，退卡关闭
     default: 'disabled',
