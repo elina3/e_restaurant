@@ -11,7 +11,7 @@
                 <div class="user">
                     <span ng-if="config.clientInfo">{{config.clientInfo ? config.clientInfo.nickname: ''}}</span>
                     <a ng-if="config.clientInfo" class="change-account" ng-click="changeAccount()">退出</a>
-                    <a ng-if="!config.clientInfo" class="sign-in" ng-click="signIn()">登录</a>
+                    <a ng-if="!config.clientInfo" class="sign-in" ng-click="changeAccount()">登录</a>
                 </div>
             </div>
         </div>
