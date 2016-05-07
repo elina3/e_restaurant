@@ -26,4 +26,5 @@ module.exports = function (app) {
 
   //卡内余额
   app.route('/card/balance').get(authFilter.requireUser, cardController.getCardBalance);
+  app.route('/card/recharge/batch').post(authFilter.requireUser, cardController.batchRechargeCard);
 };

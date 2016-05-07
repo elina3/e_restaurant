@@ -10,6 +10,8 @@ angular.module('EWeb').controller('UserManagerController',
         $state.go('user_sign_in');
         return;
       }
+
+      $scope.batchRechargeShow = false;
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
@@ -22,6 +24,7 @@ angular.module('EWeb').controller('UserManagerController',
         popMaskShow: false,
         plat_user_panel: {
           show_plat:false,
+          passwordModify: false,
           users: [],
           currentEditUser: null,
           errorInfo: {
@@ -43,6 +46,7 @@ angular.module('EWeb').controller('UserManagerController',
           }
         },
         plat_card_panel: {
+          batchRechargeCardAmount: 0,
           totalCardBalance: 0,
           keyword: {
             card_number: '',
@@ -59,7 +63,7 @@ angular.module('EWeb').controller('UserManagerController',
           },
           pagination: {
             currentPage: 1,
-            limit: 10,
+            limit: 3,
             totalCount: 0,
             isShowTotalInfo: true,
             onCurrentPageChanged: function (callback) {
@@ -70,6 +74,7 @@ angular.module('EWeb').controller('UserManagerController',
         plat_client_panel: {
           show_plat:false,
           client_users: [],
+          passwordModify: false,
           currentEditClient: null,
           errorInfo: {
             username: false,
@@ -135,15 +140,11 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.plat_user_panel.show_plat = false;
         $scope.pageConfig.plat_card_panel.show_plat = false;
         $scope.pageConfig.plat_client_panel.show_plat = false;
-      };
+        $scope.batchRechargeShow = false;
 
-      function reloadData(){
-        if($stateParams.panel_type === $scope.pageConfig.currentTag){
-          $window.location.reload();
-        }else{
-          $state.go('user_manager', {panel_type: $scope.pageConfig.currentTag});
-        }
-      }
+        $scope.pageConfig.plat_client_panel.passwordModify = false;
+        $scope.pageConfig.plat_user_panel.passwordModify = false;
+      };
 
       //<editor-fold desc="客户端用户相关">
       $scope.scanClient = function(client){
@@ -184,7 +185,7 @@ angular.module('EWeb').controller('UserManagerController',
               }
 
               $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-              reloadData();
+              loadClients();
             });
           }});
       };
@@ -194,7 +195,7 @@ angular.module('EWeb').controller('UserManagerController',
           $scope.pageConfig.plat_client_panel.errorInfo.username = true;
           isPassed = false;
         }
-        if(!client.password || client.password.length <6){
+        if($scope.pageConfig.plat_client_panel.passwordModify && (!client.password || client.password.length <6)){
           $scope.pageConfig.plat_client_panel.errorInfo.password = true;
           isPassed = false;
         }
@@ -245,6 +246,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
         param = {
           _id: $scope.pageConfig.plat_client_panel.currentEditClient._id,
+          password_modify: $scope.pageConfig.plat_client_panel.passwordModify,
           username: $scope.pageConfig.plat_client_panel.currentEditClient.username,
           password: $scope.pageConfig.plat_client_panel.currentEditClient.password,
           role: $scope.pageConfig.plat_client_panel.currentEditClient.role.id,
@@ -264,7 +266,7 @@ angular.module('EWeb').controller('UserManagerController',
             clearClientError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
-            reloadData();
+            loadClients();
           });
         }else{
           ClientService.modifyClient(param, function(err, data){
@@ -276,9 +278,10 @@ angular.module('EWeb').controller('UserManagerController',
             clearClientError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
-            reloadData();
+            loadClients();
           });
         }
+        $scope.pageConfig.plat_client_panel.passwordModify = false;
       };
       $scope.resetClient = function(){
         $scope.pageConfig.plat_client_panel.currentEditClient = getNewUserObj();
@@ -301,7 +304,6 @@ angular.module('EWeb').controller('UserManagerController',
             $scope.pageConfig.plat_client_panel.client_users.push({
               _id: client._id,
               username: client.username,
-              password: client.password,
               nickname: client.nickname,
               sex: client.sex === 'male' ? {id: client.sex, text: '男'} : (client.sex === 'female' ? {id: client.sex, text: '女'}: null),
               role: client.role ? {id: client.role, text: ClientService.translateClientRole(client.role)} : null,
@@ -358,7 +360,7 @@ angular.module('EWeb').controller('UserManagerController',
               }
 
               $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-              reloadData();
+              loadUsers();
             });
           }});
       };
@@ -368,7 +370,7 @@ angular.module('EWeb').controller('UserManagerController',
           $scope.pageConfig.plat_user_panel.errorInfo.username = true;
           isPassed = false;
         }
-        if(!user.password || user.password.length <6){
+        if( $scope.pageConfig.plat_user_panel.passwordModify && (!user.password || user.password.length <6)){
           $scope.pageConfig.plat_user_panel.errorInfo.password = true;
           isPassed = false;
         }
@@ -422,6 +424,7 @@ angular.module('EWeb').controller('UserManagerController',
           return;
         }
         param = {
+          password_modify: $scope.pageConfig.plat_user_panel.passwordModify,
           username: $scope.pageConfig.plat_user_panel.currentEditUser.username,
           password: $scope.pageConfig.plat_user_panel.currentEditUser.password,
           role: $scope.pageConfig.plat_user_panel.currentEditUser.role.id,
@@ -442,7 +445,7 @@ angular.module('EWeb').controller('UserManagerController',
             clearError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
-            reloadData();
+            loadUsers();
           });
         }else{
 
@@ -455,9 +458,10 @@ angular.module('EWeb').controller('UserManagerController',
             clearError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
-            reloadData();
+            loadUsers();
           });
         }
+        $scope.pageConfig.plat_user_panel.passwordModify = false;
       };
       $scope.reset = function(){
         $scope.pageConfig.plat_user_panel.currentEditUser = getNewUserObj();
@@ -481,7 +485,6 @@ angular.module('EWeb').controller('UserManagerController',
             $scope.pageConfig.plat_user_panel.users.push({
               _id: user._id,
               username: user.username,
-              password: user.password,
               nickname: user.nickname,
               sex: user.sex === 'male' ? {id: user.sex, text: '男'} : (user.sex === 'female' ? {id: user.sex, text: '女'}: null),
               group: {id: user.group._id, text: user.group.name},
@@ -538,6 +541,11 @@ angular.module('EWeb').controller('UserManagerController',
 
         });
       }
+      $scope.showBatchRechargePanel = function(){
+        $scope.pageConfig.popMaskShow = true;
+        $scope.batchRechargeShow = true;
+        $scope.batchRechargeMessage = '';
+      };
       $scope.editCard = function(card){
 
         if(!card){
@@ -624,7 +632,7 @@ angular.module('EWeb').controller('UserManagerController',
             clearError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '添加成功');
-            reloadData();
+            loadCards();
           });
         }else{
 
@@ -639,9 +647,23 @@ angular.module('EWeb').controller('UserManagerController',
             clearError();
             $scope.closePopMask();
             $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
-            reloadData();
+            loadCards();
           });
         }
+      };
+
+      $scope.batchRechargeCard = function(){
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.batchRechargeCard($scope.pageConfig.plat_card_panel.batchRechargeCardAmount, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if(err || !data){
+            $scope.$emit(GlobalEvent.onShowAlert, err || '批量充值失败');
+          }
+
+          $scope.batchRechargeMessage = '批量充值成功！成功为' + data.success_count + '人充值' + $scope.pageConfig.plat_card_panel.batchRechargeCardAmount + '元。';
+          $scope.pageConfig.plat_card_panel.batchRechargeCardAmount = 0;
+          loadCards();
+        });
       };
 
       $scope.deleteCard = function(card){

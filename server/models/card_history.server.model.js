@@ -52,6 +52,10 @@ var CardHistorySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  create_client: {
+    type: Schema.Types.ObjectId,
+    ref: 'Client'
+  }
 });
 
 CardHistorySchema.plugin(timestamps, {

@@ -104,7 +104,7 @@ exports.pay = function (client, order, method, card, amount, callback) {
     if(err){
       return callback(err);
     }
-    cardLogic.pay(card, results.generatePayment.total_amount, results.consumeAmountThisMonth, function (err, payResult) {
+    cardLogic.pay(client, card, results.generatePayment.total_amount, results.consumeAmountThisMonth, function (err, payResult) {
       if (err || !payResult) {
         return callback(err);
       }

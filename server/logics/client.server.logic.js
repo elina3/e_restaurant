@@ -355,7 +355,7 @@ exports.modifyClient = function(clientInfo, callback){
       client.role = clientInfo.role;
     }
 
-    if(clientInfo.password){
+    if(clientInfo.password_modify && clientInfo.password){
       client.password = client.hashPassword(clientInfo.password);
     }
 

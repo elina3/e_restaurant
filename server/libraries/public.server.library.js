@@ -121,6 +121,10 @@ exports.amountParse = function (numberString) {
   return amount;
 };
 
+exports.parseFloatNumber = function(amount){
+  return parseFloatNumber(amount);
+};
+
 exports.parseLocation = function (centerLocationParams) {
   if (!Array.isArray(centerLocationParams) || centerLocationParams.length !== 2) {
     return [];

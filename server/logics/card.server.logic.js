@@ -14,8 +14,9 @@ var CardHistory = appDb.model('CardHistory'),
 var systemError = require('../errors/system');
 var cardError = require('../errors/card');
 
-function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback){
+function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback, client){
   var cardHistory = new CardHistory({
+    create_client: client ? client._id: null,
     create_user: user? user._id:null,
     card: oldCard._id,
     id_number: oldCard.id_number,
@@ -317,7 +318,7 @@ function getActualAmount(card, amount, paymentStatisticThisMonth){
   return (amount - discountMoney) + discountMoney * card.discount;
 }
 
-exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
+exports.pay = function(client, card, amountString, paymentStatisticThisMonth, callback){
   if(card.deleted_status){
     return callback({err: cardError.card_deleted});
   }
@@ -344,7 +345,7 @@ exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(user, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
+    addHistory(null, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
       if(err) {
         err.zh_message += '添加消费历史记录失败！';
         return callback({err: systemError.database_save_error});
@@ -354,7 +355,7 @@ exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
         card: newCard,
         actualAmount: actualAmount
       });
-    });
+    }, client);
   });
 };
 
@@ -589,9 +590,8 @@ exports.getTotalCardBalance = function(filter, callback){
 };
 
 exports.batchRechargeCard = function(user, amount, callback){
-
-  var amount = publicLib.amountParse(amount);
-  if(amount < 0){
+  var amount = publicLib.parseFloatNumber(amount);
+  if(!amount){
     return callback({err: cardError.wrong_amount});
   }
 
@@ -600,15 +600,43 @@ exports.batchRechargeCard = function(user, amount, callback){
     type: 'staff'
   };
   var successCount = 0;
-  var failedCount = 0;
-  var failedCards = [];
+  var successCards = [];
   Card.find(query, function(err, cards){
     if(err || !cards){
       return callback({err: systemError.database_query_error});
     }
 
-    async.each(cards, function(card, eachCallback){}, function(err){
+    async.each(cards, function(card, eachCallback){
+      var oldAmount = card.amount;
+      card.amount = card.amount + amount;
+      card.save(function(err, newCard){
+        if(err || !newCard){
+          return eachCallback({err: systemError.database_save_error});
+        }
+        addHistory(user, newCard, null, 'recharge', oldAmount, card.amount, '充值', function(err, history){
+          if(err){
+            err.zh_message += '添加充值历史记录失败！';
+            return eachCallback({err: err});
+          }
 
+          addCardStatistic(user, newCard, 'recharge', amount, '充值', function(err, result){
+            if(err){
+              err.zh_message += '添加充值统计信息失败';
+              return eachCallback(err);
+            }
+
+            successCount++;
+            successCards.push(newCard);
+            return eachCallback();
+          });
+        });
+      });
+    }, function(err){
+      return callback(err, {
+        success_count: successCount,
+        success_cards: successCards,
+        cardCount: cards.length
+      });
     });
   });
 };

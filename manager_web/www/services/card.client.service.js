@@ -172,6 +172,26 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
+        batchRechargeCard: function(addAmount, callback){
+          RequestSupport.executePost('/card/recharge/batch', {
+            amount: addAmount
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         getStatistics: function(filter, callback){
           RequestSupport.executeGet('/card/statistics', {
             start_time_stamp: filter.startTimeStamp,

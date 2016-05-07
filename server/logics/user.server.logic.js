@@ -209,7 +209,9 @@ exports.modifyUser = function(userInfo, callback){
       return callback({err: userError.user_not_exist});
     }
 
-    user.password = userInfo.password ? user.hashPassword(userInfo.password) : '';
+    if(userInfo.password_modify){
+      user.password = userInfo.password ? user.hashPassword(userInfo.password) : '';
+    }
     user.nickname = userInfo.nickname;
     user.role = userInfo.role;
     user.group = userInfo.group_id;

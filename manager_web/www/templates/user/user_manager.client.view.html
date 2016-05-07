@@ -189,6 +189,9 @@
                                 <div class="card-history" ng-click="goState('card_history')">
                                     <span>查看历史</span>
                                 </div>
+                                <div class="card-history" ng-click="showBatchRechargePanel()">
+                                    批量充值
+                                </div>
                                 <div class="add-user" ng-click="editCard()">
                                     <img src="images/user_manager/single_add.png"/>
                                     <span>添加饭卡</span>
@@ -322,14 +325,15 @@
                     <div class="info-item">
                         <span class="info-name">用户名</span>
                         <div class="info-value">
-                            <input placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.username"/>
+                            <input ng-disabled="pageConfig.clientScanType === 'edit'"  placeholder="请输入用户名" type="text" ng-model="pageConfig.plat_client_panel.currentEditClient.username"/>
                         </div>
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.username}">(必填项，手机号)</div>
                     </div>
                     <div class="info-item">
-                        <span class="info-name">密码</span>
-                        <div class="info-value">
-                            <input placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_client_panel.currentEditClient.password"/>
+                        <span class="info-name">{{pageConfig.clientScanType === 'edit'?'修改':''}}密码</span>
+                        <div class="info-value" ng-class="{'info-value-select':pageConfig.clientScanType === 'edit'}">
+                            <input ng-show="pageConfig.clientScanType === 'edit'" class="address-check-box" ng-model="pageConfig.plat_client_panel.passwordModify" type="checkbox"/>
+                            <input class="password-input" ng-show="pageConfig.clientScanType === 'create' || (pageConfig.clientScanType === 'edit'&& pageConfig.plat_client_panel.passwordModify)" placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_client_panel.currentEditClient.password"/>
                         </div>
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_client_panel.errorInfo.password}">(必填项,至少六个字符)</div>
                     </div>
@@ -449,9 +453,10 @@
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.username}">(必填项，员工号)</div>
                     </div>
                     <div class="info-item">
-                        <span class="info-name">密码</span>
-                        <div class="info-value">
-                            <input placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_user_panel.currentEditUser.password"/>
+                        <span class="info-name">{{pageConfig.scanType === 'edit'?'修改':''}}密码</span>
+                        <div class="info-value" ng-class="{'info-value-select':pageConfig.scanType === 'edit'}">
+                            <input ng-show="pageConfig.scanType === 'edit'" class="address-check-box" ng-model="pageConfig.plat_user_panel.passwordModify" type="checkbox"/>
+                            <input class="password-input" ng-show="pageConfig.scanType === 'create' || (pageConfig.scanType === 'edit'&& pageConfig.plat_user_panel.passwordModify)" placeholder="请输入密码（至少6位数字）" type="password" ng-model="pageConfig.plat_user_panel.currentEditUser.password"/>
                         </div>
                         <div class="info-tip" ng-class="{'error': pageConfig.plat_user_panel.errorInfo.password}">(必填项,至少六个字符)</div>
                     </div>
@@ -615,8 +620,33 @@
                 </div>
             </div>
         </div>
-    </div>
 
+        <div class="ee-pop-panel" ng-if="batchRechargeShow">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>批量充值员工卡</span>
+                    <div class="close" ng-click="closePopMask()"></div>
+                </div>
+            </div>
+
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">充值金额: </span>
+                        <div class="info-value">
+                            <input placeholder="请充值金额（单位：元）" type="text" ng-model="pageConfig.plat_card_panel.batchRechargeCardAmount"/>
+                        </div>
+                    </div>
+
+                    <div class="message-result">{{batchRechargeMessage}}</div>
+
+                    <div class="handle">
+                        <div class="sure" ng-click="batchRechargeCard()">批量充值</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="ee-footer">
     <span>技术支持：茼蒿科技</span>

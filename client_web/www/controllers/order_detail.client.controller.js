@@ -48,13 +48,13 @@ angular.module('EClientWeb').controller('OrderDetailController',
           status: 'prepare',
           goods_infos: [],
           contact: {
-            name: '郭姗姗',
-            address: '201栋 病床4号',
-            mobile_phone: '18321740710'
+            name: '',
+            address: '',
+            mobile_phone: ''
           },
           in_store_deal: true,
-          total_price: 40,
-          description: '甜不辣'
+          total_price: 0,
+          description: ''
         },
         paymentInfo: {
           show: false,

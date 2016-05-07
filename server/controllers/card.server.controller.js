@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/22.
  */
 'use strict';
+var systemError  = require('../errors/system');
 var cardLogic = require('../logics/card');
 var publicLib = require('../libraries/public');
 exports.addNewCard = function (req, res, next) {
@@ -216,6 +217,16 @@ exports.getCardBalance = function(req, res, next){
   });
 };
 
+//批量充值员工卡
 exports.batchRechargeCard = function(req, res, next){
-
+  if(req.user.role !== 'admin' && req.user.role === 'card-manager'){
+   return next({err: systemError.no_permission});
+  }
+  cardLogic.batchRechargeCard(req.user, req.body.amount, function(err, result){
+    if(err){
+      return next(err);
+    }
+    req.data = result;
+    return next();
+  });
 };
