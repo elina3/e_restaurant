@@ -22,8 +22,8 @@
                 <input class="input-text"  ng-model="filter.client_username" placeholder="请输入创建人账号"/>
             </div>
         </div>
-        <div class="row">
-            <div class="filter-item  col-xs-4">
+        <div class="row selects">
+            <div class="filter-item time  col-xs-4">
                 <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
                        ng-model="pageShow.createTimeRange"
                        min="pageShow.createTimeMinTime"
@@ -32,24 +32,21 @@
                        placeholder="点击选择时间"
                         />
             </div>
-
-            <div class="filter-item   col-xs-4">
+            <div class="filter-item status col-xs-2">
                 <z-dropdown z-dropdown-model="currentStatus"
                             z-dropdown-options="statuses"
                             z-dropdown-label="所有状态"
                         >
                 </z-dropdown>
             </div>
-            <div class="filter-item  col-xs-4">
+            <div class="filter-item discount col-xs-2">
                 <z-dropdown z-dropdown-model="filter.order_type"
                             z-dropdown-options="orderTypes"
                             z-dropdown-label="所有折扣"
                         >
                 </z-dropdown>
             </div>
-        </div>
-        <div class="row">
-            <div class="filter-item col-xs-4">
+            <div class="filter-item search-item col-xs-4">
                 <div class="search" ng-click="search()">筛选</div>
             </div>
         </div>
@@ -58,7 +55,7 @@
 
         <div class="row" ng-show="pageShow.createTimeRange.startDate">
             <div class="statistic center">
-                <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
+                <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日HH时MM分')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日HH时MM分')}}</time>
             </div>
         </div>
         <div class="row">
