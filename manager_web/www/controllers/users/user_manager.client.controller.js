@@ -76,7 +76,7 @@ angular.module('EWeb').controller('UserManagerController',
           },
           pagination: {
             currentPage: 1,
-            limit: 10,
+            limit: 1,
             totalCount: 0,
             isShowTotalInfo: true,
             onCurrentPageChanged: function (callback) {
@@ -100,12 +100,23 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.currentTag = tagName;
         switch (tagName){
           case 'client-user':
+
+            $scope.pageConfig.plat_client_panel.pagination.totalCount = 0;
+            $scope.pageConfig.plat_client_panel.pagination.currentPage = 1;
+            $scope.pageConfig.plat_client_panel.pagination.pageCount = 1;
             loadClients();
             return;
           case 'card-user':
+            $scope.pageConfig.plat_card_panel.pagination.totalCount = 0;
+            $scope.pageConfig.plat_card_panel.pagination.currentPage = 1;
+            $scope.pageConfig.plat_card_panel.pagination.pageCount = 1;
             loadCards();
             return;
           case 'platform-user':
+
+            $scope.pageConfig.plat_user_panel.pagination.totalCount = 0;
+            $scope.pageConfig.plat_user_panel.pagination.currentPage = 1;
+            $scope.pageConfig.plat_user_panel.pagination.pageCount = 1;
             loadUsers();
             return;
         }
@@ -159,16 +170,19 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.plat_client_panel.show_plat=true;
       };
       $scope.deleteClient = function(client){
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        ClientService.deleteClient(client._id, function(err, result){
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err){
-            $scope.$emit(GlobalEvent.onShowAlert, UserError[err]||err);
-          }
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '您确定要删除该客户用户吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            ClientService.deleteClient(client._id, function(err, result){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                $scope.$emit(GlobalEvent.onShowAlert, UserError[err]||err);
+              }
 
-          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-          reloadData();
-        });
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+              reloadData();
+            });
+          }});
       };
       function validClientInfo(client){
         var isPassed = true;
@@ -272,7 +286,7 @@ angular.module('EWeb').controller('UserManagerController',
         clearClientError();
       };
       function loadClients(){
-        $scope.pageConfig.plat_client_panel.users = [];
+        $scope.pageConfig.plat_client_panel.client_users = [];
         ClientService.getClients($scope.pageConfig.plat_client_panel.pagination,function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
@@ -329,17 +343,20 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.plat_user_panel.show_plat=true;
       };
       $scope.deleteUser = function(user){
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        UserService.deleteUser(user._id, function(err, user){
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '您确定要删除该用户吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            UserService.deleteUser(user._id, function(err, user){
 
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err){
-            $scope.$emit(GlobalEvent.onShowAlert, UserError[err]||err);
-          }
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                $scope.$emit(GlobalEvent.onShowAlert, UserError[err]||err);
+              }
 
-          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-          reloadData();
-        });
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+              reloadData();
+            });
+          }});
       };
       function validUserInfo(user){
         var isPassed = true;
@@ -622,30 +639,38 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       $scope.deleteCard = function(card){
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        CardService.deleteCard(card._id, function(err, card){
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '确定要删除饭卡吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            CardService.deleteCard(card._id, function(err, card){
 
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err){
-            $scope.$emit(GlobalEvent.onShowAlert, err);
-          }
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
 
-          $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
-          loadCards();
-        });
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+              loadCards();
+            });
+
+        }});
       };
 
       $scope.closeCard = function(card){
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        CardService.closeCard(card._id, function(err, data){
-          $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err || !data){
-            $scope.$emit(GlobalEvent.onShowAlert, err);
-          }
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '卡内余额为:'+ card.amount +'，确定要退饭卡吗？', callback: function () {
 
-          $scope.$emit(GlobalEvent.onShowAlert, '退卡成功！');
-          loadCards();
-        });
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            CardService.closeCard(card._id, function(err, data){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err || !data){
+                $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '退卡成功！');
+              loadCards();
+            });
+          }});
       };
 
       $scope.changeCardStatus = function(card){

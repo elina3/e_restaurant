@@ -1,0 +1,11 @@
+<div class="agilepops-dialog-confirm agilepops-dialog-msg dialog-mask" ng-show="dialogInfo.isShow===true">
+  <div class="dialog-content">
+    <div class="dialog-header">{{dialogInfo.title}}</div>
+    <div class="dialog-body">
+      <p class="text">{{dialogInfo.content}}</p></div>
+    <div class="dialog-footer">
+      <p class="sure" ng-click="sure()">{{dialogInfo.sureLabel}}</p>
+      <p class="cancel" ng-click="cancel()">{{dialogInfo.cancelLabel}}</p>
+    </div>
+  </div>
+</div>

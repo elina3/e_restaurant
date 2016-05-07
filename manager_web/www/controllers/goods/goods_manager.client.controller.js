@@ -264,15 +264,19 @@ angular.module('EWeb').controller('GoodsManagerController',
         $scope.pageConfig.goodsPanel.currentEditGoods = getNewGoodsObj();
       };
       $scope.deleteGoods = function(goods){
-        GoodsService.deleteGoods(goods._id, function(err, data){
-          if(err){
-            $scope.$emit(GlobalEvent.onShowAlert, '删除失败！错误：' + err);
-            return;
-          }
-          $scope.$emit(GlobalEvent.onShowAlert, '删除商品成功！');
-          $scope.closeEditGoodsPanel();
-          $state.reload();
-        });
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '确定要删除商品吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            GoodsService.deleteGoods(goods._id, function(err, data){
+              if(err){
+                $scope.$emit(GlobalEvent.onShowAlert, '删除失败！错误：' + err);
+                return;
+              }
+              $scope.$emit(GlobalEvent.onShowAlert, '删除商品成功！');
+              $scope.closeEditGoodsPanel();
+              $state.reload();
+            });
+          }});
       };
       $scope.translateGoodsStatus = function(status){
         return GoodsService.translateGoodsStatus(status);

@@ -1,0 +1,90 @@
+.agilepops-dialog-confirm {
+
+  .dialog-content {
+
+  }
+
+}
+
+.dialog-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+
+  .dialog-content {
+    position: relative;
+    top: 50%;
+    margin: -1 * (190px /2) auto 0 auto;
+    width: 100%;
+    max-width: 400px;
+
+
+    .dialog-header {
+      padding: 0 20px;
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      color: #666;
+      background-color: #ECF5FB;
+    }
+    .dialog-body {
+      background-color: #fff;
+      height: 80px;
+      .text{
+        background-color: #fff;
+        line-height: 80px;
+        padding: 0 20px;
+        text-align: center;
+        width: 100%;
+      }
+      .dialog-row {
+        width: 100%;
+        height: 50px;
+        .dialog-left, .dialog-right {
+          float: left;
+          padding: 0 20px;
+          width: 50%;
+          height: 50px;
+          line-height: 50px;
+        }
+        .dialog-left {
+          background-color: #fff;
+        }
+        .dialog-right {
+          background-color: #f2f2f2;
+
+        }
+
+      }
+    }
+
+    .dialog-footer {
+      padding: 0 20px;
+      background-color: #fff;
+      overflow: hidden;
+      .sure, .cancel {
+        float: right;
+        width: 90px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .sure {
+        color: #fff;
+        background-color: #4186c9;
+      }
+      .cancel {
+        background-color: #f2f2f2;
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
