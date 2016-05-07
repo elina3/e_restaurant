@@ -19,6 +19,7 @@ angular.module('EWeb').controller('CardHistoryController',
           {id: 'delete', text: '删除卡'},
           {id: 'change_status', text: '卡变更'},
           {id: 'close', text: '退卡'},
+          {id: 'pay', text: '消费'},
           {id: 'recreate', text: '补卡新卡'},
           {id: 'replace', text: '补卡'}],
         statistics: {

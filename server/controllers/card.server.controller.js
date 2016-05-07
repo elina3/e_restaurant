@@ -215,3 +215,7 @@ exports.getCardBalance = function(req, res, next){
     return next();
   });
 };
+
+exports.batchRechargeCard = function(req, res, next){
+
+};

@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/23.
  */
 'use strict';
+var async = require('../')
 var mongooseLib = require('../libraries/mongoose');
 var publicLib = require('../libraries/public');
 var businessEnum = require('../enums/business');
@@ -336,15 +337,23 @@ exports.pay = function(card, amountString, paymentStatisticThisMonth, callback){
     return callback({err: cardError.insufficient_balance});
   }
 
+  var oldAmount = card.amount;
   card.amount = card.amount - actualAmount;
   card.save(function(err, newCard){
     if(err || !newCard){
       return callback({err: systemError.database_save_error});
     }
 
-    return callback(null, {
-      card: newCard,
-      actualAmount: actualAmount
+    addHistory(user, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
+      if(err) {
+        err.zh_message += '添加消费历史记录失败！';
+        return callback({err: systemError.database_save_error});
+      }
+
+      return callback(null, {
+        card: newCard,
+        actualAmount: actualAmount
+      });
     });
   });
 };
@@ -576,6 +585,31 @@ exports.getTotalCardBalance = function(filter, callback){
       totalBalance += item.totalAmount;
     });
     return callback(null, totalBalance);
+  });
+};
+
+exports.batchRechargeCard = function(user, amount, callback){
+
+  var amount = publicLib.amountParse(amount);
+  if(amount < 0){
+    return callback({err: cardError.wrong_amount});
+  }
+
+  var query = {
+    deleted_status: false,
+    type: 'staff'
+  };
+  var successCount = 0;
+  var failedCount = 0;
+  var failedCards = [];
+  Card.find(query, function(err, cards){
+    if(err || !cards){
+      return callback({err: systemError.database_query_error});
+    }
+
+    async.each(cards, function(card, eachCallback){}, function(err){
+
+    });
   });
 };
 
