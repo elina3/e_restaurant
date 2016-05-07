@@ -88,7 +88,6 @@ angular.module('EWeb').controller('CardHistoryController',
                 return $scope.$emit(GlobalEvent.onShowAlert, err);
               }
 
-              $scope.pageData.statistics.total_card_balance = data.total_card_balance;
               $scope.pageData.statistics.total_recharge_amount = data.total_recharge_amount;
               $scope.pageData.statistics.total_close_amount = data.total_close_amount;
             });

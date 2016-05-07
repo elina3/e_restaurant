@@ -39,6 +39,7 @@ angular.module('EWeb').controller('UserManagerController',
           }
         },
         plat_card_panel: {
+          totalCardBalance: 0,
           keyword: {
             card_number: '',
             registration_id: ''
@@ -92,7 +93,23 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       $scope.changeTag = function(tagName){
+        if(tagName === $scope.pageConfig.currentTag){
+          return;
+        }
+
         $scope.pageConfig.currentTag = tagName;
+        switch (tagName){
+          case 'client-user':
+            loadClients();
+            return;
+          case 'card-user':
+            loadCards();
+            return;
+          case 'platform-user':
+            loadUsers();
+            return;
+        }
+
       };
 
       $scope.closePopMask = function(){
@@ -461,6 +478,16 @@ angular.module('EWeb').controller('UserManagerController',
       //</editor-fold>
 
       //<editor-fold desc="饭卡相关">
+      function loadCardBalance(){
+        CardService.getCardBalance({}, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+          $scope.pageConfig.plat_card_panel.totalCardBalance = data.total_card_balance;
+          return;
+        });
+      }
       function loadCards(){
         $scope.pageConfig.plat_card_panel.cards = [];
         CardService.getCards($scope.pageConfig.plat_card_panel.pagination,$scope.pageConfig.plat_card_panel.keyword,function(err, data){
@@ -731,6 +758,7 @@ angular.module('EWeb').controller('UserManagerController',
           if($scope.user.role === 'admin'){
             loadUsers();
             loadClients();
+            loadCardBalance();
           }
           loadCards();
         });

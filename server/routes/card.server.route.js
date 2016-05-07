@@ -22,5 +22,8 @@ module.exports = function (app) {
   app.route('/client/card').get(cardFilter.requireCardByIDNumberOrCardNumber, cardController.getCardDetail);
 
   app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);
-  app.route('/card/statistics').get(authFilter.requireUser, cardController.getCardStatistics)
+  app.route('/card/statistics').get(authFilter.requireUser, cardController.getCardStatistics);
+
+  //卡内余额
+  app.route('/card/balance').get(authFilter.requireUser, cardController.getCardBalance);
 };

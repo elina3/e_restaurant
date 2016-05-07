@@ -25,6 +25,24 @@
         float: left;
 
         &.right-panel{
+
+          .card-balance{
+            display: inline-block;
+            overflow: hidden;
+            float: right;
+
+
+            margin-top: 10px;
+
+            width: 110px;
+            height: 40px;
+            line-height: 40px;
+
+            span{
+              color: @font-color-red;
+            }
+          }
+
           .add-user{
             display: inline-block;
             overflow: hidden;
@@ -56,6 +74,22 @@
               margin-right: 5px;
             }
 
+          }
+
+          .card-history{
+            display: inline-block;
+            overflow: hidden;
+            float: right;
+
+            margin-top: 10px;
+
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+
+            &:hover{
+              color: @background-normal-color
+            }
           }
         }
         &.left-panel{

@@ -188,17 +188,27 @@ exports.getCardStatistics = function (req, res, next) {
       return next(err);
     }
 
-    cardLogic.getTotalCardBalance(filter, function (err, totalCardBalance) {
-      if (err) {
-        return next(err);
-      }
+    req.data = {
+      total_recharge_amount: result.totalRechargeAmount,
+      total_close_amount: result.totalCloseAmount
+    };
+    return next();
+  });
+};
 
-      req.data = {
-        total_card_balance: totalCardBalance,
-        total_recharge_amount: result.totalRechargeAmount,
-        total_close_amount: result.totalCloseAmount
-      };
-      return next();
-    });
+exports.getCardBalance = function(req, res, next){
+  var keyword = req.query.keyword || '';
+  var filter = {
+    keyword: keyword
+  };
+  cardLogic.getTotalCardBalance(filter, function (err, totalCardBalance) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      total_card_balance: totalCardBalance
+    };
+    return next();
   });
 };

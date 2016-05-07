@@ -193,6 +193,25 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
+        getCardBalance: function(filter, callback){
+          RequestSupport.executeGet('/card/balance', {
+            keyword: filter.keyword
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.zh_message || data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         translateCardStatus: function(status){
           switch(status){
             case 'enabled':

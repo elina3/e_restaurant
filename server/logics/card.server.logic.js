@@ -551,10 +551,6 @@ exports.getTotalCardBalance = function(filter, callback){
       {id_number: filter.keyword}];
   }
 
-  if(filter.startTime && filter.endTime){
-    query.$and = [{update_time: {$gte: filter.startTime}},{update_time:{$lte: filter.endTime}}];
-  }
-
   Card.aggregate([{
     $match: query
   }, {

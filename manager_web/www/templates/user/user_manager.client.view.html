@@ -182,7 +182,11 @@
                                 </div>
                             </div>
                             <div class="right-panel col-xs-6">
-                                <div class="add-user" ng-click="goState('card_history')">
+                                <div class="card-balance">
+                                    <label>总余额：</label>
+                                    <span>{{pageConfig.plat_card_panel.totalCardBalance}}元</span>
+                                </div>
+                                <div class="card-history" ng-click="goState('card_history')">
                                     <span>查看历史</span>
                                 </div>
                                 <div class="add-user" ng-click="editCard()">
