@@ -751,6 +751,13 @@ angular.module('EWeb').controller('UserManagerController',
         loadCards();
       };
 
+      $scope.myKeyup = function(e){
+        var keycode = window.event?e.keyCode:e.which;
+        if(keycode===13){
+          $scope.searchCards();
+        }
+      };
+
       function getNewCardObj(){
         return {
           card_number: '',
