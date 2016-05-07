@@ -173,11 +173,13 @@ exports.signUp = function(userInfo, callback){
             return callback({err: systemError.internal_system_error});
           }
 
-          if(user){
+          if(user && user.deleted_status){
             return callback({err: userError.user_exist});
           }
 
-          user = new User();
+          if(!user){
+            user = new User();
+          }
           user.username = userInfo.username ? userInfo.username : '';
           user.password = userInfo.password ? user.hashPassword(userInfo.password) : '';
           user.nickname = userInfo.nickname;
