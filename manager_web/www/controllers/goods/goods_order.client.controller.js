@@ -38,7 +38,7 @@ angular.module('EWeb').controller('GoodsOrderController',
 
       $scope.pagination = {
         currentPage: 1,
-        limit: 2,
+        limit: 10,
         totalCount: 0,
         skipCount: 0,
         onCurrentPageChanged: function (callback) {
