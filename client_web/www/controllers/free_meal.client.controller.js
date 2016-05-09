@@ -91,20 +91,37 @@ angular.module('EClientWeb').controller('FreeMealController',
         }
         return price;
       }
+
+      $scope.alertMessage = {
+        show: false,
+        content: ''
+      };
+      function showAlertMessage(message,message2,message3){
+        $scope.alertMessage.show = true;
+        $scope.alertMessage.content = message;
+        $scope.alertMessage.content2 = message2;
+        $scope.alertMessage.content3 = message3;
+      }
+      $scope.closeAlertMessage = function(){
+        $scope.alertMessage.show = false;
+        $scope.alertMessage.content = '';
+        $scope.alertMessage.content2 = '';
+        $scope.alertMessage.content3 = '';
+      };
       $scope.pay = function(){
         if(!$scope.pageData.card_number){
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入卡号');
+          return showAlertMessage('请输入卡号');
         }
         if(!$scope.pageData.price){
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入单价');
+          return showAlertMessage('请输入金额');
         }
         var price = parseNumber($scope.pageData.price);
         if(price <= 0){
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入正确的价格');
+          return showAlertMessage('请输入正确的价格');
         }
         var count = parseNumber($scope.pageData.count);
         if(count <= 0){
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入正确的数量');
+          return showAlertMessage('请输入正确的数量');
         }
 
         var orderDetail = {
@@ -125,18 +142,17 @@ angular.module('EClientWeb').controller('FreeMealController',
         OrderService.card($scope.pageData.card_number, function(err, data){
           if (err || !data || !data.card){
             $scope.$emit(GlobalEvent.onShowLoading, false);
-            return $scope.$emit(GlobalEvent.onShowAlert, err);
+            return showAlertMessage(err);
           }
 
           OrderService.createOrder(orderDetail, function (err, data) {
             if (err || !data || !data.order || !data.client){
               $scope.$emit(GlobalEvent.onShowLoading, false);
-              return $scope.$emit(GlobalEvent.onShowAlert, '订单生成失败！请刷新页面重试' + err);
+              return showAlertMessage(err || '订单生成失败！请刷新页面重试');
             }
 
             Auth.setUser(data.client);
             $scope.$emit(GlobalEvent.onCartCountChange, data.client);
-            var orderNumber = data.order.order_number;
 
             OrderService.freeMealPay(data.order._id,
               $scope.pageData.card_number,
@@ -144,20 +160,43 @@ angular.module('EClientWeb').controller('FreeMealController',
 
                 $scope.$emit(GlobalEvent.onShowLoading, false);
                 if(err){
-                  return $scope.$emit(GlobalEvent.onShowAlert, err);
+                  return showAlertMessage(err);
                 }
-                console.log(data);
-
                 var payment = data.payment.payment;
                 var money = data.payment.cardInfo.amount;//余额
-                var message = '原价'+payment.total_amount+'元，实付'+payment.amount+'元，卡内余额'+money+'元！';
-                $scope.$emit(GlobalEvent.onShowAlert, message);
+                //var message = '原价'+payment.total_amount+'元\r\n实付'+payment.amount+'元\r\n卡内余额'+money+'元';
+                showAlertMessage('原价:'+payment.total_amount+'元', '实付:'+payment.amount+'元', '卡内余额:'+money+'元');
+                $scope.pageData.price = '';
                 $scope.pageData.card_number = '';
               });
           });
         });
       };
 
+      function keyUpEnter(){
+        if($scope.alertMessage.show){
+          $scope.closeAlertMessage();
+          if(!$scope.pageData.price){
+            $('#priceInput').focus();
+          }
+        }else{
+          $scope.pay();
+        }
+      }
+
+      $scope.priceInputKeyup = function(event){
+        var keycode = window.event?event.keyCode:event.which;
+        if(keycode === 13){
+          $('#cardInput').focus();
+        }
+      };
+
+      $scope.cardInputKeyup = function(event){
+        var keycode = window.event?event.keyCode:event.which;
+        if(keycode===13){
+          keyUpEnter(keycode);
+        }
+      };
       function init(){
         getClient();
         $scope.$emit(GlobalEvent.onShowLoading, true);
@@ -169,8 +208,9 @@ angular.module('EClientWeb').controller('FreeMealController',
           }
 
           $scope.pageData.goods = data.goods;
-          $scope.pageData.price = data.goods.price;
+          $scope.pageData.price = '';
         });
+        $('#priceInput').focus();
       }
       init();
 

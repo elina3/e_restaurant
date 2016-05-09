@@ -1,8 +1,6 @@
-
 <e-header></e-header>
 <e-head-nav config="pageData.headConfig"></e-head-nav>
 <div class="free-meal-page-view">
-
     <div class="goods-box">
         <div class='row goods-info'>
             <div class="row">
@@ -46,8 +44,9 @@
                     </div>
 
                     <div class="add-car-button">
-                        <div><label>输入金额</label><input class="input-box" ng-model="pageData.price"/></div>
-                        <div><label>输入卡号/证件号</label><input class="input-box" ng-model="pageData.card_number"/></div>
+                        <div><label>输入金额</label><input id="priceInput" ng-keyup="priceInputKeyup($event)" class="input-box" ng-model="pageData.price"/></div>
+                        <div><label>输入卡号/证件号</label><input id="cardInput" class="input-box" ng-model="pageData.card_number"
+                                                           ng-keyup="cardInputKeyup($event)"/></div>
                         <input class="buy-now" type="button" value="立即购买" ng-click="pay()"/>
                         <!--<input class="" type="button" value="扫码" ng-click="scan()"/>-->
                     </div>
@@ -63,11 +62,21 @@
 
             </div>
             <div class="description-photo">
-                <img err-src="images/global/default_goods.png"   ng-repeat="photoKey in pageData.goods.description_photos" ng-src="{{generatePhotoSrc(photoKey)}}"/>
+                <img err-src="images/global/default_goods.png" ng-repeat="photoKey in pageData.goods.description_photos"
+                     ng-src="{{generatePhotoSrc(photoKey)}}"/>
             </div>
         </div>
     </div>
 
+</div>
+<div class="mask" ng-show="alertMessage.show">
+    <div class="zz-alert">
+        <div class="zz-alert-title"><span>消息提示</span></div>
+        <div class="zz-alert-content" style="font-size:18px;padding:20px 20px 0px 20px;"><p>{{alertMessage.content}}</p><p>{{alertMessage.content2}}</p><p>{{alertMessage.content3}}</p></div>
+        <div class="zz-alert-handle">
+            <input type="submit" ng-keyup="myKeyup($event)" class="zz-btn-primary zz-alert-btn e-btn" ng-click="closeAlertMessage()" value="确定"></div>
+        </div>
+    </div>
 </div>
 
 <e-footer></e-footer>
