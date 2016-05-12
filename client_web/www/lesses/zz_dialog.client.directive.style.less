@@ -116,6 +116,57 @@
       }
     }
   }
+
+  .full-window{
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    .zz-alert-title{
+      position: relative;
+      height: 80px;
+      line-height: 80px;
+      padding-top: 0;
+      padding-bottom: 0;
+      font-size: 30px;
+      color: #999;
+
+      .close{
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        display: block;
+        overflow: hidden;
+
+        width: 40px;
+        height: 40px;
+
+        margin-top: 20px;
+
+        background: url('../../images/global/icon_close.png') center center no-repeat;
+
+
+        cursor: pointer;
+
+      }
+    }
+
+    .zz-alert-content{
+      margin-top: 100px;
+      p{
+        height: 120px;
+        line-height: 120px;
+        font-size: 80px;
+      }
+
+      strong{
+        color: @font-color-red;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {

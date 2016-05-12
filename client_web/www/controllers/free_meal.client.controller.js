@@ -165,7 +165,7 @@ angular.module('EClientWeb').controller('FreeMealController',
                 var payment = data.payment.payment;
                 var money = data.payment.cardInfo.amount;//余额
                 //var message = '原价'+payment.total_amount+'元\r\n实付'+payment.amount+'元\r\n卡内余额'+money+'元';
-                showAlertMessage('原价：'+payment.total_amount+'元', '实付：'+payment.amount+'元', '卡内余额：'+money+'元');
+                showAlertMessage(payment.total_amount, payment.amount, money);
                 $scope.pageData.price = '';
                 $scope.pageData.card_number = '';
               });
