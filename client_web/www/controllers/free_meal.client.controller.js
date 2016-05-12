@@ -110,18 +110,18 @@ angular.module('EClientWeb').controller('FreeMealController',
       };
       $scope.pay = function(){
         if(!$scope.pageData.card_number){
-          return showAlertMessage('请输入卡号');
+          return showAlertMessage('请输入卡号！');
         }
         if(!$scope.pageData.price){
-          return showAlertMessage('请输入金额');
+          return showAlertMessage('请输入金额！');
         }
         var price = parseNumber($scope.pageData.price);
         if(price <= 0){
-          return showAlertMessage('请输入正确的价格');
+          return showAlertMessage('请输入正确的价格！');
         }
         var count = parseNumber($scope.pageData.count);
         if(count <= 0){
-          return showAlertMessage('请输入正确的数量');
+          return showAlertMessage('请输入正确的数量！');
         }
 
         var orderDetail = {
@@ -148,7 +148,7 @@ angular.module('EClientWeb').controller('FreeMealController',
           OrderService.createOrder(orderDetail, function (err, data) {
             if (err || !data || !data.order || !data.client){
               $scope.$emit(GlobalEvent.onShowLoading, false);
-              return showAlertMessage(err || '订单生成失败！请刷新页面重试');
+              return showAlertMessage(err || '订单生成失败！请刷新页面重试！');
             }
 
             Auth.setUser(data.client);
