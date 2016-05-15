@@ -883,27 +883,27 @@ function updateCardHistoryCardType(callback){
       });
     })
 }
-updateCardStatisticCardType(function(err, result){
-  if(err){
-    console.error('update statistic error:');
-    console.log(err);
-    console.log('update statistic count:', result);
-    return;
-  }
-
-  console.log('update statistic success!update count is ', result);
-
-});
-
-updateCardHistoryCardType(function(err, result){
-  if(err){
-    console.error('update history error:');
-    console.log(err);
-    console.log('update history count:', result);
-    return;
-  }
-
-  console.log('update history success!update count is ', result);
-
-});
-
+//updateCardStatisticCardType(function(err, result){
+//  if(err){
+//    console.error('update statistic error:');
+//    console.log(err);
+//    console.log('update statistic count:', result);
+//    return;
+//  }
+//
+//  console.log('update statistic success!update count is ', result);
+//
+//});
+//
+//updateCardHistoryCardType(function(err, result){
+//  if(err){
+//    console.error('update history error:');
+//    console.log(err);
+//    console.log('update history count:', result);
+//    return;
+//  }
+//
+//  console.log('update history success!update count is ', result);
+//
+//});
+//
