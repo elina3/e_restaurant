@@ -13,42 +13,47 @@
         </div>
 
         <div class="search-bar">
-            <div class="row">
+            <div class="ee-wrapper">
 
-                <div class="filter-item col-xs-3">
-                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
-                           ng-model="pageShow.createTimeRange"
-                           min="pageShow.createTimeMinTime"
-                           options="pageShow.dateOptions"
+                <div class="row">
+                    <div class="filter-item col-xs-3">
+                        <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                               ng-model="pageShow.createTimeRange"
+                               min="pageShow.createTimeMinTime"
+                               options="pageShow.dateOptions"
 
-                           placeholder="点击选择时间"
-                            />
-                </div>
-                <div class="filter-item col-xs-3">
-                    <z-dropdown z-dropdown-model="pageData.action"
-                                z-dropdown-options="pageData.actions"
-                                z-dropdown-label="请选择类型"
-                            >
-                    </z-dropdown>
-                </div>
-                <div class="filter-item col-xs-3">
-                    <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" />
-                </div>
-                <div class="filter-item col-xs-3">
-                    <div class="search" ng-click="searchKey()">筛选</div>
+                               placeholder="点击选择时间"
+                                />
+                    </div>
+                    <div class="filter-item col-xs-3">
+                        <z-dropdown z-dropdown-model="pageData.action"
+                                    z-dropdown-options="pageData.actions"
+                                    z-dropdown-label="请选择类型"
+                                >
+                        </z-dropdown>
+                    </div>
+                    <div class="filter-item col-xs-3">
+                        <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" />
+                    </div>
+                    <div class="filter-item col-xs-3">
+                        <div class="search" ng-click="searchKey()">筛选</div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="statistics-panel">
-            <div class="row" ng-show="pageShow.createTimeRange.startDate">
-                <div class="statistic center">
-                    <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
+            <div class="ee-wrapper">
+
+                <div class="row" ng-show="pageShow.createTimeRange.startDate">
+                    <div class="statistic center">
+                        <time>{{(pageShow.createTimeRange.startDate).format('YY年MM月DD日')}}~{{(pageShow.createTimeRange.endDate).format('YY年MM月DD日')}}</time>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount || 0}}</strong> 元</div>
-                <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount || 0}}</strong> 元</div>
-                <div class="statistic"><label>删除卡总余额：</label><strong>{{pageData.statistics.total_delete_amount || 0}}</strong> 元</div>
+                <div class="row">
+                    <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount || 0}}</strong> 元</div>
+                    <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount || 0}}</strong> 元</div>
+                    <div class="statistic"><label>删除卡总余额：</label><strong>{{pageData.statistics.total_delete_amount || 0}}</strong> 元</div>
+                </div>
             </div>
         </div>
 

@@ -33,7 +33,7 @@ var CardSchema = new Schema({
     type: String
   },
   type: {
-    enum: ['normal', 'staff'],
+    enum: ['normal', 'staff', 'expert'],//普通，员工，专家
     type: String,
     default: 'normal'
   },

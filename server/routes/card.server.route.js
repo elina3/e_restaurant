@@ -23,9 +23,12 @@ module.exports = function (app) {
 
   app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);
   app.route('/card/statistics').get(authFilter.requireUser, cardController.getCardStatistics);
+  //饭卡金额数量财务统计
+  app.route('/card/amount_count_statistics').get(authFilter.requireUser, cardController.exportCardStatistic);
 
   app.route('/cards/import').post(authFilter.requireUser, cardController.importCards);
   //卡内余额
   app.route('/card/balance').get(authFilter.requireUser, cardController.getCardBalance);
   app.route('/card/recharge/batch').post(authFilter.requireUser, cardController.batchRechargeCard);
+
 };

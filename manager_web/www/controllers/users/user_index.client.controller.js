@@ -18,6 +18,12 @@ angular.module('EWeb').controller('UserIndexController',
       };
 
 
+      $scope.goState  = function(state){
+        if(!state){
+          return;
+        }
+        $state.go(state);
+      };
       $scope.goToView = function(state){
         if(!state){
           return;

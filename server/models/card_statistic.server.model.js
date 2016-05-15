@@ -19,6 +19,9 @@ var CardStatisticSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Card'
   },
+  card_type: {
+    type: String
+  },
   id_number: {//证件号
     type: String,
     trim: true

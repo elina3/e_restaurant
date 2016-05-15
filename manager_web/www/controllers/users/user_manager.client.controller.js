@@ -16,7 +16,8 @@ angular.module('EWeb').controller('UserManagerController',
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
         roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}],
-        cardTypes: [{id: 'normal', text: '普通'},{id: 'staff', text: '员工'}],
+        cardTypes: [{id: 'normal', text: '普通'},{id: 'staff', text: '员工'},{id: 'expert', text: '专家'}],
+        rechargeTypes: [{id: 'cash', text: '现金'},{id: 'virtual', text: '虚拟'}],
         groups: [],
         sexs: [{id: 'male', text: '男'},{id: 'female', text: '女'}],
         currentTag: 'platform-user',
@@ -526,6 +527,7 @@ angular.module('EWeb').controller('UserManagerController',
               id_number:card.id_number,
               card_number: card.card_number,
               nickname: card.nickname,
+              recharge_type: {id: card.recent_recharge_type, text: CardService.translateCardRechargeType(card.recent_recharge_type)},
               amount: card.amount,
               status: card.status,
               type: {id: card.type, text: CardService.translateCardType(card.type)},
@@ -614,10 +616,14 @@ angular.module('EWeb').controller('UserManagerController',
           return ;
         }
 
+        if(!$scope.pageConfig.plat_card_panel.currentEditCard.recharge_type){
+          $scope.pageConfig.plat_card_panel.currentEditCard.recharge_type = {id: 'cash', text: '现金充值'};
+        }
         param = {
           card_number: $scope.pageConfig.plat_card_panel.currentEditCard.card_number,
           id_number: $scope.pageConfig.plat_card_panel.currentEditCard.id_number,
           amount: addMondy,
+          recharge_type: $scope.pageConfig.plat_card_panel.currentEditCard.recharge_type.id,
           type: $scope.pageConfig.plat_card_panel.currentEditCard.type.id,
           nickname: $scope.pageConfig.plat_card_panel.currentEditCard.nickname
         };
@@ -763,6 +769,7 @@ angular.module('EWeb').controller('UserManagerController',
           card_number: '',
           id_number: '',
           amount: 0,
+          recharge_type: [{id: 'cash', text: '现金'},{id: 'virtual', text: '虚拟'}],
           type: {id: 'normal', text: CardService.translateCardType('normal')},
           nickname:''
         };

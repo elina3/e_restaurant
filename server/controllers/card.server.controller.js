@@ -5,6 +5,7 @@
 var systemError  = require('../errors/system');
 var cardLogic = require('../logics/card');
 var publicLib = require('../libraries/public');
+//办卡
 exports.addNewCard = function (req, res, next) {
   var user = req.user;
   var cardInfo = req.body.card_info || req.query.card_info || {};
@@ -19,7 +20,7 @@ exports.addNewCard = function (req, res, next) {
     return next();
   });
 };
-
+//充值
 exports.updateCard = function (req, res, next) {
   var card = req.card;
   var user = req.user;
@@ -36,14 +37,14 @@ exports.updateCard = function (req, res, next) {
     return next();
   });
 };
-
+//卡详情
 exports.getCardDetail = function (req, res, next) {
   req.data = {
     card: req.card
   };
   return next();
 };
-
+//删除卡
 exports.deleteCard = function (req, res, next) {
   var user = req.user;
   var card = req.card;
@@ -59,7 +60,7 @@ exports.deleteCard = function (req, res, next) {
     return next();
   });
 };
-
+//卡列表
 exports.getCardList = function (req, res, next) {
   var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
   var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
@@ -129,7 +130,6 @@ exports.cancelFreezeCard = function (req, res, next) {
     return next();
   });
 };
-
 //补卡
 exports.replaceCard = function (req, res, next) {
   var card = req.card;
@@ -146,7 +146,7 @@ exports.replaceCard = function (req, res, next) {
     return next();
   });
 };
-
+//卡历史
 exports.getCardHistories = function (req, res, next) {
   var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
   var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
@@ -176,7 +176,7 @@ exports.getCardHistories = function (req, res, next) {
     return next();
   });
 };
-
+//卡统计
 exports.getCardStatistics = function (req, res, next) {
   var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
   var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
@@ -199,7 +199,7 @@ exports.getCardStatistics = function (req, res, next) {
     return next();
   });
 };
-
+//卡余额
 exports.getCardBalance = function(req, res, next){
   var keyword = req.query.keyword || '';
   var filter = {
@@ -230,7 +230,7 @@ exports.batchRechargeCard = function(req, res, next){
     return next();
   });
 };
-
+//饭卡导入
 exports.importCards = function(req, res, next){
   var cardList = req.body.card_list || [];
   var user = req.user;
@@ -239,6 +239,26 @@ exports.importCards = function(req, res, next){
       return next(err);
     }
 
+    req.data = result;
+    return next();
+  });
+};
+//饭卡当日财务统计
+exports.exportCardStatistic = function(req, res, next){
+  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
+  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+  var filter = {
+    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
+    endTime: endTimeStamp === -1 ? new Date() : new Date(endTimeStamp)
+  };
+
+  cardLogic.exportCardStatistic(filter, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    result.begin_time = filter.startTime;
+    result.end_time = filter.endTime;
     req.data = result;
     return next();
   });

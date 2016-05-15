@@ -19,6 +19,7 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     create_client: client ? client._id: null,
     create_user: user? user._id:null,
     card: oldCard._id,
+    card_type: oldCard.type,
     id_number: oldCard.id_number,
     card_number: oldCard.card_number,
     action: actionName,
@@ -44,6 +45,7 @@ function addCardStatistic(user, card, action, amount, description, callback){
     create_user: user? user._id:null,
     card: card._id,
     id_number: card.id_number,
+    card_type: card.type,
     card_number: card.card_number,
     action: action,
     amount: amount,
@@ -65,11 +67,6 @@ exports.addCard = function(user, cardInfo,  callback){
 
   if(!cardInfo.id_number){
     return callback({err: cardError.id_number_null});
-  }
-
-  var amount = publicLib.amountParse(cardInfo.amount);
-  if(amount < 0){
-    return callback({err: cardError.wrong_amount});
   }
 
   Card.findOne({card_number: cardInfo.card_number, deleted_status: false})
@@ -103,7 +100,6 @@ exports.addCard = function(user, cardInfo,  callback){
           card.nickname = cardInfo.nickname;
           card.type = !cardInfo.type ? 'normal' : cardInfo.type;
           card.discount = card.type === 'staff' ? 0.25 : 1;
-          card.amount = amount;
           card.status = 'enabled';
           card.deleted_status = false;
           card.recent_modify_user = user._id;
@@ -113,7 +109,7 @@ exports.addCard = function(user, cardInfo,  callback){
               return callback({err: systemError.database_save_error});
             }
 
-            addHistory(user, newCard, null, 'create', amount, amount, '注册新卡', function(err, history){
+            addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function(err, history){
               if(err){
                 err.zh_message += '添加新卡注册历史记录失败！';
                 return callback({err: systemError.database_save_error});
@@ -288,6 +284,7 @@ exports.updateCardInfo = function(user, card, cardInfo, callback){
   var newAmount = oldAmount + addAmount;
 
   card.nickname = cardInfo.nickname;
+  card.recent_recharge_type = cardInfo.recharge_type || 'cash';
   card.amount = newAmount;
   card.recent_modify_user = user._id;
   card.save(function(err, newCard){
@@ -295,13 +292,19 @@ exports.updateCardInfo = function(user, card, cardInfo, callback){
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(user, newCard, null, 'recharge', oldAmount, newAmount, '充值', function(err, history){
+    var action = 'recharge_virtual';
+    var actionName = '虚拟充值';
+    if(newCard.recent_recharge_type === 'cash'){
+      action = 'recharge';
+      actionName = '现金充值';
+    }
+    addHistory(user, newCard, null, action, oldAmount, newAmount, actionName, function(err, history){
       if(err){
         err.zh_message += '添加充值历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
 
-      addCardStatistic(user, newCard, 'recharge', addAmount, '充值', function(err, result){
+      addCardStatistic(user, newCard, action, addAmount, actionName, function(err, result){
         return callback(err, newCard);
       });
     });
@@ -589,7 +592,6 @@ exports.getCardStatistics = function(filter, callback){
         {id_number: filter.keyword}];
   }
 
-
   if(filter.startTime && filter.endTime){
     query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
   }
@@ -618,7 +620,10 @@ exports.getCardStatistics = function(filter, callback){
 
     result.forEach(function(item){
       if(item.action === 'recharge'){
-        amountResult.totalRechargeAmount = item.totalAmount;
+        amountResult.totalRechargeAmount += item.totalAmount;
+      }
+      if(item.action === 'recharge_virtual'){
+        amountResult.totalRechargeAmount += item.totalAmount;
       }
       if(item.action === 'close'){
         amountResult.totalCloseAmount = item.totalAmount;
@@ -685,17 +690,18 @@ exports.batchRechargeCard = function(user, amount, callback){
     async.each(cards, function(card, eachCallback){
       var oldAmount = card.amount;
       card.amount = card.amount + amount;
+      card.recent_recharge_type = 'virtual';
       card.save(function(err, newCard){
         if(err || !newCard){
           return eachCallback({err: systemError.database_save_error});
         }
-        addHistory(user, newCard, null, 'recharge', oldAmount, card.amount, '充值', function(err, history){
+        addHistory(user, newCard, null, 'recharge_virtual', oldAmount, card.amount, '虚拟充值', function(err, history){
           if(err){
             err.zh_message += '添加充值历史记录失败！';
             return eachCallback({err: err});
           }
 
-          addCardStatistic(user, newCard, 'recharge', amount, '充值', function(err, result){
+          addCardStatistic(user, newCard, 'recharge_virtual', amount, '虚拟充值', function(err, result){
             if(err){
               err.zh_message += '添加充值统计信息失败';
               return eachCallback(err);
@@ -716,4 +722,188 @@ exports.batchRechargeCard = function(user, amount, callback){
     });
   });
 };
+
+
+exports.exportCardStatistic = function(filter, callback){
+  var query = {};
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  }
+
+  CardStatistic.aggregate([{
+    $match: query
+  }, {
+    $group: {
+      _id: {action: '$action', card_type: '$card_type'},
+      action: {$first: '$action'},
+      card_type: {$first: '$card_type'},
+      totalAmount: {$sum: '$amount'},
+      count: {$sum: 1}
+    }
+  }, {
+    $group: {
+      _id: '$_id.action',
+      statistics: {$push: '$$ROOT'}
+    }
+  }], function(err, result){
+    if(err || !result){
+      return callback({err: systemError.database_query_error});
+    }
+    var statisticResult = {
+      recharge_virtual: {
+        amount: {
+          staff: 0,
+          expert: 0,
+          normal: 0
+        },
+        count: {
+          staff: 0,
+          expert: 0,
+          normal: 0
+        }
+      },
+      recharge: {
+        amount: {
+          staff: 0,
+          expert: 0,
+          normal: 0},
+        count: {
+          staff: 0,
+          expert: 0,
+          normal: 0
+        }
+      },
+      close: {
+        amount: {
+          staff: 0,
+          expert: 0,
+          normal: 0
+        },
+        count: {
+          staff: 0,
+          expert: 0,
+          normal: 0}
+      },
+      delete: {
+        amount: {
+          staff: 0,
+          expert: 0,
+          normal: 0
+        },
+        count: {
+          staff: 0,
+          expert: 0,
+          normal: 0}
+      }
+    };
+    if(result.length === 0){
+      return callback(null, statisticResult);
+    }
+
+
+    result.forEach(function(item){
+      if(!statisticResult[item._id]){
+        return;
+      }
+      item.statistics.forEach(function(statistic){
+        statisticResult[item._id].amount[statistic.card_type] = statistic.totalAmount;
+        statisticResult[item._id].count[statistic.card_type] = statistic.count;
+      });
+    });
+    return callback(null, statisticResult);
+  });
+};
+
+function updateCardStatisticCardType(callback){
+  CardStatistic.find({card_type: {$exists: false}})
+    .populate('card')
+    .exec(function(err, statistics){
+      if(err){
+        return callback(err);
+      }
+
+      var successUpdateCount = 0;
+      async.each(statistics, function(statistic, eachCallback){
+        if(statistic.card_type){
+          return eachCallback();
+        }
+
+        statistic.card_type = statistic.card.type;
+        if(statistic.card.type === 'staff' && statistic.action === 'recharge'){
+          statistic.action = 'recharge_virtual';
+        }
+        statistic.save(function(err, newStatistic){
+          if(err || !newStatistic){
+            return eachCallback(err);
+          }
+
+          successUpdateCount++;
+          return eachCallback();
+        });
+      }, function(err){
+        if(err){
+          return callback(err, successUpdateCount);
+        }
+
+        return callback(null, successUpdateCount);
+
+      });
+    })
+}
+function updateCardHistoryCardType(callback){
+  CardHistory.find({action: 'recharge'})
+    .populate('card')
+    .exec(function(err, histories){
+      if(err){
+        return callback(err);
+      }
+
+      var successUpdateCount = 0;
+      async.each(histories, function(history, eachCallback){
+
+        if(history.card.type === 'staff'){
+          history.action = 'recharge_virtual';
+          history.description = '虚拟充值';
+        }
+        history.save(function(err, newStatistic){
+          if(err || !newStatistic){
+            return eachCallback(err);
+          }
+
+          successUpdateCount++;
+          return eachCallback();
+        });
+      }, function(err){
+        if(err){
+          return callback(err, successUpdateCount);
+        }
+
+        return callback(null, successUpdateCount);
+
+      });
+    })
+}
+updateCardStatisticCardType(function(err, result){
+  if(err){
+    console.error('update statistic error:');
+    console.log(err);
+    console.log('update statistic count:', result);
+    return;
+  }
+
+  console.log('update statistic success!update count is ', result);
+
+});
+
+updateCardHistoryCardType(function(err, result){
+  if(err){
+    console.error('update history error:');
+    console.log(err);
+    console.log('update history count:', result);
+    return;
+  }
+
+  console.log('update history success!update count is ', result);
+
+});
 

@@ -274,8 +274,20 @@ angular.module('EWeb').factory('CardService',
               return '普通';
             case 'staff':
               return '员工';
+            case 'expert':
+              return '专家';
             default:
               return '普通';
+          }
+        },
+        translateCardRechargeType: function(rechargeType){
+          switch (rechargeType){
+            case 'cash':
+              return '现金';
+            case 'virtual':
+              return '虚拟';
+            default:
+              return '现金';
           }
         }
       };

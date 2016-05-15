@@ -15,7 +15,8 @@ angular.module('EWeb').controller('CardHistoryController',
         action: {id: '', text: '不限'},
         actions: [{id: '', text: '不限'},
           {id: 'create', text: '注册新卡'},
-          {id: 'recharge', text: '充值'},
+          {id: 'recharge', text: '现金充值'},
+          {id: 'recharge_virtual', text: '虚拟充值'},
           {id: 'delete', text: '删除卡'},
           {id: 'change_status', text: '卡变更'},
           {id: 'close', text: '退卡'},
@@ -50,7 +51,7 @@ angular.module('EWeb').controller('CardHistoryController',
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
               '十月', '十一月', '十二月']
           },
-          timePicker: true,
+          timePicker: false,
           timePicker12Hour: false,
           timePickerIncrement: 1,
           separator: ' ~ ',
@@ -64,7 +65,9 @@ angular.module('EWeb').controller('CardHistoryController',
       $scope.goBack = function () {
         $window.history.back();
       };
-
+      $scope.goToStatistic = function(){
+        $state.go('card_statistic');
+      };
 
       function loadCardHistories() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
