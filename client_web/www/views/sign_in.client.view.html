@@ -7,7 +7,7 @@
                 <div class="logo-title"><span>瑞金医院古北分院</span></div>
             </div>
             <div class="sign-in-area">
-                <div class="sign-in-container">
+                <form class="sign-in-container">
                     <div class="container-title">
                         <span>就餐用户登录</span>
                     </div>
@@ -16,9 +16,9 @@
                         <div class="input-box"><img src="images/sign_in/password.png"/><input type="password" ng-model="pageData.password" placeholder="密码"/></div>
                     </div>
                     <div class="sign-in-handle">
-                        <a class="sign-in-button" ng-click="signIn()">登录</a>
+                        <button type="submit" class="sign-in-button" ng-click="signIn()">登录</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="copy-right">瑞金医院古北分院｜<a ng-click="goToManager()">后台管理员登录</a></div>

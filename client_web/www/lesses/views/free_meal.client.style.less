@@ -3,9 +3,9 @@
   margin: 0 auto;
   overflow: hidden;
   .goods-box {
-    border: 1px solid @border-line-color-normal-web;
-    margin-top: 20px;
-    margin-bottom: 60px;
+    border: none;
+    margin-top: 70px;
+    margin-bottom: 0px;
 
     .goods-info, .good-detail {
       margin: 0;
@@ -15,15 +15,19 @@
     }
 
     .goods-info {
-      border-bottom: 1px solid @border-line-color-normal-web;
+      //border-bottom: 1px solid @border-line-color-normal-web;
       padding-bottom: 20px;
-      height: 270px;
+      height: 350px;
       .row{
         height: 100%;
+      }
+      .image-container{
+        width: 100%;
       }
     }
 
     .good-detail {
+
       .description-text {
         padding-left: 15px;
         padding-right: 20px;
@@ -57,12 +61,13 @@
 
     .photo {
       height: 100%;
+      padding: 0;
       .top {
         padding: 0px;
         height: 100%;
 
         .image-container{
-          width: 320px;
+          //max-width: 400px;
 
           height: 100%;
         }
@@ -79,15 +84,30 @@
     }
     .info {
 
-      padding-right: 20px;
+      padding: 0 20px;
       .goods-name {
         border-bottom: 1px solid @border-line-color-normal-web;
         width: 100%;
-        padding-top: 20px;
-        padding-bottom: 5px;
-        font-size: 18px;
+        line-height: 33px;
+        height: 50px;
+
+        font-size: 35px;
+        margin-bottom: 15px;
       }
       .base {
+        line-height: 68px;
+        .row-item{
+          padding: 0;
+          line-height: 70px;
+          height: 70px;
+          label{
+            width: 140px;
+            height: 40px;
+            line-height: 40px;
+            font-weight: normal;
+            font-size: 16px;
+          }
+        }
         .right {
           padding-left: 10px;
         }
@@ -124,7 +144,7 @@
         }
         .goods-price {
           color: @font-color-red;
-          font-size: 25px;
+          font-size: 35px;
         }
         .count-box {
           margin-top: 5px;
@@ -172,23 +192,38 @@
 
       }
       .add-car-button {
-        margin-top: 20px;
-        margin-bottom: 20px;
+       >div{
+         padding: 0;
+         line-height: 70px;
+         height: 70px;
+         overflow: hidden;
 
-        label{
-          width: 100px;
-          height: 40px;
-          line-height: 40px;
-          font-weight: normal;
-        }
-        input.input-box{
-          width: 200px;
-          height: 30px;
-          line-height: 30px;
-          border: 1px solid @border-line-color-normal-web;
-        }
+         label, input{
+           display: inline-block;
+           overflow: hidden;
+           float: left;
+         }
+         label{
+           width: 140px;
+           height: 70px;
+           line-height: 70px;
+           font-weight: normal;
+           font-size: 16px;
+
+         }
+         input.input-box{
+           padding: 0 3px;
+           margin-top: 10px;
+           width: 300px;
+           height: 50px;
+           font-size: 35px;
+           line-height: 30px;
+           border: 1px solid @border-line-color-normal-web;
+         }
+       }
       }
       input[type=button] {
+        margin-top: 15px;
         width: 120px;
         height: 40px;
 
@@ -269,6 +304,7 @@
 @media (max-width: 568px) {
   .free-meal-page-view {
     width: 100%;
+    margin-bottom: 100px;
     .goods-box{
       padding: 0 !important;
       margin: 0 !important;
@@ -276,7 +312,7 @@
       .goods-info{
 
         padding: 0;
-          height: 350px;
+        height: 350px;
 
 
         .photo{
@@ -302,10 +338,36 @@
         .info{
           .goods-name{
             border: none;
+            margin-top: 20px;
           }
         }
       }
       .add-car-button{
+        .button-item{
+          display: block;
+          height: 50px !important;
+          line-height: 30px  !important;
+          margin: 0;
+
+          label{
+            display: inline-block !important;
+            float: left !important;
+            height: 50px !important;
+            line-height: 50px !important;
+            width: 100px !important;
+            font-size: 13px !important;
+            margin: 0 !important;
+          }
+          .input-box{
+            display: inline-block !important;
+            float: left !important;
+            height: 30px !important;
+            line-height: 30px !important;
+            width: 200px !important;
+            font-size: 13px !important;
+            margin-top: 10px !important;
+          }
+        }
         input[type=button]{
           padding: 0px !important;
           width: 80px !important;

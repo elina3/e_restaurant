@@ -41,7 +41,7 @@
                 <div class="logo-title-tip"><span>餐厅后台管理系统</span></div>
             </div>
             <div class="sign-in-area">
-                <div class="sign-in-container">
+                <form class="sign-in-container">
                     <div class="container-title">
                         <span>餐厅后台管理系统</span>
                     </div>
@@ -50,9 +50,9 @@
                         <div class="input-box"><img src="images/sign_in/password.png"/><input type="password" ng-model="signInObject.password" placeholder="密码"/></div>
                     </div>
                     <div class="sign-in-handle">
-                        <a class="sign-in-button" ng-click="signIn()">登录</a>
+                        <button type="submit" style="width:100%;" class="sign-in-button" ng-click="signIn()">登录</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 

@@ -4,25 +4,22 @@
     <div class="goods-box">
         <div class='row goods-info'>
             <div class="row">
-                <div class="col-xs-6 photo">
+                <div class="col-xs-5 photo">
                     <div class="top">
-                        <e-image image-key="pageData.goods.display_photos[0]"></e-image>
+                        <e-image image-key=""></e-image>
                         <!--<img err-src="images/global/default_goods.png"   ng-src="{{generatePhotoSrc(pageData.goods.display_photos[0])}}"/>-->
                     </div>
                     <div class="photo-nav">
 
                     </div>
                 </div>
-                <div class="col-xs-6 info">
+                <div class="col-xs-7 info">
                     <div class="goods-name">
                         <span>{{pageData.goods.name}}</span>
                     </div>
                     <div class="base">
-                        <div class="row">
-                            <div class="col-xs-2 normal"><span>参考价格:</span></div>
-                            <div class="col-xs-3 normal goods-price right">
-                                <span>{{pageData.goods.price === -1 ?  '待定' :'￥' + pageData.goods.price}}</span>
-                            </div>
+                        <div class="row-item">
+                            <label>参考价格</label><span class="goods-price">{{pageData.goods.price === -1 ?  '待定' :'￥' + pageData.goods.price}}</span>
                         </div>
                         <div class="row" ng-show="false">
                             <div class="col-xs-2 normal"><span>数量:</span></div>
@@ -44,8 +41,8 @@
                     </div>
 
                     <div class="add-car-button">
-                        <div><label>输入金额</label><input id="priceInput" ng-keyup="priceInputKeyup($event)" class="input-box" ng-model="pageData.price"/></div>
-                        <div><label>输入卡号/证件号</label><input id="cardInput" class="input-box" ng-model="pageData.card_number"
+                        <div class="button-item"><label>输入金额</label><input id="priceInput" ng-keyup="priceInputKeyup($event)" class="input-box" ng-model="pageData.price"/></div>
+                        <div class="button-item"><label>输入卡号/证件号</label><input id="cardInput" class="input-box" ng-model="pageData.card_number"
                                                            ng-keyup="cardInputKeyup($event)"/></div>
                         <input class="buy-now" type="button" value="立即购买" ng-click="pay()"/>
                         <!--<input class="" type="button" value="扫码" ng-click="scan()"/>-->
@@ -53,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="good-detail">
+        <div class="good-detail" ng-show="pageData.goods.description">
             <div class="description-text">
                 <p class="title">图文详情</p>
                 <pre class="content">

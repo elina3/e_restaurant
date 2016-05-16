@@ -15,7 +15,10 @@ angular.module('EClientWeb').directive('eImage', [
       link: function (scope, element, attributes) {
         scope.generateStyle = function () {
           if(!scope.imageKey ){
-            return;
+            return {
+              'background': 'url("../../resources/free_meal_default.jpg") no-repeat center top',
+              'background-size': 'cover'
+            };
           }
           return {
             'background': 'url(' + Config.qiniuServerAddress + scope.imageKey + ') no-repeat center top',
