@@ -107,16 +107,20 @@ angular.module('EClientWeb').controller('FreeMealController',
         $scope.alertMessage.content = '';
         $scope.alertMessage.content2 = '';
         $scope.alertMessage.content3 = '';
+        $('#cardInput').focus();
       };
       $scope.pay = function(){
         if(!$scope.pageData.card_number){
+          $('#cardInput').focus();
           return showAlertMessage('请输入卡号！');
         }
         if(!$scope.pageData.price){
+          $('#priceInput').focus();
           return showAlertMessage('请输入金额！');
         }
         var price = parseNumber($scope.pageData.price);
         if(price <= 0){
+          $('#priceInput').focus();
           return showAlertMessage('请输入正确的价格！');
         }
         var count = parseNumber($scope.pageData.count);
@@ -141,12 +145,14 @@ angular.module('EClientWeb').controller('FreeMealController',
         $scope.$emit(GlobalEvent.onShowLoading, true);
         OrderService.card($scope.pageData.card_number, function(err, data){
           if (err || !data || !data.card){
+            $('#cardInput').focus();
             $scope.$emit(GlobalEvent.onShowLoading, false);
             return showAlertMessage(err);
           }
 
           OrderService.createOrder(orderDetail, function (err, data) {
             if (err || !data || !data.order || !data.client){
+              $('#cardInput').focus();
               $scope.$emit(GlobalEvent.onShowLoading, false);
               return showAlertMessage(err || '订单生成失败！请刷新页面重试！');
             }
@@ -160,10 +166,12 @@ angular.module('EClientWeb').controller('FreeMealController',
 
                 $scope.$emit(GlobalEvent.onShowLoading, false);
                 if(err){
+                  $('#cardInput').focus();
                   return showAlertMessage(err);
                 }
                 var payment = data.payment.payment;
                 var money = data.payment.cardInfo.amount;//余额
+                $('#cardInput').focus();
                 //var message = '原价'+payment.total_amount+'元\r\n实付'+payment.amount+'元\r\n卡内余额'+money+'元';
                 showAlertMessage(payment.total_amount, payment.amount, money);
                 $scope.pageData.price = '';
