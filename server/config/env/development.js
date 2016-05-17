@@ -5,6 +5,6 @@ module.exports = {
     app: {
         title: 'ERestaurant - Development Environment'
     },
-    serverAddress:'http://localhost:2003/',
-    port: process.env.PORT || 2003
+    serverAddress:'http://localhost:7008/',
+    port: process.env.PORT || 7008
 };
