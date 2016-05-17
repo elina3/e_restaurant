@@ -232,7 +232,7 @@
                                         <span>{{card.card_number}}</span>
                                     </div>
                                     <div class="col-xs-1">
-                                        <span>{{card.amount}}</span>
+                                        <span>{{card.amount | number: 3}}</span>
                                     </div>
                                     <div class="col-xs-1">
                                         <span>{{card.status_display}}</span>
@@ -586,7 +586,7 @@
                     <div class="info-item" ng-show="pageConfig.scanType==='edit' || pageConfig.scanType === 'replace_card'">
                         <span class="info-name">卡内余额: </span>
                         <div class="info-value">
-                            {{pageConfig.plat_card_panel.currentEditCard.amount}}
+                            {{pageConfig.plat_card_panel.currentEditCard.amount | number: 3}}
                         </div>
                     </div>
 
