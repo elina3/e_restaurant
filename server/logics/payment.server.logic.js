@@ -41,6 +41,8 @@ function getTotalAmountThisMonth(idNumber, callback) {
       });
     }
 
+    results[0].totalAmount = parseFloat(results[0].totalAmount.toFixed(3));
+    results[0].amount = parseFloat(results[0].amount.toFixed(3));
 
     return callback(null, results[0]);
   });
@@ -247,8 +249,8 @@ exports.getTodayAmount = function (callback) {
       var todayAmount = results[0] ? results[0].totalAmount : 0;
 
       return callback(err, {
-        total_amount: totalAmount,
-        today_amount: todayAmount
+        total_amount: parseFloat(totalAmount.toFixed(3)),
+        today_amount: parseFloat(todayAmount.toFixed(3))
 
       });
     });

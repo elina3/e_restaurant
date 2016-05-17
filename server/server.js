@@ -22,8 +22,8 @@ console.log('ERestaurant application started on address ' + config.serverAddress
 console.log('ERestaurant application started on port ' + config.port);
 
 console.log('init default data');
-//var initData = require('./config/initData');
-//initData.createDefaultGroup();
+var initData = require('./config/initData');
+initData.createDefaultGroup();
 
 
 

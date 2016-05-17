@@ -410,6 +410,8 @@ exports.getOrderStatistics = function(filter, callback){
       });
     }
 
+    result[0].totalAmount = parseFloat(result[0].totalAmount.toFixed(3));
+    result[0].totalActualAmount = parseFloat(result[0].totalActualAmount.toFixed(3));
     delete result[0]._id;
 
     return callback(null, result[0]);

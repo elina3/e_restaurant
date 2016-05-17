@@ -263,3 +263,16 @@ exports.exportCardStatistic = function(req, res, next){
     return next();
   });
 };
+
+exports.getStatisticByHistory = function(req, res, next){
+  cardLogic.getStatisticByHistory(req.query.action, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      result: result
+    };
+    return next();
+  });
+};

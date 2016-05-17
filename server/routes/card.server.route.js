@@ -31,4 +31,5 @@ module.exports = function (app) {
   app.route('/card/balance').get(authFilter.requireUser, cardController.getCardBalance);
   app.route('/card/recharge/batch').post(authFilter.requireUser, cardController.batchRechargeCard);
 
+  app.route('/card/test').get(cardController.getStatisticByHistory);
 };

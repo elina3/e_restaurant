@@ -92,7 +92,7 @@
                                 <span>{{cardHistory.description}}</span>
                             </div>
                             <div class="col-xs-1">
-                                <span>{{cardHistory.amount}}-{{cardHistory.new_amount}}</span>
+                                <span>{{cardHistory.amount | number: 3}}-{{cardHistory.new_amount| number: 3}}</span>
                             </div>
                             <div class="col-xs-3" title="{{cardHistory.new_card_number?cardHistory.new_card_number : '--'}}">
                                 <span>{{cardHistory.new_card_number?cardHistory.new_card_number : '--'}}</span>

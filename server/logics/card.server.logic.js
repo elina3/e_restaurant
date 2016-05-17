@@ -14,10 +14,54 @@ var CardHistory = appDb.model('CardHistory'),
 var systemError = require('../errors/system');
 var cardError = require('../errors/card');
 
-function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback, client){
+function floatMinus(arg1, arg2) {
+  var r1, r2, m, n;
+  try {
+    r1 = arg1.toString().split(".")[1].length;
+  } catch (e) {
+    r1 = 0;
+  }
+  try {
+    r2 = arg2.toString().split(".")[1].length;
+  } catch (e) {
+    r2 = 0;
+  }
+  m = Math.pow(10, Math.max(r1, r2));
+  n = (r1 >= r2) ? r1 : r2;
+  return parseFloat(((arg1 * m - arg2 * m) / m).toFixed(n));
+}
+function floatMul(arg1, arg2) {
+  var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+  try {
+    m += s1.split(".")[1].length;
+  } catch (e) {
+  }
+  try {
+    m += s2.split(".")[1].length;
+  } catch (e) {
+  }
+  return parseFloat(Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m));
+}
+function floatAdd(arg1, arg2) {
+  var r1, r2, m;
+  try {
+    r1 = arg1.toString().split(".")[1].length;
+  } catch (e) {
+    r1 = 0;
+  }
+  try {
+    r2 = arg2.toString().split(".")[1].length;
+  } catch (e) {
+    r2 = 0;
+  }
+  m = Math.pow(10, Math.max(r1, r2));
+  return parseFloat((arg1 * m + arg2 * m) / m);
+}
+
+function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback, client) {
   var cardHistory = new CardHistory({
-    create_client: client ? client._id: null,
-    create_user: user? user._id:null,
+    create_client: client ? client._id : null,
+    create_user: user ? user._id : null,
     card: oldCard._id,
     card_type: oldCard.type,
     id_number: oldCard.id_number,
@@ -27,12 +71,12 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     new_amount: newAmount,
     description: description
   });
-  if(newCard){
+  if (newCard) {
     cardHistory.new_card = newCard._id;
     cardHistory.new_card_number = newCard.card_number;
   }
-  cardHistory.save(function(err, newCardHistory){
-    if(err || !newCardHistory){
+  cardHistory.save(function (err, newCardHistory) {
+    if (err || !newCardHistory) {
       return callback({err: systemError.database_save_error});
     }
 
@@ -40,9 +84,9 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
   });
 }
 
-function addCardStatistic(user, card, action, amount, description, callback){
+function addCardStatistic(user, card, action, amount, description, callback) {
   var cardStatistic = new CardStatistic({
-    create_user: user? user._id:null,
+    create_user: user ? user._id : null,
     card: card._id,
     id_number: card.id_number,
     card_type: card.type,
@@ -51,8 +95,8 @@ function addCardStatistic(user, card, action, amount, description, callback){
     amount: amount,
     description: description
   });
-  cardStatistic.save(function(err, newCardStatistic){
-    if(err || !newCardStatistic){
+  cardStatistic.save(function (err, newCardStatistic) {
+    if (err || !newCardStatistic) {
       return callback({err: systemError.database_save_error});
     }
 
@@ -60,36 +104,36 @@ function addCardStatistic(user, card, action, amount, description, callback){
   });
 }
 
-exports.addCard = function(user, cardInfo,  callback){
-  if(!cardInfo.card_number){
+exports.addCard = function (user, cardInfo, callback) {
+  if (!cardInfo.card_number) {
     return callback({err: cardError.card_number_null});
   }
 
-  if(!cardInfo.id_number){
+  if (!cardInfo.id_number) {
     return callback({err: cardError.id_number_null});
   }
 
   Card.findOne({card_number: cardInfo.card_number, deleted_status: false})
-    .exec(function(err, card){
-      if(err){
+    .exec(function (err, card) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
 
-      if(card){
+      if (card) {
         return callback({err: cardError.card_number_exist});
       }
 
       Card.findOne({id_number: cardInfo.id_number, deleted_status: false})
-        .exec(function(err, card){
-          if(err){
+        .exec(function (err, card) {
+          if (err) {
             return callback({err: systemError.database_query_error});
           }
 
-          if(card){
+          if (card) {
             return callback({err: cardError.id_number_exist});
           }
 
-          if(!card){
+          if (!card) {
             card = new Card({
               id_number: cardInfo.id_number,
               card_number: cardInfo.card_number,
@@ -104,13 +148,13 @@ exports.addCard = function(user, cardInfo,  callback){
           card.deleted_status = false;
           card.recent_modify_user = user._id;
 
-          card.save(function(err, newCard){
-            if(err || !newCard){
+          card.save(function (err, newCard) {
+            if (err || !newCard) {
               return callback({err: systemError.database_save_error});
             }
 
-            addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function(err, history){
-              if(err){
+            addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function (err, history) {
+              if (err) {
                 err.zh_message += '添加新卡注册历史记录失败！';
                 return callback({err: systemError.database_save_error});
               }
@@ -122,90 +166,90 @@ exports.addCard = function(user, cardInfo,  callback){
     });
 };
 
-exports.importStaffCards = function(user, cardList, callback){
+exports.importStaffCards = function (user, cardList, callback) {
   var cards = [];
   var existCards = [];
   async.eachSeries(cardList,
-    function(cardInfo, eachCallback){
-    if(!cardInfo.card_number){
-      return eachCallback({err: cardError.card_number_null});
-    }
+    function (cardInfo, eachCallback) {
+      if (!cardInfo.card_number) {
+        return eachCallback({err: cardError.card_number_null});
+      }
 
-    if(!cardInfo.id_number){
-      return eachCallback({err: cardError.id_number_null});
-    }
+      if (!cardInfo.id_number) {
+        return eachCallback({err: cardError.id_number_null});
+      }
 
-    Card.findOne({card_number: cardInfo.card_number})
-      .exec(function(err, card){
-        if(err){
-          return eachCallback({err: systemError.database_query_error});
-        }
+      Card.findOne({card_number: cardInfo.card_number})
+        .exec(function (err, card) {
+          if (err) {
+            return eachCallback({err: systemError.database_query_error});
+          }
 
-        if(card && !card.deleted_status){
-          existCards.push(card);
-          return eachCallback();
-        }
+          if (card && !card.deleted_status) {
+            existCards.push(card);
+            return eachCallback();
+          }
 
-        Card.findOne({id_number: cardInfo.id_number})
-          .exec(function(err, card){
-            if(err){
-              return eachCallback({err: systemError.database_query_error});
-            }
-
-            if(card && !card.deleted_status){
-              existCards.push(card);
-              return eachCallback();
-            }
-
-            if(!card){
-              card = new Card({
-                id_number: cardInfo.id_number,
-                card_number: cardInfo.card_number,
-                create_user: user._id,
-                amount: 0,
-                type: 'staff',
-                discount: 0.25
-              });
-            }
-
-            card.nickname = cardInfo.nickname;
-            card.status = 'enabled';
-            card.deleted_status = false;
-            card.recent_modify_user = user._id;
-            card.save(function(err, newCard){
-              if(err || !newCard){
-                return eachCallback({err: systemError.database_save_error});
+          Card.findOne({id_number: cardInfo.id_number})
+            .exec(function (err, card) {
+              if (err) {
+                return eachCallback({err: systemError.database_query_error});
               }
 
-              addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function(err, history){
-                if(err){
-                  err.zh_message += '添加新卡注册历史记录失败！';
+              if (card && !card.deleted_status) {
+                existCards.push(card);
+                return eachCallback();
+              }
+
+              if (!card) {
+                card = new Card({
+                  id_number: cardInfo.id_number,
+                  card_number: cardInfo.card_number,
+                  create_user: user._id,
+                  amount: 0,
+                  type: 'staff',
+                  discount: 0.25
+                });
+              }
+
+              card.nickname = cardInfo.nickname;
+              card.status = 'enabled';
+              card.deleted_status = false;
+              card.recent_modify_user = user._id;
+              card.save(function (err, newCard) {
+                if (err || !newCard) {
                   return eachCallback({err: systemError.database_save_error});
                 }
 
-                cards.push(newCard);
-                return eachCallback(null, newCard);
+                addHistory(user, newCard, null, 'create', 0, 0, '注册新卡', function (err, history) {
+                  if (err) {
+                    err.zh_message += '添加新卡注册历史记录失败！';
+                    return eachCallback({err: systemError.database_save_error});
+                  }
+
+                  cards.push(newCard);
+                  return eachCallback(null, newCard);
+                });
               });
             });
-          });
-      });
+        });
 
-  }, function(err){
-    return callback(err, {
-      cards: cards,
-      existCards: existCards
+    }, function (err) {
+      return callback(err, {
+        cards: cards,
+        existCards: existCards
+      });
     });
-  });
 };
 
-function getCardDetailById(cardId, callback){
+function getCardDetailById(cardId, callback) {
   Card.findOne({_id: cardId})
-    .exec(function(err, card){
-      if(err){
+    .exec(function (err, card) {
+      if (err) {
         return callback({err: systemError.internal_system_error});
       }
 
-      if(!card){
+      if (!card) {
         return callback({err: systemError.card_not_exist});
       }
 
@@ -213,20 +257,20 @@ function getCardDetailById(cardId, callback){
     });
 }
 
-exports.getCardByNumberWithoutDeleted = function(cardNumber, callback){
+exports.getCardByNumberWithoutDeleted = function (cardNumber, callback) {
   Card.findOne({card_number: cardNumber, deleted_status: false})
-    .exec(function(err, card){
-      if(err){
+    .exec(function (err, card) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
 
       return callback(null, card);
     });
 };
-exports.getCardByIDNumberWithoutDeleted = function(idNumber, callback){
+exports.getCardByIDNumberWithoutDeleted = function (idNumber, callback) {
   Card.findOne({id_number: idNumber, deleted_status: false})
-    .exec(function(err, card){
-      if(err){
+    .exec(function (err, card) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
 
@@ -234,29 +278,29 @@ exports.getCardByIDNumberWithoutDeleted = function(idNumber, callback){
     });
 };
 
-exports.findEnabledCardByCardNumberOrIdNumber = function(cardKeyword, callback){
+exports.findEnabledCardByCardNumberOrIdNumber = function (cardKeyword, callback) {
   var query = {
     deleted_status: false,
-    $or: [{card_number: cardKeyword},{id_number: cardKeyword}]
+    $or: [{card_number: cardKeyword}, {id_number: cardKeyword}]
   };
 
-  Card.find(query, function(err, cards){
-    if(err){
+  Card.find(query, function (err, cards) {
+    if (err) {
       return callback({err: systemError.database_query_error});
     }
 
-    if(!cards || cards.length === 0){
+    if (!cards || cards.length === 0) {
       return callback({err: cardError.card_not_exist});
     }
 
     var enabledCard = null;
-    cards.forEach(function(card){
-      if(card.status === 'enabled'){
+    cards.forEach(function (card) {
+      if (card.status === 'enabled') {
         enabledCard = card;
       }
     });
 
-    if(!enabledCard){
+    if (!enabledCard) {
       return callback({err: cardError.card_disabled});
     }
 
@@ -264,93 +308,93 @@ exports.findEnabledCardByCardNumberOrIdNumber = function(cardKeyword, callback){
 
   });
 };
-exports.getCardById = function(cardId, callback){
-  getCardDetailById(cardId, function(err, card){
+exports.getCardById = function (cardId, callback) {
+  getCardDetailById(cardId, function (err, card) {
     return callback(err, card);
   });
 };
 
-exports.updateCardInfo = function(user, card, cardInfo, callback){
-  if(!cardInfo.card_number){
+exports.updateCardInfo = function (user, card, cardInfo, callback) {
+  if (!cardInfo.card_number) {
     return callback({err: cardError.card_number_null});
   }
 
   var addAmount = publicLib.amountParse(cardInfo.amount);
-  if(addAmount < 0){
+  if (addAmount < 0) {
     return callback({err: cardError.wrong_amount});
   }
 
   var oldAmount = card.amount;
-  var newAmount = oldAmount + addAmount;
+  var newAmount = floatAdd(parseFloat(oldAmount.toFixed(3)), parseFloat(addAmount.toFixed(3)));
 
   card.nickname = cardInfo.nickname;
   card.recent_recharge_type = cardInfo.recharge_type || 'cash';
   card.amount = newAmount;
   card.recent_modify_user = user._id;
-  card.save(function(err, newCard){
-    if(err || !newCard){
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
 
     var action = 'recharge_virtual';
     var actionName = '虚拟充值';
-    if(newCard.recent_recharge_type === 'cash'){
+    if (newCard.recent_recharge_type === 'cash') {
       action = 'recharge';
       actionName = '现金充值';
     }
-    addHistory(user, newCard, null, action, oldAmount, newAmount, actionName, function(err, history){
-      if(err){
+    addHistory(user, newCard, null, action, oldAmount, newAmount, actionName, function (err, history) {
+      if (err) {
         err.zh_message += '添加充值历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
 
-      addCardStatistic(user, newCard, action, addAmount, actionName, function(err, result){
+      addCardStatistic(user, newCard, action, addAmount, actionName, function (err, result) {
         return callback(err, newCard);
       });
     });
   });
 };
 
-exports.deleteCard = function(user, card, callback){
-  if(!card){
+exports.deleteCard = function (user, card, callback) {
+  if (!card) {
     return callback({err: cardError.card_not_exist});
   }
 
-  if(card.deleted_status){
+  if (card.deleted_status) {
     return callback({err: cardError.card_deleted});
   }
 
   card.deleted_status = true;
   card.recent_modify_user = user._id;
-  card.save(function(err, newCard){
-    if(err || !newCard){
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
-    addHistory(user, newCard, null, 'delete', newCard.amount, newCard.amount, '删除卡', function(err, history){
-      if(err){
+    addHistory(user, newCard, null, 'delete', newCard.amount, newCard.amount, '删除卡', function (err, history) {
+      if (err) {
         err.zh_message += '添加删除卡历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
 
-      addCardStatistic(user, newCard, 'delete', newCard.amount, '删除', function(err, result){
+      addCardStatistic(user, newCard, 'delete', parseFloat(newCard.amount.toFixed(3)), '删除', function (err, result) {
         return callback(err, newCard);
       });
     });
   });
 };
 
-exports.getCardList = function(currentPage, limit, skipCount, cardNumber, idNumber, callback){
+exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNumber, callback) {
   var query = {
     deleted_status: false
   };
-  if(cardNumber)
+  if (cardNumber)
     query.card_number = {$regex: cardNumber, $options: '$i'};
 
-  if(idNumber)
+  if (idNumber)
     query.id_number = {$regex: idNumber, $options: '$i'};
 
-  Card.count(query, function(err, totalCount){
-    if(err){
+  Card.count(query, function (err, totalCount) {
+    if (err) {
       return callback({err: systemError.internal_system_error});
     }
 
@@ -366,8 +410,8 @@ exports.getCardList = function(currentPage, limit, skipCount, cardNumber, idNumb
       .sort({update_time: -1})
       .skip(skipCount)
       .limit(limit)
-      .exec(function(err, cardList){
-        if(err){
+      .exec(function (err, cardList) {
+        if (err) {
           return callback({err: systemError.internal_system_error});
         }
 
@@ -380,52 +424,56 @@ exports.getCardList = function(currentPage, limit, skipCount, cardNumber, idNumb
   });
 };
 
-function getActualAmount(card, amount, paymentStatisticThisMonth){
-  if(card.type === 'normal'){
+
+function getActualAmount(card, amount, paymentStatisticThisMonth) {
+  if (card.type === 'normal') {
     return amount;
   }
 
-  if(paymentStatisticThisMonth.totalAmount >= 300){
+  if (paymentStatisticThisMonth.totalAmount >= 300) {
     return amount;
   }
 
-  if(amount <= (300 - paymentStatisticThisMonth.totalAmount)){
+  var theRestDiscountAmount = floatMinus(300, paymentStatisticThisMonth.totalAmount);
+  if (amount <= theRestDiscountAmount) {
     return amount * card.discount;
   }
 
-  var discountMoney = 300 - paymentStatisticThisMonth.totalAmount;
-  return (amount - discountMoney) + discountMoney * card.discount;
+  var discountMoney = floatMul(theRestDiscountAmount, card.discount);
+  var unDiscountMoney = floatMinus(amount, theRestDiscountAmount);
+  return floatAdd(unDiscountMoney, discountMoney);
 }
 
-exports.pay = function(client, card, amountString, paymentStatisticThisMonth, callback){
-  if(card.deleted_status){
+exports.pay = function (client, card, amountString, paymentStatisticThisMonth, callback) {
+  if (card.deleted_status) {
     return callback({err: cardError.card_deleted});
   }
 
-  if(card.status !== 'enabled'){
-    return callback({err: cardError['card_'+ card.status]});
+  if (card.status !== 'enabled') {
+    return callback({err: cardError['card_' + card.status]});
   }
 
   var amount = publicLib.amountParse(amountString);
-  if(amount < 0){
+  if (amount < 0) {
     return callback({err: cardError.wrong_amount});
   }
 
   var actualAmount = getActualAmount(card, amount, paymentStatisticThisMonth);
 
-  if(card.amount < actualAmount){
+  if (card.amount < actualAmount) {
     return callback({err: cardError.insufficient_balance});
   }
 
   var oldAmount = card.amount;
-  card.amount = card.amount - actualAmount;
-  card.save(function(err, newCard){
-    if(err || !newCard){
+  var newAmount = floatMinus(oldAmount, actualAmount);
+  card.amount = newAmount;
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(null, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function(err, history){
-      if(err) {
+    addHistory(null, newCard, null, 'pay', oldAmount, newCard.amount, '消费', function (err, history) {
+      if (err) {
         err.zh_message += '添加消费历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
@@ -438,15 +486,15 @@ exports.pay = function(client, card, amountString, paymentStatisticThisMonth, ca
   });
 };
 
-exports.changeCardStatus = function(user, card, status, callback){
+exports.changeCardStatus = function (user, card, status, callback) {
   card.status = status;
-  card.save(function(err, newCard){
-    if(err || !newCard){
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(user, newCard, null, 'change_status', card.amount, newCard.amount, '变更卡状态为：' + status, function(err, history){
-      if(err){
+    addHistory(user, newCard, null, 'change_status', card.amount, newCard.amount, '变更卡状态为：' + status, function (err, history) {
+      if (err) {
         err.zh_message += '添加变更卡状态历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
@@ -456,62 +504,66 @@ exports.changeCardStatus = function(user, card, status, callback){
   });
 };
 
-exports.closeCard = function(user, card, callback){
+exports.closeCard = function (user, card, callback) {
   var oldAmount = card.amount;
   card.status = 'close';
   card.deleted_status = true;
   card.amount = 0;
-  card.save(function(err, newCard){
-    if(err || !newCard){
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
 
-    addHistory(user, newCard, null, 'close', oldAmount, 0, '退卡', function(err, history){
-      if(err){
+    addHistory(user, newCard, null, 'close', oldAmount, 0, '退卡', function (err, history) {
+      if (err) {
         err.zh_message += '添加退卡历史记录失败！';
         return callback({err: systemError.database_save_error});
       }
 
-      addCardStatistic(user, newCard, 'close', oldAmount, '退卡', function(err, result){
+      addCardStatistic(user, newCard, 'close', oldAmount, '退卡', function (err, result) {
         return callback(err, newCard);
       });
     });
   });
 };
 
-exports.replaceCard  = function(user, card, newCardNumber, callback){
-  if(!newCardNumber){
+exports.replaceCard = function (user, card, newCardNumber, callback) {
+  if (!newCardNumber) {
     return callback({err: cardError.card_number_null});
   }
 
-  if(card.card_number === newCardNumber){
+  if (card.card_number === newCardNumber) {
     return callback({err: cardError.need_new_card_number});
   }
 
   Card.findOne({card_number: newCardNumber, deleted_status: false})
-    .exec(function(err, findCard){
-      if(err){
+    .exec(function (err, findCard) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
 
-      if(findCard){
+      if (findCard) {
         return callback({err: cardError['card_' + findCard.status]});
       }
 
       var newCard = new Card({
         card_number: newCardNumber,
         id_number: card.id_number,
+        type: card.type,
         status: 'enabled',
         amount: card.amount,
-        deleted_status: false
+        deleted_status: false,
+        nickname: card.nickname,
+        discount: card.type === 'staff' ? 0.25 : 1
       });
-      newCard.save(function(err, savedCard){
-        if(err || !savedCard){
+
+      newCard.save(function (err, savedCard) {
+        if (err || !savedCard) {
           return callback({err: systemError.database_save_error});
         }
 
-        addHistory(user, card, savedCard, 'recreate', 0, savedCard.amount, '补卡新卡', function(err, history){
-          if(err){
+        addHistory(user, card, savedCard, 'recreate', 0, savedCard.amount, '补卡新卡', function (err, history) {
+          if (err) {
             err.zh_message += '添加补卡新卡历史记录失败！';
             return callback({err: systemError.database_save_error});
           }
@@ -519,13 +571,13 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
           card.status = 'revoked';
           card.deleted_status = true;
           card.amount = 0;
-          card.save(function(err, card){
-            if(err || !card){
+          card.save(function (err, card) {
+            if (err || !card) {
               return callback({err: systemError.database_save_error});
             }
 
-            addHistory(user, card, savedCard, 'replace', 0, savedCard.amount, '补卡', function(err, history){
-              if(err){
+            addHistory(user, card, savedCard, 'replace', 0, savedCard.amount, '补卡', function (err, history) {
+              if (err) {
                 err.zh_message += '添加补卡历史记录失败！';
                 return callback({err: systemError.database_save_error});
               }
@@ -538,24 +590,24 @@ exports.replaceCard  = function(user, card, newCardNumber, callback){
     });
 };
 
-exports.getCardHistories = function(currentPage, limit, skipCount, filter, callback){
+exports.getCardHistories = function (currentPage, limit, skipCount, filter, callback) {
 
-var query = {};
-  if(filter.keyword)
+  var query = {};
+  if (filter.keyword)
     query.$or = [{card_number: filter.keyword},
       {id_number: filter.keyword}];
 
 
-  if(filter.startTime && filter.endTime){
-    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  if (filter.startTime && filter.endTime) {
+    query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
   }
 
-  if(filter.action){
+  if (filter.action) {
     query.action = filter.action;
   }
 
-  CardHistory.count(query, function(err, totalCount){
-    if(err){
+  CardHistory.count(query, function (err, totalCount) {
+    if (err) {
       return callback({err: systemError.internal_system_error});
     }
 
@@ -571,8 +623,8 @@ var query = {};
       .sort({create_time: -1})
       .skip(skipCount)
       .limit(limit)
-      .exec(function(err, cardHistories){
-        if(err){
+      .exec(function (err, cardHistories) {
+        if (err) {
           return callback({err: systemError.internal_system_error});
         }
 
@@ -585,15 +637,15 @@ var query = {};
   });
 };
 
-exports.getCardStatistics = function(filter, callback){
+exports.getCardStatistics = function (filter, callback) {
   var query = {};
-  if(filter.keyword){
-      query.$or = [{card_number: filter.keyword},
-        {id_number: filter.keyword}];
+  if (filter.keyword) {
+    query.$or = [{card_number: filter.keyword},
+      {id_number: filter.keyword}];
   }
 
-  if(filter.startTime && filter.endTime){
-    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  if (filter.startTime && filter.endTime) {
+    query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
   }
 
   CardStatistic.aggregate([{
@@ -604,8 +656,8 @@ exports.getCardStatistics = function(filter, callback){
       action: {$first: '$action'},
       totalAmount: {$sum: '$amount'}
     }
-  }], function(err, result){
-    if(err || !result){
+  }], function (err, result) {
+    if (err || !result) {
       return callback({err: systemError.database_query_error});
     }
     var amountResult = {
@@ -613,22 +665,22 @@ exports.getCardStatistics = function(filter, callback){
       totalCloseAmount: 0,
       totalDeleteAmount: 0
     };
-    if(result.length === 0){
+    if (result.length === 0) {
       return callback(null, amountResult);
     }
 
 
-    result.forEach(function(item){
-      if(item.action === 'recharge'){
+    result.forEach(function (item) {
+      if (item.action === 'recharge') {
         amountResult.totalRechargeAmount += item.totalAmount;
       }
-      if(item.action === 'recharge_virtual'){
+      if (item.action === 'recharge_virtual') {
         amountResult.totalRechargeAmount += item.totalAmount;
       }
-      if(item.action === 'close'){
+      if (item.action === 'close') {
         amountResult.totalCloseAmount = item.totalAmount;
       }
-      if(item.action === 'delete'){
+      if (item.action === 'delete') {
         amountResult.totalDeleteAmount = item.totalAmount;
       }
     });
@@ -636,12 +688,12 @@ exports.getCardStatistics = function(filter, callback){
   });
 };
 
-exports.getTotalCardBalance = function(filter, callback){
+exports.getTotalCardBalance = function (filter, callback) {
   var query = {
     deleted_status: false,
     status: {$in: ['enabled', 'frozen']}
   };
-  if(filter.keyword){
+  if (filter.keyword) {
     query.$or = [{card_number: filter.keyword},
       {id_number: filter.keyword}];
   }
@@ -653,26 +705,26 @@ exports.getTotalCardBalance = function(filter, callback){
       _id: '$status',
       totalAmount: {$sum: '$amount'}
     }
-  }], function(err, result){
-    if(err || !result){
+  }], function (err, result) {
+    if (err || !result) {
       return callback({err: systemError.database_query_error});
     }
 
-    if(result.length === 0){
+    if (result.length === 0) {
       return callback(null, 0);
     }
 
     var totalBalance = 0;
-    result.forEach(function(item){
+    result.forEach(function (item) {
       totalBalance += item.totalAmount;
     });
     return callback(null, totalBalance);
   });
 };
 
-exports.batchRechargeCard = function(user, amount, callback){
+exports.batchRechargeCard = function (user, amount, callback) {
   var amount = publicLib.parseFloatNumber(amount);
-  if(!amount){
+  if (!amount) {
     return callback({err: cardError.wrong_amount});
   }
 
@@ -682,27 +734,28 @@ exports.batchRechargeCard = function(user, amount, callback){
   };
   var successCount = 0;
   var successCards = [];
-  Card.find(query, function(err, cards){
-    if(err || !cards){
+  Card.find(query, function (err, cards) {
+    if (err || !cards) {
       return callback({err: systemError.database_query_error});
     }
 
-    async.each(cards, function(card, eachCallback){
+    async.each(cards, function (card, eachCallback) {
       var oldAmount = card.amount;
-      card.amount = card.amount + amount;
+      var newAmount = floatAdd(parseFloat(oldAmount.toFixed(3)), amount);
+      card.amount = newAmount;
       card.recent_recharge_type = 'virtual';
-      card.save(function(err, newCard){
-        if(err || !newCard){
+      card.save(function (err, newCard) {
+        if (err || !newCard) {
           return eachCallback({err: systemError.database_save_error});
         }
-        addHistory(user, newCard, null, 'recharge_virtual', oldAmount, card.amount, '虚拟充值', function(err, history){
-          if(err){
+        addHistory(user, newCard, null, 'recharge_virtual', oldAmount, card.amount, '虚拟充值', function (err, history) {
+          if (err) {
             err.zh_message += '添加充值历史记录失败！';
             return eachCallback({err: err});
           }
 
-          addCardStatistic(user, newCard, 'recharge_virtual', amount, '虚拟充值', function(err, result){
-            if(err){
+          addCardStatistic(user, newCard, 'recharge_virtual', amount, '虚拟充值', function (err, result) {
+            if (err) {
               err.zh_message += '添加充值统计信息失败';
               return eachCallback(err);
             }
@@ -713,7 +766,7 @@ exports.batchRechargeCard = function(user, amount, callback){
           });
         });
       });
-    }, function(err){
+    }, function (err) {
       return callback(err, {
         success_count: successCount,
         success_cards: successCards,
@@ -724,10 +777,10 @@ exports.batchRechargeCard = function(user, amount, callback){
 };
 
 
-exports.exportCardStatistic = function(filter, callback){
+exports.exportCardStatistic = function (filter, callback) {
   var query = {};
-  if(filter.startTime && filter.endTime){
-    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  if (filter.startTime && filter.endTime) {
+    query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
   }
 
   CardStatistic.aggregate([{
@@ -745,8 +798,8 @@ exports.exportCardStatistic = function(filter, callback){
       _id: '$_id.action',
       statistics: {$push: '$$ROOT'}
     }
-  }], function(err, result){
-    if(err || !result){
+  }], function (err, result) {
+    if (err || !result) {
       return callback({err: systemError.database_query_error});
     }
     var statisticResult = {
@@ -766,7 +819,8 @@ exports.exportCardStatistic = function(filter, callback){
         amount: {
           staff: 0,
           expert: 0,
-          normal: 0},
+          normal: 0
+        },
         count: {
           staff: 0,
           expert: 0,
@@ -782,7 +836,8 @@ exports.exportCardStatistic = function(filter, callback){
         count: {
           staff: 0,
           expert: 0,
-          normal: 0}
+          normal: 0
+        }
       },
       delete: {
         amount: {
@@ -793,20 +848,21 @@ exports.exportCardStatistic = function(filter, callback){
         count: {
           staff: 0,
           expert: 0,
-          normal: 0}
+          normal: 0
+        }
       }
     };
-    if(result.length === 0){
+    if (result.length === 0) {
       return callback(null, statisticResult);
     }
 
 
-    result.forEach(function(item){
-      if(!statisticResult[item._id]){
+    result.forEach(function (item) {
+      if (!statisticResult[item._id]) {
         return;
       }
-      item.statistics.forEach(function(statistic){
-        statisticResult[item._id].amount[statistic.card_type] = statistic.totalAmount;
+      item.statistics.forEach(function (statistic) {
+        statisticResult[item._id].amount[statistic.card_type] = parseFloat(statistic.totalAmount.toFixed(3));
         statisticResult[item._id].count[statistic.card_type] = statistic.count;
       });
     });
@@ -814,34 +870,34 @@ exports.exportCardStatistic = function(filter, callback){
   });
 };
 
-function updateCardStatisticCardType(callback){
+function updateCardStatisticCardType(callback) {
   CardStatistic.find({card_type: {$exists: false}})
     .populate('card')
-    .exec(function(err, statistics){
-      if(err){
+    .exec(function (err, statistics) {
+      if (err) {
         return callback(err);
       }
 
       var successUpdateCount = 0;
-      async.each(statistics, function(statistic, eachCallback){
-        if(statistic.card_type){
+      async.each(statistics, function (statistic, eachCallback) {
+        if (statistic.card_type) {
           return eachCallback();
         }
 
         statistic.card_type = statistic.card.type;
-        if(statistic.card.type === 'staff' && statistic.action === 'recharge'){
+        if (statistic.card.type === 'staff' && statistic.action === 'recharge') {
           statistic.action = 'recharge_virtual';
         }
-        statistic.save(function(err, newStatistic){
-          if(err || !newStatistic){
+        statistic.save(function (err, newStatistic) {
+          if (err || !newStatistic) {
             return eachCallback(err);
           }
 
           successUpdateCount++;
           return eachCallback();
         });
-      }, function(err){
-        if(err){
+      }, function (err) {
+        if (err) {
           return callback(err, successUpdateCount);
         }
 
@@ -850,31 +906,31 @@ function updateCardStatisticCardType(callback){
       });
     })
 }
-function updateCardHistoryCardType(callback){
+function updateCardHistoryCardType(callback) {
   CardHistory.find({action: 'recharge'})
     .populate('card')
-    .exec(function(err, histories){
-      if(err){
+    .exec(function (err, histories) {
+      if (err) {
         return callback(err);
       }
 
       var successUpdateCount = 0;
-      async.each(histories, function(history, eachCallback){
+      async.each(histories, function (history, eachCallback) {
 
-        if(history.card.type === 'staff'){
+        if (history.card.type === 'staff') {
           history.action = 'recharge_virtual';
           history.description = '虚拟充值';
         }
-        history.save(function(err, newStatistic){
-          if(err || !newStatistic){
+        history.save(function (err, newStatistic) {
+          if (err || !newStatistic) {
             return eachCallback(err);
           }
 
           successUpdateCount++;
           return eachCallback();
         });
-      }, function(err){
-        if(err){
+      }, function (err) {
+        if (err) {
           return callback(err, successUpdateCount);
         }
 
@@ -907,3 +963,26 @@ function updateCardHistoryCardType(callback){
 //
 //});
 //
+
+
+exports.getStatisticByHistory = function (action, callback) {
+  var query = {
+    action: action
+  };
+
+  CardHistory.aggregate([{
+    $match: query
+  }, {
+    $group: {
+      _id: {action: '$action'},
+      action: {$first: '$action'},
+      oldAmount: {$sum: '$amount'},
+      totalAmount: {$sum: '$new_amount'}
+    }
+  }], function (err, result) {
+    if (err || !result) {
+      return callback({err: systemError.database_query_error});
+    }
+    return callback(null, result);
+  });
+};
