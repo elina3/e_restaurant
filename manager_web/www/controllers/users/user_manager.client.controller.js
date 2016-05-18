@@ -826,9 +826,9 @@ angular.module('EWeb').controller('UserManagerController',
           if($scope.user.role === 'admin'){
             loadUsers();
             loadClients();
-            loadCardBalance();
           }
           loadCards();
+          loadCardBalance();
         });
       }
       init();
