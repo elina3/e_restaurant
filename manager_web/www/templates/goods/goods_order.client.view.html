@@ -59,10 +59,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="statistic"><label>订单应收总销售额：</label><strong>{{statistic.totalAmount}}</strong> 元</div>
-            <div class="statistic"><label>订单实际总销售额：</label><strong>{{statistic.totalActualAmount}}</strong> 元</div>
-            <div class="statistic"><label>差额：</label><strong>{{statistic.totalAmount - statistic.totalActualAmount}}</strong> 元</div>
+            <div class="statistic"><label>订单数：</label><strong>{{pagination.totalCount}}</strong> 条</div>
+            <div class="statistic"><label>订单应收总销售额：</label><strong >{{statistic.totalAmount | number : 3}}</strong> 元</div>
+            <div class="statistic"><label>订单实际总销售额：</label><strong style="color: #666;">{{statistic.totalActualAmount | number : 3}}</strong> 元</div>
 
+            <div class="statistic"><label>差额：</label><strong style="color: #666;">{{(statistic.totalAmount - statistic.totalActualAmount) | number : 3}}</strong> 元</div>
         </div>
     </div>
     <div class="order-list">
