@@ -109,6 +109,7 @@ angular.module('EClientWeb').controller('FreeMealController',
         $scope.alertMessage.content3 = '';
         $('#cardInput').focus();
       };
+      var isPaying = false;
       $scope.pay = function(){
         if(!$scope.pageData.card_number){
           $('#cardInput').focus();
@@ -140,12 +141,14 @@ angular.module('EClientWeb').controller('FreeMealController',
             }],
           in_store_deal: true,
           total_price: price  * count,
-          description: '甜不辣'
+          description: ''
         };
         $scope.$emit(GlobalEvent.onShowLoading, true);
+        isPaying = true;
         OrderService.card($scope.pageData.card_number, function(err, data){
           if (err || !data || !data.card){
             $('#cardInput').focus();
+            isPaying = false;
             $scope.$emit(GlobalEvent.onShowLoading, false);
             return showAlertMessage(err);
           }
@@ -154,6 +157,7 @@ angular.module('EClientWeb').controller('FreeMealController',
             if (err || !data || !data.order || !data.client){
               $('#cardInput').focus();
               $scope.$emit(GlobalEvent.onShowLoading, false);
+              isPaying = false;
               return showAlertMessage(err || '订单生成失败！请刷新页面重试！');
             }
 
@@ -163,7 +167,7 @@ angular.module('EClientWeb').controller('FreeMealController',
             OrderService.freeMealPay(data.order._id,
               $scope.pageData.card_number,
               orderDetail.total_price, function(err, data){
-
+                isPaying = false;
                 $scope.$emit(GlobalEvent.onShowLoading, false);
                 if(err){
                   $('#cardInput').focus();
@@ -172,7 +176,6 @@ angular.module('EClientWeb').controller('FreeMealController',
                 var payment = data.payment.payment;
                 var money = data.payment.cardInfo.amount;//余额
                 $('#cardInput').focus();
-                //var message = '原价'+payment.total_amount+'元\r\n实付'+payment.amount+'元\r\n卡内余额'+money+'元';
                 showAlertMessage(payment.total_amount, payment.amount, money);
                 $scope.pageData.price = '';
                 $scope.pageData.card_number = '';
@@ -188,7 +191,9 @@ angular.module('EClientWeb').controller('FreeMealController',
             $('#priceInput').focus();
           }
         }else{
-          $scope.pay();
+          if(!isPaying){
+            $scope.pay();
+          }
         }
       }
 
@@ -221,6 +226,4 @@ angular.module('EClientWeb').controller('FreeMealController',
         $('#priceInput').focus();
       }
       init();
-
-
     }]);
