@@ -15,7 +15,7 @@
             <div class="col-xs-4 right">
                 <span class="money" ng-show="order.paid">实付:<strong>{{order.actual_amount}}</strong>元</span>
                 <span class="status">{{translateOrderStatus(order.status)}}</span>
-                <span class="time"> {{order.create_time | date:'yy-MM-dd hh:mm:ss'}}</span>
+                <span class="time"> {{order.create_time | date:'yy-MM-dd HH:mm:ss'}}</span>
             </div>
         </div>
         <div class="row order"  ng-repeat="goods in order.goods_orders">
