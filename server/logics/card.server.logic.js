@@ -592,7 +592,9 @@ exports.replaceCard = function (user, card, newCardNumber, callback) {
 
 exports.getCardHistories = function (currentPage, limit, skipCount, filter, callback) {
 
-  var query = {};
+  var query = {
+    deleted_status: false
+  };
   if (filter.keyword)
     query.$or = [{card_number: filter.keyword},
       {id_number: filter.keyword}];

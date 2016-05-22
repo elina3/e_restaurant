@@ -42,21 +42,19 @@ angular.module('EWeb').controller('CardStatisticController',
       function loadCardStatistics() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
 
-        var filter = {
-          startTimeStamp: -1,
-          endTimeStamp: -1,
-        };
 
-        if ($scope.pageShow.createTimeRange) {
-          if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
-            filter.startTimeStamp = $scope.pageShow.createTimeRange.startDate._d.getTime();
+        var timeRange = {};
+        if($scope.pageShow.createTimeRange){
+          if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
+            timeRange.startTime = moment($scope.pageShow.createTimeRange.startDate).toISOString();
           }
-          if ($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d) {
-            filter.endTimeStamp = $scope.pageShow.createTimeRange.endDate._d.getTime();
+          if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
+            timeRange.endTime = moment($scope.pageShow.createTimeRange.endDate).toISOString();
           }
         }
+        var timeRangeString = JSON.stringify(timeRange);
 
-        CardStatisticService.getAmountAndCountStatistics(filter, function (err, data) {
+        CardStatisticService.getAmountAndCountStatistics(timeRangeString, function (err, data) {
             if (err || !data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               return $scope.$emit(GlobalEvent.onShowAlert, err);

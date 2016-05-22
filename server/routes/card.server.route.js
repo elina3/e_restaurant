@@ -32,4 +32,7 @@ module.exports = function (app) {
   app.route('/card/recharge/batch').post(authFilter.requireUser, cardController.batchRechargeCard);
 
   app.route('/card/test').get(cardController.getStatisticByHistory);
+
+  //删除脏数据
+  app.route('/card/delete_pay').post(authFilter.requireUser, cardController.deleteCardPay);
 };

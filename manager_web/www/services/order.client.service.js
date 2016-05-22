@@ -23,7 +23,7 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
           return callback(SystemError.network_error);
         });
     },
-    getOrders: function(param, filter, callback){
+    getOrders: function(param, filter, timeRangeString, callback){
       RequestSupport.executeGet('/user/order_list', {
         current_page: param.currentPage,
         limit: param.limit,
@@ -33,8 +33,7 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
         card_id_number: filter.card_id_number,
         has_discount: filter.has_discount,
         client_username: filter.client_username,
-        start_time_stamp: filter.start_time_stamp,
-        end_time_stamp: filter.end_time_stamp
+        time_range: timeRangeString
       })
         .then(function (data) {
           if (!callback) {
@@ -95,6 +94,27 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
     completeOrder: function(orderId, callback){
       RequestSupport.executePost('/user/order/complete', {
         order_id: orderId
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.zh_message || data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
+    },
+    recoverOrder: function(orderId, method, callback){
+      RequestSupport.executePost('/user/recover_order', {
+        order_id: orderId,
+        method: method
       })
         .then(function (data) {
           if (!callback) {

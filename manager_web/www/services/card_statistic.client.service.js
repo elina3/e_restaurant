@@ -7,10 +7,9 @@ angular.module('EWeb').factory('CardStatisticService',
   ['Auth', 'RequestSupport', 'SystemError',
     function (Auth, RequestSupport, SystemError) {
       return {
-        getAmountAndCountStatistics: function(filter, callback){
+        getAmountAndCountStatistics: function(timeRangeString, callback){
           RequestSupport.executeGet('/card/amount_count_statistics', {
-            start_time_stamp: filter.startTimeStamp,
-            end_time_stamp: filter.endTimeStamp
+            time_range: timeRangeString
           })
             .then(function (data) {
               if (!callback) {

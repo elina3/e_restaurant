@@ -78,16 +78,19 @@ exports.getOrders = function(req, res, next){
   var cardNumber = req.query.card_number || '';
   var clientUsername = req.query.client_username || '';
   var hasDiscount = publicLib.booleanParse(req.query.has_discount);
-  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
-  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+
+  var timeRange = JSON.parse(req.query.time_range) || {};
+
+  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
+  var endTime = new Date(timeRange.endTime) || new Date();
 
   var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
   var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
   var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
   var filter = {
-    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
-    endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    startTime: startTime,
+    endTime: endTime,
     cardIdNumber: cardIdNumber,
     cardNumber: cardNumber,
     clientUsername: clientUsername,
@@ -245,4 +248,114 @@ exports.getTodayAmount = function(req, res, next){
     req.data = result;
     return next();
   });
+};
+
+
+exports.getPaymentRecords = function(req, res, next){
+  var currentPage = parseInt(req.query.current_page) || parseInt(req.body.current_page) || 1;
+  var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
+  var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
+
+  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
+  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+  var keyword = req.query.keyword || '';
+  var filter = {
+    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
+    endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    keyword: keyword
+  }
+  paymentLogic.getPayments(filter, {
+    currentPage: currentPage,
+    limit: limit,
+    skipCount: skipCount
+  },function(err, result){
+
+  });
+};
+
+
+var mongooseLib = require('../libraries/mongoose');
+var appDb = mongooseLib.appDb;
+var Order = appDb.model('Order');
+var Payment = appDb.model('Payment');
+var Card = appDb.model('Card');
+var CardHistory = appDb.model('CardHistory');
+var CardStatistic = appDb.model('CardStatistic');
+exports.recoverTheOrder = function(req, res, next){
+  var firmUser = req.firm_user;
+  var order = req.order;
+
+
+  var needAddAmount = req.body.method || '';
+  if(needAddAmount !== 'add' && needAddAmount !== 'no'){
+    return next({err: {type: 'card_method_null', message: 'the card method is null', zh_message: '是否添加money为空'}});
+  }
+
+  Payment.findOne({order: order._id})
+    .exec(function(err, payment){
+      if(err){
+        return next(err);
+      }
+
+      if(!payment){
+        return next({err: {type: 'payment_not_exist', message: 'the payment is not exist', zh_message: '支付记录不存在'}});
+      }
+
+      if(!payment.paid){
+        return next({err: {type: 'payment_not_paid', message: 'the payment is not paid', zh_message: '支付记录未支付'}});
+      }
+
+      Card.findOne({card_number: payment.card_number, id_number: payment.card_id_number})
+        .exec(function(err, card){
+          if(err){
+            return next(err);
+          }
+
+          if(!card){
+            return next({err: {type: 'card_not_exist', message: 'the card is not exist', zh_message: '卡记录不存在'}});
+          }
+
+          if(card.deleted_status){
+            return next({err: {type: 'card_deleted', message: 'the card is deleted', zh_message: '卡记录已删除'}});
+          }
+
+          if(card.status !== 'enabled'){
+            return next({err: {type: 'card_' + card.status, message: 'the card is ' + card.status, zh_message: '卡记录已'+card.status}});
+          }
+
+          if(needAddAmount === 'add'){
+            var addAmount = payment.amount;
+            if(addAmount > 0){
+              card.amount = parseFloat((card.amount + addAmount).toFixed(3));
+            }
+          }
+          card.save(function(err, newCard){
+            if(err || !newCard){
+              return next(err);
+            }
+
+            payment.deleted_status = true;
+            payment.save(function(err, newPayment){
+              if(err || !newPayment){
+                return next(err);
+              }
+
+              order.deleted_status = true;
+              order.save(function(err, newOrder){
+                if(err || !newOrder){
+                  return next(err);
+                }
+
+                req.data = {
+                  order: newOrder,
+                  payment: newPayment,
+                  card: newCard
+                };
+                return next();
+              });
+            });
+
+          });
+        });
+    });
 };

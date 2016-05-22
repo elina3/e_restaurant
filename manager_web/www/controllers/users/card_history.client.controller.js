@@ -69,27 +69,45 @@ angular.module('EWeb').controller('CardHistoryController',
         $state.go('card_statistic');
       };
 
+      $scope.deleteCardPay = function(cardHistory){
+
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '您确定要删除该消费记录吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            CardHistoryService.deleteCardPay(cardHistory._id, function(err, result){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              loadCardHistories();
+              if(err || !result){
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '删除出错');
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+            });
+          }});
+      };
+
       function loadCardHistories() {
         $scope.$emit(GlobalEvent.onShowLoading, true);
 
         var filter = {
           keyword: $scope.pageData.keyword,
-          startTimeStamp: -1,
-          endTimeStamp: -1,
           action: $scope.pageData.action.id
         };
 
-        if ($scope.pageShow.createTimeRange) {
-          if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
-            filter.startTimeStamp = $scope.pageShow.createTimeRange.startDate._d.getTime();
+
+        var timeRange = {};
+        if($scope.pageShow.createTimeRange){
+          if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
+            timeRange.startTime = moment($scope.pageShow.createTimeRange.startDate).toISOString();
           }
-          if ($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d) {
-            filter.endTimeStamp = $scope.pageShow.createTimeRange.endDate._d.getTime();
+          if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
+            timeRange.endTime = moment($scope.pageShow.createTimeRange.endDate).toISOString();
           }
         }
+        var timeRangeString = JSON.stringify(timeRange);
 
         CardHistoryService.getCardHistories($scope.pageData.pagination,
-          filter, function (err, data) {
+          filter, timeRangeString, function (err, data) {
             if (err || !data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               return $scope.$emit(GlobalEvent.onShowAlert, err);

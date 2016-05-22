@@ -152,16 +152,19 @@ exports.getCardHistories = function (req, res, next) {
   var limit = parseInt(req.query.limit) || parseInt(req.body.limit) || -1;
   var skipCount = parseInt(req.query.skip_count) || parseInt(req.body.skip_count) || -1;
 
-  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
-  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
+  var timeRange = JSON.parse(req.query.time_range) || {};
+
+  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
+  var endTime = new Date(timeRange.endTime) || new Date();
+
   var keyword = req.query.keyword || '';
   var action = req.query.action || '';
   var filter = {
-    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
-    endTime: endTimeStamp === -1 ? null : new Date(endTimeStamp),
+    startTime: startTime,
+    endTime: endTime,
     keyword: keyword,
     action: action
-  }
+  };
   cardLogic.getCardHistories(currentPage, limit, skipCount, filter, function (err, result) {
     if (err) {
       req.err = err;
@@ -245,20 +248,18 @@ exports.importCards = function(req, res, next){
 };
 //饭卡当日财务统计
 exports.exportCardStatistic = function(req, res, next){
-  var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;
-  var endTimeStamp = parseInt(req.query.end_time_stamp) || -1;
-  var filter = {
-    startTime: startTimeStamp === -1 ? null : new Date(startTimeStamp),
-    endTime: endTimeStamp === -1 ? new Date() : new Date(endTimeStamp)
-  };
+  var timeRange = JSON.parse(req.query.time_range) || {};
 
-  cardLogic.exportCardStatistic(filter, function(err, result){
+  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
+  var endTime = new Date(timeRange.endTime) || new Date();
+
+  cardLogic.exportCardStatistic({startTime: startTime, endTime: endTime}, function(err, result){
     if(err){
       return next(err);
     }
 
-    result.begin_time = filter.startTime;
-    result.end_time = filter.endTime;
+    result.begin_time = startTime;
+    result.end_time = endTime;
     req.data = result;
     return next();
   });
@@ -275,4 +276,48 @@ exports.getStatisticByHistory = function(req, res, next){
     };
     return next();
   });
+};
+
+
+//清除脏数据 TODO 将要删除
+var mongooseLib = require('../libraries/mongoose');
+var appDb = mongooseLib.appDb;
+var CardHistory = appDb.model('CardHistory');
+
+exports.deleteCardPay = function(req, res, next){
+  var cardHistoryId = req.body.card_history_id || '';
+  if(!cardHistoryId){
+    return next({err: {type: 'card_history_id_null', message: 'the card history id is null', zh_message: '卡记录id为空'}});
+  }
+
+  CardHistory.findOne({_id: cardHistoryId})
+    .exec(function(err, cardHistory){
+      if(err){
+        return next(err);
+      }
+
+      if(!cardHistory){
+        return next({err: {type: 'card_history_not_exist', message: 'the card history is not exist', zh_message: '卡记录不存在'}})
+      }
+
+      if(cardHistory.deleted_status){
+        return next({err: {type: 'card_history_deleted', message: 'the card history is deleted', zh_message: '卡记录已删除'}})
+      }
+
+      if(cardHistory.action !== 'pay'){
+        return next({err: {type: 'card_history_not_pay', message: 'the card history is not the paying ', zh_message: '卡记录不是消费记录'}});
+      }
+
+      cardHistory.deleted_status = true;
+      cardHistory.save(function(err, newCardHistory){
+        if(err || !newCardHistory){
+          return next(err);
+        }
+
+        req.data = {
+          card_history: newCardHistory
+        };
+        return next();
+      });
+    });
 };

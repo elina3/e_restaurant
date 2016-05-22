@@ -50,25 +50,25 @@ angular.module('EWeb').controller('GoodsOrderController',
           status: $scope.currentStatus.id,
           card_number: $scope.filter.card_number,
           card_id_number: $scope.filter.card_id_number,
-          client_username: $scope.filter.client_username,
-          start_time_stamp: -1,
-          end_time_stamp: -1
+          client_username: $scope.filter.client_username
         };
 
+        var timeRange = {};
         if($scope.pageShow.createTimeRange){
           if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
-            filter.start_time_stamp = $scope.pageShow.createTimeRange.startDate._d.getTime();
+            timeRange.startTime = moment($scope.pageShow.createTimeRange.startDate).toISOString();
           }
           if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
-            filter.end_time_stamp = $scope.pageShow.createTimeRange.endDate._d.getTime();
+            timeRange.endTime = moment($scope.pageShow.createTimeRange.endDate).toISOString();
           }
         }
+        var timeRangeString = JSON.stringify(timeRange);
 
         if($scope.filter.order_type &&  $scope.filter.order_type.id !== ''){
           filter.has_discount = $scope.filter.order_type.id;
         }
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.getOrders($scope.pagination, filter, function (err, data) {
+        OrderService.getOrders($scope.pagination, filter, timeRangeString, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if(err || !data.orders){
             $scope.$emit(GlobalEvent.onShowAlert, err);
@@ -173,6 +173,39 @@ angular.module('EWeb').controller('GoodsOrderController',
           }
           $state.reload();
         });
+      };
+
+      $scope.tempAddMoneyDelete = function(order){
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '您确定要加钱并删除该订单吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            OrderService.recoverOrder(order._id, 'add', function(err, result){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if (err || !result) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+              $state.reload();
+            });
+          }});
+      };
+
+
+      $scope.tempDelete = function(order){
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {title: '确认操作', content: '您确定要不加钱并删除该订单吗？', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            OrderService.recoverOrder(order._id, 'no', function(err, result){
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if (err || !result) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+              $state.reload();
+            });
+          }});
       };
 
       $scope.loadMore = function () {

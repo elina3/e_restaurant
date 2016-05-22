@@ -16,6 +16,7 @@ function getTotalAmountThisMonth(idNumber, callback) {
 
   var query = {
     card_id_number: idNumber,
+    deleted_status: false,
     pay_time: {$gte: thisMonth},
     paid: true
   };
@@ -69,6 +70,10 @@ exports.pay = function (client, order, method, card, amount, callback) {
 
           if (payment.paid) {
             return autoCallback({err: paymentError.order_paid});
+          }
+
+          if(payment.deleted_status){
+            return autoCallback({err: paymentError.order_deleted});
           }
 
           if (method !== 'card') {
@@ -142,6 +147,53 @@ exports.pay = function (client, order, method, card, amount, callback) {
     });
   });
 };
+
+exports.getPayments = function(filter, pagination, callback){
+  var query = {
+    deleted_status: false
+  };
+
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  }
+
+  if(filter.keyword){
+    query.$or = [{card_number: filter.keyword},{card_id_number:filter.keyword}]
+  }
+
+  Payment.count(query)
+    .exec(function(err, totalCount){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      if (pagination.limit === -1) {
+        pagination.limit = totalCount;
+      }
+
+      if (pagination.skipCount === -1) {
+        pagination.skipCount = pagination.limit * (pagination.currentPage - 1);
+      }
+
+      Payment.find(query)
+        .sort({create_time: -1})
+        .skip(pagination.skipCount)
+        .limit(pagination.limit)
+        .exec(function(err, payments){
+          if(err){
+            return callback({err: systemError.database_query_error});
+          }
+
+          return callback(null, {
+            totalCount: totalCount,
+            limit: limit,
+            payments: payments
+          });
+        });
+
+    });
+};
+
 
 exports.getTodayAmount = function (callback) {
   var query = {paid: true, deleted_status: false};

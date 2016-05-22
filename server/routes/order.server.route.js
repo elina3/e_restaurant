@@ -30,4 +30,7 @@ module.exports = function (app) {
   app.route('/user/order/goods_complete').post(authFilter.requireUser, orderFilter.requireGoodsOrder, orderController.setGoodsOrderComplete);
 
   app.route('/user/order/today_amount').get(orderController.getTodayAmount);
+
+  app.route('/user/order_payments').get(authFilter.requireUser, orderController.getPaymentRecords);
+  app.route('/user/recover_order').post(authFilter.requireUser, orderFilter.requireOrder, orderController.recoverTheOrder);
 };
