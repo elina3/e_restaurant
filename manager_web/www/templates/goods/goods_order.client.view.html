@@ -118,9 +118,9 @@
             </div>
             <div class="order-handle">
                 <div class="buttons">
-                    <div class="button cook" ng-click="tempAddMoneyDelete(order)">价钱删除</div>
+                    <!--<div class="button cook" ng-click="tempAddMoneyDelete(order)">价钱删除</div>-->
 
-                    <div class="button cook" ng-click="tempDelete(order)">不加钱删除</div>
+                    <!--<div class="button cook" ng-click="tempDelete(order)">不加钱删除</div>-->
                     <div class="button cook" ng-show="order.status === 'paid'" ng-click="cook(order)">烹饪</div>
                     <div class="button delivery" ng-show="order.status === 'paid' || order.status === 'cooking'" ng-click="delivery(order)">配送</div>
                     <div class="button complete" ng-show="order.status === 'paid' || order.status === 'cooking' || order.status === 'transporting'" ng-click="complete(order)">完成</div>
