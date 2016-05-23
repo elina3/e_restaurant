@@ -110,7 +110,7 @@
                         </div>
                         <div class="order-goods-summary row">
                             <time class="col-xs-3">成交于：{{order.create_time | date: 'yyyy-MM-dd HH:mm:ss'}}</time>
-                            <span class="col-xs-3">卡号：{{order.card_number}}，证件号：{{order.card_id_number}}</span>
+                            <!--<span class="col-xs-3">卡号：{{order.card_number}}，证件号：{{order.card_id_number}}</span>-->
                             <span class="col-xs-6">总共{{order.goods_orders.length}}个菜，合计 <strong>{{order.total_price}}</strong> 元 <span ng-show="order.paid">，实付 <strong>{{order.actual_amount}}</strong> 元</span></span>
                         </div>
                     </div>
