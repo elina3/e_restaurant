@@ -154,8 +154,9 @@ exports.getCardHistories = function (req, res, next) {
 
   var timeRange = JSON.parse(req.query.time_range) || {};
 
-  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
-  var endTime = new Date(timeRange.endTime) || new Date();
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   var keyword = req.query.keyword || '';
   var action = req.query.action || '';
@@ -250,8 +251,9 @@ exports.importCards = function(req, res, next){
 exports.exportCardStatistic = function(req, res, next){
   var timeRange = JSON.parse(req.query.time_range) || {};
 
-  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
-  var endTime = new Date(timeRange.endTime) || new Date();
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   cardLogic.exportCardStatistic({startTime: startTime, endTime: endTime}, function(err, result){
     if(err){

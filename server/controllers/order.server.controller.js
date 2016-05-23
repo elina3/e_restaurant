@@ -81,8 +81,9 @@ exports.getOrders = function(req, res, next){
 
   var timeRange = JSON.parse(req.query.time_range) || {};
 
-  var startTime = new Date(timeRange.startTime) || new Date('1970-1-1 00:00:00');
-  var endTime = new Date(timeRange.endTime) || new Date();
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   var currentPage = publicLib.parsePositiveIntNumber(req.query.current_page) || 1; //解析正整数
   var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
