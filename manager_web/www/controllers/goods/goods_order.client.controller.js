@@ -208,6 +208,10 @@ angular.module('EWeb').controller('GoodsOrderController',
           }});
       };
 
+      $scope.goOrderStatistic = function(){
+        $state.go('order_statistic');
+      };
+
       $scope.loadMore = function () {
         loadOrders();
       };

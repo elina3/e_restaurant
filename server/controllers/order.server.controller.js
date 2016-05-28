@@ -360,3 +360,43 @@ exports.recoverTheOrder = function(req, res, next){
         });
     });
 };
+
+
+exports.updateTimeTag = function(req, res, next){
+  orderLogic.updateTimeTag(function(err){
+    if(err){
+      return next(err);
+    }
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+
+exports.getOrderStatisticByTimeTagGroup = function(req, res, next){
+  var timeRange = {};
+  try{
+    timeRange = JSON.parse(req.query.time_range || '') || {};
+  }catch(e){}
+
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  orderLogic.getOrderStatisticByTimeTagGroup({
+    startTime: startTime,
+    endTime: endTime
+  }, function(err, result){
+      if(err){
+        return next(err);
+      }
+
+    req.data = {
+      order_statistic: result,
+      begin_time: startTime,
+      end_time: endTime
+    };
+    return next();
+  });
+};

@@ -132,6 +132,26 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
           return callback(SystemError.network_error);
         });
     },
+    getOrderStatisticByTimeTagGroup: function(timeRangeString, callback){
+      RequestSupport.executeGet('/user/order/time_tag_statistic', {
+        time_range: timeRangeString
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.zh_message || data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
+    },
     translateOrderStatus: function(status){
       switch(status){
         case 'unpaid':

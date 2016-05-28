@@ -1,0 +1,83 @@
+<z-header></z-header>
+<div class="ee-card-history-page-view ee-order-statistic-page-view">
+    <div class="ee-user-manager">
+        <div class="ee-banner">
+            <div class="ee-wrapper">
+                <div class="row ee-title">
+                    <div class="col-xs-6">
+                        <span class="ee-banner-back" ng-click="goBack()">< </span>
+                        <span class="ee-banner-content">订单统计结果</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <div class="ee-wrapper">
+                <div class="row">
+                    <div class="filter-item col-xs-3">
+                        <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                               ng-model="pageShow.createTimeRange"
+                               min="pageShow.createTimeMinTime"
+                               options="pageShow.dateOptions"
+
+                               placeholder="点击选择日期"
+                                />
+                    </div>
+                    <div class="filter-item col-xs-3">
+                        <div class="search" ng-click="search()">查询</div>
+                    </div>
+                    <div class="filter-item col-xs-3">
+                        <div class="search" ng-click="export()">导出</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-user-manager-body">
+            <div class="ee-wrapper">
+                <div class="ee-table-list">
+                    <div class="content">
+                        <div class="row list-header">
+                            <div class="col-xs-3">
+                                <span>时间段</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>订单数</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>销售额</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>扣卡金额</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>日期</span>
+                            </div>
+                        </div>
+                        <div class="row list-info" ng-hide="info.hide" ng-repeat="info in formattedStatisticInfos">
+                            <div class="col-xs-3">
+                                <span>{{info.time_tag}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{info.order_count}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{info.order_total_price}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span>{{info.order_actual_amount}}</span>
+                            </div>
+
+                            <div class="col-xs-3">
+                                <span>{{info.date}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

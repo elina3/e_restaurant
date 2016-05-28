@@ -38,6 +38,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         templateUrl: 'templates/goods/goods_order.client.view.html',
         controller: 'GoodsOrderController'
       })
+      .state('order_statistic', {
+        url: '/orders/statistics:filter',
+        templateUrl: 'templates/goods/order_statistic.client.view.html',
+        controller: 'OrderStatisticController'
+      })
       .state('goods_add', {
         url: '/goods/add',
         templateUrl: 'templates/goods/goods_add.client.view.html',

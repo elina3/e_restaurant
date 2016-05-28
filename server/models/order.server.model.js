@@ -121,6 +121,9 @@ var OrderSchema = new Schema({
   },
   card_id_number: {
     type: String
+  },
+  time_tag: {//时间标签。早餐，午餐，晚餐
+    type: String
   }
 });
 
@@ -128,6 +131,19 @@ OrderSchema.plugin(timestamps, {
   createdAt: 'create_time',
   updatedAt: 'update_time'
 });
+
+
+function translateTime(createTime){
+ var hour = createTime.getHours();
+  if(hour >= 0 && hour < 10){
+    return '早餐';
+  }
+  else if(hour >= 10 && hour < 16){
+    return '午餐';
+  }else{
+    return '晚餐';
+  }
+}
 
 OrderSchema.pre('save', function (next) {
   this.total_price = 0;
@@ -149,6 +165,11 @@ OrderSchema.pre('save', function (next) {
   if(this.paid && this.actual_amount !== this.total_price){
     this.has_discount = true;
   }
+
+  if(this.create_time){
+    this.time_tag = translateTime(this.create_time);
+  }
+
   next();
 });
 
