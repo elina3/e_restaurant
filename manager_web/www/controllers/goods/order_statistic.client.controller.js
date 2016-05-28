@@ -88,7 +88,10 @@ angular.module('EWeb').controller('OrderStatisticController',
             date: beginTime + '~' + endTime
           };
 
-            if(data.order_statistic){
+            if(data.order_statistic && data.order_statistic.length > 0){
+              summary.order_count = 0;
+              summary.order_total_price = 0;
+              summary.order_actual_amount = 0;
               data.order_statistic.forEach(function(group){
                 if(group._id === '晚餐'){
                   dinner.order_count = group.order_count;
@@ -107,7 +110,15 @@ angular.module('EWeb').controller('OrderStatisticController',
                   breakfast.order_total_price = group.order_total_price.toFixed(3);
                   breakfast.order_actual_amount = group.order_actual_amount.toFixed(3);
                 }
+
+                summary.order_count += group.order_count;
+                summary.order_total_price += parseFloat(group.order_total_price);
+                summary.order_actual_amount += parseFloat(group.order_actual_amount);
+
               });
+
+              summary.order_total_price = summary.order_total_price.toFixed(3);
+              summary.order_actual_amount = summary.order_actual_amount.toFixed(3);
             }
 
 
