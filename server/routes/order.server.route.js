@@ -34,6 +34,6 @@ module.exports = function (app) {
   app.route('/user/order_payments').get(authFilter.requireUser, orderController.getPaymentRecords);
   app.route('/user/recover_order').post(authFilter.requireUser, orderFilter.requireOrder, orderController.recoverTheOrder);
 
-  app.route('/user/update_time_tag').post(orderController.updateTimeTag);
+  //app.route('/user/update_time_tag').post(orderController.updateTimeTag);
   app.route('/user/order/time_tag_statistic').get(orderController.getOrderStatisticByTimeTagGroup);
 };
