@@ -15,7 +15,7 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
-        roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}],
+        roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}, {id: 'nurse', text: '护士'}],
         cardTypes: [{id: 'normal', text: '普通'},{id: 'staff', text: '员工'},{id: 'expert', text: '专家'}],
         rechargeTypes: [{id: 'cash', text: '现金'},{id: 'virtual', text: '虚拟'}],
         groups: [],
@@ -520,7 +520,7 @@ angular.module('EWeb').controller('UserManagerController',
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
-          console.log(data);
+
           data.card_list.forEach(function(card){
             $scope.pageConfig.plat_card_panel.cards.push({
               _id: card._id,
@@ -536,11 +536,9 @@ angular.module('EWeb').controller('UserManagerController',
               update_time:card.update_time
             });
           });
-
           $scope.pageConfig.plat_card_panel.pagination.totalCount = data.total_count;
           $scope.pageConfig.plat_card_panel.pagination.limit = data.limit;
           $scope.pageConfig.plat_card_panel.pagination.pageCount = Math.ceil($scope.pageConfig.plat_card_panel.pagination.totalCount / $scope.pageConfig.plat_card_panel.pagination.limit);
-
         });
       }
       $scope.showBatchRechargePanel = function(){
@@ -580,9 +578,6 @@ angular.module('EWeb').controller('UserManagerController',
         try{
           price = parseFloat(numberString);
           price = isNaN(price) ? -1 : price;
-          if(price < 0){
-            return -1;
-          }
         }catch(e){
           price = -1;
         }
@@ -605,13 +600,17 @@ angular.module('EWeb').controller('UserManagerController',
         }
 
         var addMondy = parseNumber($scope.pageConfig.plat_card_panel.add_money);
-        if(addMondy < 0){
+        if(addMondy === 0){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           $scope.$emit(GlobalEvent.onShowAlert, '请输入正确金额');
-          return ;
+          return;
         }
 
         var money = parseNumber($scope.pageConfig.plat_card_panel.currentEditCard.amount);
         if(money < 0){
+
+          $scope.$emit(GlobalEvent.onShowLoading, false);
           $scope.$emit(GlobalEvent.onShowAlert, '卡内余额解析出错！');
           return ;
         }
@@ -628,7 +627,6 @@ angular.module('EWeb').controller('UserManagerController',
           nickname: $scope.pageConfig.plat_card_panel.currentEditCard.nickname
         };
         if($scope.pageConfig.scanType === 'create'){
-
           CardService.addCard(param, function(err, data){
             $scope.$emit(GlobalEvent.onShowLoading, false);
             if (err) {

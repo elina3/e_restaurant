@@ -319,8 +319,8 @@ exports.updateCardInfo = function (user, card, cardInfo, callback) {
     return callback({err: cardError.card_number_null});
   }
 
-  var addAmount = publicLib.amountParse(cardInfo.amount);
-  if (addAmount < 0) {
+  var addAmount = publicLib.parseFloatNumber(cardInfo.amount);
+  if (addAmount === 0) {
     return callback({err: cardError.wrong_amount});
   }
 
