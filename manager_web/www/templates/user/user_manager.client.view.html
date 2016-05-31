@@ -204,12 +204,13 @@
                         <div class="ee-table-list">
                             <div class="content">
                                 <div class="row list-header">
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                         <span>证件号</span>
                                     </div>
                                     <div class="col-xs-3">
                                         <span>卡号</span>
                                     </div>
+                                    <div class="col-xs-1"><span>昵称</span></div>
                                     <div class="col-xs-1">
                                         <span>余额</span>
                                     </div>
@@ -225,12 +226,13 @@
                                     </div>
                                 </div>
                                 <div class="row list-info" ng-repeat="card in pageConfig.plat_card_panel.cards">
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2" title="{{card.id_number}}">
                                         <span>{{card.id_number}}</span>
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-3" title="{{card.card_number}}">
                                         <span>{{card.card_number}}</span>
                                     </div>
+                                    <div class="col-xs-1">{{card.nickname || '--'}}</div>
                                     <div class="col-xs-1">
                                         <span>{{card.amount | number: 3}}</span>
                                     </div>
