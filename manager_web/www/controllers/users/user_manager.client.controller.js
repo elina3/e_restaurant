@@ -600,8 +600,7 @@ angular.module('EWeb').controller('UserManagerController',
         }
 
         var addMondy = parseNumber($scope.pageConfig.plat_card_panel.add_money);
-        if(addMondy === 0){
-
+        if(addMondy === 0 && $scope.pageConfig.scanType !== 'create'){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           $scope.$emit(GlobalEvent.onShowAlert, '请输入正确金额');
           return;
@@ -609,7 +608,6 @@ angular.module('EWeb').controller('UserManagerController',
 
         var money = parseNumber($scope.pageConfig.plat_card_panel.currentEditCard.amount);
         if(money < 0){
-
           $scope.$emit(GlobalEvent.onShowLoading, false);
           $scope.$emit(GlobalEvent.onShowAlert, '卡内余额解析出错！');
           return ;
