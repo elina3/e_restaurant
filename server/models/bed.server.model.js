@@ -8,8 +8,7 @@ var appDb = mongoLib.appDb;
 
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
-  timestamps = require('mongoose-timestamp'),
-  crypto = require('crypto');
+  timestamps = require('mongoose-timestamp');
 
 var BuildingSchema = new Schema({
   object:{
@@ -29,6 +28,11 @@ var BuildingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Hospital'
   }
+});
+
+BuildingSchema.plugin(timestamps, {
+  createdAt: 'create_time',
+  updatedAt: 'update_time'
 });
 
 var FloorSchema = new Schema({
@@ -57,6 +61,10 @@ var FloorSchema = new Schema({
   }
 });
 
+FloorSchema.plugin(timestamps, {
+  createdAt: 'create_time',
+  updatedAt: 'update_time'
+});
 
 var BedSchema = new Schema({
   object:{

@@ -21,16 +21,16 @@
                 <div class="filter-item status col-xs-2">
                     <z-dropdown z-dropdown-model="filter.currentBuilding"
                                 z-dropdown-options="filter.buildings"
-                                z-dropdown-label="所有楼"
+                                z-dropdown-label="选择楼"
                                 z-dropdown-change="changeBuilding()"
-                                z-dropdown-disabled="filter.buildings.length===0"
+                                z-dropdown-disabled="filter.buildings.length<=1"
                             >
                     </z-dropdown>
                 </div>
                 <div class="filter-item discount col-xs-2">
                     <z-dropdown z-dropdown-model="filter.currentFloor"
                                 z-dropdown-options="filter.floors"
-                                z-dropdown-label="所有楼层"
+                                z-dropdown-label="选择楼层"
                                 z-dropdown-change="changeFloor()"
                                 z-dropdown-disabled="filter.floors.length===0"
                             >

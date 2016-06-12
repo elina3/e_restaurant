@@ -14,7 +14,7 @@ angular.module('EWeb').controller('SetMealController',
         currentFloor: null,
         buildings: [],
         floors: [],
-        mealTypes: [{id: '', text: '普食'}, {id: '', text: '流食'}, {id: '', text: '半流食'}, {id: '', text: '软食'}]
+        mealTypes: [{id: 'normal', text: '普食'},  {id: 'soft_diets', text: '软食'}, {id: 'liquid_diets', text: '流食'}, {id: 'semi_liquid_diets', text: '半流食'}]
       };
       $scope.changeBuilding = function(){
         if($scope.filter.currentBuilding){
@@ -53,8 +53,6 @@ angular.module('EWeb').controller('SetMealController',
           });
         }
       };
-
-
 
       $scope.beds = [];
       $scope.search = function () {
@@ -102,7 +100,9 @@ angular.module('EWeb').controller('SetMealController',
           data.buildings.forEach(function(building){
             $scope.filter.buildings.push({id: building._id, text: building.name});
           });
-        }
 
+          $scope.filter.currentBuilding = $scope.filter.buildings[0];
+          $scope.changeBuilding();
+        }
       });
     }]);

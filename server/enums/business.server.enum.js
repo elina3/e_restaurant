@@ -13,3 +13,14 @@ exports.card_status = {
     return '';
   }
 };
+
+exports.meal_types = {
+  enums: ['liquid_diets', 'normal', 'soft_diets', 'semi_liquid_diets'],
+  parseStatus: function(status){
+    if(this.enums.indexOf(status) > -1){
+      return status;
+    }
+
+    return '';
+  }
+};
