@@ -4,13 +4,14 @@
 'use strict';
 
 var userLogic = require('../logics/user');
+var bedLogic = require('../logics/bed');
+
 exports.createDefaultGroup = function(){
   userLogic.createHospital({name: '瑞金医院古北分院', address: '上海市长宁区红宝石路398号'}, function(err, hospital){
     if(err){
       console.log('create default hospital failed');
       return;
     }
-
 
     userLogic.createGroup({
       name: '餐厅',
@@ -60,11 +61,13 @@ exports.createDefaultGroup = function(){
         };
         userLogic.signUpAdmin(userInfo, function(err, admin){
           if(err){
-            console.log('create admin failed');
-            console.log(err);
-            return;
+            if(err.type !== 'admin_exist'){
+              console.log('create admin failed');
+              console.log(err);
+            }else{
+              return;
+            }
           }
-
 
           console.log('create default admin success!!!!');
           console.log(JSON.stringify(admin));
@@ -75,6 +78,25 @@ exports.createDefaultGroup = function(){
               return;
             }
 
+            bedLogic.createBuilding(hospital._id, {name: 'B楼'}, function(err, building){
+              if (err) {
+                console.log('create default building failed');
+                return;
+              }
+
+
+              console.log('create default building success');
+
+              var floors = [{name: '5楼', beds_count: 38},{name: '6楼', beds_count: 38},{name: '7楼', beds_count: 38},{name: '8楼', beds_count: 38},{name: '9楼', beds_count: 38},{name: '10楼', beds_count: 38},{name: '11楼', beds_count: 38}];
+              bedLogic.createFloorBedsByBuilding(building, floors, function(err, building){
+                if (err) {
+                  console.log('create default floor failed');
+                  return;
+                }
+
+                console.log('create default floor and beds success');
+              });
+            });
           });
         });
       });

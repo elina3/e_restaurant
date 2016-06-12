@@ -72,6 +72,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
         url: '/supermarket/manager',
         templateUrl: 'templates/supermarket/supermarket_manager.client.view.html',
         controller: 'SMarketManagerController'
+      })
+      .state('set_meal', {
+        url: '/healthy_meal/set_meal',
+        templateUrl: 'templates/healthy_meal/set_meal.client.view.html',
+        controller: 'SetMealController'
       });
 
     $urlRouterProvider.otherwise('/user/sign_in');

@@ -1,0 +1,107 @@
+<z-header></z-header>
+<div class="set-meal-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">营养餐设置</span>
+                </div>
+                <div class="col-xs-6">
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="set-meal-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentBuilding"
+                                z-dropdown-options="filter.buildings"
+                                z-dropdown-label="所有楼"
+                                z-dropdown-change="changeBuilding()"
+                                z-dropdown-disabled="filter.buildings.length===0"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item discount col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentFloor"
+                                z-dropdown-options="filter.floors"
+                                z-dropdown-label="所有楼层"
+                                z-dropdown-change="changeFloor()"
+                                z-dropdown-disabled="filter.floors.length===0"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item time  col-xs-2">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="pageShow.createTimeRange"
+                           min="pageShow.createTimeMinTime"
+                           options="pageShow.dateOptions"
+
+                           placeholder="点击选择时间"
+                            />
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="search()">筛选</div>
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="applyYesterday()">应用前一天数据</div>
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="save" ng-click="saveMealSet()">保存</div>
+                </div>
+            </div>
+        </div>
+        <div class="bed-list row">
+            <div class="bed-framework col col-lg-2 col-md-4 col-sm-6 col-xs-12" ng-repeat="bed in beds">
+                <div class="bed-info">
+                    <div class="name"><strong>{{bed.name}}</strong></div>
+                    <div class="set-area">
+                        <div class="set-item breakfast row" ng-class="{'selected': bed.breakfast}">
+                            <label class="col-xs-2">早</label>
+
+                            <div class="col-xs-10">
+                                <z-dropdown z-dropdown-model="bed.breakfast"
+                                            z-dropdown-options="filter.mealTypes"
+                                            z-dropdown-label="无"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+                        <div class="set-item lunch row" ng-class="{'selected': bed.lunch}">
+                            <label class="col-xs-2">中</label>
+
+                            <div class="col-xs-10">
+                                <z-dropdown z-dropdown-model="bed.lunch"
+                                            z-dropdown-options="filter.mealTypes"
+                                            z-dropdown-label="无"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+                        <div class="set-item dinner row" ng-class="{'selected': bed.dinner}">
+                            <label class="col-xs-2">晚</label>
+
+                            <div class="col-xs-10">
+                                <z-dropdown z-dropdown-model="bed.dinner"
+                                            z-dropdown-options="filter.mealTypes"
+                                            z-dropdown-label="无"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>
