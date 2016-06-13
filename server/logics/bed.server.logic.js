@@ -193,3 +193,34 @@ exports.getBedsByFloorId = function(floorId, callback){
       return callback(null, beds);
     });
 };
+
+exports.getBuildingById = function(buildingId, callback){
+  Building.findOne({_id: buildingId})
+    .exec(function(err, building){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null,  building);
+    });
+};
+exports.getFloorById = function(floorId, callback){
+  Floor.findOne({_id: floorId})
+    .exec(function(err, floor){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null,  floor);
+    });
+};
+exports.getBedById = function(bedId, callback){
+  Bed.findOne({_id: bedId})
+    .exec(function(err, bed){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null,  bed);
+    });
+};

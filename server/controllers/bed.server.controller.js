@@ -4,7 +4,6 @@
 'use strict';
 var systemError  = require('../errors/system');
 var bedLogic = require('../logics/bed');
-var publicLib = require('../libraries/public');
 
 exports.getBuildings = function(req, res, next){
   var user = req.user;

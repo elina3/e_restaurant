@@ -15,44 +15,32 @@ var BedMealRecordSchema = new Schema({
     type:String,
     default:'BedMealRecord'
   },
-  time: {
+  meal_set_date: {//日期
     type: Date
   },
-  meal_type: {//'liquid_diets', 'normal', 'soft_diets', 'semi_liquid_diets'
-    type: String
-  },
-  bed_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Bed'
-  },
-  bed_name: {//证件id
-    type: String
-  },
-  bed_description: {
-    type: String
-  },
-  floor_id: {
-    type: Schema.Types.ObjectId,
-    ref: 'Floor'
-  },
-  floor_name: {
-    type: String
-  },
-  floor_description: {
-    type: String
-  },
-  building_id: {
+  building: {
     type: Schema.Types.ObjectId,
     ref: 'Building'
   },
-  building_name: {
+  floor: {
+    type: Schema.Types.ObjectId,
+    ref: 'Floor'
+  },
+  bed: {
+    type: Schema.Types.ObjectId,
+    ref: 'Bed'
+  },
+  breakfast: {//'liquid_diets', 'normal', 'soft_diets', 'semi_liquid_diets'
     type: String
   },
-  building_address: {
+  lunch: {
     type: String
   },
-  building_description: {
+  dinner: {
     type: String
+  },
+  create_user: {
+    type: Schema.Types.ObjectId
   }
 });
 

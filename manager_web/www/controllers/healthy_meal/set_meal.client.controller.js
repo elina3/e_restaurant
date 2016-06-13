@@ -6,15 +6,22 @@
  */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state','Auth', 'BedService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state','Auth', 'BedService', 'BedMealRecordService',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService) {
+
+      var mealTypes = {
+        normal: '普食',
+        soft_diets: '软食',
+        liquid_diets: '流食',
+        semi_liquid_diets: '半流食'
+      };
 
       $scope.filter = {
         currentBuilding: null,
         currentFloor: null,
         buildings: [],
         floors: [],
-        mealTypes: [{id: 'normal', text: '普食'},  {id: 'soft_diets', text: '软食'}, {id: 'liquid_diets', text: '流食'}, {id: 'semi_liquid_diets', text: '半流食'}]
+        mealTypes: [{id: 'normal', text: mealTypes.normal},  {id: 'soft_diets', text: mealTypes.soft_diets}, {id: 'liquid_diets', text: mealTypes.liquid_diets}, {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets}]
       };
       $scope.changeBuilding = function(){
         if($scope.filter.currentBuilding){
@@ -43,6 +50,7 @@ angular.module('EWeb').controller('SetMealController',
 
               data.beds.forEach(function(bed){
                 $scope.beds.push({
+                  id: bed._id,
                   name: bed.name,
                   breakfast: null,
                   lunch: null,
@@ -54,18 +62,67 @@ angular.module('EWeb').controller('SetMealController',
         }
       };
 
+      function getMealTypeText(id){
+
+      };
       $scope.beds = [];
       $scope.search = function () {
-        $scope.pagination.currentPage = 1;
-        $scope.pagination.skipCount = 0;
-        $scope.pagination.totalCount = 0;
-        $scope.pagination.pageCount = 0;
-        $scope.orders = [];
+        BedMealRecordService.getBedMealRecords({
+          buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+          floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
+          timeStamp: new Date().getTime()
+        }, function(err, data){
+          $scope.beds.forEach(function(bed){
+            data.bed_meal_records.forEach(function(record){
+              if(bed.id === record.bed){
+                if(record.breakfast){
+                  bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
+                }
+                if(record.lunch){
+                  bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
+                }
+                if(record.dinner){
+                  bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
+                }
+              }
+            });
+          });
+        });
       };
       $scope.applyYesterday = function(){
 
       };
-      $scope.saveMealSet = function(){};
+      $scope.saveMealSet = function(){
+        var formattedBedMealInfos = $scope.beds.filter(function(bed){
+          if(bed.breakfast || bed.lunch || bed.dinner){
+            return bed;
+          }
+        });
+
+        formattedBedMealInfos = formattedBedMealInfos.map(function(bed){
+          return {
+            _id: bed.id,
+            breakfast: bed.breakfast ? bed.breakfast.id : '',
+            lunch: bed.lunch ? bed.lunch.id : '',
+            dinner: bed.dinner ? bed.dinner.id : '',
+          };
+        });
+
+        if(formattedBedMealInfos.length === 0){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请至少设置一个床位的用餐信息！');
+        }
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        BedMealRecordService.saveBedMealRecords({
+          buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+          floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
+          bedMealInfos: formattedBedMealInfos,
+          timeStamp: new Date().getTime()
+        }, function(err, data){
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          console.log(data);
+        });
+      };
 
       $scope.pageShow = {
         createTimeRange: '',
