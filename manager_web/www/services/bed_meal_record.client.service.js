@@ -8,7 +8,7 @@ angular.module('EWeb').factory('BedMealRecordService',
       return {
         getBedMealRecords: function (params, callback) {
           RequestSupport.executeGet('/bed_meal_records', {
-            meal_set_time_stamp: params.timeStamp,
+            time_stamp: params.timeStamp,
             building_id: params.buildingId,
             floor_id: params.floorId,
             bed_id: params.bedId

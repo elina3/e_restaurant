@@ -6,7 +6,7 @@
  */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state','Auth', 'BedService', 'BedMealRecordService',
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService) {
 
       var mealTypes = {
@@ -21,15 +21,20 @@ angular.module('EWeb').controller('SetMealController',
         currentFloor: null,
         buildings: [],
         floors: [],
-        mealTypes: [{id: 'normal', text: mealTypes.normal},  {id: 'soft_diets', text: mealTypes.soft_diets}, {id: 'liquid_diets', text: mealTypes.liquid_diets}, {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets}]
+        mealTypes: [
+          {id: 'normal', text: mealTypes.normal},
+          {id: 'soft_diets', text: mealTypes.soft_diets},
+          {id: 'liquid_diets', text: mealTypes.liquid_diets},
+          {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets}
+        ]
       };
-      $scope.changeBuilding = function(){
-        if($scope.filter.currentBuilding){
-          BedService.getFloorsByBuildingId($scope.filter.currentBuilding.id, function(err, data){
-            if(data && data.floors){
+      $scope.changeBuilding = function () {
+        if ($scope.filter.currentBuilding) {
+          BedService.getFloorsByBuildingId($scope.filter.currentBuilding.id, function (err, data) {
+            if (data && data.floors) {
               $scope.filter.floors = [];
 
-              data.floors.forEach(function(floor){
+              data.floors.forEach(function (floor) {
                 $scope.filter.floors.push({
                   id: floor._id,
                   text: floor.name
@@ -40,76 +45,96 @@ angular.module('EWeb').controller('SetMealController',
         }
       };
 
-      $scope.changeFloor = function(){
-        if($scope.filter.currentFloor){
-          BedService.getBedsByFloorId($scope.filter.currentFloor.id, function(err, data){
-            if(data && data.beds){
-              $scope.beds = [];
-
-              //todo load set info
-
-              data.beds.forEach(function(bed){
-                $scope.beds.push({
-                  id: bed._id,
-                  name: bed.name,
-                  breakfast: null,
-                  lunch: null,
-                  dinner: null
-                });
-              });
-            }
-          });
-        }
+      $scope.changeFloor = function () {
       };
 
-      function getMealTypeText(id){
-
-      };
       $scope.beds = [];
+
+      function getBed(record) {
+        return $scope.beds.filter(function (item) {
+          return item.id === record.bed;
+        })[0];
+      }
+      function getTimeStamp(){
+        if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
+          var time = moment($scope.pageShow.createTimeRange.startDate);
+          return new Date(time).getTime()
+        }
+        return;
+      }
       $scope.search = function () {
-        BedMealRecordService.getBedMealRecords({
-          buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
-          floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
-          timeStamp: new Date().getTime()
-        }, function(err, data){
-          $scope.beds.forEach(function(bed){
-            data.bed_meal_records.forEach(function(record){
-              if(bed.id === record.bed){
-                if(record.breakfast){
-                  bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
-                }
-                if(record.lunch){
-                  bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
-                }
-                if(record.dinner){
-                  bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
-                }
+        if (!$scope.filter.currentFloor) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择楼层信息');
+        }
+
+        var timeStamp = getTimeStamp();
+        if(!timeStamp){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
+        }
+
+        BedService.getBedsByFloorId($scope.filter.currentFloor.id, function (err, data) {
+          if (data && data.beds) {
+            $scope.beds = data.beds.map(function (item) {
+              return {
+                id: item._id,
+                name: item.name,
+                breakfast: null,
+                lunch: null,
+                dinner: null
+              };
+            });
+
+            BedMealRecordService.getBedMealRecords({
+              buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+              floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
+              timeStamp: timeStamp
+            }, function (err, data) {
+              if (data.bed_meal_records) {
+                data.bed_meal_records.forEach(function (record) {
+                  var bed = getBed(record);
+                  if (bed) {
+                    if (record.breakfast) {
+                      bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
+                    }
+                    if (record.lunch) {
+                      bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
+                    }
+                    if (record.dinner) {
+                      bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
+                    }
+                  }
+                });
               }
             });
-          });
+          }
         });
       };
-      $scope.applyYesterday = function(){
+      $scope.applyYesterday = function () {
 
       };
-      $scope.saveMealSet = function(){
-        var formattedBedMealInfos = $scope.beds.filter(function(bed){
-          if(bed.breakfast || bed.lunch || bed.dinner){
+      $scope.saveMealSet = function () {
+        var formattedBedMealInfos = $scope.beds.filter(function (bed) {
+          if (bed.breakfast || bed.lunch || bed.dinner) {
             return bed;
           }
         });
 
-        formattedBedMealInfos = formattedBedMealInfos.map(function(bed){
+        formattedBedMealInfos = formattedBedMealInfos.map(function (bed) {
           return {
             _id: bed.id,
             breakfast: bed.breakfast ? bed.breakfast.id : '',
             lunch: bed.lunch ? bed.lunch.id : '',
-            dinner: bed.dinner ? bed.dinner.id : '',
+            dinner: bed.dinner ? bed.dinner.id : ''
           };
         });
 
-        if(formattedBedMealInfos.length === 0){
+        if (formattedBedMealInfos.length === 0) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请至少设置一个床位的用餐信息！');
+        }
+
+        var timeStamp = getTimeStamp();
+        if(!timeStamp){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
         }
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
@@ -117,8 +142,8 @@ angular.module('EWeb').controller('SetMealController',
           buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
           floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
           bedMealInfos: formattedBedMealInfos,
-          timeStamp: new Date().getTime()
-        }, function(err, data){
+          timeStamp: timeStamp
+        }, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           console.log(data);
         });
@@ -126,7 +151,7 @@ angular.module('EWeb').controller('SetMealController',
 
       $scope.pageShow = {
         createTimeRange: '',
-        createTimeMinTime: moment().format('YY/MM/DD HH:mm'),
+        createTimeMinTime: moment().format('YY/MM/DD'),
         dateOptions: {
           locale: {
             fromLabel: '起始时间',
@@ -139,11 +164,11 @@ angular.module('EWeb').controller('SetMealController',
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
               '十月', '十一月', '十二月']
           },
-          timePicker: true,
+          timePicker: false,
           timePicker12Hour: false,
           timePickerIncrement: 1,
-          separator: ' ~ ',
-          format: 'YY/MM/DD HH:mm'
+          singleDatePicker: true,
+          format: 'YYYY/MM/DD HH:mm'
         }
       };
 
@@ -151,10 +176,10 @@ angular.module('EWeb').controller('SetMealController',
         $state.go('goods_manager');
       };
 
-      BedService.getBuildings(function(err, data){
-        if(data && data.buildings){
+      BedService.getBuildings(function (err, data) {
+        if (data && data.buildings) {
           $scope.filter.buildings = [];
-          data.buildings.forEach(function(building){
+          data.buildings.forEach(function (building) {
             $scope.filter.buildings.push({id: building._id, text: building.name});
           });
 

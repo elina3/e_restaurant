@@ -26,14 +26,14 @@ exports.saveBedMealRecords = function(req, res, next){
 };
 
 exports.getBedMealRecords = function(req, res, next){
-  var dateTimeStamp = req.query.meal_set_time_stamp;
+  var timeStamp = req.query.time_stamp || '';
   var bedId = req.query.bed_id || '';
-  var mealSetDate = new Date();
-  if(dateTimeStamp){
-    mealSetDate = new Date(parseInt(dateTimeStamp));
+  var time = new Date();
+  if(timeStamp) {
+    time = new Date(parseInt(timeStamp))
   }
 
-  bedMealRecordLogic.getBedMealRecord(mealSetDate, req.building._id, req.floor._id, bedId, function(err, bedMealRecords){
+  bedMealRecordLogic.getBedMealRecord(time, req.building._id, req.floor._id, bedId, function(err, bedMealRecords){
     if(err){
       return next(err);
     }
