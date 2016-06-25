@@ -30,75 +30,85 @@
     width: 100%;
     min-height: 750px;
 
-    background: #fff;
 
+    .search-content{
+      width: 100%;
+      background: #fff;
+      height: 600px;
 
-    .bed-list {
-      width: 95%;
-      margin: 0 auto;
+      .row{
+        height: 100%;
+        background: #fff;
+      }
+      .left-panel, .right-panel{
+        height: 100%;
+        overflow: auto;
+      }
+      .left-panel{
+        border-right: 1px solid #ccc;
+        box-shadow: 0 1px 5px #ccc;
 
-      .bed-framework{
-        padding: 10px;
+        .ee-table-list .row{
+          &:hover, &.selected{
+            background: @task-photos-theme-color;
+            color: #fff;
 
-        .bed-info{
-          border: 1px solid @task-photos-theme-color;
-          background: #fff;
-
-
-          .name{
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
           }
-
-          .set-area{
-
-            .set-item{
-              border-top: 1px solid @task-photos-theme-color;
-
-              &.selected{
-                .z-select-box{
-                  .selected{
-                    color: @task-photos-theme-color;
-                  }
-                }
-              }
-              label{
-                margin: 0;
-                padding: 0;
-                height: 33px;
-
-                background: @task-photos-theme-color;
-                color: #fff;
-                line-height: 33px;
-                text-align: center;
-              }
-            }
-            .breakfast, .lunch, .dinner{
-
-            }
-
-            .z-select-box{
-              border: none;
-              img{
-                display: none;
-              }
-              .z-select-panel .z-select-ul li:hover{
-                background: @task-photos-theme-color;
-              }
+          &:hover{
+            .handle:hover{
+              color: #f2f2f2;
             }
           }
         }
       }
+      .right-panel{
+        position: relative;
+        .hospitalized-info{
 
+          padding: 10px;
+          height: 40px;
+          line-height: 40px;
+          span{
+            margin-right: 10px;
+            &.name{
+              font-size: 20px;
+            }
+          }
+        }
+
+        .bed-meal-bills{
+          overflow: auto;
+          margin: 20px auto;
+          height: 480px;
+        }
+        .handle{
+          width: 100%;
+          height: 40px;
+          background: #fff;
+          button{
+            display: inline-block;
+            float: right;
+          }
+        }
+
+      }
+    }
+  }
+
+  form{
+    .submit-button{
+      display: none;
     }
   }
 
   .search-bar {
-    width: 95%;
+    width: 100%;
 
     margin: 0px auto;
-    padding: 20px 0;
+    padding: 20px 2.5%;
+
+    background: #eee;
+    box-shadow: 0 1px 5px #ccc;
 
     .filter-item {
       margin: 1px 0;
@@ -158,6 +168,7 @@
       width: 100%;
       margin: 0;
       padding:0;
+
       .filter-item{
         margin: 0 0 10px 0;
       }
@@ -199,7 +210,6 @@
       }
     }
 
-
     .handle{
       overflow: hidden;
       margin: 10px auto;
@@ -210,7 +220,7 @@
         float: right;
 
         width: 150px;
-        heigth: 30px;
+        height: 40px;
         line-height: 40px;
 
         font-size: 14px;
@@ -231,6 +241,9 @@
           &:hover{
             color: #666;
           }
+        }
+        &.submit-button{
+          display: none;
         }
       }
     }

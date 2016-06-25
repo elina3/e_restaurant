@@ -18,53 +18,427 @@
     <div class="hospitalized-info-page-body">
         <div class="search-bar">
             <div class="row selects">
-                <div class="filter-item status col-xs-2">
-                    <z-dropdown z-dropdown-model="filter.currentBuilding"
-                                z-dropdown-options="filter.buildings"
-                                z-dropdown-label="选择楼"
-                                z-dropdown-change="filterBuildingChange()"
-                                z-dropdown-disabled="filter.buildings.length<=1"
-                            >
-                    </z-dropdown>
-                </div>
-                <div class="filter-item discount col-xs-2">
-                    <z-dropdown z-dropdown-model="filter.currentFloor"
-                                z-dropdown-options="filter.floors"
-                                z-dropdown-label="选择楼层"
-                                z-dropdown-change="filterFloorChange()"
-                                z-dropdown-disabled="filter.floors.length===0"
-                            >
-                    </z-dropdown>
-                </div>
-                <div class="filter-item id-number col-xs-2">
-                    <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber" placeholder="请输入身份证号"/>
-                </div>
-                <div class="filter-item nickname col-xs-2">
-                    <input type="text" class="input-text" ng-model="filter.currentNickname" placeholder="请输入姓名"/>
-                </div>
-                <div class="filter-item time  col-xs-2">
-                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
-                           ng-model="datePicker.createTimeRange"
-                           min="datePicker.createTimeMinTime"
-                           options="datePicker.dateOptions"
-                           placeholder="入住时间"
-                            />
-                </div>
-                <div class="filter-item search-item col-xs-2">
-                    <div class="search" ng-click="search()">筛选</div>
-                </div>
+                <form>
+                    <div class="filter-item id-number col-xs-2">
+                        <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
+                               placeholder="请输入身份证号"/>
+                    </div>
+                    <div class="filter-item search-item col-xs-2">
+                        <div class="search" ng-click="search()">筛选</div>
+                        <input class="submit-button" type="submit" ng-click="search()">
+                    </div>
+                </form>
                 <div class="filter-item search-item col-xs-2">
                     <div class="search" ng-click="showPanel()">办理入住手续</div>
                 </div>
+            </div>
+        </div>
+        <div class="search-content">
+            <div class="row">
+                <div class="col-xs-4 left-panel">
+                    <div class="ee-table-list">
+                        <div class="content">
+                            <div class="row list-header">
+                                <div class="col-xs-3">
+                                    <span>床位信息</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>入院</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>出院</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>操作</span>
+                                </div>
+                            </div>
+                            <div class="row list-info selected">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+                            <div class="row list-info">
+                                <div class="col-xs-3">
+                                    <span>B座5楼23床</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>2016-3-10 12:20</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                        <z-pagination config="pageData.pagination"></z-pagination>
+                    </div>
+                </div>
+                <div class="col-xs-8 right-panel">
+                    <div class="hospitalized-info">
+                        <span class="name">王明霞</span>
+                        <span>女</span>
+                        <span>18321740710</span>
+                    </div>
+                    <div class="bed-meal-bills">
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-4">
+                                        <span>就餐日期</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>营养餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>金额（元）</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>状态</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info">
+                                    <div class="col-xs-4">
+                                        <span>2016-3-10 早餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>糖尿病饮食</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>15</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>未结账</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="handle">
+                        <button>导出账单</button>
+                        <button>结算</button>
+                    </div>
                 </div>
             </div>
+        </div>
     </div>
+
     <div class="ee-pop-mask" ng-show="panelConfig.isShow">
         <div class="ee-pop-wrapper">
             <div class="ee-pop-panel" ng-show="panelConfig.isShow">
                 <div class="ee-pop-header">
                     <div class="ee-pop-title">
                         <span>办理入住</span>
+
                         <div class="close" ng-click="closePanel()"></div>
                     </div>
                 </div>
@@ -72,6 +446,7 @@
                     <div class="hospitalized-info-new-panel">
                         <div class="info-item bed-info">
                             <p class="info-title">床位信息</p>
+
                             <div class="info-detail">
                                 <z-dropdown z-dropdown-model="panelConfig.newSicker.building"
                                             z-dropdown-options="panelConfig.buildings"
@@ -81,7 +456,7 @@
                                         >
                                 </z-dropdown>
                             </div>
-                            <div  class="info-detail">
+                            <div class="info-detail">
                                 <z-dropdown z-dropdown-model="panelConfig.newSicker.floor"
                                             z-dropdown-options="panelConfig.floors"
                                             z-dropdown-label="选择楼层"
@@ -90,7 +465,7 @@
                                         >
                                 </z-dropdown>
                             </div>
-                            <div  class="info-detail">
+                            <div class="info-detail">
                                 <z-dropdown z-dropdown-model="panelConfig.newSicker.bed"
                                             z-dropdown-options="panelConfig.beds"
                                             z-dropdown-label="选择床位"
@@ -99,38 +474,46 @@
                                 </z-dropdown>
                             </div>
                         </div>
-                        <div class="info-item search-bar">
-                            <p class="info-title">病人信息</p>
-                            <div class="row selects">
+
+                        <form>
+                            <div class="info-item search-bar">
+                                <p class="info-title">病人信息</p>
+
+                                <div class="row selects">
                                     <div class="filter-item col-xs-12">
-                                        <input class="input-text" type="text" placeholder="请输入病人身份证号" ng-model="panelConfig.newSicker.id_number"/>
+                                        <input class="input-text" type="text" placeholder="请输入病人身份证号"
+                                               ng-model="panelConfig.newSicker.id_number"/>
                                     </div>
                                     <div class="filter-item col-xs-12">
-                                        <input class="input-text" type="text" placeholder="请输入病人姓名" ng-model="panelConfig.newSicker.id_number"/>
+                                        <input class="input-text" type="text" placeholder="请输入病人姓名"
+                                               ng-model="panelConfig.newSicker.nickname"/>
                                     </div>
                                     <div class="filter-item col-xs-6">
                                         <z-dropdown z-dropdown-model="panelConfig.newSicker.sex"
-                                                    z-dropdown-options="filter.sexes"
+                                                    z-dropdown-options="panelConfig.sexes"
                                                     z-dropdown-label="选择性别"
-                                                    z-dropdown-disabled="filter.sexes.length===0"
+                                                    z-dropdown-disabled="panelConfig.sexes.length===0"
                                                 >
                                         </z-dropdown>
                                     </div>
-                                    <div class="filter-item col-xs-12">
-
-                                        <input class="input-text" type="text" placeholder="电话" ng-model="panelConfig.newSicker.phone"/>
+                                    <div class="filter-item col-xs-12"><input class="input-text" type="text"
+                                                                              placeholder="电话"
+                                                                              ng-model="panelConfig.newSicker.phone"/>
                                     </div>
                                     <div class="filter-item col-xs-12">
-                                        <input class="input-text" type="text" placeholder="备注" ng-model="panelConfig.newSicker.description"/>
+                                        <input class="input-text" type="text" placeholder="备注"
+                                               ng-model="panelConfig.newSicker.description"/>
                                     </div>
                                 </div>
-                        </div>
+                            </div>
 
 
-                        <div class="handle">
-                            <button class="save" ng-click="saveGoods()">保存</button>
-                            <button class="reset" ng-click="resetGoods()">重置</button>
-                        </div>
+                            <div class="handle">
+                                <button class="save" ng-click="save()">保存</button>
+                                <button class="reset" ng-click="reset()">重置</button>
+                                <button class="submit-button" ng-click="save()" type="submit">提交</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
