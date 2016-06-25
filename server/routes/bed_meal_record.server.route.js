@@ -15,7 +15,7 @@ module.exports = function (app) {
     bedMealRecordController.getBedMealRecords);
 
   //根据楼层获取当天某一餐的病床普食设置信息
-  app.route('/bed_meal_records/healthy_normal').get(authFilter.requireUser,
+  app.route('/bed_meal_records/healthy_normal').get(authFilter.requireClient,
     bedFilter.requireBuilding,
     bedFilter.requireFloor,
     bedMealRecordController.getHealthyNormalBedMealRecordByFloorToday);
