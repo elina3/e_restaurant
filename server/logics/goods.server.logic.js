@@ -216,3 +216,15 @@ exports.getFirstFreeMealGoods = function(callback){
        return callback(null, freeMeals[0]);
      });
 };
+
+exports.getHealthyNormalGoodsList =function(pagination, callback){
+  var query = {
+    deleted_status: false,
+    status: 'on_sale',
+    type: 'healthy_normal'
+  };
+
+  queryGoodsList(query, pagination.current_page, pagination.limit, pagination.skip_count, function(err, result){
+    return callback(err, result);
+  });
+};

@@ -124,3 +124,19 @@ exports.getFirstFreeMealGoods = function(req, res, next){
     return next();
   });
 };
+
+exports.getHealthyNormalGoods =function(req, res, next){
+  goodsLogic.getHealthyNormalGoodsList(req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      goods_list: result.goodsList
+    };
+    return next();
+
+  });
+};

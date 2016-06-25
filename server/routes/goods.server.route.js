@@ -4,7 +4,8 @@
 'use strict';
 
 var goodsController = require('../controllers/goods');
-var authFilter = require('../filters/auth');
+var authFilter = require('../filters/auth'),
+  paginationFilter = require('../filters/pagination');
 
 module.exports = function (app) {
   app.route('/goods').post(authFilter.requireUser, goodsController.addNewGoods);
@@ -18,4 +19,5 @@ module.exports = function (app) {
   app.route('/client/goods/list').get(goodsController.getOpeningGoodsList);
   app.route('/client/goods').get(goodsController.getGoodsDetail);
   app.route('/client/goods/free_meal').get(goodsController.getFirstFreeMealGoods);
+  app.route('/client/goods/healthy_normal').get(paginationFilter.requirePagination, goodsController.getHealthyNormalGoods);
 };
