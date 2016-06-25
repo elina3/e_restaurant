@@ -32,6 +32,11 @@ angular.module('EClientWeb').directive('eHeader', [
                         tipsNum: 0
                     },
                     {
+                        label: '营养餐',
+                        state: 'healthy_normal',
+                        title: '营养餐'
+                    },
+                    {
                         label: '我的订单',
                         state: 'my_orders'
                     }

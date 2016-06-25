@@ -1,0 +1,77 @@
+
+<e-header></e-header>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="healthy-normal-page-view">
+    <div class="search-bar">
+        <div class="row selects">
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentMealType"
+                            z-dropdown-options="pageData.mealTags"
+                            z-dropdown-label="就餐类型"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentFloor"
+                            z-dropdown-options="pageData.floors"
+                            z-dropdown-label="楼层"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentFloor"
+                            z-dropdown-options="pageData.floors"
+                            z-dropdown-label="床位"
+                        >
+                </z-dropdown>
+            </div>
+            <form>
+
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="search()">筛选</div>
+                    <input class="submit-button" type="submit" ng-click="search()">
+                </div>
+            </form>
+            <div class="filter-item save col-xs-2">
+                <div class="save" ng-click="showPanel()">提交选餐</div>
+            </div>
+        </div>
+    </div>
+    <div class="hospitalized-info">
+        <strong>姓名：王小明</strong><span>身份证：410825198805177625</span>
+    </div>
+    <div class="goods-list">
+        <!--<div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">-->
+        <div class="goods-item" ng-repeat="goods in pageData.goodsList">
+            <div class="photo-area">
+                <e-image image-key="goods.display_photos[0]"></e-image>
+                <!--<div class="photo">-->
+                <!--<img err-src="images/global/default_goods.png"  ng-src={{generatePhotoSrc(goods)}}>-->
+                <!--</div>-->
+            </div>
+            <div class="desc">
+                <div class="wrap">
+                    <div class="description">
+                        {{goods.name}}
+                    </div>
+                    <div class="price">
+                        <span>{{goods.price === -1 ? '待定': ('¥' + goods.price)}}</span>
+                    </div>
+                    <div class="handle">
+                        <input ng-model="goods.count" type="number"><strong>份</strong>
+                        <!--<div class="add" ng-click="addToCart(goods, $event)">加入购物车</div>-->
+                        <!--<div class="buy-now" ng-click="buyNow(goods, $event)">立即购买</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">
+        <div class="load-area">
+            <span class="click-button" ng-show="pageData.pagination.totalCount > pageData.pagination.skipCount" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="pageData.pagination.totalCount <= pageData.pagination.skipCount">已全部加载</span>
+        </div>
+    </div>
+</div>
+
+<e-footer></e-footer>

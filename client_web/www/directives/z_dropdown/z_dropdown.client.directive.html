@@ -1,0 +1,18 @@
+<div ng-class="{'disabled': zDropdownDisabled || zDropdownWaiting}"
+     class="z-select-box z-dropdown-view"
+     ng-click="elementClick($event)"
+        >
+    <span class="selected">{{zDropdownWaiting?'加载中...':generalSelectedText()}}</span>
+    <img ng-src="{{'images/global/'+(zDropdownWaiting?'loading-more.gif':'arrow_open.png')}}" class="arrow-icon"/>
+
+    <div class="z-select-panel">
+        <ul class="z-select-ul" ng-show="config.showOptions">
+            <li ng-repeat="option in zDropdownOptions"
+                ng-class="{'separator': option.separator}"
+                ng-click="selectOption(option,$event)"
+                    >
+                <span>{{option.text}}</span>
+            </li>
+        </ul>
+    </div>
+</div>
