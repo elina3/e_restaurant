@@ -24,8 +24,8 @@ var GoodsSchema = new Schema({
     type: String,
     default: ''
   },
-  type: {
-    enum: ['free_meal', 'normal'],
+  type: {//工作餐，       普通，     营养餐普食，        营养餐流质饮食，  营养餐半流质饮食，     糖尿病饮食，        低脂低盐饮食
+    enum: ['free_meal', 'normal', 'healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'],
     type: String,
     default: false
   },

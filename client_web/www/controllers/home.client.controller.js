@@ -100,7 +100,12 @@ angular.module('EClientWeb').controller('HomeController',
 
       function loadGoods(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        GoodsService.getGoodsList($scope.pageData.pagination, function(err, data){
+        GoodsService.getNormalGoodsList({
+          currentPage: $scope.pageData.pagination.currentPage,
+          limit: $scope.pageData.pagination.limit,
+          skipCount: $scope.pageData.pagination.skipCount,
+          type: 'normal'
+        }, function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if(err){
             $scope.$emit(GlobalEvent.onShowAlert, err);

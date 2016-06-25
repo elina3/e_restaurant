@@ -62,8 +62,6 @@ exports.saveBedMealRecord = function(user, building, floor, bedMealInfos, date, 
 
 exports.getBedMealRecord = function(mealSetDate, buildingId, floorId, bedId, callback){
   mealSetDate = parseToDate(mealSetDate);//如果为空则为今天的日期
-  console.log('Date');
-  console.log(mealSetDate);
   var query = {meal_set_date: mealSetDate,
     building: buildingId,
     floor: floorId
@@ -75,6 +73,17 @@ exports.getBedMealRecord = function(mealSetDate, buildingId, floorId, bedId, cal
   BedMealRecord.find(query)
     .exec(function(err, bedMealRecords){
       if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, bedMealRecords);
+    });
+};
+
+exports.getBedMealRecordsByIds = function(ids, callback){
+  BedMealRecord.find({_id: {$in: ids}})
+    .exec(function(err, bedMealRecords){
+      if(err || bedMealRecords){
         return callback({err: systemError.database_query_error});
       }
 

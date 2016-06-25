@@ -6,11 +6,11 @@ angular.module('EClientWeb').factory('GoodsService',
   ['RequestSupport', 'SystemError',
     function (RequestSupport, SystemError) {
       return {
-        getGoodsList: function (param, callback) {
+        getNormalGoodsList: function (param, callback) {
           RequestSupport.executeGet('/client/goods/list', {
             skip_count: param.skipCount,
             limit: param.limit,
-            goods_ids: param.goods_ids
+            type: param.type
           })
             .then(function (data) {
               if (!callback) {

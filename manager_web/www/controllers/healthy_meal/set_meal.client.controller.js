@@ -11,9 +11,10 @@ angular.module('EWeb').controller('SetMealController',
 
       var mealTypes = {
         normal: '普食',
-        soft_diets: '软食',
-        liquid_diets: '流食',
-        semi_liquid_diets: '半流食'
+        liquid_diets: '流质',
+        semi_liquid_diets: '半流质',
+        diabetic_diets: '糖尿病饮食',
+        low_fat_low_salt_diets: '低脂低盐饮食'
       };
 
       $scope.filter = {
@@ -22,12 +23,14 @@ angular.module('EWeb').controller('SetMealController',
         buildings: [],
         floors: [],
         mealTypes: [
-          {id: 'normal', text: mealTypes.normal},
-          {id: 'soft_diets', text: mealTypes.soft_diets},
+          {id: 'healthy_normal', text: mealTypes.normal},
           {id: 'liquid_diets', text: mealTypes.liquid_diets},
-          {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets}
+          {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets},
+          {id: 'diabetic_diets', text: mealTypes.diabetic_diets},
+          {id: 'low_fat_low_salt_diets', text: mealTypes.low_fat_low_salt_diets}
         ]
       };
+
       $scope.changeBuilding = function () {
         if ($scope.filter.currentBuilding) {
           BedService.getFloorsByBuildingId($scope.filter.currentBuilding.id, function (err, data) {
@@ -58,7 +61,7 @@ angular.module('EWeb').controller('SetMealController',
       function getTimeStamp(){
         if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
           var time = moment($scope.pageShow.createTimeRange.startDate);
-          return new Date(time).getTime()
+          return new Date(time).getTime();
         }
         return;
       }

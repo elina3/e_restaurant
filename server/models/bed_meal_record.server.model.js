@@ -15,6 +15,9 @@ var BedMealRecordSchema = new Schema({
     type:String,
     default:'BedMealRecord'
   },
+  hospitalized_info: {//入住信息
+    type: Schema.Types.ObjectId
+  },
   meal_set_date: {//日期
     type: Date
   },
@@ -30,7 +33,7 @@ var BedMealRecordSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Bed'
   },
-  breakfast: {//'liquid_diets', 'normal', 'soft_diets', 'semi_liquid_diets'
+  breakfast: {//'healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'
     type: String
   },
   lunch: {

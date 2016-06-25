@@ -1,0 +1,144 @@
+<z-header></z-header>
+<div class="hospitalized-info-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">住院管理</span>
+                </div>
+                <div class="col-xs-6">
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hospitalized-info-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentBuilding"
+                                z-dropdown-options="filter.buildings"
+                                z-dropdown-label="选择楼"
+                                z-dropdown-change="filterBuildingChange()"
+                                z-dropdown-disabled="filter.buildings.length<=1"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item discount col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentFloor"
+                                z-dropdown-options="filter.floors"
+                                z-dropdown-label="选择楼层"
+                                z-dropdown-change="filterFloorChange()"
+                                z-dropdown-disabled="filter.floors.length===0"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item id-number col-xs-2">
+                    <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber" placeholder="请输入身份证号"/>
+                </div>
+                <div class="filter-item nickname col-xs-2">
+                    <input type="text" class="input-text" ng-model="filter.currentNickname" placeholder="请输入姓名"/>
+                </div>
+                <div class="filter-item time  col-xs-2">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="datePicker.createTimeRange"
+                           min="datePicker.createTimeMinTime"
+                           options="datePicker.dateOptions"
+                           placeholder="入住时间"
+                            />
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="search()">筛选</div>
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="showPanel()">办理入住手续</div>
+                </div>
+                </div>
+            </div>
+    </div>
+    <div class="ee-pop-mask" ng-show="panelConfig.isShow">
+        <div class="ee-pop-wrapper">
+            <div class="ee-pop-panel" ng-show="panelConfig.isShow">
+                <div class="ee-pop-header">
+                    <div class="ee-pop-title">
+                        <span>办理入住</span>
+                        <div class="close" ng-click="closePanel()"></div>
+                    </div>
+                </div>
+                <div class="ee-pop-body">
+                    <div class="hospitalized-info-new-panel">
+                        <div class="info-item bed-info">
+                            <p class="info-title">床位信息</p>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.building"
+                                            z-dropdown-options="panelConfig.buildings"
+                                            z-dropdown-label="选择楼"
+                                            z-dropdown-change="panelBuildingChange()"
+                                            z-dropdown-disabled="panelConfig.buildings.length<=1"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div  class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.floor"
+                                            z-dropdown-options="panelConfig.floors"
+                                            z-dropdown-label="选择楼层"
+                                            z-dropdown-change="panelFloorChange()"
+                                            z-dropdown-disabled="panelConfig.floors.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div  class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.bed"
+                                            z-dropdown-options="panelConfig.beds"
+                                            z-dropdown-label="选择床位"
+                                            z-dropdown-disabled="panelConfig.beds.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+                        <div class="info-item search-bar">
+                            <p class="info-title">病人信息</p>
+                            <div class="row selects">
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="请输入病人身份证号" ng-model="panelConfig.newSicker.id_number"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="请输入病人姓名" ng-model="panelConfig.newSicker.id_number"/>
+                                    </div>
+                                    <div class="filter-item col-xs-6">
+                                        <z-dropdown z-dropdown-model="panelConfig.newSicker.sex"
+                                                    z-dropdown-options="filter.sexes"
+                                                    z-dropdown-label="选择性别"
+                                                    z-dropdown-disabled="filter.sexes.length===0"
+                                                >
+                                        </z-dropdown>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+
+                                        <input class="input-text" type="text" placeholder="电话" ng-model="panelConfig.newSicker.phone"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="备注" ng-model="panelConfig.newSicker.description"/>
+                                    </div>
+                                </div>
+                        </div>
+
+
+                        <div class="handle">
+                            <button class="save" ng-click="saveGoods()">保存</button>
+                            <button class="reset" ng-click="resetGoods()">重置</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

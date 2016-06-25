@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/2/23.
  */
 'use strict';
+var async = require('async');
 var mongooseLib = require('../libraries/mongoose');
 var appDb = mongooseLib.appDb;
 var Goods = appDb.model('Goods');
@@ -154,14 +155,35 @@ exports.getGoodsList = function(currentPage, limit, skipCount, callback){
   });
 };
 
+exports.getFirstHealthyGoods = function(healthyTypes, callback){
+  var goodsList = [];
+  async.each(healthyTypes, function(healthyType, eachCallback){
+    Goods.first({type: healthyType, deleted_status: false, status: 'on_sale'})
+      .exec(function(err, goods){
+        if(err){
+          return callback({err: systemError.database_query_error});
+        }
+
+        if(!goods){
+          return callback({err: goodsError.goods_not_exist});
+        }
+
+        goodsList.push(goods);
+        return callback();
+      });
+  }, function(err){
+    return callback(err, goodsList);
+  });
+};
+
 exports.getOpeningGoodsList = function(filter, currentPage, limit, skipCount, callback){
   var query = {
     deleted_status: false,
-    status: {$nin: ['none']},
-    type: {$ne: 'free_meal'}
+    status: {$nin: ['none']}
   };
-  if(filter.goods_ids && filter.goods_ids.length > 0){
-    query._id = {$in: filter.goods_ids};
+
+  if(filter.goodsType){
+    query.type = filter.goodsType;
   }
 
   queryGoodsList(query, currentPage, limit, skipCount, function(err, result){

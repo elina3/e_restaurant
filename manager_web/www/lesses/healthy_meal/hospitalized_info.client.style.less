@@ -1,0 +1,277 @@
+.hospitalized-info-page-view {
+
+  .ee-banner {
+    background: @task-photos-theme-color;
+
+    .handle-button{
+      display: inline-block;
+      overflow: hidden;
+      float: right;
+
+      margin-top: 10px;
+
+      width: 100px;
+      height: 40px;
+
+      border: 1px solid #fff;
+      color: #fff;
+      font-size: 12px;
+      font-weight: normal !important;
+      text-align: center;
+      line-height: 40px;
+
+      cursor: pointer;
+    }
+
+  }
+
+
+  .hospitalized-info-page-body {
+    width: 100%;
+    min-height: 750px;
+
+    background: #fff;
+
+
+    .bed-list {
+      width: 95%;
+      margin: 0 auto;
+
+      .bed-framework{
+        padding: 10px;
+
+        .bed-info{
+          border: 1px solid @task-photos-theme-color;
+          background: #fff;
+
+
+          .name{
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+          }
+
+          .set-area{
+
+            .set-item{
+              border-top: 1px solid @task-photos-theme-color;
+
+              &.selected{
+                .z-select-box{
+                  .selected{
+                    color: @task-photos-theme-color;
+                  }
+                }
+              }
+              label{
+                margin: 0;
+                padding: 0;
+                height: 33px;
+
+                background: @task-photos-theme-color;
+                color: #fff;
+                line-height: 33px;
+                text-align: center;
+              }
+            }
+            .breakfast, .lunch, .dinner{
+
+            }
+
+            .z-select-box{
+              border: none;
+              img{
+                display: none;
+              }
+              .z-select-panel .z-select-ul li:hover{
+                background: @task-photos-theme-color;
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  .search-bar {
+    width: 95%;
+
+    margin: 0px auto;
+    padding: 20px 0;
+
+    .filter-item {
+      margin: 1px 0;
+      padding:2px;
+      .e-date-picker {
+        width: 100%;
+        padding: 0 10px;
+        border: 1px solid #d7d7d7;
+        height: 34px;
+        line-height: 34px;
+      }
+      .input-text {
+        width: 100%;
+        height: 34px;
+        line-height: 34px;
+        padding: 0 10px;
+        border: 1px solid #d7d7d7;
+      }
+    }
+
+    .search {
+      height: 35px;
+      line-height: 35px;
+      border: 1px solid @task-photos-theme-color;
+      color: @task-photos-theme-color;
+      text-align: center;
+
+      cursor: pointer;
+      overflow: hidden;
+      &:hover {
+        border-color: #72CF22;
+        color: #72CF22;
+      }
+    }
+    .save{
+      height: 35px;
+      line-height: 35px;
+      color: #fff;
+      background-color: @task-photos-theme-color;
+      text-align: center;
+
+      cursor: pointer;
+      overflow: hidden;
+      &:hover {
+        background-color: #72CF22;
+      }
+    }
+  }
+
+  .ee-pop-mask .ee-pop-wrapper .ee-pop-panel .ee-pop-header{
+    background: @task-photos-theme-color !important;
+  }
+
+  .hospitalized-info-new-panel{
+    padding: 0 20px;
+    .search-bar{
+      width: 100%;
+      margin: 0;
+      padding:0;
+      .filter-item{
+        margin: 0 0 10px 0;
+      }
+    }
+    .info-item{
+      margin-top: 20px;
+      &.bed-info{
+        height: 60px;
+      }
+      .row{
+        padding: 0;
+      }
+      .info-title{
+        display: block;
+        height: 20px;
+        line-height: 20px;
+        font-size: 16px;
+      }
+      .info-detail{
+        display: inline-block;
+        float: left;
+
+        width: 25%;
+        margin-right: 5%;
+        height: 40px;
+        line-heigth: 40px;
+
+        label{
+          font-weight: normal;
+          color: #666;
+          font-size: 14px;
+        }
+        input{
+          margin-left: 5px;
+        }
+        .z-select-panel{
+          z-index: 2001;
+        }
+      }
+    }
+
+
+    .handle{
+      overflow: hidden;
+      margin: 10px auto;
+
+      button{
+        display: inline-block;
+        overflow: hidden;
+        float: right;
+
+        width: 150px;
+        heigth: 30px;
+        line-height: 40px;
+
+        font-size: 14px;
+        outline: none;
+        border: none;
+        text-align: center;
+        &.save{
+          color: #fff;
+          background: @task-photos-theme-color;
+        }
+        &.reset{
+          border: none;
+
+          background: #fff;
+          width: 80px;
+          color: #999;
+          margin-left: 0;
+          &:hover{
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 568px) {
+  .hospitalized-info-page-view {
+    width: 100%;
+    .search-bar{
+      .selects{
+        .time{
+          width: 100%;
+        }
+        .status{
+          width: 50%;
+        }
+        .discount{
+          width: 50%;
+        }
+        .id-number, .nickname{
+          width: 100%;
+        }
+
+        .search-item{
+
+          width: 100%;
+        }
+      }
+
+    }
+    .bed-list{
+      .bed-framework{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
+  }
+}
+
+
+
+
