@@ -57,8 +57,13 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 
       bedMealBill.recent_modify_user = user._id;
       bedMealBill.recent_modify_user_info = userInfo;
-      bedMealBill.meal_type = bedMealRecord[mealTag];
-      bedMealBill.goods_bills = goodsBills;
+
+
+      if(goodsBills){//goodsBills为空,表示统一下单的普食，不更新goods_bills
+        bedMealBill.goods_bills = goodsBills;
+        bedMealBill.meal_type = bedMealRecord[mealTag];
+      }
+
       bedMealBill.save(function(err, newBedMealBill){
         if(err || !newBedMealBill){
           return callback({err: systemError.database_save_error});
@@ -72,13 +77,19 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, callback){
   async.each(mealTags, function(mealTag, eachCallback){
     var goodsBills = [];
-    if(!bedMealRecord[mealTag]){//没有选
-      goodsBills = [];
-    }else if(healthyMeals[bedMealRecord[mealTag]]){//选了，但是不是选择普食
-      goodsBills = [getGoodsBills([healthyMeals[bedMealRecord[mealTag]]])]
-    }else{//选择普食，商品待选
-      goodsBills = [];
+    if(!bedMealRecord[mealTag] || bedMealRecord[mealTag] === 'healthy_normal'){//没有选或选择普食
+      return eachCallback();
     }
+
+    var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
+    if(!healthyGoodsInfo){
+      return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
+    }
+
+    if(healthyMeals[bedMealRecord[mealTag]]){//选了，但是不是选择普食
+      goodsBills = getGoodsBills([healthyGoodsInfo]);
+    }
+
     upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, function(err, bedMealBill){
       return eachCallback(err);
     });
