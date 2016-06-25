@@ -67,11 +67,11 @@
         cursor: pointer;
         overflow: hidden;
         &:hover {
-          border-color: #72CF22;
-          color: #72CF22;
+          border-color: @task-photos-theme-color-hover;
+          color: @task-photos-theme-color-hover;
         }
       }
-      .save{
+      .save,.bill{
         height: 35px;
         line-height: 35px;
         color: #fff;
@@ -81,7 +81,17 @@
         cursor: pointer;
         overflow: hidden;
         &:hover {
-          background-color: #72CF22;
+          background-color: @task-photos-theme-color-hover;
+        }
+      }
+      .bill{
+        background-color: #EF6F70;
+        text-align: center;
+
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          background-color: #DC6465;
         }
       }
     }
@@ -108,6 +118,10 @@
 
             .set-item{
               border-top: 1px solid @task-photos-theme-color;
+
+              .no-padding{
+                padding: 0;
+              }
 
               &.selected{
                 .z-select-box{

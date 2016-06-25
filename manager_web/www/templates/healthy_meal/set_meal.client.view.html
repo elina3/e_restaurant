@@ -48,26 +48,30 @@
                 <div class="filter-item search-item col-xs-2">
                     <div class="search" ng-click="search()">筛选</div>
                 </div>
-                <div class="filter-item search-item col-xs-2">
-                    <div class="search" ng-click="applyYesterday()">应用前一天数据</div>
-                </div>
+                <!--<div class="filter-item search-item col-xs-2">-->
+                    <!--<div class="search" ng-click="applyYesterday()">应用前一天数据</div>-->
+                <!--</div>-->
                 <div class="filter-item search-item col-xs-2">
                     <div class="save" ng-click="saveMealSet()">保存</div>
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="bill" ng-click="generateBill()">生成账单</div>
                 </div>
             </div>
         </div>
         <div class="bed-list row">
             <div class="bed-framework col col-lg-2 col-md-4 col-sm-6 col-xs-12" ng-repeat="bed in beds">
                 <div class="bed-info">
-                    <div class="name"><strong>{{bed.name}}</strong></div>
+                    <div class="name"><strong>{{bed.name}}（王明霞）</strong></div>
                     <div class="set-area">
                         <div class="set-item breakfast row" ng-class="{'selected': bed.breakfast}">
                             <label class="col-xs-2">早</label>
 
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 no-padding">
                                 <z-dropdown z-dropdown-model="bed.breakfast"
                                             z-dropdown-options="filter.mealTypes"
                                             z-dropdown-label="无"
+                                            z-dropdown-disabled = "true"
                                         >
                                 </z-dropdown>
                             </div>
@@ -75,7 +79,7 @@
                         <div class="set-item lunch row" ng-class="{'selected': bed.lunch}">
                             <label class="col-xs-2">中</label>
 
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 no-padding">
                                 <z-dropdown z-dropdown-model="bed.lunch"
                                             z-dropdown-options="filter.mealTypes"
                                             z-dropdown-label="无"
@@ -86,7 +90,7 @@
                         <div class="set-item dinner row" ng-class="{'selected': bed.dinner}">
                             <label class="col-xs-2">晚</label>
 
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 no-padding">
                                 <z-dropdown z-dropdown-model="bed.dinner"
                                             z-dropdown-options="filter.mealTypes"
                                             z-dropdown-label="无"

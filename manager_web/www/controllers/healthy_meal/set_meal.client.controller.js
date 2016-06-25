@@ -115,6 +115,9 @@ angular.module('EWeb').controller('SetMealController',
       $scope.applyYesterday = function () {
 
       };
+      $scope.generateBill = function(){
+        alert('bill');
+      };
       $scope.saveMealSet = function () {
         var formattedBedMealInfos = $scope.beds.filter(function (bed) {
           if (bed.breakfast || bed.lunch || bed.dinner) {
