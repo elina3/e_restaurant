@@ -176,3 +176,20 @@ exports.getHospitalizedInfoById = function(hospitalizedInfoId, population, callb
       return callback(null, hospitalizedInfo);
     });
 };
+
+exports.getHospitalizedInfoByBed = function(buildingId, floorId, bedId, callback){
+  HospitalizedInfo.findOne({
+    deleted_status: false,
+    building: buildingId,
+    floor: floorId,
+    bed: bedId,
+    is_hospitalized: true,
+    is_leave_hospital: false
+  })
+    .exec(function(err, hospitalizedInfo){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+      return callback(null, hospitalizedInfo);
+    });
+};

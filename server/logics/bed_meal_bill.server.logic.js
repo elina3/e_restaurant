@@ -248,3 +248,14 @@ exports.getMealBillByFilter =function(hospitalizedInfo, status, pagination, call
       });
   });
 };
+
+exports.getMealBillByRecordId = function(bedMealRecordId, callback){
+  BedMealBill.findOne({bed_meal_record: bedMealRecordId})
+    .exec(function(err, bedMealBill){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, bedMealBill);
+    });
+};

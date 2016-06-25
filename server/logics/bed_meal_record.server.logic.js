@@ -18,51 +18,95 @@ function parseToDate(time){
   return new Date(time.toDateString());
 }
 
-exports.saveBedMealRecord = function(user, building, floor, bedMealInfos, date, callback){
-  var today = parseToDate(new Date());
-  var date = parseToDate(date);
-  if(date < today){
+function translateTime(createTime){
+  var hour = createTime.getHours();
+  if(hour >= 0 && hour < 10){
+    return 'breakfast';
+  }
+  else if(hour >= 10 && hour < 16){
+    return 'lunch';
+  }else{
+    return 'dinner';
+  }
+}
+
+exports.updateBedMealRecordSetting = function(date, bedMealRecord, breakfast, lunch, dinner, callback){
+  var now = new Date();
+  var today = parseToDate(now);
+  var mealSetDate = bedMealRecord.meal_set_date;
+  if(mealSetDate < today){
     return callback({err: bedMealRecordError.time_out});
   }
+  var isToday = mealSetDate === today;
 
-  var bedMealRecords = [];
-  async.each(bedMealInfos, function(bedMealInfo, eachCallback){
-    BedMealRecord.findOne({meal_set_date: date, floor: floor._id, building: building._id, bed: bedMealInfo._id})
-      .exec(function(err, bedMealRecord){
-        if(err){
-          return eachCallback({err: systemError.database_query_error});
-        }
+  var currentMealType = translateTime(now);
 
-        if(!bedMealRecord){
-          bedMealRecord = new BedMealRecord({
-            meal_set_date: date,
-            building: building._id,
-            floor: floor._id,
-            bed: bedMealInfo._id
-          });
-        }
+  if(isToday){
+    if(currentMealType === 'dinner'){
+      bedMealRecord.dinner = dinner;
+    }else if(currentMealType === 'lunch'){
+      bedMealRecord.lunch = lunch;
+    }else{
+      bedMealRecord.breakfast = breakfast;
+    }
+  }else{
+    bedMealRecord.breakfast = breakfast;
+    bedMealRecord.lunch = lunch;
+    bedMealRecord.dinner = dinner;
+  }
 
-        bedMealRecord.breakfast = bedMealInfo.breakfast;
-        bedMealRecord.lunch = bedMealInfo.lunch;
-        bedMealRecord.dinner = bedMealInfo.dinner;
-        bedMealRecord.create_user = user;
-        bedMealRecord.save(function(err, newBedMealRecord){
-          if(err || !newBedMealRecord){
-            return eachCallback({err: systemError.database_save_error});
-          }
+  bedMealRecord.save(function(err, newBedMealRecord){
+    if(err || !newBedMealRecord){
+      return callback({err: systemError.database_save_error});
+    }
 
-          bedMealRecords.push(newBedMealRecord);
-          return eachCallback(null, newBedMealRecord);
-        });
-      });
-  }, function(err){
-    return callback(err, bedMealRecords);
+    return callback(null, newBedMealRecord);
   });
+};
+
+exports.createAndGetBedMealRecord = function(user, mealSetDate, hospitalizedInfo, buildingId, floorId, bedId, callback){
+  mealSetDate = parseToDate(mealSetDate);//如果为空则为今天的日期
+  var query = {
+    meal_set_date: mealSetDate,
+    hospitalized_info: hospitalizedInfo._id,
+    building: buildingId,
+    floor: floorId,
+    bed: bedId,
+    deleted_status: false
+  };
+  BedMealRecord.findOne(query)
+    .exec(function(err, bedMealRecord){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      if(bedMealRecord){
+        return callback(null, bedMealRecord);
+      }
+
+      bedMealRecord = new BedMealRecord({
+        meal_set_date: mealSetDate,
+        hospitalized_info: hospitalizedInfo._id,
+        building: buildingId,
+        floor: floorId,
+        bed: bedId,
+        deleted_status: false,
+        create_user: user._id
+      });
+      bedMealRecord.save(function(err, newBedMealRecord){
+        if(err || !newBedMealRecord){
+          return callback({err: systemError.database_save_error})
+        }
+
+        return callback(null, newBedMealRecord);
+      });
+    });
 };
 
 exports.getBedMealRecord = function(mealSetDate, buildingId, floorId, bedId, callback){
   mealSetDate = parseToDate(mealSetDate);//如果为空则为今天的日期
-  var query = {meal_set_date: mealSetDate,
+  var query = {
+    meal_set_date: mealSetDate,
     building: buildingId,
     floor: floorId
   };
