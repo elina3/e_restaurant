@@ -58,7 +58,7 @@
                         <span>{{goods.price === -1 ? '待定': ('¥' + goods.price)}}</span>
                     </div>
                     <div class="handle">
-                        <input ng-model="goods.count" type="number"><strong>份</strong>
+                        <input ng-model="goods.count" min="0" type="number"><strong>份</strong>
                         <!--<div class="add" ng-click="addToCart(goods, $event)">加入购物车</div>-->
                         <!--<div class="buy-now" ng-click="buyNow(goods, $event)">立即购买</div>-->
                     </div>
