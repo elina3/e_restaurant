@@ -87,8 +87,60 @@ exports.chooseGoodsBill = function (req, res, next) {
 };
 
 exports.queryBedMealBillsByFilter = function (req, res, next) {
-  var status = req.query.status || 'un_paid';
-  bedMealBillLogic.getMealBillByFilter(status, req.hospitalized_info, req.pagination, function(err, result){
+  var timeRange = JSON.parse(req.query.time_range) || {};
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  bedMealBillLogic.getMealBillByFilter({
+    status: req.query.status || '',
+    timeTag: req.query.time_tag || '',
+    idNumber: req.query.id_number || '',
+    startTime: startTime,
+    endTime: endTime
+  }, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      bed_meal_bills: result.bedMealBills
+    };
+    return next();
+  });
+};
+
+exports.getBedMealBillStatistic = function(req, res, next){
+  var timeRange = JSON.parse(req.query.time_range) || {};
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  bedMealBillLogic.getBedMealBillTotalAmount({
+    status: req.query.status || '',
+    timeTag: req.query.time_tag || '',
+    idNumber: req.query.id_number || '',
+    startTime: startTime,
+    endTime: endTime
+  }, function(err, totalAmount){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      totalAmount: totalAmount
+    };
+    return next();
+  });
+};
+
+exports.querySickerBedMealBillsByFilter = function (req, res, next) {
+  bedMealBillLogic.getMealBillByFilter({
+    status: req.query.status || 'un_paid',
+    hospitalizedInfo: req.hospitalized_info
+  }, req.pagination, function(err, result){
     if(err){
       return next(err);
     }
