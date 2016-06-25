@@ -205,3 +205,46 @@ exports.getTotalAmountByHospitalizedInfoId = function(hospitalizedInfoId, callba
     return callback(null, result[0]);
   });
 };
+
+//根据条件获取账单
+exports.getMealBillByFilter =function(hospitalizedInfo, status, pagination, callback){
+  var query = {
+    deleted_status: false
+  };
+
+  if(status === 'un_paid'){
+    query.is_checkout = false;
+  }else if(status === 'paid'){
+    query.is_checkout = true;
+  }
+
+  BedMealBill.count(query, function(err, totalCount){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    if (pagination.limit === -1) {
+      pagination.limit = totalCount;
+    }
+
+    if (pagination.skipCount === -1) {
+      pagination.skipCount = pagination.limit * (pagination.currentPage - 1);
+    }
+
+    BedMealBill.find(query)
+      .sort({update_time: -1})
+      .skip(pagination.skipCount)
+      .limit(pagination.limit)
+      .exec(function(err, bedMealBills){
+        if(err || bedMealBills){
+          return callback({err: systemError.database_query_error});
+        }
+
+        return callback(null, {
+          bedMealBills: bedMealBills,
+          limit: pagination.limit,
+          totalCount: totalCount
+        });
+      });
+  });
+};

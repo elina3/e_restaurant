@@ -87,9 +87,33 @@ exports.chooseGoodsBill = function (req, res, next) {
 };
 
 exports.queryBedMealBillsByFilter = function (req, res, next) {
+  var status = req.query.status || 'un_paid';
+  bedMealBillLogic.getMealBillByFilter(status, req.hospitalized_info, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
 
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      bed_meal_bills: result.bedMealBills
+    };
+    return next();
+
+  });
 };
 
 exports.checkoutByHospitalizedInfoId = function (req, res, next) {
+  bedMealBillLogic.checkoutByHospitalizedInfoId(req.user, req.hospitalized_info, function(err, result){
+    if(err){
+      return next(err);
+    }
 
+    req.data = {
+      amount_due: result.amountDue,
+      amount_paid: result.amountPaid,
+      checkout_count: result.checkoutCount
+    };
+    return next();
+  });
 };

@@ -160,8 +160,10 @@ exports.addLeaveDescription = function(user, hospitalizedInfo, description, call
 };
 
 //根据id获取hospitalizedInfo
-exports.getHospitalizedInfoById = function(hospitalizedInfoId, callback){
+exports.getHospitalizedInfoById = function(hospitalizedInfoId, population, callback){
+  population = population || '';
   HospitalizedInfo.findOne({_id: hospitalizedInfoId})
+    .populate(population)
     .exec(function(err, hospitalizedInfo){
       if(err){
         return callback({err: systemError.database_query_error});
