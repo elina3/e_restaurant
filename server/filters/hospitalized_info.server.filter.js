@@ -5,6 +5,20 @@
 var hospitalizedInfoError = require('../errors/hospitalized_info');
 var hospitalizedInfoLogic = require('../logics/hospitalized_info');
 
+exports.validCanHospitalizedBed = function(req, res, next){
+  hospitalizedInfoLogic.getHospitalizedInfoByBed(req.building, req.floor, req.bed, function(err, hospitalizedInfo){
+    if(err){
+      return next(err);
+    }
+
+    if(hospitalizedInfo){
+      return next({err: hospitalizedInfoError.bed_is_hospitalized});
+    }
+
+    next();
+  });
+};
+
 exports.requireHospitalizedInfo = function(req, res, next){
   var hospitalizedInfoId = req.query.hospitalized_info_id || req.body.hospitalized_info_id;
 

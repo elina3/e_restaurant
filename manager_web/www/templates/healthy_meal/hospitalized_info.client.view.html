@@ -24,12 +24,12 @@
                                placeholder="请输入身份证号"/>
                     </div>
                     <div class="filter-item search-item col-xs-2">
-                        <div class="search" ng-click="search()">筛选</div>
-                        <input class="submit-button" type="submit" ng-click="search()">
+                        <div class="search" ng-click="filter.search()">筛选</div>
+                        <input class="submit-button" type="submit" ng-click="filter.search()">
                     </div>
                 </form>
                 <div class="filter-item search-item col-xs-2">
-                    <div class="save" ng-click="showPanel()">办理入住手续</div>
+                    <div class="save" ng-click="panelConfig.show()">办理入住手续</div>
                 </div>
             </div>
         </div>
@@ -52,146 +52,31 @@
                                     <span>操作</span>
                                 </div>
                             </div>
-                            <div class="row list-info selected">
+                            <div class="row list-info" ng-click="getBedMealBills(info._id)" ng-repeat="info in hospitalized_infos">
                                 <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
+                                    <span>{{info.building.name}}{{info.floor.name}}{{info.bed.name}}</span>
                                 </div>
                                 <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
+                                    <span>{{info.hospitalized_time | date: 'yyyy-MM-dd HH:mm'}}</span>
                                 </div>
-                                <div class="col-xs-3">
+                                <div ng-if="info.is_leave_hospital" class="col-xs-3">
+                                    <span>{{info.leave_hospital_time | date: 'yyyy-MM-dd HH:mm'}}</span>
+                                </div>
+                                <div ng-if="!info.is_leave_hospital" class="col-xs-3">
                                     <span>--</span>
                                 </div>
                                 <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
+                                    <span class="handle" ng-click="leaveHospital(info._id, $event)">出院</span>
                                 </div>
                             </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-                            <div class="row list-info">
-                                <div class="col-xs-3">
-                                    <span>B座5楼23床</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>2016-3-10 12:20</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span>--</span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span class="handle" ng-click="leaveHospital()">出院</span>
-                                </div>
-                            </div>
-
-
-
-
                         </div>
-                        <z-pagination config="pageData.pagination"></z-pagination>
                     </div>
                 </div>
                 <div class="col-xs-8 right-panel">
                     <div class="hospitalized-info">
-                        <span class="name">王明霞</span>
-                        <span>女</span>
-                        <span>18321740710</span>
+                        <span class="name">{{id_number_info.nickname}}</span>
+                        <span>{{id_number_info.transformSex(id_number_info.sex)}}</span>
+                        <span>{{id_number_info.phone}}</span>
                     </div>
                     <div class="bed-meal-bills">
                         <div class="ee-table-list">
@@ -439,7 +324,7 @@
                     <div class="ee-pop-title">
                         <span>办理入住</span>
 
-                        <div class="close" ng-click="closePanel()"></div>
+                        <div class="close" ng-click="panelConfig.hide()"></div>
                     </div>
                 </div>
                 <div class="ee-pop-body">
@@ -482,7 +367,7 @@
                                 <div class="row selects">
                                     <div class="filter-item col-xs-12">
                                         <input class="input-text" type="text" placeholder="请输入病人身份证号"
-                                               ng-model="panelConfig.newSicker.id_number"/>
+                                               ng-model="panelConfig.newSicker.idNumber"/>
                                     </div>
                                     <div class="filter-item col-xs-12">
                                         <input class="input-text" type="text" placeholder="请输入病人姓名"
@@ -509,9 +394,10 @@
 
 
                             <div class="handle">
-                                <button class="save" ng-click="save()">保存</button>
-                                <button class="reset" ng-click="reset()">重置</button>
-                                <button class="submit-button" ng-click="save()" type="submit">提交</button>
+                                <strong>{{panelConfig.messageTip}}</strong>
+                                <button class="save" ng-click="panelConfig.save()">保存</button>
+                                <button class="reset" ng-click="panelConfig.reset()">重置</button>
+                                <button class="submit-button" ng-click="panelConfig.save()" type="submit">提交</button>
                             </div>
                         </form>
                     </div>

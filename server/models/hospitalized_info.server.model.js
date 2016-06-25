@@ -43,7 +43,8 @@ var HospitalizedInfoSchema = new Schema({
     type: String
   },
   is_hospitalized: {//是否住院
-    type: Boolean
+    type: Boolean,
+    default: true
   },
   hospitalized_time: {//入院时间
     type: Date
@@ -56,7 +57,8 @@ var HospitalizedInfoSchema = new Schema({
     type: Schema.Types.Mixed
   },
   is_leave_hospital: {//是否出院
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   leave_description: {//出院备注
     type: String
@@ -77,6 +79,10 @@ var HospitalizedInfoSchema = new Schema({
   },
   recent_update_user_info: {
     type: Schema.Types.Mixed
+  },
+  deleted_status: {
+    type: Boolean,
+    default: false
   }
 });
 

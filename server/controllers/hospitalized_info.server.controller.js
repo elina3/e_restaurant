@@ -33,13 +33,13 @@ exports.queryHospitalizedInfoByFilter = function (req, res, next) {
     return next({err: systemError.param_null_error});
   }
 
-  hospitalizedLogic.queryHospitalizedInfo({idNumber: idNumber, nickname: nickname}, function (err, bedMealRecords) {
+  hospitalizedLogic.queryHospitalizedInfo({idNumber: idNumber, nickname: nickname}, function (err, hospitalizedInfos) {
     if (err) {
       return next(err);
     }
 
     req.data = {
-      bed_meal_records: bedMealRecords
+      hospitalized_infos: hospitalizedInfos
     };
     return next();
   });

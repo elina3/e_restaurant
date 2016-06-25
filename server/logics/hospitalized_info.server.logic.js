@@ -66,7 +66,6 @@ exports.createNewHospitalizedInfo = function(user, building, floor, bed, sickerI
         hospitalized_creator: user._id,
         hospitalized_creator_info: userInfo,
         is_hospitalized: true,
-        deleted_status: false,
         recent_update_user: user._id,
         recent_update_user_info: userInfo
       });
@@ -82,7 +81,7 @@ exports.createNewHospitalizedInfo = function(user, building, floor, bed, sickerI
 };
 
 //查询入住信息
-exports.queryHospitalizedInfo = function(user, filter, pagination, callback){
+exports.queryHospitalizedInfo = function(filter, callback){
   if(!validIdNumber(filter.idNumber)){
     return callback({err: hospitalizedInfoError.invalid_id_number});
   }
@@ -94,6 +93,7 @@ exports.queryHospitalizedInfo = function(user, filter, pagination, callback){
     is_leave_hospital: false
   };
   HospitalizedInfo.findOne(query)
+    .populate('building floor bed')
     .exec(function(err, hospitalizedInfo){
       if(err){
         return callback({err: systemError.database_query_error})
