@@ -100,3 +100,27 @@ exports.getBedMealRecords = function (req, res, next) {
     return next();
   });
 };
+
+exports.getHealthyNormalBedMealRecordByFloorToday = function(req, res, next){
+  var mealTag = req.query.meal_tag;//breakfast, lunch, dinner
+  bedMealRecordLogic.getHealthyNormalMealRecordByBedGroup(req.building, req.floor, mealTag, function(err, bedMealRecords){
+    if (err) {
+      return next(err);
+    }
+
+
+    var records = bedMealRecords.map(function(item){
+      return {
+        bed: item.bed,
+        hospitalized_info: item.hospitalized_info,
+        meal_set_date: item.meal_set_date,
+        create_user: item.create_user
+      };
+    });
+
+    req.data = {
+      bed_meal_records: records
+    };
+    return next();
+  });
+};

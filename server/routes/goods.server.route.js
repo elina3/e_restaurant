@@ -19,5 +19,6 @@ module.exports = function (app) {
   app.route('/client/goods/list').get(goodsController.getOpeningGoodsList);
   app.route('/client/goods').get(goodsController.getGoodsDetail);
   app.route('/client/goods/free_meal').get(goodsController.getFirstFreeMealGoods);
+
   app.route('/client/goods/healthy_normal').get(paginationFilter.requirePagination, goodsController.getHealthyNormalGoods);
 };

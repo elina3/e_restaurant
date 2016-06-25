@@ -134,3 +134,26 @@ exports.getBedMealRecordsByIds = function(ids, callback){
       return callback(null, bedMealRecords);
     });
 };
+
+exports.getHealthyNormalMealRecordByBedGroup = function(building, floor, mealTag, callback){
+  var todayMealTimeSet =parseToDate(new Date());
+  if(!mealTag){
+    return callback({err: bedMealRecordError.meal_tag_param_null});
+  }
+  var query = {
+    meal_set_date: todayMealTimeSet,
+    building: building._id,
+    floor: floor._id,
+    deleted_status: false
+  };
+  query[mealTag] = 'healthy_normal';
+  BedMealRecord.find(query)
+    .populate('bed hospitalized_info')
+    .exec(function(err, bedMealRecords){
+      if(err || !bedMealRecords){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, bedMealRecords);
+    });
+};

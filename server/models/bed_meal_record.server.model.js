@@ -16,7 +16,8 @@ var BedMealRecordSchema = new Schema({
     default:'BedMealRecord'
   },
   hospitalized_info: {//入住信息
-    type: Schema.Types.ObjectId
+    type: Schema.Types.ObjectId,
+    ref: 'HospitalizedInfo'
   },
   meal_set_date: {//日期
     type: Date
@@ -44,6 +45,10 @@ var BedMealRecordSchema = new Schema({
   },
   create_user: {
     type: Schema.Types.ObjectId
+  },
+  deleted_status: {
+    type: Boolean,
+    default: false
   }
 });
 

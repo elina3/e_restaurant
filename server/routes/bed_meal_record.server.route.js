@@ -8,6 +8,23 @@ var authFilter = require('../filters/auth'),
   hospitalizedInfoFilter = require('../filters/hospitalized_info');
 
 module.exports = function (app) {
-  app.route('/bed_meal_records').get(authFilter.requireUser, bedFilter.requireBuilding, bedFilter.requireFloor, bedMealRecordController.getBedMealRecords);
-  app.route('/bed_meal_records').post(authFilter.requireUser, bedFilter.requireBuilding, bedFilter.requireFloor,  hospitalizedInfoFilter.requireHospitalizedInfo, bedMealRecordController.saveBedMealRecords);
+  //根据楼层获取病床营养餐设置信息
+  app.route('/bed_meal_records').get(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
+    bedMealRecordController.getBedMealRecords);
+
+  //根据楼层获取当天某一餐的病床普食设置信息
+  app.route('/bed_meal_records/healthy_normal').get(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
+    bedMealRecordController.getHealthyNormalBedMealRecordByFloorToday);
+
+  //根据楼层
+  app.route('/bed_meal_records').post(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
+    hospitalizedInfoFilter.requireHospitalizedInfo,
+    bedMealRecordController.saveBedMealRecords);
+
 };
