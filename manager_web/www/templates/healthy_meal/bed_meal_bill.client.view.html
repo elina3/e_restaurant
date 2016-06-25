@@ -1,0 +1,222 @@
+<z-header></z-header>
+<div class="bed-meal-bill-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">营养餐账单管理</span>
+                </div>
+                <div class="col-xs-6">
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bed-meal-bill-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <div class="filter-item time  col-xs-2">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="pageData.datePicker.createTimeRange"
+                           min="pageData.datePicker.createTimeMinTime"
+                           options="pageData.datePicker.dateOptions"
+                           placeholder="点击选择时间"
+                            />
+                </div>
+
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentMealType"
+                                z-dropdown-options="pageData.mealTags"
+                                z-dropdown-label="所有就餐类型"
+                            >
+                    </z-dropdown>
+                </div>
+                <form>
+                    <div class="filter-item id-number col-xs-2">
+                        <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
+                               placeholder="请输入身份证号"/>
+                    </div>
+                    <div class="filter-item search-item col-xs-2">
+                        <div class="search" ng-click="search()">筛选</div>
+                        <input class="submit-button" type="submit" ng-click="search()">
+                    </div>
+                </form>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="save" ng-click="showPanel()">办理入住手续</div>
+                </div>
+            </div>
+        </div>
+        <div class="search-content">
+            <div class="search-total-amount"><span>总金额（元）：</span><strong>522222</strong></div>
+            <div class="ee-table-list">
+                <div class="content">
+                    <div class="row list-header">
+                        <div class="col-xs-2"><span>就餐日期</span></div>
+                        <div class="col-xs-2"><span>床位信息</span></div>
+                        <div class="col-xs-3"><span>身份证</span></div>
+                        <div class="col-xs-1"><span>姓名</span></div>
+                        <div class="col-xs-1"><span>营养餐</span></div>
+                        <div class="col-xs-1"><span>金额（元）</span></div>
+                        <div class="col-xs-1"><span>状态</span></div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                    <div class="row list-info">
+                        <div class="col-xs-2">
+                            <span>2016-3-10 早餐</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>B楼5层13床</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>410825198805177625</span>
+                        </div>
+                        <div class="col-xs-1"><span>王明霞</span></div>
+                        <div class="col-xs-1">
+                            <span>糖尿病饮食</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>15</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>未结账</span>
+                        </div>
+                    </div>
+                </div>
+                <z-pagination config="pageData.pagination"></z-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

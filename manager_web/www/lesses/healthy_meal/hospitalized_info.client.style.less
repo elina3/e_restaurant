@@ -1,7 +1,7 @@
 .hospitalized-info-page-view {
 
   .ee-banner {
-    background: @task-photos-theme-color;
+    background: @task-list-theme-color;
 
     .handle-button{
       display: inline-block;
@@ -50,7 +50,7 @@
 
         .ee-table-list .row{
           &:hover, &.selected{
-            background: @task-photos-theme-color;
+            background: @task-list-theme-color;
             color: #fff;
 
           }
@@ -132,34 +132,34 @@
     .search {
       height: 35px;
       line-height: 35px;
-      border: 1px solid @task-photos-theme-color;
-      color: @task-photos-theme-color;
+      border: 1px solid @task-list-theme-color;
+      color: @task-list-theme-color;
       text-align: center;
 
       cursor: pointer;
       overflow: hidden;
       &:hover {
-        border-color: #72CF22;
-        color: #72CF22;
+        border-color: @task-list-theme-color-hover;
+        color: @task-list-theme-color-hover;
       }
     }
     .save{
       height: 35px;
       line-height: 35px;
       color: #fff;
-      background-color: @task-photos-theme-color;
+      background-color: @task-list-theme-color;
       text-align: center;
 
       cursor: pointer;
       overflow: hidden;
       &:hover {
-        background-color: #72CF22;
+        background-color: @task-list-theme-color-hover;
       }
     }
   }
 
   .ee-pop-mask .ee-pop-wrapper .ee-pop-panel .ee-pop-header{
-    background: @task-photos-theme-color !important;
+    background: @task-list-theme-color !important;
   }
 
   .hospitalized-info-new-panel{
@@ -180,6 +180,7 @@
       }
       .row{
         padding: 0;
+        cursor: pointer;
       }
       .info-title{
         display: block;
@@ -229,7 +230,10 @@
         text-align: center;
         &.save{
           color: #fff;
-          background: @task-photos-theme-color;
+          background: @task-list-theme-color;
+          :hover{
+            background: @task-list-theme-color-hover;
+          }
         }
         &.reset{
           border: none;
@@ -273,13 +277,6 @@
 
           width: 100%;
         }
-      }
-
-    }
-    .bed-list{
-      .bed-framework{
-        padding-left: 0 !important;
-        padding-right: 0 !important;
       }
     }
   }
