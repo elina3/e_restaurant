@@ -36,7 +36,8 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 
       var userInfo = {
         username: user.username,
-        nickname: user.nickname
+        nickname: user.nickname,
+        user_model: user.user_model
       };
       if(!bedMealBill){
         bedMealBill = new BedMealBill({
@@ -50,12 +51,12 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
           id_number: bedMealRecord.hospitalized_info.id_number,
           nickname: bedMealRecord.hospitalized_info.nickname,
           is_checkout: false,
-          creator: user._id,
+          creator_id: user._id,
           creator_info: userInfo
         });
       }
 
-      bedMealBill.recent_modify_user = user._id;
+      bedMealBill.recent_modify_user._id = user._id;
       bedMealBill.recent_modify_user_info = userInfo;
 
 
@@ -90,6 +91,7 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
       goodsBills = getGoodsBills([healthyGoodsInfo]);
     }
 
+    user.user_model = 'User';
     upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, function(err, bedMealBill){
       return eachCallback(err);
     });
@@ -126,13 +128,14 @@ function getGoodsBills(goodsInfos){
   });
 }
 //食堂工作人员为某床病人选餐
-exports.chooseGoodsBillForBedMealRecord = function(user, bedMealRecord, mealTag, goodsInfos, callback){
+exports.chooseGoodsBillForBedMealRecord = function(client, bedMealRecord, mealTag, goodsInfos, callback){
   var goodsBills = getGoodsBills(goodsInfos);
   if(goodsBills.length === 0){
     return callback({err: bedMeallBillError.no_goods_info});
   }
 
-  upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, function(err, bedMealBill){
+  client.user_model = 'Client';
+  upsertBedMealBillForMealTag(client, bedMealRecord, mealTag, goodsBills, function(err, bedMealBill){
     if(err){
       return callback(err);
     }
@@ -160,7 +163,7 @@ exports.checkoutByHospitalizedInfoId = function(user, hospitalizedInfoId, callba
       var checkoutCount = 0;
       async.each(bedMealBills, function(bedMealBill, eachCallback){
         bedMealBill.is_checkout = true;
-        bedMealBill.checkout_creator = user._id;
+        bedMealBill.checkout_creator_id = user._id;
         bedMealBill.checkout_creator_info = {
           username: user.username,
           nickname: user.nickname

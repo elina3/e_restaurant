@@ -104,16 +104,14 @@ var BedMealBillSchema = new Schema({
     type: Boolean,
     default: false
   },
-  creator: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+  creator_id: {
+    type: Schema.Types.ObjectId//可以是User也可以是Client
   },
   creator_info: {
     type: Schema.Types.Mixed
   },
-  recent_modify_user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+  recent_modify_user_id: {//可以是User也可以是Client
+    type: Schema.Types.ObjectId
   },
   recent_modify_user_info: {
     type: Schema.Types.Mixed
@@ -125,9 +123,8 @@ var BedMealBillSchema = new Schema({
     type: Boolean,
     default: false
   },
-  checkout_creator: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+  checkout_creator_id: {
+    type: Schema.Types.ObjectId//可以是User也可以是Client
   },
   checkout_creator_info: {
     type: Schema.Types.Mixed

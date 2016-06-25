@@ -72,7 +72,7 @@ exports.chooseGoodsBill = function (req, res, next) {
       return next(err);
     }
 
-    bedMealBillLogic.chooseGoodsBillForBedMealRecord(req.user, req.bed_meal_record, req.body.meal_tag, goodsInfos, function(err, newBedMealBill){
+    bedMealBillLogic.chooseGoodsBillForBedMealRecord(req.client, req.bed_meal_record, req.body.meal_tag, goodsInfos, function(err, newBedMealBill){
       if(err){
         return next(err);
       }
@@ -104,6 +104,10 @@ exports.queryBedMealBillsByFilter = function (req, res, next) {
 };
 
 exports.checkoutByHospitalizedInfoId = function (req, res, next) {
+  if(req.hospitalized_info.is_leave_hospital){
+    return next({err: bedMealBillError.is_leave_hospital});
+  }
+
   bedMealBillLogic.checkoutByHospitalizedInfoId(req.user, req.hospitalized_info, function(err, result){
     if(err){
       return next(err);
