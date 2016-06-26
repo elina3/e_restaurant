@@ -106,6 +106,7 @@ exports.queryHospitalizedInfo = function(filter, callback){
       delete query.is_hospitalized;
       delete query.is_leave_hospital;
       HospitalizedInfo.find(query)
+        .populate('building floor bed')
         .exec(function(err, hospitalizedInfos){
           if(err || !hospitalizedInfos){
             return callback({err: systemError.database_query_error})

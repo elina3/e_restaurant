@@ -4,13 +4,13 @@
         <div class="ee-wrapper">
             <div class="row ee-title">
                 <div class="col-xs-6">
-                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-back"  ng-hide="user.role==='nurse'"   ng-click="goBack()">< </span>
                     <span class="ee-banner-content">营养餐设置</span>
                 </div>
                 <div class="col-xs-6">
-                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
-                    <!--<span>统计查询</span>-->
-                    <!--</div>-->
+                    <div class="handle-button" ng-click="goBill()">
+                    <span>账单查询</span>
+                    </div>
                 </div>
             </div>
         </div>

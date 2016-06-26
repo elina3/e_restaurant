@@ -15,7 +15,7 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'},{id: 'cashier', text: '收银员'},],
-        roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}, {id: 'nurse', text: '护士'}],
+        roles: [{id:'card_manager',text:'饭卡管理员'}, {id: 'delivery', text: '配送员'}, {id: 'cooker', text: '厨师'}, {id: 'nurse', text: '护士'}, {id: 'registrar', text: '登记员'}],
         cardTypes: [{id: 'normal', text: '普通'},{id: 'staff', text: '员工'},{id: 'expert', text: '专家'}],
         rechargeTypes: [{id: 'cash', text: '现金'},{id: 'virtual', text: '虚拟'}],
         groups: [],

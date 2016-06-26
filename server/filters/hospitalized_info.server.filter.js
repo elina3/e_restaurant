@@ -23,7 +23,7 @@ exports.requireHospitalizedInfo = function(req, res, next){
   var hospitalizedInfoId = req.query.hospitalized_info_id || req.body.hospitalized_info_id;
 
   if(!hospitalizedInfoId){
-    return res.send({err: hospitalizedInfoError.hospitalized_info_id_null});
+    return next({err: hospitalizedInfoError.hospitalized_info_id_null});
   }
 
   hospitalizedInfoLogic.getHospitalizedInfoById(hospitalizedInfoId, null, function(err, hospitalizedInfo){

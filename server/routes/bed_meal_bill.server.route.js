@@ -33,7 +33,7 @@ module.exports = function (app) {
   //根据时间短，账单状态或身份证号统计账单金额（时间段必选）
   app.route('/bed_meal_bills/amount_statistic').get(authFilter.requireUser, paginationFilter.requirePagination, bedMealBillController.getBedMealBillStatistic);
 
-  //根据状态获取账单列表（un_paid,paid）没有状态就返回所有
+  //登录人员，根据状态获取账单列表（un_paid,paid）没有状态就返回所有
   app.route('/hospitalized_info/bed_meal_bills').get(authFilter.requireUser,
     hospitalizedInfoFilter.requireHospitalizedInfoWithPopulation,
     paginationFilter.requirePagination,

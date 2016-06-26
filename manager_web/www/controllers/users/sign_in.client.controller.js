@@ -31,8 +31,6 @@ angular.module('EWeb').controller('UserSignInController',
             return;
           }
 
-
-
           switch(user.role){
             case 'admin':
               return $state.go('user_index');
@@ -41,6 +39,10 @@ angular.module('EWeb').controller('UserSignInController',
             case 'cooker':
             case 'delivery':
               return $state.go('goods_order');
+            case 'nurse':
+              return $state.go('set_meal');
+            case 'registrar':
+              return $state.go('hospitalized_info');
             default:
               return $state.go('user_index');
           }

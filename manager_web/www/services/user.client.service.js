@@ -125,6 +125,10 @@ angular.module('EWeb').factory('UserService',
               return '配送员';
             case 'cooker':
               return '厨师';
+            case 'nurse':
+              return '护士';
+            case 'registrar':
+              return '登记员';
             default:
               return '未知';
 

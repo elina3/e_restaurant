@@ -235,7 +235,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
   }
 
   if(filter.hospitalized_info){
-    query.hospitalized_info = filter.hospitalizedInfo;
+    query.hospitalized_info = filter.hospitalizedInfo._id;
   }
 
   if (filter.startTime && filter.endTime) {
@@ -268,7 +268,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
       .skip(pagination.skipCount)
       .limit(pagination.limit)
       .exec(function (err, bedMealBills) {
-        if (err || bedMealBills) {
+        if (err || !bedMealBills) {
           return callback({err: systemError.database_query_error});
         }
 

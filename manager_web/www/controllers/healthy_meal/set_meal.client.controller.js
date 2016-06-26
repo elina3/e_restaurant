@@ -9,6 +9,7 @@ angular.module('EWeb').controller('SetMealController',
   ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService) {
 
+      $scope.user = Auth.getUser();
       var mealTypes = {
         normal: '普食',
         liquid_diets: '流质',
@@ -112,8 +113,8 @@ angular.module('EWeb').controller('SetMealController',
           }
         });
       };
-      $scope.applyYesterday = function () {
-
+      $scope.goBill = function () {
+        $state.go('bed_meal_bill');
       };
       $scope.generateBill = function(){
         alert('bill');
@@ -179,7 +180,7 @@ angular.module('EWeb').controller('SetMealController',
       };
 
       $scope.goBack = function () {
-        $state.go('goods_manager');
+        $window.history.back();
       };
 
       BedService.getBuildings(function (err, data) {

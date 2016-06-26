@@ -376,4 +376,7 @@ angular.module('EWeb').controller('GoodsManagerController',
       $scope.goToOrderManager = function(){
         $state.go('goods_order');
       };
+      $scope.goToHealthyMeal =function(){
+        $state.go('set_meal');
+      };
     }]);

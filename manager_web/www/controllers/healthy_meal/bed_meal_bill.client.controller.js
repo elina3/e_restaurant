@@ -6,6 +6,7 @@
 angular.module('EWeb').controller('BedMealBillController',
   ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService) {
+
       $scope.pageData = {
         mealTags: [{id: '', text: '所有就餐类型'}, {id: 'breakfast', text: '早餐'}, {id: 'lunch', text: '午餐'}, {id: 'dinner', text: '晚餐'}],
         pagination: {
@@ -43,6 +44,6 @@ angular.module('EWeb').controller('BedMealBillController',
       };
 
       $scope.goBack = function () {
-        $state.go('goods_manager');
+        $window.history.back();
       };
     }]);
