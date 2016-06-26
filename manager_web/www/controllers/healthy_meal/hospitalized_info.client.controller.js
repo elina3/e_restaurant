@@ -154,13 +154,15 @@ angular.module('EWeb').controller('HospitalizedInfoController',
                 };
               });
               if($scope.hospitalized_infos.length > 0){
+                $scope.id_number_info.hospitalized_info_id = $scope.hospitalized_infos[0]._id;
                 $scope.id_number_info.nickname = $scope.hospitalized_infos[0].nickname;
                 $scope.id_number_info.sex = $scope.hospitalized_infos[0].sex;
                 $scope.id_number_info.phone = $scope.hospitalized_infos[0].phone;
               }
             }
           });
-        }
+        },
+        currentHospitalizedInfo: null
       };
       $scope.hospitalized_infos = [];
       $scope.id_number_info = {
@@ -305,6 +307,32 @@ angular.module('EWeb').controller('HospitalizedInfoController',
         return result;
       };
 
+      function updateBills(data){
+        $scope.billAmount = 0;
+        if(data.bed_meal_bills){
+          $scope.current_bills = data.bed_meal_bills.map(function(item){
+            $scope.billAmount += item.amount_paid;
+            return {
+              bed_meal_record: item.bed_meal_record,
+              meal_set_date: item.meal_set_date,
+              meal_tag: item.meal_tag,
+              meal_type: item.meal_type,
+              amount_paid: item.amount_paid,
+              is_checkout: item.is_checkout,
+              goods_bills: item.goods_bills
+            };
+          });
+        }
+
+
+        if(data.bed_meal_bills.length === 0){
+          $scope.noResultTip = '没有任何数据';
+        }else{
+          $scope.noResultTip = '';
+        }
+      }
+
+
       $scope.getBedMealBills = function(info){
         if(!info){
           return;
@@ -315,11 +343,12 @@ angular.module('EWeb').controller('HospitalizedInfoController',
         });
 
         info.selected = true;
+        $scope.pageConfig.currentHospitalizedInfo = info;
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
         BedMealBillService.querySickerBedMealBillsByFilter({
           hospitalizedInfoId: info._id,
-          status: 'un_paid'
+          status: ''
         }, function(err, data){
 
           $scope.$emit(GlobalEvent.onShowLoading, false);
@@ -327,27 +356,7 @@ angular.module('EWeb').controller('HospitalizedInfoController',
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
 
-          $scope.billAmount = 0;
-          if(data.bed_meal_bills){
-            $scope.current_bills = data.bed_meal_bills.map(function(item){
-              $scope.billAmount += item.amount_paid;
-              return {
-                bed_meal_record: item.bed_meal_record,
-                meal_set_date: item.meal_set_date,
-                meal_tag: item.meal_tag,
-                meal_type: item.meal_type,
-                amount_paid: item.amount_paid,
-                is_checkout: item.is_checkout,
-                goods_bills: item.goods_bills
-              };
-            });
-          }
-
-          if(data.bed_meal_bills.length === 0){
-            $scope.noResultTip = '没有任何数据';
-          }else{
-            $scope.noResultTip = '';
-          }
+          updateBills(data);
 
         });
       };
@@ -370,6 +379,20 @@ angular.module('EWeb').controller('HospitalizedInfoController',
           }
         });
         stopBubble($event);
+      };
+      $scope.pay = function(){
+        BedMealBillService.pay({
+          hospitalized_info_id: $scope.pageData.currentHospitalizedInfo._id
+        }, function(err, data) {
+          if(err || !data){
+            return $scope.$emit(GlobalEvent.onShowAlert, err || '清算失败');
+          }
+
+          if(data.bed_meal_bills){
+            $scope.$emit(GlobalEvent.onShowAlert, '清算成功，总金额' + data.amount_paid/100 + '，共'+data.checkout_count+'笔。');
+            updateBills(data);
+          }
+        });
       };
       $scope.goBack = function () {
         $window.history.back();
