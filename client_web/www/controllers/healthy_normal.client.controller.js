@@ -73,6 +73,10 @@ angular.module('EClientWeb').controller('HealthyNormalController',
             };
           });
 
+          if(goodsInfos.length === 0){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请选餐');
+          }
+
           HealthyMealService.createNewBill({
             building_id: $scope.filter.currentBuilding.id,
             floor_id: $scope.filter.currentFloor.id,
