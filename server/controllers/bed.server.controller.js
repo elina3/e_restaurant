@@ -5,9 +5,22 @@
 var systemError  = require('../errors/system');
 var bedLogic = require('../logics/bed');
 
-exports.getBuildings = function(req, res, next){
+exports.getBuildingsByUser = function(req, res, next){
   var user = req.user;
   bedLogic.getBuildingsByHospitalId(user.hospital, function(err, buildings){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      buildings: buildings
+    };
+    return next();
+  });
+};
+
+exports.getBuildings = function(req, res, next){
+  bedLogic.getBuildings(function(err, buildings){
     if(err){
       return next(err);
     }

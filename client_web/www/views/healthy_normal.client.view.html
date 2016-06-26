@@ -5,9 +5,10 @@
     <div class="search-bar">
         <div class="row selects">
             <div class="filter-item status col-xs-2">
-                <z-dropdown z-dropdown-model="filter.currentMealType"
+                <z-dropdown z-dropdown-model="filter.currentMealTag"
                             z-dropdown-options="pageData.mealTags"
                             z-dropdown-label="就餐类型"
+                            z-dropdown-change="onMealTagChange()"
                         >
                 </z-dropdown>
             </div>
@@ -15,30 +16,27 @@
                 <z-dropdown z-dropdown-model="filter.currentFloor"
                             z-dropdown-options="pageData.floors"
                             z-dropdown-label="楼层"
+                            z-dropdown-change="onFloorChange()"
+                            z-dropdown-disabled="pageData.floors.length<=0"
                         >
                 </z-dropdown>
             </div>
             <div class="filter-item status col-xs-2">
-                <z-dropdown z-dropdown-model="filter.currentFloor"
-                            z-dropdown-options="pageData.floors"
+                <z-dropdown z-dropdown-model="filter.currentBedMealRecord"
+                            z-dropdown-options="pageData.bedMealRecords"
                             z-dropdown-label="床位"
+                            z-dropdown-change="onBedChange()"
+                            z-dropdown-disabled="pageData.bedMealRecords.length<=0"
                         >
                 </z-dropdown>
             </div>
-            <form>
-
-                <div class="filter-item search-item col-xs-2">
-                    <div class="search" ng-click="search()">筛选</div>
-                    <input class="submit-button" type="submit" ng-click="search()">
-                </div>
-            </form>
-            <div class="filter-item save col-xs-2">
-                <div class="save" ng-click="showPanel()">提交选餐</div>
+            <div class="filter-item save col-xs-2" ng-show="pageData.hospitalized_info">
+                <div class="save" ng-click="filter.saveBill()">提交选餐</div>
             </div>
         </div>
     </div>
-    <div class="hospitalized-info">
-        <strong>姓名：王小明</strong><span>身份证：410825198805177625</span>
+    <div class="hospitalized-info" ng-show="pageData.hospitalized_info">
+        <strong>姓名：{{pageData.hospitalized_info.nickname}}</strong><span>身份证：{{pageData.hospitalized_info.id_number}}</span>
     </div>
     <div class="goods-list">
         <!--<div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">-->

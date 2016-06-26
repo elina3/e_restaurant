@@ -158,13 +158,8 @@ function getGoodsBills(goodsInfos) {
 }
 //食堂工作人员为某床病人选餐
 exports.chooseGoodsBillForBedMealRecord = function (client, bedMealRecord, mealTag, goodsInfos, callback) {
-  var goodsBills = getGoodsBills(goodsInfos);
-  if (goodsBills.length === 0) {
-    return callback({err: bedMeallBillError.no_goods_info});
-  }
-
   client.user_model = 'Client';
-  upsertBedMealBillForMealTag(client, bedMealRecord, mealTag, goodsBills, function (err, bedMealBill) {
+  upsertBedMealBillForMealTag(client, bedMealRecord, mealTag, goodsInfos, function (err, bedMealBill) {
     if (err) {
       return callback(err);
     }

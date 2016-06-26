@@ -152,6 +152,15 @@ exports.createFloorBedsByBuilding = function(building, floorInfos, callback){
   });
 };
 
+exports.getBuildings = function(callback){
+  Building.find({})
+    .exec(function(err, buildings){
+      if(err || !buildings){
+        return callback({err: systemError.database_query_error});
+      }
+      return callback(null, buildings);
+    });
+};
 
 exports.getBuildingsByHospitalId = function(hospitalId, callback){
   if(!hospitalId){

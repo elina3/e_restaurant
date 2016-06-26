@@ -55,12 +55,13 @@ function getGoodsInfos(goodsInfos, callback) {
           name :goods.name,
           description :goods.description,
           display_photos :goods.display,
+          status: goods.status,
           price :goods.price * 100
         });
       }
     });
 
-    if (goodsIds.length === result.length) {
+    if (goodsIds.length !== result.length) {
       return callback({err: bedMealBillError.goods_not_all_exist});
     }
 
@@ -69,7 +70,7 @@ function getGoodsInfos(goodsInfos, callback) {
 }
 
 exports.chooseGoodsBill = function (req, res, next) {
-  getGoodsInfos(req.query.goods_infos || [], function(err, goodsInfos){
+  getGoodsInfos(req.body.goods_infos || [], function(err, goodsInfos){
     if(err){
       return next(err);
     }

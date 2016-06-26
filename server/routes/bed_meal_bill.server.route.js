@@ -23,7 +23,7 @@ module.exports = function (app) {
 
   //食堂人员选餐，产生账单
   app.route('/bed_meal_bills/single').post(authFilter.requireClient,
-    goodsFilter.requireAllHealthyMeals,
+    bedMealRecordFilter.requireMealRecord,
     bedFilter.requireBuilding,
     bedFilter.requireFloor,
     bedMealBillController.chooseGoodsBill);

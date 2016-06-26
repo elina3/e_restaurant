@@ -13,6 +13,7 @@ angular.module('EClientWeb').controller('HealthyNormalController',
     'ClientService',
     'GlobalEvent',
     'Auth',
+    'HealthyMealService',
     function ($rootScope,
               $scope,
               $state,
@@ -21,7 +22,8 @@ angular.module('EClientWeb').controller('HealthyNormalController',
               GoodsService,
               ClientService,
               GlobalEvent,
-              Auth) {
+              Auth,
+              HealthyMealService) {
 
       $scope.pageData = {
         mealTags: [{id: 'breakfast', text: '早餐'}, {id: 'lunch', text: '午餐'}, {id: 'dinner', text: '晚餐'}],
@@ -36,12 +38,59 @@ angular.module('EClientWeb').controller('HealthyNormalController',
           skipCount: 0,
           totalCount: 0,
           limit: 20
-        }
+        },
+        bedMealRecords: [],
+        floors: [],
+        hospitalized_info: null
       };
 
       $scope.filter = {
         currentIdNumber: '',
-        currentMealTag: null
+        currentMealTag: null,
+        currentFloor: null,
+        currentBuilding: null,
+        currentBedMealRecord: null,
+        search: function(){
+
+        },
+        saveBill: function(){
+          if(!$scope.pageData.hospitalized_info){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请选择床位');
+          }
+
+          if(!$scope.filter.currentFloor){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请选择楼层');
+          }
+
+          var selectedGoodsList = $scope.pageData.goodsList.filter(function(item){
+            return item.count && item.count > 0;
+          });
+
+          var goodsInfos = selectedGoodsList.map(function(item){
+            return {
+              goods_id: item._id,
+              count: item.count
+            };
+          });
+
+          HealthyMealService.createNewBill({
+            building_id: $scope.filter.currentBuilding.id,
+            floor_id: $scope.filter.currentFloor.id,
+            goods_infos: goodsInfos,
+            bed_meal_record_id: $scope.filter.currentBedMealRecord.bed_meal_record_id,
+            meal_tag: $scope.filter.currentMealTag.id
+          }, function(err, data){
+            if(err || !data || !data.success){
+              return $scope.$emit(GlobalEvent.onShowAlert, err || '保存失败');
+            }
+            $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
+            selectedGoodsList.forEach(function(item){
+              item.count = 0;
+            });
+            $scope.filter.currentBedMealRecord = null;
+            $scope.pageData.hospitalized_info = null;
+          });
+        }
       };
 
       $scope.generatePhotoSrc = function (goods) {
@@ -81,36 +130,12 @@ angular.module('EClientWeb').controller('HealthyNormalController',
         return client;
       }
 
-      $scope.addToCart = function(goods, event){
-        var client = getClient();
-        if(client){
-
-          $scope.$emit(GlobalEvent.onShowLoading, true);
-          ClientService.addGoodsToCart(client, goods, 1, function(err, data){
-            $scope.$emit(GlobalEvent.onShowLoading, false);
-            if(err){
-              console.log(err);
-              return $scope.$emit(GlobalEvent.onShowAlert, '加入购物车失败！');
-            }
-
-            $scope.$emit(GlobalEvent.onCartCountChange, data.client);
-          });
-        }
-
-        if(event){
-          if (event) {
-            event.stopPropagation();
-          }
-        }
-      };
-
       function loadGoods(){
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        GoodsService.getNormalGoodsList({
+        GoodsService.getHealthyNormalGoodsList({
           currentPage: $scope.pageData.pagination.currentPage,
           limit: $scope.pageData.pagination.limit,
-          skipCount: $scope.pageData.pagination.skipCount,
-          type: 'normal'
+          skipCount: $scope.pageData.pagination.skipCount
         }, function(err, data){
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if(err){
@@ -124,7 +149,82 @@ angular.module('EClientWeb').controller('HealthyNormalController',
         });
       }
 
+      function loadBedMealRecord(buildingId, floorId, mealTag, callback){
+        $scope.pageData.hospitalized_info = null;
+        HealthyMealService.getHealthyNormalBedMealRecordByFloorToday({
+          building_id: buildingId,
+          floor_id: floorId,
+          meal_tag: mealTag
+        }, function(err, data){
+          if(err || !data){
+            return $scope.$emit(GlobalEvent.onShowAlert, err || '查询出错');
+          }
+
+          if(data.bed_meal_records){
+            $scope.pageData.bedMealRecords = data.bed_meal_records.map(function(item){
+              return {
+                id: item.bed._id,
+                text: item.bed.name,
+                bed_meal_record_id: item._id,
+                bed: item.bed,
+                hospitalized_info: item.hospitalized_info
+              };
+            });
+          }
+          $scope.filter.currentBedMealRecord = null;
+          $scope.pageData.hospitalized_info = null;
+        });
+      }
+
+      $scope.onMealTagChange = function(){
+        $scope.filter.currentFloor = null;
+        $scope.filter.currentBedMealRecord = null;
+        $scope.pageData.hospitalized_info = null;
+      };
+
+      $scope.onFloorChange = function(){
+        if (!$scope.filter.currentFloor) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择当前楼层');
+        }
+        if(!$scope.filter.currentMealTag){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择就餐类型');
+        }
+
+        loadBedMealRecord($scope.filter.currentBuilding.id, $scope.filter.currentFloor.id, $scope.filter.currentMealTag.id);
+      };
+
+      $scope.onBedChange = function(){
+        if(!$scope.filter.currentBedMealRecord){
+          return;
+        }
+        $scope.pageData.hospitalized_info = $scope.filter.currentBedMealRecord.hospitalized_info;
+      };
+
+
       function init(){
+        getClient();
+
+        HealthyMealService.getBuildings(function(err, data){
+          if(data && data.buildings && data.buildings.length > 0){
+            var firstBuilding = data.buildings[0];
+            $scope.filter.currentBuilding = {
+              id: firstBuilding._id,
+              text: firstBuilding.name
+            };
+
+            HealthyMealService.getFloorsByBuildingId(firstBuilding._id, function(err, data){
+              if(data && data.floors && data.floors.length > 0){
+                $scope.pageData.floors = data.floors.map(function(item){
+                  return {
+                    id: item._id,
+                    text: item.name
+                  };
+                });
+              }
+            });
+          }
+        });
+
         loadGoods();
       }
 
@@ -132,27 +232,5 @@ angular.module('EClientWeb').controller('HealthyNormalController',
 
       $scope.loadMore = function(){
         loadGoods();
-      };
-      $scope.buyNow = function(goods, event){
-
-        if(!getClient()){
-          if(event){
-            if (event) {
-              event.stopPropagation();
-            }
-          }
-          return;
-        }
-
-        var goodsInfos = [{
-          _id: goods._id,
-          count: 1
-        }];
-        $state.go('order_detail', {goods_infos: JSON.stringify(goodsInfos)});
-        if(event){
-          if (event) {
-            event.stopPropagation();
-          }
-        }
       };
     }]);

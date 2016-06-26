@@ -114,7 +114,8 @@ exports.getHealthyNormalBedMealRecordByFloorToday = function(req, res, next){
         bed: item.bed,
         hospitalized_info: item.hospitalized_info,
         meal_set_date: item.meal_set_date,
-        create_user: item.create_user
+        create_user: item.create_user,
+        _id: item._id
       };
     });
 

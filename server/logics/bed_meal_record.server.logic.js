@@ -139,6 +139,22 @@ exports.getBedMealRecordsByIds = function(ids, population, callback){
     });
 };
 
+
+exports.getBedMealRecordsById = function(id, population, callback){
+  if(!population){
+    population = ''
+  }
+  BedMealRecord.findOne({_id: id})
+    .populate(population)
+    .exec(function(err, bedMealRecord){
+      if(err || !bedMealRecord){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, bedMealRecord);
+    });
+};
+
 exports.getHealthyNormalMealRecordByBedGroup = function(building, floor, mealTag, callback){
   var todayMealTimeSet =parseToDate(new Date());
   if(!mealTag){

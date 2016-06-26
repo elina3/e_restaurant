@@ -21,3 +21,23 @@ exports.requireMealRecords = function(req, res, next){
     next();
   });
 };
+
+exports.requireMealRecord = function(req, res, next){
+  var bedMealRecordId = req.query.bed_meal_record_id  || req.body.bed_meal_record_id;
+  var population = req.query.population || req.body.population || 'hospitalized_info';
+  if(!bedMealRecordId){
+    return next({err: bedMealRecordError.invalid_bed_meal_record_id});
+  }
+
+  bedMealRecordLogic.getBedMealRecordsById(bedMealRecordId, population, function(err, bedMealRecord){
+    if(err){
+      return next(err);
+    }
+
+    if(!bedMealRecord){
+      return next({err: bedMealRecordError.bed_meal_record_not_exist});
+    }
+    req.bed_meal_record = bedMealRecord;
+    next();
+  });
+};

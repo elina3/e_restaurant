@@ -9,7 +9,7 @@ exports.requireBuilding = function(req, res, next){
   var buildingId = req.query.building_id || req.body.building_id;
 
   if(!buildingId){
-    return res.send({err: bedError.building_id_null});
+    return next({err: bedError.building_id_null});
   }
 
   bedLogic.getBuildingById(buildingId, function(err, building){
