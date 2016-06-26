@@ -328,7 +328,7 @@ exports.getBedMealBillTotalAmount = function(filter, callback){
   }
 
   if (filter.startTime && filter.endTime) {
-    match.$and = [{meal_set_date: {$gte: filter.startTime}}, {meal_set_date: {$lte: filter.endTime}}];
+    match.$and = [{meal_set_date: {$gte: parseToDate(filter.startTime)}}, {meal_set_date: {$lte: parseToDate(filter.endTime)}}];
   }
 
   if(filter.mealTag){
@@ -356,8 +356,12 @@ exports.getBedMealBillTotalAmount = function(filter, callback){
     }
 
     if(result.length === 0){
-     result[0].totalAmount = 0;
+      result[0] = {
+        totalAmount: 0
+      };
     }
+
+    console.log(result.length);
     return callback(null, result[0].totalAmount);
   });
 };
