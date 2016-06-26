@@ -13,6 +13,13 @@ var systemError = require('../errors/system'),
 
 var mealTags = ['breakfast', 'lunch', 'dinner'];
 
+function parseToDate(time){
+  if(!time){
+    time = new Date();
+  }
+  return new Date(time.toDateString());
+}
+
 function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, callback) {
   var query = {
     bed_meal_record: bedMealRecord._id,
@@ -22,15 +29,18 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
   BedMealBill.findOne(query)
     .exec(function (err, bedMealBill) {
       if (err) {
+        console.log('upsertBedMealBillForMealTag error  database_query_error');
         return callback({err: systemError.database_query_error});
       }
 
       //不存在账单，没有选择不做任何事情
       if (!bedMealBill && !bedMealRecord[mealTag]) {
+        console.log('upsertBedMealBillForMealTag error  不存在账单,没有选择不做任何事情');
         return callback();
       }
 
       if (bedMealBill && bedMealBill.is_checkout) {
+        console.log('upsertBedMealBillForMealTag  is_checkout');
         return callback(null, bedMealBill);
       }
 
@@ -54,6 +64,7 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
           creator_id: user._id,
           creator_info: userInfo
         });
+        console.log('new insert');
       }
 
       bedMealBill.recent_modify_user_id = user._id;
@@ -67,8 +78,12 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 
       bedMealBill.save(function (err, newBedMealBill) {
         if (err || !newBedMealBill) {
+
+          console.log('save error');
           return callback({err: systemError.database_save_error});
         }
+
+        console.log('save success');
 
         return callback(null, newBedMealBill);
       });
@@ -76,14 +91,17 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 }
 
 function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, callback) {
-  async.each(mealTags, function (mealTag, eachCallback) {
+  console.log('batch inner logic async start');
+  async.eachSeries(mealTags, function (mealTag, eachCallback) {
     var goodsBills = [];
     if (!bedMealRecord[mealTag] || bedMealRecord[mealTag] === 'healthy_normal') {//没有选或选择普食
+      console.log('error  healthy_normal or no record_meal_tag');
       return eachCallback();
     }
 
     var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
     if (!healthyGoodsInfo) {
+      console.log('error  healthy_goods_not_all_exist 1');
       return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
     }
 
@@ -92,25 +110,31 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
     }
 
     if(goodsBills.length === 0){
+      console.log('error  healthy_goods_not_all_exist');
       return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
     }
 
     user.user_model = 'User';
+    console.log('upsertBedMealBillForMealTag start');
     upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, function (err, bedMealBill) {
+      console.log('upsertBedMealBillForMealTag end');
       return eachCallback(err);
     });
   }, function (err) {
+    console.log('batch inner logic async end');
     return callback(err);
   });
 }
 
 //护士为病人设置营养餐时生成账单
 exports.batchCreateMealBills = function (user, bedMealRecords, healthyMeals, callback) {
+  console.log('batch create meal bill logic async begin');
   async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
     batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, function (err) {
       return eachCallback(err);
     });
   }, function (err) {
+    console.log('batch create meal bill logic async end');
     return callback(err);
   });
 };
@@ -244,11 +268,15 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
   }
 
   if (filter.startTime && filter.endTime) {
-    query.$and = [{meal_set_time: {$gte: filter.startTime}}, {meal_set_time: {$lte: filter.endTime}}];
+    query.$and = [{meal_set_date: {$gte: parseToDate(filter.startTime)}}, {meal_set_date: {$lte: parseToDate(filter.endTime)}}];
   }
 
-  if(filter.timeTag){
-    query.time_tag = filter.timeTag;
+  if(filter.mealTag){
+    query.meal_tag = filter.mealTag;
+  }
+
+  if(filter.mealType){
+    query.meal_type = filter.mealType;
   }
 
   if(filter.idNumber){
@@ -272,6 +300,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
       .sort({update_time: -1})
       .skip(pagination.skipCount)
       .limit(pagination.limit)
+      .populate('building floor bed')
       .exec(function (err, bedMealBills) {
         if (err || !bedMealBills) {
           return callback({err: systemError.database_query_error});

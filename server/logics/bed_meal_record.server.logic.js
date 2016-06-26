@@ -124,8 +124,12 @@ exports.getBedMealRecord = function(mealSetDate, buildingId, floorId, bedId, cal
     });
 };
 
-exports.getBedMealRecordsByIds = function(ids, callback){
+exports.getBedMealRecordsByIds = function(ids, population, callback){
+  if(!population){
+    population = ''
+  }
   BedMealRecord.find({_id: {$in: ids}})
+    .populate(population)
     .exec(function(err, bedMealRecords){
       if(err || !bedMealRecords){
         return callback({err: systemError.database_query_error});

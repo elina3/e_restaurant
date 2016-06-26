@@ -248,8 +248,9 @@ angular.module('EWeb').controller('SetMealController',
           }
 
           if (data.bed_meal_records) {
-            return $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
+            $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
           }
+          $scope.search();
           console.log(data);
         });
       };

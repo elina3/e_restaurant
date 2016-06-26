@@ -13,6 +13,7 @@ var bedMealBillLogic = require('../logics/bed_meal_bill'),
 //护士下单（今日账单）
 exports.batchCreateBills = function (req, res, next) {
 
+  console.log('controller');
   bedMealBillLogic.batchCreateMealBills(req.user, req.bed_meal_records, req.healthy_meal_dic, function (err, hospitalizedInfo) {
     if (err) {
       return next(err);
@@ -95,7 +96,8 @@ exports.queryBedMealBillsByFilter = function (req, res, next) {
 
   bedMealBillLogic.getMealBillByFilter({
     status: req.query.status || '',
-    timeTag: req.query.time_tag || '',
+    mealTag: req.query.meal_tag || '',
+    mealType: req.query.meal_type || '',
     idNumber: req.query.id_number || '',
     startTime: startTime,
     endTime: endTime

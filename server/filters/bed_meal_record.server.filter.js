@@ -7,11 +7,12 @@ var bedMealRecordLogic = require('../logics/bed_meal_record');
 
 exports.requireMealRecords = function(req, res, next){
   var bedMealRecordIds = req.query.bed_meal_record_ids  || req.body.bed_meal_record_ids || [];
+  var population = req.query.population || req.body.population || 'hospitalized_info';
   if(!Array.isArray(bedMealRecordIds)){
     return next({err: bedMealRecordError.invalid_bed_meal_record_ids});
   }
 
-  bedMealRecordLogic.getBedMealRecordsByIds(bedMealRecordIds, function(err, bedMealRecords){
+  bedMealRecordLogic.getBedMealRecordsByIds(bedMealRecordIds, population, function(err, bedMealRecords){
     if(err){
       return next(err);
     }

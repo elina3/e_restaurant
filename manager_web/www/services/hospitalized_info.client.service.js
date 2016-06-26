@@ -30,7 +30,7 @@ angular.module('EWeb').factory('HospitalizedInfoService',
         },
         searchHospitalizedInfoByIdNumber: function (params, callback) {
           RequestSupport.executeGet('/hospitalized_info', {
-            id_number: params.idNumber,
+            id_number: params.idNumber
           })
             .then(function (data) {
               if (!callback) {

@@ -302,7 +302,7 @@ angular.module('EWeb').controller('HospitalizedInfoController',
             break;
         }
 
-        return '';
+        return result;
       };
 
       $scope.getBedMealBills = function(info){
