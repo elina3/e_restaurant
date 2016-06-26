@@ -9,7 +9,7 @@ var GoodsBill = appDb.model('GoodsBill'),
   BedMealBill = appDb.model('BedMealBill');
 
 var systemError = require('../errors/system'),
-  bedMeallBillError = require('../errors/bed_meal_bill');
+  bedMealBillError = require('../errors/bed_meal_bill');
 
 var mealTags = ['breakfast', 'lunch', 'dinner'];
 
@@ -41,7 +41,7 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
 
       if (bedMealBill && bedMealBill.is_checkout) {
         console.log('upsertBedMealBillForMealTag  is_checkout');
-        return callback(null, bedMealBill);
+        return callback({err: bedMealBillError.checkout});
       }
 
       var userInfo = {
@@ -102,7 +102,7 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
     var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
     if (!healthyGoodsInfo) {
       console.log('error  healthy_goods_not_all_exist 1');
-      return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
+      return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
     }
 
     if (healthyGoodsInfo) {//选了，但是不是选择普食
@@ -111,7 +111,7 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
 
     if(goodsBills.length === 0){
       console.log('error  healthy_goods_not_all_exist');
-      return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
+      return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
     }
 
     user.user_model = 'User';
@@ -185,6 +185,7 @@ exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callb
       var amountDue = 0;
       var amountPaid = 0;
       var checkoutCount = 0;
+      var newBedMealBills = [];
       async.each(bedMealBills, function (bedMealBill, eachCallback) {
         bedMealBill.is_checkout = true;
         bedMealBill.checkout_creator_id = user._id;
@@ -200,6 +201,7 @@ exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callb
           amountDue += savedBedMealBill.amount_due;
           amountPaid += savedBedMealBill.amount_paid;
           checkoutCount++;
+          newBedMealBills.push(savedBedMealBill);
 
           return eachCallback();
         });
@@ -209,7 +211,8 @@ exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callb
         return callback(null, {
           amountDue: amountDue,
           amountPaid: amountPaid,
-          checkoutCount: checkoutCount
+          checkoutCount: checkoutCount,
+          bedMealBills: newBedMealBills
         });
       });
     });
@@ -258,7 +261,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
     query.is_checkout = true;
   }
 
-  if(filter.hospitalized_info){
+  if(filter.hospitalizedInfo){
     query.hospitalized_info = filter.hospitalizedInfo._id;
   }
 

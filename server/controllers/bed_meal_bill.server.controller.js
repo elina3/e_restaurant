@@ -143,7 +143,7 @@ exports.getBedMealBillStatistic = function(req, res, next){
 
 exports.querySickerBedMealBillsByFilter = function (req, res, next) {
   bedMealBillLogic.getMealBillByFilter({
-    status: req.query.status || 'un_paid',
+    status: req.query.status,
     hospitalizedInfo: req.hospitalized_info
   }, req.pagination, function(err, result){
     if(err){
@@ -173,7 +173,8 @@ exports.checkoutByHospitalizedInfoId = function (req, res, next) {
     req.data = {
       amount_due: result.amountDue,
       amount_paid: result.amountPaid,
-      checkout_count: result.checkoutCount
+      checkout_count: result.checkoutCount,
+      bed_meal_bills: result.bedMealBills
     };
     return next();
   });

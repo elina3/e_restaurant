@@ -60,12 +60,12 @@ exports.queryHospitalizedInfoByFilter = function (req, res, next) {
 };
 
 exports.leaveHospital = function(req, res, next){
-  bedMealBillLogic.getTotalAmountByHospitalizedInfoId(req.hospitalized_info._id, function(err, totalAmount){
+  bedMealBillLogic.getTotalAmountByHospitalizedInfoId(req.hospitalized_info._id, function(err, result){
     if(err){
       return next(err);
     }
 
-    if(totalAmount > 0){
+    if(result.total_amount > 0){
       return next({err: hospitalizedInfoError.bill_not_checkout});
     }
 

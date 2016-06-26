@@ -11,7 +11,8 @@ module.exports = _.extend(exports, {
   invalid_goods_infos: {type: 'invalid_goods_infos', message: 'The goods_infos is invalid', zh_message: '无效的商品信息'},
   no_goods_info: {type: 'no_goods_info', message: 'The goods info is null', zh_message: '没有商品信息'},
   goods_not_all_exist: {type: 'goods_not_all_exist', message: 'The goods is not exist', zh_message: '不是所有商品都存在'},
-  healthy_goods_not_all_exist: {type: 'healthy_goods_not_all_exist', message: 'Not all healthy goods exist', zh_message: '不是所有的营养商品都存在'}
+  healthy_goods_not_all_exist: {type: 'healthy_goods_not_all_exist', message: 'Not all healthy goods exist', zh_message: '不是所有的营养商品都存在'},
+  checkout: {type: 'checkout', message: 'The bill is checkout', zh_message: '该餐已结账'}
   //invalid_id_number: {type: 'invalid_id_number', message: 'The id_number is invalid', zh_message: '无效的身份证号'},
   //sicker_info_null: {type: 'sicker_info_null', message: 'The sicker info is null', zh_message: '病人信息为空'},
   //nickname_null: {type: 'nickname_null', message: 'The sicker nickname is null', zh_message: '病人姓名未填'},
