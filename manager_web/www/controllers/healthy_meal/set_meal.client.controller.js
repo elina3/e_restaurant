@@ -6,17 +6,19 @@
  */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, HospitalizedInfoService, BedMealBillService) {
 
       $scope.user = Auth.getUser();
+
       var mealTypes = {
-        normal: '普食',
+        healthy_normal: '普食',
         liquid_diets: '流质',
         semi_liquid_diets: '半流质',
         diabetic_diets: '糖尿病饮食',
         low_fat_low_salt_diets: '低脂低盐饮食'
       };
+      $scope.timeout = true;
 
       $scope.filter = {
         currentBuilding: null,
@@ -24,7 +26,7 @@ angular.module('EWeb').controller('SetMealController',
         buildings: [],
         floors: [],
         mealTypes: [
-          {id: 'healthy_normal', text: mealTypes.normal},
+          {id: 'healthy_normal', text: mealTypes.healthy_normal},
           {id: 'liquid_diets', text: mealTypes.liquid_diets},
           {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets},
           {id: 'diabetic_diets', text: mealTypes.diabetic_diets},
@@ -48,34 +50,51 @@ angular.module('EWeb').controller('SetMealController',
           });
         }
       };
-
       $scope.changeFloor = function () {
       };
-
       $scope.beds = [];
 
-      function getBed(record) {
+      function getBedByInfoBedId(bedId) {
         return $scope.beds.filter(function (item) {
-          return item.id === record.bed;
+          return item.id === bedId;
         })[0];
       }
-      function getTimeStamp(){
+
+      function getTimeStamp() {
         if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
           var time = moment($scope.pageShow.createTimeRange.startDate);
           return new Date(time).getTime();
         }
         return;
       }
+
+      function getNowTimeStamp() {
+        var timeDate = new Date(new Date().toLocaleDateString() + ' 23:59:59');
+        return new Date(timeDate).getTime();
+      }
+
+      function updateTimeout(timeStamp) {
+        var today = getNowTimeStamp();
+        if (today > timeStamp) {
+          $scope.timeout = true;
+        } else {
+          $scope.timeout = false;
+        }
+      }
+
       $scope.search = function () {
         if (!$scope.filter.currentFloor) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择楼层信息');
         }
 
         var timeStamp = getTimeStamp();
-        if(!timeStamp){
+        if (!timeStamp) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
         }
 
+        updateTimeout(timeStamp);
+
+        $scope.$emit(GlobalEvent.onShowLoading, true);
         BedService.getBedsByFloorId($scope.filter.currentFloor.id, function (err, data) {
           if (data && data.beds) {
             $scope.beds = data.beds.map(function (item) {
@@ -88,40 +107,111 @@ angular.module('EWeb').controller('SetMealController',
               };
             });
 
-            BedMealRecordService.getBedMealRecords({
-              buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
-              floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
-              timeStamp: timeStamp
+            HospitalizedInfoService.searchHospitalizedInfoByFilter({
+              building_id: $scope.filter.currentBuilding.id,
+              floor_id: $scope.filter.currentFloor.id
             }, function (err, data) {
-              if (data.bed_meal_records) {
-                data.bed_meal_records.forEach(function (record) {
-                  var bed = getBed(record);
+              if (data && data.hospitalized_infos) {
+                data.hospitalized_infos.forEach(function (info) {
+                  var bed = getBedByInfoBedId(info.bed._id);
                   if (bed) {
-                    if (record.breakfast) {
-                      bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
-                    }
-                    if (record.lunch) {
-                      bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
-                    }
-                    if (record.dinner) {
-                      bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
-                    }
+                    bed.hospitalized_info = {
+                      id_number: info.id_number,
+                      _id: info._id,
+                      nickname: info.nickname
+                    };
                   }
                 });
               }
+
+              BedMealRecordService.getBedMealRecords({
+                buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+                floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
+                timeStamp: timeStamp
+              }, function (err, data) {
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if (data.bed_meal_records) {
+                  data.bed_meal_records.forEach(function (record) {
+                    var bed = getBedByInfoBedId(record.bed);
+                    if (bed) {
+                      bed.bed_meal_record_id = record._id;
+                      if (record.breakfast) {
+                        bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
+                      }
+                      if (record.lunch) {
+                        bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
+                      }
+                      if (record.dinner) {
+                        bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
+                      }
+                    }
+                  });
+                }
+              });
             });
           }
         });
       };
+
       $scope.goBill = function () {
         $state.go('bed_meal_bill');
       };
-      $scope.generateBill = function(){
-        alert('bill');
+
+      $scope.generateBill = function () {
+        if ($scope.timeout) {
+          return;
+        }
+
+        if (!$scope.filter.currentFloor) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择楼层信息');
+        }
+
+        var timeStamp = getTimeStamp();
+        if (!timeStamp) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
+        }
+
+        var bedMealRecordIds = [];
+        var formattedBedMealInfos = $scope.beds.filter(function (bed) {
+          if (bed.hospitalized_info && bed.bed_meal_record_id
+          ) {
+            if(bed.bed_meal_record_id){
+              bedMealRecordIds.push(bed.bed_meal_record_id);
+            }
+            return bed;
+          }
+        });
+
+        if (formattedBedMealInfos.length === 0) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请至少保存一个床位的用餐信息！');
+        }
+
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {
+            title: '确认操作', content: '您确定要生成账单吗？如果确定，请确保您已保存刚才的更改', callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            BedMealBillService.batchCreateBills({
+              bedMealRecordIds: bedMealRecordIds,
+              buildingId: $scope.filter.currentBuilding.id,
+              floorId: $scope.filter.currentFloor.id
+            }, function (err, result) {
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if (err) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '操作失败');
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '操作成功！');
+            });
+          }
+          });
       };
       $scope.saveMealSet = function () {
+        if ($scope.timeout) {
+          return;
+        }
+
         var formattedBedMealInfos = $scope.beds.filter(function (bed) {
-          if (bed.breakfast || bed.lunch || bed.dinner) {
+          if (bed.hospitalized_info && (bed.breakfast || bed.lunch || bed.dinner)) {
             return bed;
           }
         });
@@ -131,7 +221,8 @@ angular.module('EWeb').controller('SetMealController',
             _id: bed.id,
             breakfast: bed.breakfast ? bed.breakfast.id : '',
             lunch: bed.lunch ? bed.lunch.id : '',
-            dinner: bed.dinner ? bed.dinner.id : ''
+            dinner: bed.dinner ? bed.dinner.id : '',
+            hospitalizedInfoId: bed.hospitalized_info._id
           };
         });
 
@@ -140,7 +231,7 @@ angular.module('EWeb').controller('SetMealController',
         }
 
         var timeStamp = getTimeStamp();
-        if(!timeStamp){
+        if (!timeStamp) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
         }
 
@@ -152,6 +243,13 @@ angular.module('EWeb').controller('SetMealController',
           timeStamp: timeStamp
         }, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err || '保存失败');
+          }
+
+          if (data.bed_meal_records) {
+            return $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
+          }
           console.log(data);
         });
       };

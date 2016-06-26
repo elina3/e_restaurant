@@ -11,7 +11,8 @@ angular.module('EWeb').factory('BedMealRecordService',
             time_stamp: params.timeStamp,
             building_id: params.buildingId,
             floor_id: params.floorId,
-            bed_id: params.bedId
+            bed_id: params.bedId,
+            hospitalized_info_id: params.hospitalizedInfoId
           })
             .then(function (data) {
               if (!callback) {

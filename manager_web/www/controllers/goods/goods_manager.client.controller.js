@@ -284,6 +284,9 @@ angular.module('EWeb').controller('GoodsManagerController',
       $scope.translateGoodsStatus = function(status){
         return GoodsService.translateGoodsStatus(status);
       };
+      $scope.translateGoodsType =function(type){
+        return GoodsService.translateGoodsType(type);
+      };
 
       function initPageConfig(){
         switch($stateParams.goods_type){
@@ -372,6 +375,7 @@ angular.module('EWeb').controller('GoodsManagerController',
           'background-size': 'cover'
         };
       };
+
 
       $scope.goToOrderManager = function(){
         $state.go('goods_order');

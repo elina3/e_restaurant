@@ -25,7 +25,7 @@ exports.addNewHospitalizedInfo = function (req, res, next) {
 };
 
 
-exports.queryHospitalizedInfoByFilter = function (req, res, next) {
+exports.queryHospitalizedInfoByIdNumber = function (req, res, next) {
   var idNumber = req.query.id_number || '';
   var nickname = req.query.nickname || '';
 
@@ -33,7 +33,21 @@ exports.queryHospitalizedInfoByFilter = function (req, res, next) {
     return next({err: systemError.param_null_error});
   }
 
-  hospitalizedLogic.queryHospitalizedInfo({idNumber: idNumber, nickname: nickname}, function (err, hospitalizedInfos) {
+  hospitalizedLogic.queryHospitalizedInfoByIdNumber({idNumber: idNumber, nickname: nickname}, function (err, hospitalizedInfos) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      hospitalized_infos: hospitalizedInfos
+    };
+    return next();
+  });
+};
+
+
+exports.queryHospitalizedInfoByFilter = function (req, res, next) {
+  hospitalizedLogic.queryHospitalizedInfoByFilter(req.building, req.floor, function (err, hospitalizedInfos) {
     if (err) {
       return next(err);
     }

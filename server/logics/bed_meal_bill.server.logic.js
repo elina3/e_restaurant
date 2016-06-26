@@ -56,7 +56,7 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
         });
       }
 
-      bedMealBill.recent_modify_user._id = user._id;
+      bedMealBill.recent_modify_user_id = user._id;
       bedMealBill.recent_modify_user_info = userInfo;
 
 
@@ -87,8 +87,12 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
       return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
     }
 
-    if (healthyMeals[bedMealRecord[mealTag]]) {//选了，但是不是选择普食
+    if (healthyGoodsInfo) {//选了，但是不是选择普食
       goodsBills = getGoodsBills([healthyGoodsInfo]);
+    }
+
+    if(goodsBills.length === 0){
+      return eachCallback({err: bedMeallBillError.healthy_goods_not_all_exist});
     }
 
     user.user_model = 'User';
@@ -103,7 +107,7 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
 //护士为病人设置营养餐时生成账单
 exports.batchCreateMealBills = function (user, bedMealRecords, healthyMeals, callback) {
   async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
-    batchCreateBillsByBedMealRecord(bedMealRecord, function (err) {
+    batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, function (err) {
       return eachCallback(err);
     });
   }, function (err) {
@@ -113,9 +117,9 @@ exports.batchCreateMealBills = function (user, bedMealRecords, healthyMeals, cal
 
 function getGoodsBills(goodsInfos) {
   if (!Array.isArray(goodsInfos)) {
-    return callback({err: bedMeallBillError.invalid_goods_infos})
+    return [];
   }
-  return goodsInfos.map(function (goodsInfo) {
+  var goodsList = goodsInfos.map(function (goodsInfo) {
     return {
       goods_id: goodsInfo.goods_id,
       name: goodsInfo.name,
@@ -126,6 +130,7 @@ function getGoodsBills(goodsInfos) {
       count: goodsInfo.count
     };
   });
+  return goodsList;
 }
 //食堂工作人员为某床病人选餐
 exports.chooseGoodsBillForBedMealRecord = function (client, bedMealRecord, mealTag, goodsInfos, callback) {

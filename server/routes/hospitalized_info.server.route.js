@@ -17,6 +17,11 @@ module.exports = function (app) {
     hospitalizedInfoController.addNewHospitalizedInfo);
 
   app.route('/hospitalized_info').get(authFilter.requireUser,
+    hospitalizedInfoController.queryHospitalizedInfoByIdNumber);
+
+  app.route('/hospitalized_info/filter').get(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
     hospitalizedInfoController.queryHospitalizedInfoByFilter);
 
   app.route('/hospitalized_info/leaveHospital').post(authFilter.requireUser,

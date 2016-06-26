@@ -84,6 +84,17 @@
           background-color: @task-pois-theme-color-hover;
         }
       }
+      .save{
+        &.disabled{
+          background-color: #f2f2f2;
+          color: #aaa;
+          cursor: default;
+
+          &:hover{
+            background-color: #f2f2f2;
+          }
+        }
+      }
       .bill{
         background-color: #EF6F70;
         text-align: center;
@@ -92,6 +103,15 @@
         overflow: hidden;
         &:hover {
           background-color: #DC6465;
+        }
+        &.disabled{
+          background-color: #f2f2f2;
+          color: #aaa;
+          cursor: default;
+
+          &:hover{
+            background-color: #f2f2f2;
+          }
         }
       }
     }

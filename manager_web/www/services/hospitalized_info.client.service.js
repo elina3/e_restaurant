@@ -28,9 +28,9 @@ angular.module('EWeb').factory('HospitalizedInfoService',
               return callback(SystemError.network_error);
             });
         },
-        searchHospitalizedInfoByIdNumber: function(params, callback){
+        searchHospitalizedInfoByIdNumber: function (params, callback) {
           RequestSupport.executeGet('/hospitalized_info', {
-            id_number: params.idNumber
+            id_number: params.idNumber,
           })
             .then(function (data) {
               if (!callback) {
@@ -47,7 +47,24 @@ angular.module('EWeb').factory('HospitalizedInfoService',
               return callback(SystemError.network_error);
             });
         },
-        leaveHospital: function(params, callback){
+        searchHospitalizedInfoByFilter: function (params, callback) {
+          RequestSupport.executeGet('/hospitalized_info/filter', params)
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.zh_message || data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
+        leaveHospital: function (params, callback) {
           RequestSupport.executePost('/hospitalized_info/leaveHospital', {
             hospitalized_info_id: params.hospitalizedInfoId
           })

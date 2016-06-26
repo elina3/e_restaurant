@@ -81,7 +81,7 @@ exports.createNewHospitalizedInfo = function(user, building, floor, bed, sickerI
 };
 
 //查询入住信息
-exports.queryHospitalizedInfo = function(filter, callback){
+exports.queryHospitalizedInfoByIdNumber = function(filter, callback){
   if(!validIdNumber(filter.idNumber)){
     return callback({err: hospitalizedInfoError.invalid_id_number});
   }
@@ -114,6 +114,25 @@ exports.queryHospitalizedInfo = function(filter, callback){
 
           return callback(null, hospitalizedInfos);
         });
+    });
+};
+
+exports.queryHospitalizedInfoByFilter =function(building, floor, callback){
+  var query = {
+    deleted_status: false,
+    building: building._id,
+    floor: floor._id,
+    is_hospitalized: true,
+    is_leave_hospital: false
+  };
+  HospitalizedInfo.find(query)
+    .populate('building floor bed')
+    .exec(function(err, hospitalizedInfos){
+      if(err || !hospitalizedInfos){
+        return callback({err: systemError.database_query_error})
+      }
+
+      return callback(null, hospitalizedInfos);
     });
 };
 

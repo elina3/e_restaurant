@@ -127,7 +127,7 @@ exports.getBedMealRecord = function(mealSetDate, buildingId, floorId, bedId, cal
 exports.getBedMealRecordsByIds = function(ids, callback){
   BedMealRecord.find({_id: {$in: ids}})
     .exec(function(err, bedMealRecords){
-      if(err || bedMealRecords){
+      if(err || !bedMealRecords){
         return callback({err: systemError.database_query_error});
       }
 

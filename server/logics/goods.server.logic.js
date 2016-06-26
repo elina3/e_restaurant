@@ -10,8 +10,8 @@ var Goods = appDb.model('Goods');
 var systemError = require('../errors/system');
 var goodsError = require('../errors/goods');
 
-exports.addGoods = function(goodsInfo, user, callback){
-  if(!goodsInfo.name){
+exports.addGoods = function (goodsInfo, user, callback) {
+  if (!goodsInfo.name) {
     return callback({err: goodsError.goods_name_null});
   }
   var goods = new Goods({
@@ -21,15 +21,15 @@ exports.addGoods = function(goodsInfo, user, callback){
     status: goodsInfo.status,
     price: goodsInfo.price ? parseFloat(goodsInfo.price) : -1,
     unit: goodsInfo.unit ? goodsInfo.unit : '盒',
-    discount: goodsInfo.discount ? parseFloat(goodsInfo.discount): 1,
+    discount: goodsInfo.discount ? parseFloat(goodsInfo.discount) : 1,
     display_photos: goodsInfo.display_photos,
     description_photos: goodsInfo.description_photos,
     create_user: user._id,
     create_group: user.group,
     deleted_status: false
   });
-  goods.save(function(err, newGoods){
-    if(err || !newGoods){
+  goods.save(function (err, newGoods) {
+    if (err || !newGoods) {
       return callback({err: systemError.database_save_error});
     }
 
@@ -37,18 +37,18 @@ exports.addGoods = function(goodsInfo, user, callback){
   });
 };
 
-function getGoodsDetailById(goodsId, callback){
+function getGoodsDetailById(goodsId, callback) {
   Goods.findOne({_id: goodsId})
-    .exec(function(err, goods){
-      if(err){
+    .exec(function (err, goods) {
+      if (err) {
         return callback({err: systemError.internal_system_error});
       }
 
-      if(!goods){
+      if (!goods) {
         return callback({err: goodsError.goods_not_exist});
       }
 
-      if(goods.deleted_status){
+      if (goods.deleted_status) {
         return callback({err: goodsError.goods_deleted});
       }
 
@@ -56,38 +56,42 @@ function getGoodsDetailById(goodsId, callback){
     });
 }
 
-exports.getGoodsById = function(goodsId, callback){
-  getGoodsDetailById(goodsId, function(err, goods){
+exports.getGoodsById = function (goodsId, callback) {
+  getGoodsDetailById(goodsId, function (err, goods) {
     return callback(err, goods);
   });
 };
 
-exports.updateGoodsById = function(goodsId, goodsInfo, user, callback){
-  if(!goodsId){
+exports.updateGoodsById = function (goodsId, goodsInfo, user, callback) {
+  if (!goodsId) {
     return callback({err: goodsError.goods_id_null});
   }
 
-  if(!goodsInfo.name){
+  if (!goodsInfo.name) {
     return callback({err: goodsError.goods_name_null});
   }
 
-  getGoodsDetailById(goodsId, function(err, goods){
-    if(err){
+  getGoodsDetailById(goodsId, function (err, goods) {
+    if (err) {
       return callback(err);
     }
 
-    Goods.update({_id: goodsId},{$set: {name: goodsInfo.name,
-      description: goodsInfo.description,
-      type: goodsInfo.type || 'normal',
-      price: goodsInfo.price? parseFloat(goodsInfo.price):-1,
-      discount: goodsInfo.discount ? parseFloat(goodsInfo.discount): 1,
-      display_photos: goodsInfo.display_photos,
-      description_photos: goodsInfo.description_photos,
-      create_user: user._id,
-      create_group: user.group,
-      status: goodsInfo.status,
-      deleted_status: false}}, function(err){
-      if(err){
+    Goods.update({_id: goodsId}, {
+      $set: {
+        name: goodsInfo.name,
+        description: goodsInfo.description,
+        type: goodsInfo.type || 'normal',
+        price: goodsInfo.price ? parseFloat(goodsInfo.price) : -1,
+        discount: goodsInfo.discount ? parseFloat(goodsInfo.discount) : 1,
+        display_photos: goodsInfo.display_photos,
+        description_photos: goodsInfo.description_photos,
+        create_user: user._id,
+        create_group: user.group,
+        status: goodsInfo.status,
+        deleted_status: false
+      }
+    }, function (err) {
+      if (err) {
         return callback({err: systemError.internal_system_error});
       }
 
@@ -96,15 +100,15 @@ exports.updateGoodsById = function(goodsId, goodsInfo, user, callback){
   });
 };
 
-exports.deleteGoods = function(goodsId, callback){
-  getGoodsDetailById(goodsId, function(err, goods){
-    if(err){
+exports.deleteGoods = function (goodsId, callback) {
+  getGoodsDetailById(goodsId, function (err, goods) {
+    if (err) {
       return callback(err);
     }
 
     goods.deleted_status = true;
-    goods.save(function(err, newGoods){
-      if(err || !newGoods){
+    goods.save(function (err, newGoods) {
+      if (err || !newGoods) {
         return callback({err: systemError.database_save_error});
       }
 
@@ -113,10 +117,10 @@ exports.deleteGoods = function(goodsId, callback){
   });
 };
 
-function queryGoodsList(query, currentPage, limit, skipCount, callback){
+function queryGoodsList(query, currentPage, limit, skipCount, callback) {
 
-  Goods.count(query, function(err, totalCount){
-    if(err){
+  Goods.count(query, function (err, totalCount) {
+    if (err) {
       return callback({err: systemError.internal_system_error});
     }
 
@@ -132,8 +136,8 @@ function queryGoodsList(query, currentPage, limit, skipCount, callback){
       .sort({update_time: -1})
       .skip(skipCount)
       .limit(limit)
-      .exec(function(err, goodsList){
-        if(err){
+      .exec(function (err, goodsList) {
+        if (err) {
           return callback({err: systemError.internal_system_error});
         }
 
@@ -146,58 +150,64 @@ function queryGoodsList(query, currentPage, limit, skipCount, callback){
   });
 }
 
-exports.getGoodsList = function(currentPage, limit, skipCount, callback){
+exports.getGoodsList = function (currentPage, limit, skipCount, callback) {
   var query = {
     deleted_status: false
   };
-  queryGoodsList(query, currentPage, limit, skipCount, function(err, result){
+  queryGoodsList(query, currentPage, limit, skipCount, function (err, result) {
     return callback(err, result);
   });
 };
 
-exports.getFirstHealthyGoods = function(healthyTypes, callback){
-  var goodsList = [];
-  async.each(healthyTypes, function(healthyType, eachCallback){
-    Goods.first({type: healthyType, deleted_status: false, status: 'on_sale'})
-      .exec(function(err, goods){
-        if(err){
-          return callback({err: systemError.database_query_error});
-        }
+exports.getFirstHealthyGoods = function (healthyTypes, callback) {
+  var query = {type: {$in: healthyTypes}, deleted_status: false, status: 'on_sale'};
 
-        if(!goods){
-          return callback({err: goodsError.goods_not_exist});
-        }
+  Goods.aggregate([
+    {$match: query},
+    {
+      $group: {
+        _id: '$type',
+        goodsList: {$push: '$$ROOT'}
+      }
+    }
+  ], function (err, result) {
+    if (err || !result) {
+      return callback({err: systemError.database_query_error});
+    }
 
-        goodsList.push(goods);
-        return callback();
-      });
-  }, function(err){
-    return callback(err, goodsList);
+    if (result.length !== healthyTypes.length) {
+      return callback({err: goodsError.not_all_healthy_goods})
+    }
+
+    var goodsList = result.map(function (item) {
+      return item.goodsList[0];
+    });
+    return callback(null, goodsList);
   });
 };
 
-exports.getOpeningGoodsList = function(filter, currentPage, limit, skipCount, callback){
+exports.getOpeningGoodsList = function (filter, currentPage, limit, skipCount, callback) {
   var query = {
     deleted_status: false,
     status: {$nin: ['none']}
   };
 
-  if(filter.goodsType){
+  if (filter.goodsType) {
     query.type = filter.goodsType;
   }
 
-  queryGoodsList(query, currentPage, limit, skipCount, function(err, result){
+  queryGoodsList(query, currentPage, limit, skipCount, function (err, result) {
     return callback(err, result);
   });
 };
 
-exports.getGoodsInfos = function(goodsIds, callback){
+exports.getGoodsInfos = function (goodsIds, callback) {
   var query = {
     deleted_status: false,
     _id: {$in: goodsIds}
   };
-  queryGoodsList(query, 1, -1, -1, function(err, result){
-    if(err){
+  queryGoodsList(query, 1, -1, -1, function (err, result) {
+    if (err) {
       return callback(err);
     }
 
@@ -206,25 +216,25 @@ exports.getGoodsInfos = function(goodsIds, callback){
   });
 };
 
-exports.getFirstFreeMealGoods = function(callback){
-   Goods.find({deleted_status: false, type: 'free_meal'})
-     .exec(function(err, freeMeals){
-       if(err || !freeMeals){
-         return callback({err: systemError.database_query_error});
-       }
+exports.getFirstFreeMealGoods = function (callback) {
+  Goods.find({deleted_status: false, type: 'free_meal'})
+    .exec(function (err, freeMeals) {
+      if (err || !freeMeals) {
+        return callback({err: systemError.database_query_error});
+      }
 
-       return callback(null, freeMeals[0]);
-     });
+      return callback(null, freeMeals[0]);
+    });
 };
 
-exports.getHealthyNormalGoodsList =function(pagination, callback){
+exports.getHealthyNormalGoodsList = function (pagination, callback) {
   var query = {
     deleted_status: false,
     status: 'on_sale',
     type: 'healthy_normal'
   };
 
-  queryGoodsList(query, pagination.current_page, pagination.limit, pagination.skip_count, function(err, result){
+  queryGoodsList(query, pagination.current_page, pagination.limit, pagination.skip_count, function (err, result) {
     return callback(err, result);
   });
 };

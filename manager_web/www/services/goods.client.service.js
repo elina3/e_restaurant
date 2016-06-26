@@ -103,6 +103,28 @@ angular.module('EWeb').factory('GoodsService',
               return '未上架';
 
           }
+        },
+        translateGoodsType: function(type){
+          switch(type){
+            case 'normal':
+              return '工作餐';
+            case 'free_meal':
+              return '普通';
+            case 'healthy_normal':
+              return '营养餐普食';
+            case 'liquid_diets':
+              return '流质饮食';
+            case 'semi_liquid_diets':
+              return '半流质饮食';
+            case 'diabetic_diets':
+              return '糖尿病饮食';
+              case 'low_fat_low_salt_diets':
+              return '低脂低盐饮食';
+
+            default:
+              return '未上架';
+
+          }
         }
       };
     }]);

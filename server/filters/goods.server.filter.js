@@ -34,10 +34,6 @@ exports.requireAllHealthyMeals = function(req, res, next){
       return next(err);
     }
 
-    if(mealTypes.length !== goodsList.length){
-      return next({err: goodsError.not_all_healthy_goods});
-    }
-
     req.healthy_meal_dic = {};
     goodsList.forEach(function(goods){
       req.healthy_meal_dic[goods.type] = {
@@ -49,5 +45,6 @@ exports.requireAllHealthyMeals = function(req, res, next){
         count: 1
       };
     });
+    next();
   });
 };

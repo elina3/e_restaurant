@@ -71,7 +71,8 @@
                                             <!--{{goods.discount === 1 ? '无': ((goods.discount * 10) + '折')}}-->
                                         <!--</span>-->
                                         <span class="type">
-                                        {{goods.type === 'free_meal' ? '工作餐': '普通'}}
+                                            <span>{{translateGoodsType(goods.type)}}</span>
+
                                         </span>
                                     </div>
                                     <div class="col-xs-2">
@@ -149,11 +150,11 @@
                                 <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'healthy_normal'" name="goodsType" value="healthy_normal"   type="radio"/>
                             </div>
                             <div class="goods-type-item">
-                                <label>流质</label>
+                                <label>流质饮食</label>
                                 <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'liquid_diets'" name="goodsType" value="liquid_diets"   type="radio"/>
                             </div>
                             <div class="goods-type-item">
-                                <label>半流质</label>
+                                <label>半流质饮食</label>
                                 <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'semi_liquid_diets'" name="goodsType" value="semi_liquid_diets"   type="radio"/>
                             </div>
                             <div class="goods-type-item">
@@ -161,7 +162,7 @@
                                 <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'diabetic_diets'" name="goodsType" value="diabetic_diets"   type="radio"/>
                             </div>
                             <div class="goods-type-item">
-                                <label>低脂低盐</label>
+                                <label>低脂低盐饮食</label>
                                 <input ng-model="pageConfig.goodsPanel.currentEditGoods.type" ng-checked="pageConfig.goodsPanel.currentEditGoods.type === 'low_fat_low_salt_diets'" name="goodsType" value="low_fat_low_salt_diets"   type="radio"/>
                             </div>
                         </div>

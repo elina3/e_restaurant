@@ -24,7 +24,6 @@ module.exports = function (app) {
   app.route('/bed_meal_records').post(authFilter.requireUser,
     bedFilter.requireBuilding,
     bedFilter.requireFloor,
-    hospitalizedInfoFilter.requireHospitalizedInfo,
     bedMealRecordController.saveBedMealRecords);
 
 };

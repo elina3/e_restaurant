@@ -12,6 +12,7 @@ var bedMealBillLogic = require('../logics/bed_meal_bill'),
 
 //护士下单（今日账单）
 exports.batchCreateBills = function (req, res, next) {
+
   bedMealBillLogic.batchCreateMealBills(req.user, req.bed_meal_records, req.healthy_meal_dic, function (err, hospitalizedInfo) {
     if (err) {
       return next(err);

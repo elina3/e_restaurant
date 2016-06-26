@@ -73,6 +73,7 @@ var BedMealBillSchema = new Schema({
     type: Date
   },
   meal_tag: {
+    type: String,
     enum: ['breakfast', 'lunch', 'dinner']
   },
   meal_type: {
@@ -136,16 +137,20 @@ BedMealBillSchema.plugin(timestamps, {
 });
 appDb.model('BedMealBill', BedMealBillSchema);
 
-function translateTime(createTime){
-  var hour = createTime.getHours();
-  if(hour >= 0 && hour < 10){
-    return '早餐';
+function translateTime(mealTag){
+  var result = '';
+  switch(mealTag){
+    case 'breakfast':
+      result = '早餐';
+      break;
+    case 'lunch':
+      result = '午餐';
+      break;
+    case 'dinner':
+      result = '晚餐';
+      break;
   }
-  else if(hour >= 10 && hour < 16){
-    return '午餐';
-  }else{
-    return '晚餐';
-  }
+  return result;
 }
 BedMealBillSchema.pre('save', function (next) {
   this.amount_due = 0;
@@ -161,7 +166,7 @@ BedMealBillSchema.pre('save', function (next) {
   this.amount_paid = this.amount_due * this.discount;
 
   if(this.create_time){
-    this.time_tag = translateTime(this.create_time);
+    this.time_tag = translateTime(this.meal_tag);
   }
 
   next();
