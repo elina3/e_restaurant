@@ -33,6 +33,28 @@ angular.module('EWeb').factory('BedMealBillService',
               return callback(SystemError.network_error);
             });
         },
+        queryBedMealBillStatistic: function(params, callback) {
+          RequestSupport.executeGet('/bed_meal_bills/amount_statistic', {
+            time_range: params.timeRangeString,
+            id_number: params.idNumber,
+            meal_tag: params.mealTag,
+            meal_type: params.mealType
+          })
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.zh_message || data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         //登记人员获取单个病人的账单
         querySickerBedMealBillsByFilter: function (params, callback) {
           RequestSupport.executeGet('/hospitalized_info/bed_meal_bills', {

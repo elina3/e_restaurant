@@ -49,7 +49,8 @@ angular.module('EWeb').controller('BedMealBillController',
             format: 'YY/MM/DD HH:mm'
           }
         },
-        bills: []
+        bills: [],
+        totalAmount: 0
       };
 
       function getTimeRangeString() {
@@ -105,19 +106,35 @@ angular.module('EWeb').controller('BedMealBillController',
         });
       }
 
+      function loadAmountStatistic(){
+        BedMealBillService.queryBedMealBillStatistic({
+          idNumber: $scope.filter.currentIdNumber,
+          mealType: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
+          mealTag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
+          timeRangeString: getTimeRangeString()
+        }, function (err, data) {
+          if (err || !data) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err || '查询失败');
+          }
+
+          $scope.pageData.totalAmount = data.totalAmount !== 0 ? (data.totalAmount /100).toFixed(3) : '--';
+        });
+      }
+
       $scope.filter = {
         currentIdNumber: '',
         currentMealTag: null,
         currentMealType: null,
         search: function () {
           $scope.pageData.pagination.currentPage = 1;
-          $scope.pageData.pagination.skipCount = 1;
+          $scope.pageData.pagination.skipCount = 0;
 
           if (!$scope.pageData.datePicker.createTimeRange) {
             return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间');
           }
 
           loadBills();
+          loadAmountStatistic();
         }
       };
 

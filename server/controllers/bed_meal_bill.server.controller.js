@@ -122,9 +122,10 @@ exports.getBedMealBillStatistic = function(req, res, next){
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   bedMealBillLogic.getBedMealBillTotalAmount({
-    status: req.query.status || '',
-    timeTag: req.query.time_tag || '',
+    mealType: req.query.meal_type || '',
+    mealTag: req.query.meal_tag || '',
     idNumber: req.query.id_number || '',
+    status: req.query.status || '',
     startTime: startTime,
     endTime: endTime
   }, function(err, totalAmount){

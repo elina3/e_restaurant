@@ -292,13 +292,13 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
       pagination.limit = totalCount;
     }
 
-    if (pagination.skipCount === -1) {
-      pagination.skipCount = pagination.limit * (pagination.currentPage - 1);
+    if (pagination.skip_count === -1) {
+      pagination.skip_count = pagination.limit * (pagination.current_page - 1);
     }
 
     BedMealBill.find(query)
       .sort({update_time: -1})
-      .skip(pagination.skipCount)
+      .skip(pagination.skip_count )
       .limit(pagination.limit)
       .populate('building floor bed')
       .exec(function (err, bedMealBills) {
@@ -328,11 +328,15 @@ exports.getBedMealBillTotalAmount = function(filter, callback){
   }
 
   if (filter.startTime && filter.endTime) {
-    match.$and = [{meal_set_time: {$gte: filter.startTime}}, {meal_set_time: {$lte: filter.endTime}}];
+    match.$and = [{meal_set_date: {$gte: filter.startTime}}, {meal_set_date: {$lte: filter.endTime}}];
   }
 
-  if(filter.timeTag){
-    match.time_tag = filter.timeTag;
+  if(filter.mealTag){
+    match.meal_tag = filter.mealTag;
+  }
+
+  if(filter.mealType){
+    match.meal_type = filter.mealType;
   }
 
   if(filter.idNumber){
