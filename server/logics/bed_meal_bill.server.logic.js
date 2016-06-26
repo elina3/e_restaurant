@@ -71,10 +71,8 @@ function upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, c
       bedMealBill.recent_modify_user_info = userInfo;
 
 
-      if (goodsBills) {//goodsBills为空,表示统一下单的普食，不更新goods_bills
-        bedMealBill.goods_bills = goodsBills;
-        bedMealBill.meal_type = bedMealRecord[mealTag];
-      }
+      bedMealBill.goods_bills = goodsBills;
+      bedMealBill.meal_type = bedMealRecord[mealTag];
 
       bedMealBill.save(function (err, newBedMealBill) {
         if (err || !newBedMealBill) {
@@ -94,31 +92,30 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
   console.log('batch inner logic async start');
   async.eachSeries(mealTags, function (mealTag, eachCallback) {
     var goodsBills = [];
-    if (!bedMealRecord[mealTag] || bedMealRecord[mealTag] === 'healthy_normal') {//没有选或选择普食
-      console.log('error  healthy_normal or no record_meal_tag');
-      return eachCallback();
-    }
 
-    var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
-    if (!healthyGoodsInfo) {
-      console.log('error  healthy_goods_not_all_exist 1');
-      return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
-    }
+    if(bedMealRecord[mealTag] === 'healthy_normal'){
+      goodsBills = [];
+    }else{
+      var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
+      if (!healthyGoodsInfo) {
+        console.log('error  healthy_goods_not_all_exist 1');
+        return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
+      }
+      if (healthyGoodsInfo) {//选了，但是不是选择普食
+        goodsBills = getGoodsBills([healthyGoodsInfo]);
+      }
 
-    if (healthyGoodsInfo) {//选了，但是不是选择普食
-      goodsBills = getGoodsBills([healthyGoodsInfo]);
-    }
-
-    if(goodsBills.length === 0){
-      console.log('error  healthy_goods_not_all_exist');
-      return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
+      if(goodsBills.length === 0){
+        console.log('error  healthy_goods_not_all_exist');
+        return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
+      }
     }
 
     user.user_model = 'User';
     console.log('upsertBedMealBillForMealTag start');
     upsertBedMealBillForMealTag(user, bedMealRecord, mealTag, goodsBills, function (err, bedMealBill) {
       console.log('upsertBedMealBillForMealTag end');
-      return eachCallback(err);
+      return eachCallback();//批量插入不处理错误
     });
   }, function (err) {
     console.log('batch inner logic async end');
@@ -365,12 +362,12 @@ exports.getBedMealBillTotalAmount = function(filter, callback){
 };
 
 exports.getMealBillByRecordId = function (bedMealRecordId, callback) {
-  BedMealBill.findOne({bed_meal_record: bedMealRecordId})
-    .exec(function (err, bedMealBill) {
+  BedMealBill.find({bed_meal_record: bedMealRecordId})
+    .exec(function (err, bedMealBills) {
       if (err) {
         return callback({err: systemError.database_query_error});
       }
 
-      return callback(null, bedMealBill);
+      return callback(null, bedMealBills);
     });
 };

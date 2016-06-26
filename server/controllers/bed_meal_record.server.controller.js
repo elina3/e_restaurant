@@ -25,13 +25,17 @@ function saveOneBedMealRecord(user, time, building, floor, bedId, bedMealInfo, c
         return callback(err);
       }
 
-      bedMealBillLogic.getMealBillByRecordId(bedMealRecord._id, function (err, bedMealBill) {
+      bedMealBillLogic.getMealBillByRecordId(bedMealRecord._id, function (err, bedMealBills) {
         if (err) {
           return callback(err);
         }
 
-        if (bedMealBill && bedMealBill.is_checkout) {
-          return callback();
+        if (bedMealBills && bedMealBills.length > 0) {
+          bedMealBills.forEach(function(item){//如果账单已清算，则不更新，使用旧的饮食类型；或者是普食已选餐也不更新，使用旧饮食类型
+            if(item.is_checkout || (item.meal_type === 'healthy_normal' && item.goods_bills.length > 0)){
+              bedMealInfo[item.meal_tag] = item.meal_type;
+            }
+          });
         }
 
         bedMealRecordLogic.updateBedMealRecordSetting(time, bedMealRecord, bedMealInfo.breakfast, bedMealInfo.lunch, bedMealInfo.dinner

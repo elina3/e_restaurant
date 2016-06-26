@@ -382,7 +382,7 @@ angular.module('EWeb').controller('HospitalizedInfoController',
       };
       $scope.pay = function(){
         BedMealBillService.pay({
-          hospitalized_info_id: $scope.pageData.currentHospitalizedInfo._id
+          hospitalized_info_id: $scope.pageConfig.currentHospitalizedInfo._id
         }, function(err, data) {
           if(err || !data){
             return $scope.$emit(GlobalEvent.onShowAlert, err || '清算失败');
