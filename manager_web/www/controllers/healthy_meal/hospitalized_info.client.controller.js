@@ -278,33 +278,8 @@ angular.module('EWeb').controller('HospitalizedInfoController',
         return '';
       };
 
-      $scope.translateMealType = function(bill){
-        var result = '';
-        switch (bill.meal_type){
-          case 'liquid_diets':
-            result = '流质';
-            break;
-          case 'semi_liquid_diets':
-            result = '半流质';
-            break;
-          case 'diabetic_diets':
-            result = '糖尿病饮食';
-            break;
-          case 'low_fat_low_salt_diets':
-            result = '半糖半盐';
-            break;
-          case 'healthy_normal':
-            result = '普食(';
-            var names = bill.goods_bills.map(function(item){
-              return item.name;
-            });
-
-            result += names.join(',');
-            result += ')';
-            break;
-        }
-
-        return result;
+      $scope.translateMealType = function (bill) {
+        return BedMealBillService.translateMealType(bill);
       };
 
       function updateBills(data){

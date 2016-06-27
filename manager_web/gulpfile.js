@@ -12,6 +12,7 @@ var webJsFiles = [
     'www/',
     'www/config/**/*.js',
     'www/services/**/*.js',
+    'www/constant/**/*.js',
     'www/supports/**/*.js',
     'www/errors/**/*.js',
     'www/events/**/*.js',

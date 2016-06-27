@@ -27,9 +27,10 @@ exports.requireGoods = function(req, res, next){
   });
 };
 
+var specialMealTypes = require('../enums/business').meal_types.special_enums;
+
 exports.requireAllHealthyMeals = function(req, res, next){
-  var mealTypes = ['liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'];
-  goodsLogic.getFirstHealthyGoods(mealTypes, function(err, goodsList){
+  goodsLogic.getFirstHealthyGoods(specialMealTypes, function(err, goodsList){
     if(err){
       return next(err);
     }

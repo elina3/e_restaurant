@@ -34,8 +34,9 @@ var BedMealRecordSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Bed'
   },
-  breakfast: {//'healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'
-    type: String
+  breakfast: {      //'healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'
+    type: String    //'lunch_liquid_diets','lunch_semi_liquid_diets','lunch_diabetic_diets','lunch_low_fat_low_salt_diets',
+                    //'dinner_liquid_diets', 'dinner_semi_liquid_diets', 'dinner_diabetic_diets', 'dinner_low_fat_low_salt_diets'
   },
   lunch: {
     type: String

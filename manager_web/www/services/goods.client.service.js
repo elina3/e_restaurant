@@ -113,14 +113,29 @@ angular.module('EWeb').factory('GoodsService',
             case 'healthy_normal':
               return '营养餐普食';
             case 'liquid_diets':
-              return '营养餐流质饮食';
+              return '流质饮食';
             case 'semi_liquid_diets':
-              return '营养餐半流质饮食';
+              return '半流质饮食';
             case 'diabetic_diets':
               return '糖尿病饮食';
               case 'low_fat_low_salt_diets':
               return '低脂低盐饮食';
-
+            case 'lunch_liquid_diets':
+              return '流质饮食（中）';
+            case 'lunch_semi_liquid_diets':
+              return '半流质饮食（中）';
+            case 'lunch_diabetic_diets':
+              return '糖尿病饮食（中）';
+            case 'lunch_low_fat_low_salt_diets':
+              return '低脂低盐饮食（中）';
+            case 'dinner_liquid_diets':
+              return '流质饮食（晚）';
+            case 'dinner_semi_liquid_diets':
+              return '半流质饮食（晚）';
+            case 'dinner_diabetic_diets':
+              return '糖尿病饮食（晚）';
+            case 'dinner_low_fat_low_salt_diets':
+              return '低脂低盐饮食（晚）';
             default:
               return '未上架';
 

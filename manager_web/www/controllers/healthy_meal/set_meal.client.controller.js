@@ -6,18 +6,23 @@
  */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, HospitalizedInfoService, BedMealBillService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService','MealTypeConstant',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, HospitalizedInfoService, BedMealBillService, MealTypeConstant) {
 
       $scope.user = Auth.getUser();
 
-      var mealTypes = {
-        healthy_normal: '普食',
-        liquid_diets: '流质',
-        semi_liquid_diets: '半流质',
-        diabetic_diets: '糖尿病饮食',
-        low_fat_low_salt_diets: '低脂低盐饮食'
-      };
+      //var mealTypes = {
+      //  healthy_normal: '普食',
+      //  liquid_diets: '流质',
+      //  semi_liquid_diets: '半流质',
+      //  diabetic_diets: '糖尿病饮食',
+      //  low_fat_low_salt_diets: '低脂低盐饮食'
+      //};
+
+      var breakfastMealTypes = MealTypeConstant.breakfast_drop_menu_options;
+      var lunchMealTypes = MealTypeConstant.lunch_drop_menu_options;
+      var dinnerMealTypes = MealTypeConstant.dinner_drop_menu_options;
+
       $scope.timeout = true;
 
       $scope.filter = {
@@ -25,13 +30,16 @@ angular.module('EWeb').controller('SetMealController',
         currentFloor: null,
         buildings: [],
         floors: [],
-        mealTypes: [
-          {id: 'healthy_normal', text: mealTypes.healthy_normal},
-          {id: 'liquid_diets', text: mealTypes.liquid_diets},
-          {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets},
-          {id: 'diabetic_diets', text: mealTypes.diabetic_diets},
-          {id: 'low_fat_low_salt_diets', text: mealTypes.low_fat_low_salt_diets}
-        ]
+        breakfastMealTypes: breakfastMealTypes,
+        lunchMealTypes: lunchMealTypes,
+        dinnerMealTypes: dinnerMealTypes,
+        //mealTypes: [
+        //  {id: 'healthy_normal', text: mealTypes.healthy_normal},
+        //  {id: 'liquid_diets', text: mealTypes.liquid_diets},
+        //  {id: 'semi_liquid_diets', text: mealTypes.semi_liquid_diets},
+        //  {id: 'diabetic_diets', text: mealTypes.diabetic_diets},
+        //  {id: 'low_fat_low_salt_diets', text: mealTypes.low_fat_low_salt_diets}
+        //]
       };
 
       $scope.changeBuilding = function () {
@@ -124,6 +132,13 @@ angular.module('EWeb').controller('SetMealController',
                 });
               }
 
+              function getMealTypeOption(mealTypeOptions, mealType){
+                var filters = mealTypeOptions.filter(function(item){
+                  return item.id === mealType;
+                });
+                return filters[0];
+              }
+
               BedMealRecordService.getBedMealRecords({
                 buildingId: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
                 floorId: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
@@ -136,13 +151,13 @@ angular.module('EWeb').controller('SetMealController',
                     if (bed) {
                       bed.bed_meal_record_id = record._id;
                       if (record.breakfast) {
-                        bed.breakfast = {id: record.breakfast, text: mealTypes[record.breakfast]};
+                        bed.breakfast = getMealTypeOption(breakfastMealTypes, record.breakfast);
                       }
                       if (record.lunch) {
-                        bed.lunch = {id: record.lunch, text: mealTypes[record.lunch]};
+                        bed.lunch = getMealTypeOption(lunchMealTypes, record.lunch);
                       }
                       if (record.dinner) {
-                        bed.dinner = {id: record.dinner, text: mealTypes[record.dinner]};
+                        bed.dinner = getMealTypeOption(dinnerMealTypes, record.dinner);
                       }
                     }
                   });

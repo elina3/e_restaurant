@@ -2,6 +2,7 @@
  * Created by elinaguo on 16/6/25.
  */
 'use strict';
+var mealTypes = require('../enums/business').meal_types.all_enums;
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
@@ -77,7 +78,7 @@ var BedMealBillSchema = new Schema({
     enum: ['breakfast', 'lunch', 'dinner']
   },
   meal_type: {
-    enum: ['healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'],
+    enum: mealTypes,
     type: String
   },
   id_number: {//身份证号，标示一个人的唯一性，冗余数据（可以通过hospitalized_info populate后获取）

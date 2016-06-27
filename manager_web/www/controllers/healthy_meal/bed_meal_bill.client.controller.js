@@ -4,20 +4,18 @@
 
 'use strict';
 angular.module('EWeb').controller('BedMealBillController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'BedMealBillService', 'GoodsService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, BedMealBillService, GoodsService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'BedMealBillService', 'GoodsService', 'MealTypeConstant',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, BedMealBillService, GoodsService, MealTypeConstant) {
 
+
+      var allMealTypes = [{id: '', text: '所有类型'}];
+      allMealTypes = allMealTypes.concat(MealTypeConstant.all_drop_menu_options);
       $scope.pageData = {
         mealTags: [{id: '', text: '所有类型'},
           {id: 'breakfast', text: '早餐'},
           {id: 'lunch', text: '午餐'},
           {id: 'dinner', text: '晚餐'}],
-        mealTypes: [{id: '', text: '所有种类'},
-          {id: 'healthy_normal', text: '普食'},
-          {id: 'liquid_diets', text: '流质饮食'},
-          {id: 'semi_liquid_diets', text: '半流质饮食'},
-          {id: 'diabetic_diets', text: '糖尿病饮食'},
-          {id: 'low_fat_low_salt_diets', text: '低脂低盐饮食'}],
+        mealTypes: allMealTypes,
         pagination: {
           currentPage: 1,
           limit: 20,
@@ -106,7 +104,7 @@ angular.module('EWeb').controller('BedMealBillController',
         });
       }
 
-      function loadAmountStatistic(){
+      function loadAmountStatistic() {
         BedMealBillService.queryBedMealBillStatistic({
           idNumber: $scope.filter.currentIdNumber,
           mealType: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
@@ -117,7 +115,7 @@ angular.module('EWeb').controller('BedMealBillController',
             return $scope.$emit(GlobalEvent.onShowAlert, err || '查询失败');
           }
 
-          $scope.pageData.totalAmount = data.totalAmount !== 0 ? (data.totalAmount /100).toFixed(3) : '--';
+          $scope.pageData.totalAmount = data.totalAmount !== 0 ? (data.totalAmount / 100).toFixed(3) : '--';
         });
       }
 

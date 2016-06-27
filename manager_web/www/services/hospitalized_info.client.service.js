@@ -82,7 +82,7 @@ angular.module('EWeb').factory('HospitalizedInfoService',
             function (err) {
               return callback(SystemError.network_error);
             });
-        },
+        }
 
       };
     }]);

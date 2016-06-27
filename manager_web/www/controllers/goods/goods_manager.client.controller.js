@@ -3,13 +3,14 @@
  */
 'use strict';
 angular.module('EWeb').controller('GoodsManagerController',
-  ['$scope', '$stateParams', '$window', '$rootScope', 'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService', 'Auth',
-    function ($scope, $stateParams, $window, $rootScope,  GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService, Auth) {
+  ['$scope', '$stateParams', '$window', '$rootScope', 'GlobalEvent', '$state', 'GoodsService', 'QiNiuService', 'Config','OrderService', 'Auth','MealTypeConstant',
+    function ($scope, $stateParams, $window, $rootScope,  GlobalEvent, $state, GoodsService, QiNiuService, Config, OrderService, Auth,MealTypeConstant) {
       if(!Auth.getUser()){
         $state.go('user_sign_in');
         return;
       }
       $scope.pageConfig = {
+        allGoodsMealTypes: MealTypeConstant.all_drop_menu_options,
         qiniuToken: '',
         title: '',
         type: '',

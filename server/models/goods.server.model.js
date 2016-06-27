@@ -2,6 +2,9 @@
  * Created by elinaguo on 16/2/22.
  */
 'use strict';
+var mealTypes = ['free_meal', 'normal'];
+ mealTypes = mealTypes.concat(require('../enums/business').meal_types.all_enums);
+
 
 var mongoLib = require('../libraries/mongoose');
 var appDb = mongoLib.appDb;
@@ -25,7 +28,7 @@ var GoodsSchema = new Schema({
     default: ''
   },
   type: {//工作餐，       普通，     营养餐普食，        营养餐流质饮食，  营养餐半流质饮食，     糖尿病饮食，        低脂低盐饮食
-    enum: ['free_meal', 'normal', 'healthy_normal', 'liquid_diets', 'semi_liquid_diets', 'diabetic_diets', 'low_fat_low_salt_diets'],
+    enum: mealTypes,
     type: String,
     default: false
   },

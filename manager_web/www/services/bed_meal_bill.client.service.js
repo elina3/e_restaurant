@@ -104,16 +104,40 @@ angular.module('EWeb').factory('BedMealBillService',
           var result = '';
           switch (bill.meal_type) {
             case 'liquid_diets':
-              result = '流质';
+              result = '流质饮食（早）';
               break;
             case 'semi_liquid_diets':
-              result = '半流质';
+              result = '半流质饮食（早）';
               break;
             case 'diabetic_diets':
-              result = '糖尿病饮食';
+              result = '糖尿病饮食（早）';
               break;
             case 'low_fat_low_salt_diets':
-              result = '半糖半盐';
+              result = '低脂低盐饮食（早）';
+              break;
+            case 'lunch_liquid_diets':
+              result =  '流质饮食（中）';
+              break;
+            case 'lunch_semi_liquid_diets':
+              result =  '半流质饮食（中）';
+              break;
+            case 'lunch_diabetic_diets':
+              result =  '糖尿病饮食（中）';
+              break;
+            case 'lunch_low_fat_low_salt_diets':
+              result =  '低脂低盐饮食（中）';
+              break;
+            case 'dinner_liquid_diets':
+              result =  '流质饮食（晚）';
+              break;
+            case 'dinner_semi_liquid_diets':
+              result =  '半流质饮食（晚）';
+              break;
+            case 'dinner_diabetic_diets':
+              result =  '糖尿病饮食（晚）';
+              break;
+            case 'dinner_low_fat_low_salt_diets':
+              result =  '低脂低盐饮食（晚）';
               break;
             case 'healthy_normal':
               result = '普食(';
