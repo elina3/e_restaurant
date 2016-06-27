@@ -107,7 +107,10 @@ exports.getBedMealRecords = function (req, res, next) {
 
 exports.getHealthyNormalBedMealRecordByFloorToday = function(req, res, next){
   var mealTag = req.query.meal_tag;//breakfast, lunch, dinner
-  bedMealRecordLogic.getHealthyNormalMealRecordByBedGroup(req.building, req.floor, mealTag, function(err, bedMealRecords){
+  var dateTag = req.query.date_tag || 'today';//today,tomorrow
+
+
+  bedMealRecordLogic.getHealthyNormalMealRecordByBedGroup(req.building, req.floor, mealTag, dateTag, function(err, bedMealRecords){
     if (err) {
       return next(err);
     }

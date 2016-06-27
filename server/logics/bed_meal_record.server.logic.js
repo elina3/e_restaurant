@@ -155,11 +155,22 @@ exports.getBedMealRecordsById = function(id, population, callback){
     });
 };
 
-exports.getHealthyNormalMealRecordByBedGroup = function(building, floor, mealTag, callback){
+exports.getHealthyNormalMealRecordByBedGroup = function(building, floor, mealTag, dateTag, callback){
+
+
   var todayMealTimeSet =parseToDate(new Date());
   if(!mealTag){
     return callback({err: bedMealRecordError.meal_tag_param_null});
   }
+
+  if(dateTag === 'tomorrow'){
+    todayMealTimeSet.setDate(todayMealTimeSet.getDate()+1);
+  }
+
+  if(!mealTag){
+    return callback({err: bedMealRecordError.meal_tag_param_null});
+  }
+
   var query = {
     meal_set_date: todayMealTimeSet,
     building: building._id,

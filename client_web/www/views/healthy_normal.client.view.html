@@ -5,6 +5,14 @@
     <div class="search-bar">
         <div class="row selects">
             <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentDateTag"
+                            z-dropdown-options="pageData.dateTags"
+                            z-dropdown-label="就餐时间"
+                            z-dropdown-change="onDateTagChange()"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
                 <z-dropdown z-dropdown-model="filter.currentMealTag"
                             z-dropdown-options="pageData.mealTags"
                             z-dropdown-label="就餐类型"

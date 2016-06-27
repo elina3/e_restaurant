@@ -26,6 +26,7 @@ angular.module('EClientWeb').controller('HealthyNormalController',
               HealthyMealService) {
 
       $scope.pageData = {
+        dateTags: [{id: 'today', text: '今天'},{id: 'tomorrow', text: '明天'}],
         mealTags: [{id: 'breakfast', text: '早餐'}, {id: 'lunch', text: '午餐'}, {id: 'dinner', text: '晚餐'}],
         title: '首页',
         headConfig: {
@@ -45,7 +46,7 @@ angular.module('EClientWeb').controller('HealthyNormalController',
       };
 
       $scope.filter = {
-        currentIdNumber: '',
+        currentDateTag: '',
         currentMealTag: null,
         currentFloor: null,
         currentBuilding: null,
@@ -153,12 +154,13 @@ angular.module('EClientWeb').controller('HealthyNormalController',
         });
       }
 
-      function loadBedMealRecord(buildingId, floorId, mealTag, callback){
+      function loadBedMealRecord(buildingId, floorId, mealTag, dateTag, callback){
         $scope.pageData.hospitalized_info = null;
         HealthyMealService.getHealthyNormalBedMealRecordByFloorToday({
           building_id: buildingId,
           floor_id: floorId,
-          meal_tag: mealTag
+          meal_tag: mealTag,
+          date_tag: dateTag
         }, function(err, data){
           if(err || !data){
             return $scope.$emit(GlobalEvent.onShowAlert, err || '查询出错');
@@ -180,6 +182,12 @@ angular.module('EClientWeb').controller('HealthyNormalController',
         });
       }
 
+      $scope.onDateTagChange = function(){
+        $scope.filter.currentFloor = null;
+        $scope.filter.currentMealTag = null;
+        $scope.filter.currentBedMealRecord = null;
+        $scope.pageData.hospitalized_info = null;
+      };
       $scope.onMealTagChange = function(){
         $scope.filter.currentFloor = null;
         $scope.filter.currentBedMealRecord = null;
@@ -187,6 +195,10 @@ angular.module('EClientWeb').controller('HealthyNormalController',
       };
 
       $scope.onFloorChange = function(){
+
+        if (!$scope.filter.currentDateTag) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间');
+        }
         if (!$scope.filter.currentFloor) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择当前楼层');
         }
@@ -194,7 +206,7 @@ angular.module('EClientWeb').controller('HealthyNormalController',
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择就餐类型');
         }
 
-        loadBedMealRecord($scope.filter.currentBuilding.id, $scope.filter.currentFloor.id, $scope.filter.currentMealTag.id);
+        loadBedMealRecord($scope.filter.currentBuilding.id, $scope.filter.currentFloor.id, $scope.filter.currentMealTag.id, $scope.filter.currentDateTag.id);
       };
 
       $scope.onBedChange = function(){
@@ -229,6 +241,7 @@ angular.module('EClientWeb').controller('HealthyNormalController',
           }
         });
 
+        $scope.filter.currentDateTag = {id: 'today', text: '今天'};
         loadGoods();
       }
 
