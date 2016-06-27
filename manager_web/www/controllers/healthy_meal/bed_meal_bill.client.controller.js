@@ -42,9 +42,9 @@ angular.module('EWeb').controller('BedMealBillController',
               monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
                 '十月', '十一月', '十二月']
             },
-            timePicker: false,
+            timePicker: true,
             timePicker12Hour: false,
-            timePickerIncrement: 0,
+            timePickerIncrement: 1,
             separator: ' ~ ',
             format: 'YY/MM/DD HH:mm'
           }
@@ -57,7 +57,7 @@ angular.module('EWeb').controller('BedMealBillController',
         var timeRange = {};
         if ($scope.pageData.datePicker.createTimeRange) {
           if ($scope.pageData.datePicker.createTimeRange.startDate && $scope.pageData.datePicker.createTimeRange.startDate._d) {
-            timeRange.startTime = moment($scope.pageData.datePicker.startDate).toISOString();
+            timeRange.startTime = moment($scope.pageData.datePicker.createTimeRange.startDate).toISOString();
           }
           if ($scope.pageData.datePicker.createTimeRange.endDate && $scope.pageData.datePicker.createTimeRange.endDate._d) {
             timeRange.endTime = moment($scope.pageData.datePicker.createTimeRange.endDate).toISOString();
