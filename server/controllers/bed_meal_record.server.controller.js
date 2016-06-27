@@ -31,8 +31,8 @@ function saveOneBedMealRecord(user, time, building, floor, bedId, bedMealInfo, c
         }
 
         if (bedMealBills && bedMealBills.length > 0) {
-          bedMealBills.forEach(function(item){//如果账单已清算，则不更新，使用旧的饮食类型；或者是普食已选餐也不更新，使用旧饮食类型
-            if(item.is_checkout || (item.meal_type === 'healthy_normal' && item.goods_bills.length > 0)){
+          bedMealBills.forEach(function(item){//如果账单已清算，则不更新，使用旧的饮食类型；或者是已选餐(生成账单)也不更新，使用旧饮食类型,普食没选餐也不能更新
+            if(item.is_checkout || item.goods_bills.length > 0 || (item.goods_bills.length === 0 && item.meal_type === 'healthy_normal')){
               bedMealInfo[item.meal_tag] = item.meal_type;
             }
           });

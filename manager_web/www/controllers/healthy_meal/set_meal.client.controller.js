@@ -6,7 +6,7 @@
  */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService','MealTypeConstant',
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService', 'MealTypeConstant',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, BedMealRecordService, HospitalizedInfoService, BedMealBillService, MealTypeConstant) {
 
       $scope.user = Auth.getUser();
@@ -19,9 +19,10 @@ angular.module('EWeb').controller('SetMealController',
       //  low_fat_low_salt_diets: '低脂低盐饮食'
       //};
 
-      var breakfastMealTypes = MealTypeConstant.breakfast_drop_menu_options;
-      var lunchMealTypes = MealTypeConstant.lunch_drop_menu_options;
-      var dinnerMealTypes = MealTypeConstant.dinner_drop_menu_options;
+      var defaultOption = [{id: '', text: '无'}];
+      var breakfastMealTypes = defaultOption.concat(MealTypeConstant.breakfast_drop_menu_options);
+      var lunchMealTypes = defaultOption.concat(MealTypeConstant.lunch_drop_menu_options);
+      var dinnerMealTypes = defaultOption.concat(MealTypeConstant.dinner_drop_menu_options);
 
       $scope.timeout = true;
 
@@ -132,8 +133,8 @@ angular.module('EWeb').controller('SetMealController',
                 });
               }
 
-              function getMealTypeOption(mealTypeOptions, mealType){
-                var filters = mealTypeOptions.filter(function(item){
+              function getMealTypeOption(mealTypeOptions, mealType) {
+                var filters = mealTypeOptions.filter(function (item) {
                   return item.id === mealType;
                 });
                 return filters[0];
@@ -190,7 +191,7 @@ angular.module('EWeb').controller('SetMealController',
         var formattedBedMealInfos = $scope.beds.filter(function (bed) {
           if (bed.hospitalized_info && bed.bed_meal_record_id
           ) {
-            if(bed.bed_meal_record_id){
+            if (bed.bed_meal_record_id) {
               bedMealRecordIds.push(bed.bed_meal_record_id);
             }
             return bed;

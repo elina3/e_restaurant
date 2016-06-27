@@ -93,10 +93,11 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
   async.eachSeries(mealTags, function (mealTag, eachCallback) {
     var goodsBills = [];
 
-    if(bedMealRecord[mealTag] === 'healthy_normal'){
+    var mealType = bedMealRecord[mealTag];
+    if(mealType === 'healthy_normal' || mealType === ''){
       goodsBills = [];
     }else{
-      var healthyGoodsInfo = healthyMeals[bedMealRecord[mealTag]];
+      var healthyGoodsInfo = healthyMeals[mealType];
       if (!healthyGoodsInfo) {
         console.log('error  healthy_goods_not_all_exist 1');
         return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
