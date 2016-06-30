@@ -130,6 +130,16 @@ var BedMealBillSchema = new Schema({
   },
   checkout_creator_info: {
     type: Schema.Types.Mixed
+  },
+  is_cancel: {
+    type: Boolean,
+    default: false
+  },
+  cancel_creator_id: {
+    type: Schema.Types.ObjectId//可以是User也可以是Client
+  },
+  cancel_creator_info: {
+    type: Schema.Types.Mixed
   }
 });
 BedMealBillSchema.plugin(timestamps, {

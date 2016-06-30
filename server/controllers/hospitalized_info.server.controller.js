@@ -69,15 +69,21 @@ exports.leaveHospital = function(req, res, next){
       return next({err: hospitalizedInfoError.bill_not_checkout});
     }
 
-    hospitalizedLogic.leaveHospital(req.user, req.hospitalized_info, req.body.description, function(err, hospitalizedInfo){
+    bedMealBillLogic.cancelPrepareBill(req.user, req.hospitalized_info, function(err){
       if(err){
         return next(err);
       }
 
-      req.data = {
-        success: true
-      };
-      return next();
+      hospitalizedLogic.leaveHospital(req.user, req.hospitalized_info, req.body.description, function(err, hospitalizedInfo){
+        if(err){
+          return next(err);
+        }
+
+        req.data = {
+          success: true
+        };
+        return next();
+      });
     });
   });
 };

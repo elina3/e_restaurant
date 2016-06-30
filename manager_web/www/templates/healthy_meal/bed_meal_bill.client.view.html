@@ -41,6 +41,13 @@
                             >
                     </z-dropdown>
                 </div>
+                <!--<div class="filter-item status col-xs-2">-->
+                    <!--<z-dropdown z-dropdown-model="filter.currentBillStatus"-->
+                                <!--z-dropdown-options="pageData.billStatuses"-->
+                                <!--z-dropdown-label="账单状态"-->
+                            <!-->-->
+                    <!--</z-dropdown>-->
+                <!--</div>-->
                 <form>
                     <div class="filter-item id-number col-xs-2">
                         <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
@@ -63,7 +70,8 @@
                         <div class="col-xs-3"><span>身份证</span></div>
                         <div class="col-xs-1"><span>姓名</span></div>
                         <div class="col-xs-2"><span>营养餐</span></div>
-                        <div class="col-xs-1"><span>金额（元）</span></div>
+                        <div class="col-xs-1"><span>金额(元)</span></div>
+                        <div class="col-xs-1"><span>状态</span></div>
                     </div>
                     <div class="row list-info" ng-repeat="info in pageData.bills">
                         <div class="col-xs-2">
@@ -81,6 +89,9 @@
                         </div>
                         <div class="col-xs-1">
                             <span>{{info.amount_paid / 100}}</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>{{info.status}}</span>
                         </div>
                     </div>
                 </div>

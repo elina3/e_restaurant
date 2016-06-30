@@ -73,10 +73,18 @@
                     </div>
                 </div>
                 <div class="col-xs-8 right-panel">
-                    <div class="hospitalized-info">
-                        <span class="name">{{id_number_info.nickname}}</span>
-                        <span>{{id_number_info.transformSex(id_number_info.sex)}}</span>
-                        <span>{{id_number_info.phone}}</span>
+                    <div class="hospitalized-info row">
+                        <div class="col-xs-6">
+                            <span class="name">{{id_number_info.nickname}}</span>
+                            <span>{{id_number_info.transformSex(id_number_info.sex)}}</span>
+                            <span>{{id_number_info.phone}}</span>
+                        </div>
+                        <div class="col-xs-6" ng-show="current_bills.length > 0">
+                            <span class="unPaid">未付款：{{current_bill_money.unPaidAmount / 100}}元</span>
+                            <span>已付款：{{current_bill_money.paidAmount / 100}}元</span>
+                            <span>共计：{{(current_bill_money.paidAmount + current_bill_money.unPaidAmount)/ 100}}元</span>
+                            <span>未出账单：{{current_bill_money.prepareToPayAmount / 100}}元</span>
+                        </div>
                     </div>
 
                     <div class="tip" style="height: 60px; line-height: 60px; color: #999; font-size: 18px; padding-left: 10px;" ng-show="noResultTip">
@@ -111,7 +119,7 @@
                                         <span>{{bill.amount_paid / 100}}</span>
                                     </div>
                                     <div class="col-xs-2">
-                                        <span>{{bill.is_checkout ? '已结账' : '未结账'}}</span>
+                                        <span>{{bill.status}}</span>
                                     </div>
                                 </div>
                             </div>

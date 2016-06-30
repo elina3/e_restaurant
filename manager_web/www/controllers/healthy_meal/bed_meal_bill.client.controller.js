@@ -16,6 +16,7 @@ angular.module('EWeb').controller('BedMealBillController',
           {id: 'lunch', text: '午餐'},
           {id: 'dinner', text: '晚餐'}],
         mealTypes: allMealTypes,
+        billStatuses: [{id: '', text: '所有类型'},{id: 'un_paid', text: '未付款'},{id: 'paid', text: '已付款'},{id: 'prepare_to_pay', text: '未出账单'},{id: 'canceled', text: '已取消'}],
         pagination: {
           currentPage: 1,
           limit: 20,
@@ -69,6 +70,7 @@ angular.module('EWeb').controller('BedMealBillController',
           idNumber: $scope.filter.currentIdNumber,
           mealType: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
           mealTag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
+          status: $scope.filter.currentBillStatus ? $scope.filter.currentBillStatus.id: '',
           timeRangeString: getTimeRangeString(),
           currentPage: $scope.pageData.pagination.currentPage,
           limit: $scope.pageData.pagination.limit,
@@ -80,6 +82,7 @@ angular.module('EWeb').controller('BedMealBillController',
 
           if (data.bed_meal_bills) {
             $scope.pageData.bills = data.bed_meal_bills.map(function (item) {
+              var isPrepareToPay = (!item.is_checkout && (new Date(item.meal_set_date) > new Date()));
               return {
                 building: item.building,
                 floor: item.floor,
@@ -91,7 +94,9 @@ angular.module('EWeb').controller('BedMealBillController',
                 nickname: item.nickname,
                 goods_bills: item.goods_bills,
                 amount_paid: item.amount_paid,
-                is_checkout: item.is_checkout
+                is_checkout: item.is_checkout,
+                is_cancel: item.is_cancel,
+                status: item.is_cancel ? '已取消' : (isPrepareToPay ? '未出单' : (item.is_checkout ? '已付款' : '未付款'))
               };
             });
           }
@@ -123,6 +128,7 @@ angular.module('EWeb').controller('BedMealBillController',
         currentIdNumber: '',
         currentMealTag: null,
         currentMealType: null,
+        currentBillStatus: null,
         search: function () {
           $scope.pageData.pagination.currentPage = 1;
           $scope.pageData.pagination.skipCount = 0;

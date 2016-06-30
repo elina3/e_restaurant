@@ -173,7 +173,8 @@ exports.checkoutByHospitalizedInfoId = function (req, res, next) {
       amount_due: result.amountDue,
       amount_paid: result.amountPaid,
       checkout_count: result.checkoutCount,
-      bed_meal_bills: result.bedMealBills
+      bed_meal_bills: result.bedMealBills,
+      bedMealBillCheckout: result.bedMealBillCheckout
     };
     return next();
   });

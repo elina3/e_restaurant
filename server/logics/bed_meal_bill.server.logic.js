@@ -6,15 +6,16 @@ var async = require('async');
 var mongooseLib = require('../libraries/mongoose');
 var appDb = mongooseLib.appDb;
 var GoodsBill = appDb.model('GoodsBill'),
-  BedMealBill = appDb.model('BedMealBill');
+  BedMealBill = appDb.model('BedMealBill'),
+  BedMealBillCheckout = appDb.model('BedMealBillCheckout');
 
 var systemError = require('../errors/system'),
   bedMealBillError = require('../errors/bed_meal_bill');
 
 var mealTags = ['breakfast', 'lunch', 'dinner'];
 
-function parseToDate(time){
-  if(!time){
+function parseToDate(time) {
+  if (!time) {
     time = new Date();
   }
   return new Date(time.toDateString());
@@ -94,9 +95,9 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
     var goodsBills = [];
 
     var mealType = bedMealRecord[mealTag];
-    if(mealType === 'healthy_normal' || mealType === ''){
+    if (mealType === 'healthy_normal' || mealType === '') {
       goodsBills = [];
-    }else{
+    } else {
       var healthyGoodsInfo = healthyMeals[mealType];
       if (!healthyGoodsInfo) {
         console.log('error  healthy_goods_not_all_exist 1');
@@ -106,7 +107,7 @@ function batchCreateBillsByBedMealRecord(user, bedMealRecord, healthyMeals, call
         goodsBills = getGoodsBills([healthyGoodsInfo]);
       }
 
-      if(goodsBills.length === 0){
+      if (goodsBills.length === 0) {
         console.log('error  healthy_goods_not_all_exist');
         return eachCallback({err: bedMealBillError.healthy_goods_not_all_exist});
       }
@@ -167,11 +168,12 @@ exports.chooseGoodsBillForBedMealRecord = function (client, bedMealRecord, mealT
 };
 
 //清算
-exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callback) {
+exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfo, callback) {
+  var today = new Date();
   var query = {
     deleted_status: false,
     is_checkout: false,
-    hospitalized_info: hospitalizedInfoId
+    hospitalized_info: hospitalizedInfo._id
   };
 
   BedMealBill.find(query)
@@ -183,8 +185,12 @@ exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callb
       var amountDue = 0;
       var amountPaid = 0;
       var checkoutCount = 0;
-      var newBedMealBills = [];
+      var checkoutMealBills = [];
       async.each(bedMealBills, function (bedMealBill, eachCallback) {
+        if (bedMealBill.meal_set_date > today) {
+          return eachCallback();
+        }
+
         bedMealBill.is_checkout = true;
         bedMealBill.checkout_creator_id = user._id;
         bedMealBill.checkout_creator_info = {
@@ -199,18 +205,36 @@ exports.checkoutByHospitalizedInfoId = function (user, hospitalizedInfoId, callb
           amountDue += savedBedMealBill.amount_due;
           amountPaid += savedBedMealBill.amount_paid;
           checkoutCount++;
-          newBedMealBills.push(savedBedMealBill);
-
+          checkoutMealBills.push(savedBedMealBill);
           return eachCallback();
         });
       }, function (err) {
         //错误不处理，返回已结清的数据
 
-        return callback(null, {
-          amountDue: amountDue,
-          amountPaid: amountPaid,
-          checkoutCount: checkoutCount,
-          bedMealBills: newBedMealBills
+        var bedMealBillCheckout = new BedMealBillCheckout({
+          building: hospitalizedInfo.building,
+          floor: hospitalizedInfo.floor,
+          bed: hospitalizedInfo.bed,
+          hospitalized_info: hospitalizedInfo._id,
+          bills: checkoutMealBills,
+          creator_id: user._id,
+          checkout_creator_info: {
+            username: user.username,
+            nickname: user.nickname
+          }
+        });
+        bedMealBillCheckout.save(function (err, newBedMealBillCheckout) {
+          if (err || !newBedMealBillCheckout) {
+            console.log('bedMealBillCheckout save error');
+          }
+
+          return callback(null, {
+            amountDue: amountDue,
+            amountPaid: amountPaid,
+            checkoutCount: checkoutCount,
+            bedMealBills: checkoutMealBills,
+            bedMealBillCheckout: newBedMealBillCheckout
+          });
         });
       });
     });
@@ -221,7 +245,9 @@ exports.getTotalAmountByHospitalizedInfoId = function (hospitalizedInfoId, callb
   var match = {
     deleted_status: false,
     is_checkout: false,
-    hospitalized_info: hospitalizedInfoId
+    hospitalized_info: hospitalizedInfoId,
+    meal_set_date: {$lt: new Date()},
+    $or: [{is_cancel: false}, {is_cancel: {$exists: false}}]
   };
 
   BedMealBill.aggregate([{
@@ -245,6 +271,45 @@ exports.getTotalAmountByHospitalizedInfoId = function (hospitalizedInfoId, callb
   });
 };
 
+exports.cancelPrepareBill = function (user, hospitalizedInfo, callback) {
+  var match = {
+    deleted_status: false,
+    is_checkout: false,
+    hospitalized_info: hospitalizedInfo._id,
+    meal_set_date: {$gte: new Date()},
+    $or: [{is_cancel: false}, {is_cancel: {$exists: false}}]
+  };
+
+  BedMealBill.find(match)
+    .exec(function (err, bedMealBills) {
+      if (err || !bedMealBills) {
+        return callback({err: systemError.database_query_error});
+      }
+
+      if (bedMealBills.length === 0) {
+        return callback();
+      }
+
+      async.forEach(bedMealBills, function (bedMealBill, eachCallback) {
+        bedMealBill.is_cancel = true;
+        bedMealBill.cancel_creator = user._id;
+        bedMealBill.cancel_creator_info = {
+          username: user.username,
+          nickname: user.nickname
+        };
+        bedMealBill.save(function (err, newBedBill) {
+          if (err || !newBedBill) {
+            return eachCallback({err: systemError.database_save_error});
+          }
+
+          return eachCallback();
+        });
+      }, function (err) {
+        return callback(err);
+      });
+    });
+};
+
 //根据条件获取账单
 exports.getMealBillByFilter = function (filter, pagination, callback) {
   var query = {
@@ -259,7 +324,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
     query.is_checkout = true;
   }
 
-  if(filter.hospitalizedInfo){
+  if (filter.hospitalizedInfo) {
     query.hospitalized_info = filter.hospitalizedInfo._id;
   }
 
@@ -267,15 +332,15 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
     query.$and = [{meal_set_date: {$gte: parseToDate(filter.startTime)}}, {meal_set_date: {$lte: parseToDate(filter.endTime)}}];
   }
 
-  if(filter.mealTag){
+  if (filter.mealTag) {
     query.meal_tag = filter.mealTag;
   }
 
-  if(filter.mealType){
+  if (filter.mealType) {
     query.meal_type = filter.mealType;
   }
 
-  if(filter.idNumber){
+  if (filter.idNumber) {
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
@@ -294,7 +359,7 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
 
     BedMealBill.find(query)
       .sort({update_time: -1})
-      .skip(pagination.skip_count )
+      .skip(pagination.skip_count)
       .limit(pagination.limit)
       .populate('building floor bed')
       .exec(function (err, bedMealBills) {
@@ -311,47 +376,49 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
   });
 };
 
-exports.getBedMealBillTotalAmount = function(filter, callback){
+exports.getBedMealBillTotalAmount = function (filter, callback) {
   var match = {
-    deleted_status: false
+    deleted_status: false,
+    $or: [{is_cancel: false}, {is_cancel: {$exists: false}}]
   };
 
   filter = filter || {};
+
   if (filter.status === 'un_paid') {
-    match.is_checkout = false;
+    query.is_checkout = false;
   } else if (filter.status === 'paid') {
-    match.is_checkout = true;
+    query.is_checkout = true;
   }
 
   if (filter.startTime && filter.endTime) {
     match.$and = [{meal_set_date: {$gte: parseToDate(filter.startTime)}}, {meal_set_date: {$lte: parseToDate(filter.endTime)}}];
   }
 
-  if(filter.mealTag){
+  if (filter.mealTag) {
     match.meal_tag = filter.mealTag;
   }
 
-  if(filter.mealType){
+  if (filter.mealType) {
     match.meal_type = filter.mealType;
   }
 
-  if(filter.idNumber){
+  if (filter.idNumber) {
     match.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
   BedMealBill.aggregate([{
     $match: match
-  },{
+  }, {
     $group: {
       _id: '$object',
       totalAmount: {$sum: '$amount_paid'}
     }
-  }], function(err, result){
-    if(err || !result){
+  }], function (err, result) {
+    if (err || !result) {
       return callback({err: systemError.database_query_error});
     }
 
-    if(result.length === 0){
+    if (result.length === 0) {
       result[0] = {
         totalAmount: 0
       };
