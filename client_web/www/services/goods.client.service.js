@@ -10,7 +10,8 @@ angular.module('EClientWeb').factory('GoodsService',
           RequestSupport.executeGet('/client/goods/list', {
             skip_count: param.skipCount,
             limit: param.limit,
-            type: param.type
+            type: param.type,
+            goods_ids: param.goods_ids
           })
             .then(function (data) {
               if (!callback) {

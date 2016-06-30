@@ -92,11 +92,17 @@ exports.getOpeningGoodsList = function(req, res, next){
   var limit = publicLib.parsePositiveIntNumber(req.query.limit) || -1; //解析正整数
   var skipCount = publicLib.parseNonNegativeIntNumber(req.query.skip_count) || -1; //解析正整数和0
 
+
+  var goodsIds = req.query.goods_ids || [];
+  if(goodsIds && !Array.isArray(goodsIds)){
+    goodsIds = [goodsIds];
+  }
+
   currentPage = parseInt(currentPage);
   skipCount = parseInt(skipCount);
   limit = parseInt(limit);
 
-  goodsLogic.getOpeningGoodsList({goodsType: req.query.type}, currentPage, limit, skipCount, function(err, result){
+  goodsLogic.getOpeningGoodsList({goodsType: req.query.type, goodsIds: goodsIds}, currentPage, limit, skipCount, function(err, result){
     if(err){
       req.err = err;
       return next();

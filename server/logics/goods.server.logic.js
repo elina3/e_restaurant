@@ -196,6 +196,10 @@ exports.getOpeningGoodsList = function (filter, currentPage, limit, skipCount, c
     query.type = filter.goodsType;
   }
 
+  if(filter.goodsIds && filter.goodsIds.length > 0){
+    query._id = {$in: filter.goodsIds};
+  }
+
   queryGoodsList(query, currentPage, limit, skipCount, function (err, result) {
     return callback(err, result);
   });

@@ -117,7 +117,7 @@ angular.module('EClientWeb').controller('OrderDetailController',
         });
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        GoodsService.getGoodsList({goods_ids: goodsIdList}, function (err, data) {
+        GoodsService.getNormalGoodsList({goods_ids: goodsIdList}, function (err, data) {
 
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data) {
