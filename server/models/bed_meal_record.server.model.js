@@ -15,22 +15,22 @@ var BedMealRecordSchema = new Schema({
     type:String,
     default:'BedMealRecord'
   },
-  hospitalized_info: {//入住信息
+  hospitalized_info: {//入住信息（包括当前所在的信息）
     type: Schema.Types.ObjectId,
     ref: 'HospitalizedInfo'
   },
   meal_set_date: {//日期
     type: Date
   },
-  building: {
+  building: {//这个时间点所在的楼（有可能跟hospitalized_info中当前所在的building，floor，bed不一致）
     type: Schema.Types.ObjectId,
     ref: 'Building'
   },
-  floor: {
+  floor: {//这个时间点所在的楼层
     type: Schema.Types.ObjectId,
     ref: 'Floor'
   },
-  bed: {
+  bed: {//这个时间点所在的床位
     type: Schema.Types.ObjectId,
     ref: 'Bed'
   },

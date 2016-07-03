@@ -15,6 +15,9 @@ var HospitalizedInfoSchema = new Schema({
     type:String,
     default:'HospitalizedInfo'
   },
+  id_number: {//身份证号，标示一个人的唯一性
+    type: String
+  },
   building: {
     type: Schema.Types.ObjectId,
     ref: 'Building'
@@ -26,9 +29,6 @@ var HospitalizedInfoSchema = new Schema({
   bed: {
     type: Schema.Types.ObjectId,
     ref: 'Bed'
-  },
-  id_number: {//身份证号，标示一个人的唯一性
-    type: String
   },
   nickname: {
     type: String
