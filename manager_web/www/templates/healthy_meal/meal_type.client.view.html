@@ -47,13 +47,13 @@
                                 <span>名称</span>
                             </div>
                             <div class="col-xs-3">
-                                <span>早／中／晚餐价格（元）</span>
+                                <span>早｜中｜晚餐价格（元）</span>
                             </div>
                             <div class="col-xs-1">
                                 <span>是套餐</span>
                             </div>
                             <div class="col-xs-3">
-                                <span>套餐（名称／价格（元））</span>
+                                <span>套餐（名称-价格（元））</span>
                             </div>
                             <div class="col-xs-3">
                                 <span>操作</span>
@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-xs-3">
                                 <span ng-show="mealType.need_choose_package_meal" ng-repeat="meal in mealType.package_meals">
-                                    {{meal.name}}: {{meal.price / 100 | number: 2}} |
+                                    {{meal.name}} － {{meal.price / 100 | number: 2}} {{$index === (mealType.package_meals.length -1) ? '' : '，'}}
                                 </span>
                                 <span ng-show="!mealType.need_choose_package_meal">--</span>
                             </div>

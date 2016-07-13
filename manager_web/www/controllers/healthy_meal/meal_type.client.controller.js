@@ -52,12 +52,16 @@ angular.module('EWeb').controller('MealTypeController',
             this.currentMealType.lunch_price = mealType.lunch_price / 100;
             this.currentMealType.dinner_price = mealType.dinner_price / 100;
             this.currentMealType.need_choose_package_meal = this.getNeedChoosePackageMeal(mealType);
-            this.currentMealType.package_meals = mealType.package_meals.map(function (item) {
-              return {
-                name: item.name,
-                price: item.price / 100
-              };
-            });
+            if(!mealType.need_choose_package_meal){
+              this.currentMealType.package_meals = [{name: '', price: ''}];
+            }else{
+              this.currentMealType.package_meals = mealType.package_meals.map(function (item) {
+                return {
+                  name: item.name,
+                  price: item.price / 100
+                };
+              });
+            }
           }
         },
         hide: function () {
@@ -136,6 +140,7 @@ angular.module('EWeb').controller('MealTypeController',
               item.price = 0;
             }
           });
+
           return {
             need_choose_package_meal: this.currentMealType.need_choose_package_meal.id,
             name: this.currentMealType.name,

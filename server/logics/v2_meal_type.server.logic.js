@@ -101,7 +101,8 @@ exports.addNewMealType = function (user, mealTypeInfo, callback) {
     }
 
     MealType.findOne({
-      name: mealTypeInfo.name
+      name: mealTypeInfo.name,
+      deleted_status: false
     }, function (err, mealType) {
       if (err) {
         return callback({err: systemError.database_query_error});
