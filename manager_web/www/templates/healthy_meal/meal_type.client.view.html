@@ -1,0 +1,178 @@
+<z-header></z-header>
+<div class="ee-meal-type-page-view">
+    <div class="ee-meal-type">
+        <div class="ee-banner">
+            <div class="ee-wrapper">
+                <div class="row ee-title">
+                    <div class="col-xs-6">
+                        <span class="ee-banner-back" ng-click="goBack()">< </span>
+                        <span class="ee-banner-content">营养餐种类</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="search-bar">
+            <div class="ee-wrapper">
+                <div class="row">
+                    <!--<div class="filter-item col-xs-3">-->
+                        <!--<input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"-->
+                               <!--ng-model="pageShow.createTimeRange"-->
+                               <!--min="pageShow.createTimeMinTime"-->
+                               <!--options="pageShow.dateOptions"-->
+
+                               <!--placeholder="点击选择时间"-->
+                                <!--/>-->
+                    <!--</div>-->
+                    <!--<div class="filter-item col-xs-3">-->
+                        <!--<z-dropdown z-dropdown-model="pageData.action"-->
+                                    <!--z-dropdown-options="pageData.actions"-->
+                                    <!--z-dropdown-label="请选择类型">-->
+                        <!--</z-dropdown>-->
+                    <!--</div>-->
+                    <!--<div class="filter-item col-xs-3">-->
+                        <!--<input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword"/>-->
+                    <!--</div>-->
+                    <div class="filter-item col-xs-2">
+                        <div class="search" ng-click="create()">添加</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ee-meal-type-body">
+            <div class="ee-wrapper">
+                <div class="ee-table-list">
+                    <div class="content">
+                        <div class="row list-header">
+                            <div class="col-xs-2">
+                                <span>名称</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>早／中／晚餐价格（元）</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>是套餐</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>套餐（名称／价格（元））</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span>操作</span>
+                            </div>
+                        </div>
+                        <div class="row list-info" ng-repeat="mealType in mealTypes">
+                            <div class="col-xs-2">
+                                <span>{{mealType.name}}</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span ng-show="!mealType.need_choose_package_meal">{{(mealType.breakfast_price / 100)| number:2}} | {{(mealType.lunch_price / 100)| number:2}} | {{(mealType.dinner_price / 100)| number:2}}</span>
+                                <span ng-show="mealType.need_choose_package_meal">--</span>
+                            </div>
+                            <div class="col-xs-1">
+                                <span>{{mealType.need_choose_package_meal ? '是' : '否'}}</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <span ng-show="mealType.need_choose_package_meal" ng-repeat="meal in mealType.package_meals">
+                                    {{meal.name}}: {{meal.price / 100 | number: 2}} |
+                                </span>
+                                <span ng-show="!mealType.need_choose_package_meal">--</span>
+                            </div>
+                            <div class="col-xs-3">
+                                <a  ng-click="delete(mealType)">删除</a>
+                                <a  ng-click="editPanel.show(mealType)">编辑</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ee-pop-mask" ng-show="editPanel.isShow">
+        <div class="ee-pop-wrapper">
+            <div class="ee-pop-panel" ng-show="editPanel.isShow">
+                <div class="ee-pop-header">
+                    <div class="ee-pop-title">
+                        <span>添加新餐种</span>
+                        <div class="close" ng-click="editPanel.hide()"></div>
+                    </div>
+                </div>
+                <div class="ee-pop-body">
+                    <div class="meal-type-edit-panel">
+                        <form>
+                            <div class="info-item search-bar">
+                                <p class="info-title">餐种基本设置</p>
+                                <div class="row selects">
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="请输入餐种名称"
+                                               ng-model="editPanel.currentMealType.name"/>
+                                    </div>
+                                    <div class="filter-item col-xs-6">
+                                        <z-dropdown z-dropdown-model="editPanel.currentMealType.need_choose_package_meal"
+                                                    z-dropdown-options="editPanel.types"
+                                                    z-dropdown-label="选择类别"
+                                                    z-dropdown-disabled="editPanel.types.length===0"
+                                                >
+                                        </z-dropdown>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-item" ng-show="!editPanel.currentMealType.need_choose_package_meal.id">
+                                <p class="info-title">价格设置</p>
+                                <div class="row">
+                                    <div class="filter-item col-xs-12">
+                                        <label>早餐</label>
+                                        <input class="input-text" type="number" placeholder="请输入早餐价格（元）"
+                                               ng-model="editPanel.currentMealType.breakfast_price"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <label>午餐</label>
+                                        <input class="input-text" type="number" placeholder="请输入午餐价格（元）"
+                                               ng-model="editPanel.currentMealType.lunch_price"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <label>晚餐</label>
+                                        <input class="input-text" type="number" placeholder="请输入晚餐价格（元）"
+                                               ng-model="editPanel.currentMealType.dinner_price"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-item" ng-show="editPanel.currentMealType.need_choose_package_meal.id">
+                                <p class="info-title">套餐设置</p>
+                                <div class="row selects" ng-repeat="package in editPanel.currentMealType.package_meals">
+                                    <div class="filter-item col-xs-1"><label>{{$index + 1}}</label></div>
+                                    <div class="filter-item col-xs-5">
+                                        <input class="input-text" type="text"  placeholder="请输入套餐名"
+                                               ng-model="package.name"/>
+                                    </div>
+                                    <div class="filter-item col-xs-4">
+                                        <input class="input-text" type="number" placeholder="请输入套餐价格（元）"
+                                               ng-model="package.price"/>
+                                    </div>
+                                    <div class="filter-item col-sx-1">
+                                        <a class="delete" ng-click="editPanel.currentMealType.deletePackage($index)">删除</a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="filter-item col-xs-1"><label>+</label></div>
+                                    <div class="filter-item col-xs-3"><a class="add-button" ng-click="editPanel.currentMealType.addPackage()">添加</a></div>
+                                </div>
+                            </div>
+
+                            <div class="handle">
+                                <strong>{{editPanel.errorMessage}}</strong>
+                                <button class="save" ng-click="editPanel.sure()">保存</button>
+                                <button class="reset" ng-click="editPanel.reset()">重置</button>
+                                <button class="submit-button" ng-click="editPanel.save()" type="submit">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

@@ -5,8 +5,7 @@
 var async = require('async');
 var mongooseLib = require('../libraries/mongoose');
 var appDb = mongooseLib.appDb;
-var GoodsBill = appDb.model('GoodsBill'),
-  BedMealBill = appDb.model('BedMealBill'),
+var BedMealBill = appDb.model('BedMealBill'),
   BedMealBillCheckout = appDb.model('BedMealBillCheckout');
 
 var systemError = require('../errors/system'),

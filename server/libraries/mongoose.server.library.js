@@ -18,3 +18,18 @@ exports.generateNewObjectId = function (newId) {
   }
   return new mongoose.Types.ObjectId();
 };
+
+exports.isObjectId = function(newId){
+  if(!newId){
+    return false;
+  }
+
+  try{
+    mongoose.Types.ObjectId(newId)
+    return true;
+  }
+  catch(e){
+    return false;
+  }
+
+};

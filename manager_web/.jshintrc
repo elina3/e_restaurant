@@ -72,7 +72,8 @@
     "Highcharts",
     "$",
     "moment",
-    "ActiveXObject"
+    "ActiveXObject",
+    "amountParse"
   ],
   "indent": 4,
   // Specify indentation spacing

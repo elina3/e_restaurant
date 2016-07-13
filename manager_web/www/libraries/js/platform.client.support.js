@@ -25,3 +25,17 @@ function isWechatBroswer(){
         return false;
     }
 }
+
+function amountParse(numberString) {
+    var amount = -1;
+    try {
+        amount = parseFloat(numberString);
+        amount = isNaN(amount) ? -1 : amount;
+        if (amount < 0) {
+            amount = -1;
+        }
+    } catch (e) {
+        amount = -1;
+    }
+    return amount;
+}

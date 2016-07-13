@@ -11,40 +11,6 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   timestamps = require('mongoose-timestamp');
 
-var GoodsBillSchema = new Schema({
-  object:{
-    type:String,
-    default:'GoodsBill'
-  },
-  goods_id: {
-    type: Schema.Types.ObjectId
-  },
-  name: {
-    type: String
-  },
-  description: {
-    type: String
-  },
-  display_photos: [{
-    type: String
-  }],
-  status: {
-    type: String,
-    enum: ['prepare', 'cooking', 'complete'],
-    default: 'prepare'
-  },
-  price: {//金额，单位：分
-    type: Number
-  },
-  count: {
-    type: Number
-  },
-  total_price: {//总金额，单位：分
-    type: Number
-  }
-});
-appDb.model('GoodsBill', GoodsBillSchema);
-
 var BedMealBillSchema = new Schema({
   object:{
     type:String,

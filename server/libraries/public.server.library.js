@@ -3,18 +3,14 @@
  */
 'use strict';
 var self = exports;
-exports.isNullOrEmpty = function (value) {
-  return (value === undefined || value === null || value === '');
-};
-exports.isTrue = function (value) {
-  if (self.isNullOrEmpty(value))
-    return false;
 
-  return (value.toString().toLowerCase() === 'true');
-};
-
-exports.isString = function (value) {
-  return Object.prototype.toString.call(value) === "[object String]";
+String.prototype.Trim = function ()
+{
+  /// <summary>
+  /// 字符串去除前后空格
+  /// </summary>
+  /// <returns type=""></returns>
+  return this.replace(/(^\s*)|(\s*$)/g, "");
 };
 
 Array.prototype.objectIndexOf = function (objectKey, value) {
@@ -52,6 +48,20 @@ Date.prototype.Format = function (fmt) {
     if (new RegExp('(' + k + ')').test(fmt))
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
   return fmt;
+};
+
+exports.isNullOrEmpty = function (value) {
+  return (value === undefined || value === null || value === '');
+};
+exports.isTrue = function (value) {
+  if (self.isNullOrEmpty(value))
+    return false;
+
+  return (value.toString().toLowerCase() === 'true');
+};
+
+exports.isString = function (value) {
+  return Object.prototype.toString.call(value) === "[object String]";
 };
 
 //数字解析，解析不出来返回null
@@ -157,3 +167,9 @@ exports.booleanParse = function (value) {
   return valueString === 'true' ? true : (valueString === 'false' ? false : null);
 };
 
+exports.parseToDate = function(time) {
+  if (!time) {
+    time = new Date();
+  }
+  return new Date(time.toDateString());
+};
