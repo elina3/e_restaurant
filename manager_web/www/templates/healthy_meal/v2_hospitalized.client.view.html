@@ -1,0 +1,239 @@
+<z-header></z-header>
+<div class="hospitalized-info-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-hide="user.role==='registrar'"  ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">入住信息管理</span>
+                </div>
+                <div class="col-xs-6">
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hospitalized-info-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <form>
+                    <div class="filter-item id-number col-xs-2">
+                        <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
+                               placeholder="请输入身份证号"/>
+                    </div>
+                    <div class="filter-item search-item col-xs-2">
+                        <div class="search" ng-click="filter.search()">筛选</div>
+                        <input class="submit-button" type="submit" ng-click="filter.search()">
+                    </div>
+                </form>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="save" ng-click="panelConfig.show()">办理入住手续</div>
+                </div>
+            </div>
+        </div>
+        <div class="search-content">
+            <div class="row">
+                <div class="col-xs-4 left-panel">
+                    <div class="ee-table-list">
+                        <div class="content">
+                            <div class="row list-header">
+                                <div class="col-xs-3">
+                                    <span>床位信息</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>入院</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>出院</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>操作</span>
+                                </div>
+                            </div>
+                            <div class="row list-info" ng-click="getBedMealBills(info)" ng-class="{'selected':info.selected}" ng-repeat="info in hospitalized_infos">
+                                <div class="col-xs-3">
+                                    <span>{{info.building.name}}{{info.floor.name}}{{info.bed.name}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>{{info.hospitalized_time | date: 'yyyy-MM-dd HH:mm'}}</span>
+                                </div>
+                                <div ng-if="info.is_leave_hospital" class="col-xs-3">
+                                    <span>{{info.leave_hospital_time | date: 'yyyy-MM-dd HH:mm'}}</span>
+                                </div>
+                                <div ng-if="!info.is_leave_hospital" class="col-xs-3">
+                                    <span>--</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="handle" ng-show="!info.is_leave_hospital" ng-click="leaveHospital(info, $event)">出院</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-8 right-panel">
+                    <div class="hospitalized-info row">
+                        <div class="col-xs-6">
+                            <span class="name">{{id_number_info.nickname}}</span>
+                            <span>{{id_number_info.transformSex(id_number_info.sex)}}</span>
+                            <span>{{id_number_info.phone}}</span>
+                        </div>
+                        <div class="col-xs-6" ng-show="current_bills.length > 0">
+                            <span class="unPaid">未付款：{{current_bill_money.unPaidAmount / 100}}元</span>
+                            <span>已付款：{{current_bill_money.paidAmount / 100}}元</span>
+                            <span>共计：{{(current_bill_money.paidAmount + current_bill_money.unPaidAmount)/ 100}}元</span>
+                        </div>
+                    </div>
+
+                    <!--<div class="search row">-->
+                        <!--<div class="col-xs-2">-->
+                            <!--<z-dropdown z-dropdown-model="currentStatus"-->
+                                        <!--z-dropdown-options="statuses"-->
+                                        <!--z-dropdown-label="状态"-->
+                                        <!--z-dropdown-change="statusChange()">-->
+                            <!--</z-dropdown>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="tip" style="height: 60px; line-height: 60px; color: #999; font-size: 18px; padding-left: 10px;" ng-show="noResultTip">
+                        <strong>{{noResultTip}}</strong>
+                    </div>
+
+                    <div class="bed-meal-bills" ng-show="current_bills.length > 0">
+                        <div class="ee-table-list">
+                            <div class="content">
+                                <div class="row list-header">
+                                    <div class="col-xs-4">
+                                        <span>就餐日期</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>营养餐</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>金额（元）</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>状态</span>
+                                    </div>
+                                </div>
+
+                                <div class="row list-info" ng-repeat="bill in current_bills">
+                                    <div class="col-xs-4">
+                                        <span>{{bill.meal_set_date | date: 'yyyy-MM-dd'}} {{translateMealTag(bill.meal_tag)}}</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>{{translateMealType(bill)}}</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span>{{bill.amount_paid / 100}}</span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span>{{bill.status}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="handle" ng-show="current_bills.length > 0">
+                        <!--<button>导出账单</button>-->
+                        <button ng-click="pay()">结算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ee-pop-mask" ng-show="panelConfig.isShow">
+        <div class="ee-pop-wrapper">
+            <div class="ee-pop-panel" ng-show="panelConfig.isShow">
+                <div class="ee-pop-header">
+                    <div class="ee-pop-title">
+                        <span>办理入住</span>
+
+                        <div class="close" ng-click="panelConfig.hide()"></div>
+                    </div>
+                </div>
+                <div class="ee-pop-body">
+                    <div class="hospitalized-info-new-panel">
+                        <div class="info-item bed-info">
+                            <p class="info-title">床位信息</p>
+
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.building"
+                                            z-dropdown-options="panelConfig.buildings"
+                                            z-dropdown-label="选择楼"
+                                            z-dropdown-change="panelBuildingChange()"
+                                            z-dropdown-disabled="panelConfig.buildings.length<=1"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.floor"
+                                            z-dropdown-options="panelConfig.floors"
+                                            z-dropdown-label="选择楼层"
+                                            z-dropdown-change="panelFloorChange()"
+                                            z-dropdown-disabled="panelConfig.floors.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="panelConfig.newSicker.bed"
+                                            z-dropdown-options="panelConfig.beds"
+                                            z-dropdown-label="选择床位"
+                                            z-dropdown-disabled="panelConfig.beds.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+
+                        <form>
+                            <div class="info-item search-bar">
+                                <p class="info-title">病人信息</p>
+
+                                <div class="row selects">
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="请输入病人身份证号"
+                                               ng-model="panelConfig.newSicker.idNumber"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="请输入病人姓名"
+                                               ng-model="panelConfig.newSicker.nickname"/>
+                                    </div>
+                                    <div class="filter-item col-xs-6">
+                                        <z-dropdown z-dropdown-model="panelConfig.newSicker.sex"
+                                                    z-dropdown-options="panelConfig.sexes"
+                                                    z-dropdown-label="选择性别"
+                                                    z-dropdown-disabled="panelConfig.sexes.length===0"
+                                                >
+                                        </z-dropdown>
+                                    </div>
+                                    <div class="filter-item col-xs-12"><input class="input-text" type="text"
+                                                                              placeholder="电话"
+                                                                              ng-model="panelConfig.newSicker.phone"/>
+                                    </div>
+                                    <div class="filter-item col-xs-12">
+                                        <input class="input-text" type="text" placeholder="备注"
+                                               ng-model="panelConfig.newSicker.description"/>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="handle">
+                                <strong>{{panelConfig.messageTip}}</strong>
+                                <button class="save" ng-click="panelConfig.save()">保存</button>
+                                <button class="reset" ng-click="panelConfig.reset()">重置</button>
+                                <button class="submit-button" ng-click="panelConfig.save()" type="submit">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

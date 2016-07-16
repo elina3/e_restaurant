@@ -98,6 +98,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       templateUrl: 'templates/healthy_meal/v2_meal_setting.client.view.html',
       controller: 'MealSettingController'
     })
+    .state('hospitalized', {
+      url: '/healthy_meal/hospitalized',
+      templateUrl: 'templates/healthy_meal/v2_hospitalized.client.view.html',
+      controller: 'HospitalizedController'
+    })
     .state('meal_bill', {
       url: '/healthy_meal/meal_bill',
       templateUrl: 'templates/healthy_meal/v2_meal_bill.client.view.html',

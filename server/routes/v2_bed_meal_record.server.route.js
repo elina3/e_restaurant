@@ -29,6 +29,16 @@ module.exports = function (app) {
     paginationFilter.requirePagination,
     bedMealRecordController.getBedMealRecordsByPagination);
 
+  //病人账单
+  app.route('/v2/hospitalized_bills').get(authFilter.requireUser,
+    paginationFilter.requirePagination,
+    bedMealRecordController.getMealBillByHospitalizedId);
+
+  //病人结账
+  app.route('/v2/hospitalized_bills/pay').post(authFilter.requireUser,
+    hospitalizedInfoFilter.requireHospitalizedInfo,
+    bedMealRecordController.checkoutByHospitalizedInfo);
+
   //客户端选餐之前获取选餐设置记录（用于生成筛选条件）
   app.route('/v2/client/bed_meal_records').get(authFilter.requireClient,
     bedFilter.requireBuilding,

@@ -210,7 +210,7 @@ exports.getMealBillByFilter = function(filter, pagination, callback){
     }
 
     if (pagination.limit === -1) {
-      pagination.limit = totalCount;
+      pagination.limit = result[0].total_count;
     }
 
     if (pagination.skip_count === -1) {
@@ -235,6 +235,90 @@ exports.getMealBillByFilter = function(filter, pagination, callback){
           totalAmount: result[0].total_amount
         });
       });
+  });
+};
+
+exports.getMealBillByHospitalizedId = function(filter, pagination, callback){
+
+
+  filter = filter || {};
+
+  var query = {
+    deleted_status: false
+  };
+
+  if(filter.hospitalizedInfoId && mongoLib.isObjectId(filter.hospitalizedInfoId)){
+    query.hospitalized_info = mongoLib.generateNewObjectId(filter.hospitalizedInfoId);
+  }
+
+
+  BedMealRecord.count(query, function (err, totalCount) {
+    if (err) {
+      return callback({err: systemError.database_query_error});
+    }
+
+    if (pagination.limit === -1) {
+      pagination.limit = totalCount;
+    }
+
+    if (pagination.skip_count === -1) {
+      pagination.skip_count = pagination.limit * (pagination.current_page - 1);
+    }
+
+    BedMealRecord.find(query)
+      .sort({update_time: -1})
+      .skip(pagination.skip_count)
+      .limit(pagination.limit)
+      .populate('building floor bed')
+      .exec(function (err, bedMealRecords) {
+        if (err || !bedMealRecords) {
+          return callback({err: systemError.database_query_error});
+        }
+
+
+        return callback(null, {
+          bedMealRecords: bedMealRecords,
+          limit: pagination.limit,
+          totalCount: totalCount
+        });
+      });
+  });
+};
+
+exports.checkoutByHospitalizedInfo = function(user, hospitalizedInfo, callback){
+  BedMealRecord.find({
+    hospitalized_info: hospitalizedInfo._id,
+    deleted_status: false,
+    is_checkout: false
+  }).exec(function(err, bedMealRecords){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    var checkoutCount  = 0;
+    var checkoutAmount = 0;
+    async.each(bedMealRecords, function(bedMealRecord, eachCallback){
+      bedMealRecord.is_checkout = true;
+      bedMealRecord.checkout_create_id = user._id;
+      bedMealRecord.checkout_creator_info = {
+        username: user.username,
+        nickname: user.nickname
+      };
+      bedMealRecord.save(function(err, savedBedMealRecord){
+        if(err || !savedBedMealRecord){
+          return eachCallback({err: systemError.database_save_error});
+        }
+
+        checkoutAmount += bedMealRecord.amount_paid;
+        checkoutCount++;
+        return eachCallback(null, savedBedMealRecord);
+      });
+    }, function(err){
+      return callback(err, {
+        checkoutCount: checkoutCount,
+        checkoutAmount: checkoutAmount
+      });
+    });
   });
 };
 

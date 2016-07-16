@@ -124,7 +124,6 @@ exports.getBedMealRecordsByPagination = function(req, res, next){
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   bedMealRecordLogic.getMealBillByFilter({
-    status: req.query.status || '',
     mealTag: req.query.meal_tag || '',
     mealTypeId: req.query.meal_type_id || '',
     idNumber: req.query.id_number || '',
@@ -140,6 +139,40 @@ exports.getBedMealRecordsByPagination = function(req, res, next){
       total_count: result.totalCount,
       limit: result.limit,
       bed_meal_bills: result.bedMealRecords
+    };
+    return next();
+  });
+};
+
+//获取病人账单
+exports.getMealBillByHospitalizedId = function(req, res, next){
+
+  bedMealRecordLogic.getMealBillByHospitalizedId({
+    hospitalizedInfoId: req.query.hospitalized_info_id,
+    is_checkout: publicLib.booleanParse(req.query.is_checkout) || false
+  }, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_count: result.totalCount,
+      limit: result.limit,
+      bed_meal_bills: result.bedMealRecords
+    };
+    return next();
+  });
+};
+
+exports.checkoutByHospitalizedInfo = function(req, res, next){
+  bedMealRecordLogic.checkoutByHospitalizedInfo(req.user, req.hospitalized_info, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      checkout_count: result.checkoutCount,
+      checkout_amount: result.checkoutAmount
     };
     return next();
   });

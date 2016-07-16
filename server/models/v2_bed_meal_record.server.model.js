@@ -90,15 +90,16 @@ var BedMealRecordV2Schema = new Schema({
   time_tag: {
     type: String
   },
-  is_checkout: {
-    type: Boolean
-  },
   discount: {
     type: Number,
     default: 1
   },
   checkout_create_id: {
     type: Schema.Types.ObjectId
+  },
+  is_checkout: {
+    type: Boolean,
+    default: false
   },
   checkout_creator_info: {
     type: Schema.Types.Mixed
