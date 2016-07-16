@@ -98,7 +98,7 @@ exports.batchSaveBedMealRecords = function (req, res, next) {
 
 //营养餐设置页面搜索结果
 exports.getBedMealRecords = function (req, res, next) {
-  var dateTimeStamp = req.body.meal_set_time_stamp;
+  var dateTimeStamp = req.query.meal_set_time_stamp;
   var time = new Date();
   if (dateTimeStamp) {
     time = new Date(parseInt(dateTimeStamp));
@@ -111,6 +111,35 @@ exports.getBedMealRecords = function (req, res, next) {
 
     req.data = {
       bed_meal_records: mealBedRecords
+    };
+    return next();
+  });
+};
+
+//分页获取记录
+exports.getBedMealRecordsByPagination = function(req, res, next){
+  var timeRange = JSON.parse(req.query.time_range) || {};
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  bedMealRecordLogic.getMealBillByFilter({
+    status: req.query.status || '',
+    mealTag: req.query.meal_tag || '',
+    mealTypeId: req.query.meal_type_id || '',
+    idNumber: req.query.id_number || '',
+    startTime: publicLib.parseToDate(startTime),
+    endTime: publicLib.parseToDate(endTime)
+  }, req.pagination, function(err, result){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      total_amount: result.totalAmount,
+      total_count: result.totalCount,
+      limit: result.limit,
+      bed_meal_bills: result.bedMealRecords
     };
     return next();
   });

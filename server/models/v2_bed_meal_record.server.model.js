@@ -22,7 +22,8 @@ var MealBillSchema = new Schema({
     type: Number
   },
   count: {
-    type: Number
+    type: Number,
+    default: 1
   },
   total_price: {//总金额，单位：分
     type: Number
@@ -92,6 +93,10 @@ var BedMealRecordV2Schema = new Schema({
   is_checkout: {
     type: Boolean
   },
+  discount: {
+    type: Number,
+    default: 1
+  },
   checkout_create_id: {
     type: Schema.Types.ObjectId
   },
@@ -130,11 +135,11 @@ function translateTime(mealTag){
 }
 BedMealRecordV2Schema.pre('save', function (next) {
   this.amount_due = 0;
-  if(this.goods_bills &&  this.goods_bills.length > 0){
+  if(this.meal_bills &&  this.meal_bills.length > 0){
     var amountDue = 0;
-    this.goods_bills.forEach(function(goodsBill){
-      goodsBill.total_price = goodsBill.price * goodsBill.count;
-      amountDue += goodsBill.total_price;
+    this.meal_bills.forEach(function(mealBill){
+      mealBill.total_price = mealBill.price * mealBill.count;
+      amountDue += mealBill.total_price;
     });
     this.amount_due = amountDue;
   }

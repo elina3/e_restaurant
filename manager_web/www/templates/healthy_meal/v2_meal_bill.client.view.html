@@ -1,10 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<z-header></z-header>
+<div class="bed-meal-bill-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back" ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">营养餐账单管理</span>
+                </div>
+                <div class="col-xs-6">
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bed-meal-bill-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <div class="filter-item time  col-xs-2">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="pageData.datePicker.createTimeRange"
+                           min="pageData.datePicker.createTimeMinTime"
+                           options="pageData.datePicker.dateOptions"
+                           placeholder="点击选择时间"
+                            />
+                </div>
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentMealType"
+                                z-dropdown-options="pageData.mealTypes"
+                                z-dropdown-label="营养餐类型"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentMealTag"
+                                z-dropdown-options="pageData.mealTags"
+                                z-dropdown-label="就餐类型"
+                            >
+                    </z-dropdown>
+                </div>
+                <form>
+                    <div class="filter-item id-number col-xs-2">
+                        <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
+                               placeholder="请输入身份证号"/>
+                    </div>
+                    <div class="filter-item search-item col-xs-2">
+                        <div class="search" ng-click="filter.search()">筛选</div>
+                        <input class="submit-button" type="submit" ng-click="filter.search()">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="search-content">
+            <div class="search-total-amount"><span>总金额（元）：</span><strong>{{pageData.totalAmount / 100 | number : 2}}</strong><span style="margin-left:20px;font-size:12px;color:#666;">共{{pageData.pagination.totalCount}}条</span></div>
+            <div class="ee-table-list">
+                <div class="content">
+                    <div class="row list-header">
+                        <div class="col-xs-2"><span>就餐日期</span></div>
+                        <div class="col-xs-2"><span>床位信息</span></div>
+                        <div class="col-xs-3"><span>身份证</span></div>
+                        <div class="col-xs-1"><span>姓名</span></div>
+                        <div class="col-xs-2"><span>营养餐</span></div>
+                        <div class="col-xs-1"><span>金额(元)</span></div>
+                        <div class="col-xs-1"><span>状态</span></div>
+                    </div>
+                    <div class="row list-info" ng-repeat="info in pageData.bills">
+                        <div class="col-xs-2">
+                            <span>{{info.meal_set_date | date: 'yyyy-MM-dd'}} {{info.meal_tag}}</span>
+                        </div>
+                        <div class="col-xs-2">
+                            <span>{{info.building.name}}{{info.floor.name}}{{info.bed.name}}</span>
+                        </div>
+                        <div class="col-xs-3">
+                            <span>{{info.id_number}}</span>
+                        </div>
+                        <div class="col-xs-1"><span>{{info.nickname}}</span></div>
+                        <div class="col-xs-2">
+                            <span>{{info.meal_type_name}}</span>
+                            <span ng-repeat="bill in info.meal_bills">{{bill.name}}({{ bill.count}})</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>{{info.amount_paid / 100}}</span>
+                        </div>
+                        <div class="col-xs-1">
+                            <span>{{info.status}}</span>
+                        </div>
+                    </div>
+                </div>
+                <z-pagination config="pageData.pagination"></z-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

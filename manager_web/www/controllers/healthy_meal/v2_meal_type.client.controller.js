@@ -160,27 +160,24 @@ angular.module('EWeb').controller('MealTypeController',
 
           if(!that.isModify){
             MealTypeService.addNewMealType(mealTypeInfo, function (err, data) {
-              if (err) {
-                $scope.$emit(GlobalEvent.onShowAlert, err || '保存失败');
+              if (err || !data || !data.meal_type) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '保存失败');
               }
-              if (data.meal_type) {
-                that.hide();
-                that.reset();
-                loadMealTypes();
-                $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
-              }
+
+              that.hide();
+              that.reset();
+              loadMealTypes();
+              $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
             });
           }else{
             MealTypeService.modifyMealType(this.currentMealType._id, mealTypeInfo, function(err, data){
-              if (err) {
-                $scope.$emit(GlobalEvent.onShowAlert, err || '修改失败');
+              if (err || !data || !data.meal_type) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '修改失败');
               }
-              if (data.meal_type) {
-                that.hide();
-                that.reset();
-                loadMealTypes();
-                $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
-              }
+              that.hide();
+              that.reset();
+              loadMealTypes();
+              $scope.$emit(GlobalEvent.onShowAlert, '修改成功');
             });
           }
         }

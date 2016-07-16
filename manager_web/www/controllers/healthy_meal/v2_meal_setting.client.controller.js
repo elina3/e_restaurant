@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('MealSettingController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'MealRecordService', 'HospitalizedInfoService', 'BedMealBillService', 'MealTypeConstant', 'MealTypeService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, MealRecordService, HospitalizedInfoService, BedMealBillService, MealTypeConstant, MealTypeService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'MealRecordService', 'HospitalizedInfoService', 'MealTypeService',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, MealRecordService, HospitalizedInfoService, MealTypeService) {
       //<editor-fold desc="更新当前时间">
       $scope.timeout = true;
       function getNowTimeStamp() {
@@ -361,6 +361,10 @@ angular.module('EWeb').controller('MealSettingController',
 
       $scope.goBack = function () {
         $window.history.back();
+      };
+
+      $scope.goBill = function(){
+        $state.go('meal_bill');
       };
 
       function init() {

@@ -7,7 +7,8 @@ var bedMealRecordController = require('../controllers/v2_bed_meal_record');
 var authFilter = require('../filters/auth'),
   bedFilter = require('../filters/bed'),
   hospitalizedInfoFilter = require('../filters/hospitalized_info'),
-  mealTypeFilter = require('../filters/v2_meal_type');
+  mealTypeFilter = require('../filters/v2_meal_type'),
+  paginationFilter = require('../filters/pagination');
 
 module.exports = function (app) {
   //营养餐设置页面保存
@@ -17,11 +18,16 @@ module.exports = function (app) {
     bedMealRecordController.batchSaveBedMealRecords);
 
 
-  //根据条件获取订餐表内容 or //营养餐设置页面搜索结果
+  //营养餐设置页面搜索结果
   app.route('/v2/bed_meal_records').get(authFilter.requireUser,
     bedFilter.requireBuilding,
     bedFilter.requireFloor,
     bedMealRecordController.getBedMealRecords);
+
+  //根据条件获取订餐表内容
+  app.route('/v2/bed_meal_bills').get(authFilter.requireUser,
+    paginationFilter.requirePagination,
+    bedMealRecordController.getBedMealRecordsByPagination);
 
   //客户端选餐之前获取选餐设置记录（用于生成筛选条件）
   app.route('/v2/client/bed_meal_records').get(authFilter.requireClient,

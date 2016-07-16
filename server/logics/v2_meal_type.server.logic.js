@@ -16,7 +16,7 @@ function formatMealTypeInfo(mealTypeInfo, callback) {
   mealTypeInfo = mealTypeInfo || {};
   mealTypeInfo.need_choose_package_meal = publicLib.booleanParse(mealTypeInfo.need_choose_package_meal);
   if(mealTypeInfo.need_choose_package_meal  === null){
-    return callback({err: mealTypeError.need_choose_package_meall_null});
+    return callback({err: mealTypeError.need_choose_package_meal_null});
   }
 
   if (!mealTypeInfo.name) {
@@ -25,16 +25,16 @@ function formatMealTypeInfo(mealTypeInfo, callback) {
   mealTypeInfo.name = mealTypeInfo.name.Trim();
 
   if (!mealTypeInfo.need_choose_package_meal) {
-    var breakfastPrice = publicLib.parseFloatNumber(mealTypeInfo.breakfast_price);
-    if (!breakfastPrice) {
+    var breakfastPrice = publicLib.amountParse(mealTypeInfo.breakfast_price);
+    if (breakfastPrice < 0) {
       return callback({err: mealTypeError.invalid_breakfast_price});
     }
-    var lunchPrice = publicLib.parseFloatNumber(mealTypeInfo.lunch_price);
-    if (!lunchPrice || lunchPrice < 0) {
+    var lunchPrice = publicLib.amountParse(mealTypeInfo.lunch_price);
+    if (lunchPrice < 0) {
       return callback({err: mealTypeError.invalid_lunch_price});
     }
-    var dinnerPrice = publicLib.parseFloatNumber(mealTypeInfo.dinner_price);
-    if (!dinnerPrice || dinnerPrice < 0) {
+    var dinnerPrice = publicLib.amountParse(mealTypeInfo.dinner_price);
+    if (dinnerPrice < 0) {
       return callback({err: mealTypeError.invalid_dinner_price});
     }
 
@@ -53,8 +53,8 @@ function formatMealTypeInfo(mealTypeInfo, callback) {
         return true;
       } else {
         item.name = item.name.Trim();
-        var price = publicLib.parseFloatNumber(item.price);
-        if (price && price >= 0) {
+        var price = publicLib.amountParse(item.price);
+        if (price >= 0) {
           item.price = price;
         } else {
           return true;
