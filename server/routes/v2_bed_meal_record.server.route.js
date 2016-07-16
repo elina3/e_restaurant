@@ -8,7 +8,8 @@ var authFilter = require('../filters/auth'),
   bedFilter = require('../filters/bed'),
   hospitalizedInfoFilter = require('../filters/hospitalized_info'),
   mealTypeFilter = require('../filters/v2_meal_type'),
-  paginationFilter = require('../filters/pagination');
+  paginationFilter = require('../filters/pagination'),
+  bedMealRecordFilter = require('../filters/v2_bed_meal_record');
 
 module.exports = function (app) {
   //营养餐设置页面保存
@@ -29,7 +30,7 @@ module.exports = function (app) {
     paginationFilter.requirePagination,
     bedMealRecordController.getBedMealRecordsByPagination);
 
-  //病人账单
+  //获取病人账单
   app.route('/v2/hospitalized_bills').get(authFilter.requireUser,
     paginationFilter.requirePagination,
     bedMealRecordController.getMealBillByHospitalizedId);
@@ -42,14 +43,15 @@ module.exports = function (app) {
   //客户端选餐之前获取选餐设置记录（用于生成筛选条件）
   app.route('/v2/client/bed_meal_records').get(authFilter.requireClient,
     bedFilter.requireBuilding,
-    bedMealRecordController.getBedMealRecords);
+    bedFilter.requireFloor,
+    bedMealRecordController.getBedMealRecordsByClient);
 
   //客户端选餐保存
-  app.route('/v2/client/bed_meal_record/save').get(authFilter.requireClient,
-    bedFilter.requireBuilding,
+  app.route('/v2/client/bed_meal_record/save').post(authFilter.requireClient,
     hospitalizedInfoFilter.requireHospitalizedInfo,
+    bedMealRecordFilter.requireBedMealRecord,
     mealTypeFilter.requireMealType,
-    bedMealRecordController.getBedMealRecords);
+    bedMealRecordController.saveBedMealRecord);
 
   //更换到新床位
   app.route('/v2/bed_meal_records/change_to_new_bed').post(authFilter.requireUser,

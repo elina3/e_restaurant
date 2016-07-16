@@ -208,6 +208,7 @@ angular.module('EWeb').controller('MealSettingController',
                 text: (record.meal_type_name + '(' + (record.meal_type_price / 100) + ')')
               };
               var currentHospitalizedInfo = bed.hospitalized_infos[index];
+              currentHospitalizedInfo.is_checkout = record.is_checkout;
               currentHospitalizedInfo[record.meal_tag] = mealType;
               if (!currentHospitalizedInfo[record.meal_tag + 'Options']) {
                 currentHospitalizedInfo[record.meal_tag + 'Options'] = [];
@@ -278,7 +279,7 @@ angular.module('EWeb').controller('MealSettingController',
       function prepareParams() {
         var validBedSettings = $scope.filter.beds.filter(function (item) {
           var settings = item.hospitalized_infos.filter(function (subItem) {
-            return subItem._id && ((subItem.breakfast && subItem.breakfast.id || (subItem.lunch && subItem.lunch.id) || (subItem.dinner && subItem.dinner.id)));
+            return subItem._id && !subItem.is_checkout && ((subItem.breakfast && subItem.breakfast.id || (subItem.lunch && subItem.lunch.id) || (subItem.dinner && subItem.dinner.id)));
           });
 
           return item.hasSicker && settings.length > 0;

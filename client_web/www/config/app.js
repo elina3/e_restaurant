@@ -61,6 +61,11 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
       url: '/healthy_normal',
       templateUrl: 'views/healthy_normal.client.view.html',
       controller: 'HealthyNormalController'
+    })
+    .state('healthy_meal', {
+      url: '/healthy_meal',
+      templateUrl: 'views/v2_healthy_meal.client.view.html',
+      controller: 'HealthyMealController'
     });
 
   $urlRouterProvider.otherwise('/');

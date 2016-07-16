@@ -301,7 +301,9 @@ angular.module('EWeb').controller('HospitalizedController',
         record.meal_bills.forEach(function (item) {
           str += '(' + (item.name) + ':' + (item.price / 100) + '*' + item.count + '),';
         });
-        str = str.substring(0, str.length - 1);
+        if(str.substr(str.length -1, 1) === ','){
+          str = str.substring(0, str.length - 1);
+        }
         return str;
       };
 

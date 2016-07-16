@@ -1,0 +1,83 @@
+
+<e-header></e-header>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="healthy-normal-page-view">
+    <div class="search-bar">
+        <div class="row selects">
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentDateTag"
+                            z-dropdown-options="pageData.dateTags"
+                            z-dropdown-label="就餐时间"
+                            z-dropdown-change="onDateTagChange()"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentMealTag"
+                            z-dropdown-options="pageData.mealTags"
+                            z-dropdown-label="就餐类型"
+                            z-dropdown-change="onMealTagChange()"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentFloor"
+                            z-dropdown-options="pageData.floors"
+                            z-dropdown-label="楼层"
+                            z-dropdown-change="onFloorChange()"
+                            z-dropdown-disabled="pageData.floors.length<=0"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item status col-xs-2">
+                <z-dropdown z-dropdown-model="filter.currentBedMealRecord"
+                            z-dropdown-options="pageData.bedMealRecords"
+                            z-dropdown-label="床位"
+                            z-dropdown-change="onBedChange()"
+                            z-dropdown-disabled="pageData.bedMealRecords.length<=0"
+                        >
+                </z-dropdown>
+            </div>
+            <div class="filter-item save col-xs-2" ng-show="pageData.hospitalized_info">
+                <div class="save" ng-click="filter.saveBill()">提交选餐</div>
+            </div>
+        </div>
+    </div>
+    <div class="hospitalized-info" ng-show="pageData.hospitalized_info">
+        <strong>姓名：{{pageData.hospitalized_info.nickname}}</strong><span>身份证：{{pageData.hospitalized_info.id_number}}</span>
+    </div>
+    <div class="goods-list">
+        <!--<div class="goods-item" ng-click="goToView('goodsDetail', {goods_id: goods._id}, $event)" ng-repeat="goods in pageData.goodsList">-->
+        <div class="goods-item" ng-repeat="packageMeal in pageData.hospitalized_info.meal_type.package_meals">
+            <div class="photo-area">
+                <!--<e-image image-key="packageMeal.display_photos[0]"></e-image>-->
+                <div class="photo">
+                <img err-src="images/global/default_goods.png"  ng-src={{generatePhotoSrc(packageMeal)}}>
+                </div>
+            </div>
+            <div class="desc">
+                <div class="wrap">
+                    <div class="description">
+                        {{packageMeal.name}}
+                    </div>
+                    <div class="price">
+                        <span>¥{{packageMeal.price / 100 | number: 2}}</span>
+                    </div>
+                    <div class="handle">
+                        <input ng-model="packageMeal.count" min="0" type="number"><strong>份</strong>
+                        <!--<div class="add" ng-click="addToCart(goods, $event)">加入购物车</div>-->
+                        <!--<div class="buy-now" ng-click="buyNow(goods, $event)">立即购买</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="e-load-more" ng-show="pageData.pagination.totalCount > pageData.pagination.limit">
+        <div class="load-area">
+            <span class="click-button" ng-show="pageData.pagination.totalCount > pageData.pagination.skipCount" ng-click="loadMore()">点击加载更多</span>
+            <span class="load-result" ng-show="pageData.pagination.totalCount <= pageData.pagination.skipCount">已全部加载</span>
+        </div>
+    </div>
+</div>
+
+<e-footer></e-footer>

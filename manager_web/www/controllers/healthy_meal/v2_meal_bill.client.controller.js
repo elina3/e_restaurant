@@ -75,6 +75,17 @@ angular.module('EWeb').controller('MealBillController',
         return filterResult[0].text;
       }
 
+      function translateMealType(record) {
+        var str = record.meal_type_name;
+        record.meal_bills.forEach(function (item) {
+          str += '(' + (item.name) + ':' + (item.price / 100) + '*' + item.count + '),';
+        });
+        if(str.substr(str.length -1, 1) === ','){
+          str = str.substring(0, str.length - 1);
+        }
+        return str;
+      }
+
       function loadBills() {
         MealRecordService.getMealBills({
           id_number: $scope.filter.currentIdNumber,
@@ -97,7 +108,7 @@ angular.module('EWeb').controller('MealBillController',
               bed: item.bed,
               meal_set_date: item.meal_set_date,
               meal_tag: translateMealTag(item.meal_tag),
-              meal_type_name: item.meal_type_name,
+              meal_type_name: translateMealType(item),
               id_number: item.id_number,
               nickname: item.nickname,
               goods_bills: item.goods_bills,

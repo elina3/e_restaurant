@@ -166,7 +166,7 @@ exports.getMealBedRecordsByMealDate = function (building, floor, mealSetDate, ca
   });
 };
 
-exports.getMealBillByFilter = function(filter, pagination, callback){
+exports.getMealBillByFilter = function (filter, pagination, callback) {
   var query = {
     deleted_status: false
   };
@@ -238,7 +238,7 @@ exports.getMealBillByFilter = function(filter, pagination, callback){
   });
 };
 
-exports.getMealBillByHospitalizedId = function(filter, pagination, callback){
+exports.getMealBillByHospitalizedId = function (filter, pagination, callback) {
 
 
   filter = filter || {};
@@ -247,7 +247,7 @@ exports.getMealBillByHospitalizedId = function(filter, pagination, callback){
     deleted_status: false
   };
 
-  if(filter.hospitalizedInfoId && mongoLib.isObjectId(filter.hospitalizedInfoId)){
+  if (filter.hospitalizedInfoId && mongoLib.isObjectId(filter.hospitalizedInfoId)) {
     query.hospitalized_info = mongoLib.generateNewObjectId(filter.hospitalizedInfoId);
   }
 
@@ -285,27 +285,27 @@ exports.getMealBillByHospitalizedId = function(filter, pagination, callback){
   });
 };
 
-exports.checkoutByHospitalizedInfo = function(user, hospitalizedInfo, callback){
+exports.checkoutByHospitalizedInfo = function (user, hospitalizedInfo, callback) {
   BedMealRecord.find({
     hospitalized_info: hospitalizedInfo._id,
     deleted_status: false,
     is_checkout: false
-  }).exec(function(err, bedMealRecords){
-    if(err){
+  }).exec(function (err, bedMealRecords) {
+    if (err) {
       return callback({err: systemError.database_query_error});
     }
 
-    var checkoutCount  = 0;
+    var checkoutCount = 0;
     var checkoutAmount = 0;
-    async.each(bedMealRecords, function(bedMealRecord, eachCallback){
+    async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
       bedMealRecord.is_checkout = true;
       bedMealRecord.checkout_create_id = user._id;
       bedMealRecord.checkout_creator_info = {
         username: user.username,
         nickname: user.nickname
       };
-      bedMealRecord.save(function(err, savedBedMealRecord){
-        if(err || !savedBedMealRecord){
+      bedMealRecord.save(function (err, savedBedMealRecord) {
+        if (err || !savedBedMealRecord) {
           return eachCallback({err: systemError.database_save_error});
         }
 
@@ -313,7 +313,7 @@ exports.checkoutByHospitalizedInfo = function(user, hospitalizedInfo, callback){
         checkoutCount++;
         return eachCallback(null, savedBedMealRecord);
       });
-    }, function(err){
+    }, function (err) {
       return callback(err, {
         checkoutCount: checkoutCount,
         checkoutAmount: checkoutAmount
@@ -322,9 +322,31 @@ exports.checkoutByHospitalizedInfo = function(user, hospitalizedInfo, callback){
   });
 };
 
-function formatPackageMeals(mealType, selectedPackageMeals, callback) {
+exports.getMealRecordsByClientBuildingFloors = function (building, floor, mealSetDate, mealTag, callback) {
 
-  async.eachOfSeries(selectedPackageMeals, function (selectedPackageMeal, eachCallback) {
+  var match = {
+    meal_set_date: mealSetDate,
+    meal_tag: mealTag,
+    building: building._id,
+    floor: floor._id,
+    deleted_status: false,
+    is_checkout: false,
+    need_choose_package_meal: true
+  };
+
+  BedMealRecord.find(match)
+    .populate('bed meal_type_id')
+    .exec(function(err, bedMealRecords){
+      if (err || !bedMealRecords) {
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null, bedMealRecords);
+    });
+};
+
+function formatPackageMeals(mealType, selectedPackageMeals, callback) {
+  async.each(selectedPackageMeals, function (selectedPackageMeal, eachCallback) {
 
     var packageMeals = mealType.package_meals.filter(function (item) {
       return item.name === selectedPackageMeal.name;
@@ -334,7 +356,8 @@ function formatPackageMeals(mealType, selectedPackageMeals, callback) {
       return eachCallback({err: bedMealRecordError.package_meal_not_exist});
     }
 
-    selectedPackageMeal.price = selectedPackageMeal.price;
+    selectedPackageMeal.price = packageMeal.price;
+    return eachCallback();
   }, function (err) {
     return callback(err);
   });
@@ -384,7 +407,7 @@ exports.needChoosePackageMealTypes = function (building, mealTag, mealSetDate, c
 };
 
 exports.getBedMealRecordsById = function (id, callback) {
-  BedMealRecord.find({
+  BedMealRecord.findOne({
     _id: id
   }).exec(function (err, bedMealRecord) {
     if (err) {

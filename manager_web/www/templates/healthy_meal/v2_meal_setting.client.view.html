@@ -74,27 +74,27 @@
                         <div class="set-item no-padding" ng-class="{'col-xs-10': bed.hospitalized_infos.length === 1, 'col-xs-5': bed.hospitalized_infos.length > 1}"
                              ng-repeat="hospitalizedInfo in bed.hospitalized_infos">
                             <div class="set-row sicker-name" ng-class="{'has': hospitalizedInfo.nickname}">
-                                <span>{{hospitalizedInfo.nickname || '无'}}</span>
+                                <span>{{hospitalizedInfo.nickname || '无'}}{{hospitalizedInfo.is_checkout ? '(已结账)':''}}</span>
                             </div>
                             <div class="set-row">
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.breakfast"
                                             z-dropdown-options="hospitalizedInfo.breakfastOptions"
                                             z-dropdown-label="无"
-                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
                             <div class="set-row">
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.lunch"
                                             z-dropdown-options="hospitalizedInfo.lunchOptions"
                                             z-dropdown-label="无"
-                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
                             <div class="set-row no-border">
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.dinner"
                                             z-dropdown-options="hospitalizedInfo.dinnerOptions"
                                             z-dropdown-label="无"
-                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
                         </div>
