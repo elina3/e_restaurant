@@ -8,7 +8,7 @@
     <div class="z-select-panel">
         <ul class="z-select-ul" ng-show="config.showOptions">
             <li ng-repeat="option in zDropdownOptions"
-                ng-class="{'separator': option.separator}"
+                ng-class="{'separator': option.separator, 'disabled': option.disabled}"
                 ng-click="selectOption(option,$event)"
                     >
                 <span>{{option.text}}</span>

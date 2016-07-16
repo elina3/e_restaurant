@@ -1,0 +1,272 @@
+.meal-setting-page-view {
+
+  .ee-banner {
+    background: @task-pois-theme-color;
+
+    .handle-button {
+      display: inline-block;
+      overflow: hidden;
+      float: right;
+
+      margin-top: 10px;
+
+      width: 100px;
+      height: 40px;
+
+      border: 1px solid #fff;
+      color: #fff;
+      font-size: 12px;
+      font-weight: normal !important;
+      text-align: center;
+      line-height: 40px;
+
+      cursor: pointer;
+    }
+
+  }
+
+  .meal-setting-page-body {
+    width: 100%;
+    min-height: 750px;
+
+    background: #fff;
+
+    .search-bar {
+      width: 95%;
+
+      margin: 0px auto;
+      padding: 20px 0;
+
+      .filter-item {
+        margin: 1px 0;
+        padding: 2px;
+        .e-date-picker {
+          width: 100%;
+          padding: 0 10px;
+          border: 1px solid #d7d7d7;
+          height: 34px;
+          line-height: 34px;
+        }
+        .input-text {
+          width: 100%;
+          height: 34px;
+          line-height: 34px;
+          padding: 0 10px;
+          border: 1px solid #d7d7d7;
+        }
+      }
+
+      .search {
+        height: 35px;
+        line-height: 35px;
+        border: 1px solid @task-pois-theme-color;
+        color: @task-pois-theme-color;
+        text-align: center;
+
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          border-color: @task-pois-theme-color-hover;
+          color: @task-pois-theme-color-hover;
+        }
+      }
+      .save, .bill {
+        height: 35px;
+        line-height: 35px;
+        color: #fff;
+        background-color: @task-pois-theme-color;
+        text-align: center;
+
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          background-color: @task-pois-theme-color-hover;
+        }
+      }
+      .save {
+        &.disabled {
+          background-color: #f2f2f2;
+          color: #aaa;
+          cursor: default;
+
+          &:hover {
+            background-color: #f2f2f2;
+          }
+        }
+      }
+      .bill {
+        background-color: #EF6F70;
+        text-align: center;
+
+        cursor: pointer;
+        overflow: hidden;
+        &:hover {
+          background-color: #DC6465;
+        }
+        &.disabled {
+          background-color: #f2f2f2;
+          color: #aaa;
+          cursor: default;
+
+          &:hover {
+            background-color: #f2f2f2;
+          }
+        }
+      }
+    }
+
+    .bed-list {
+      width: 95%;
+      margin: 0 auto;
+
+      .bed-framework {
+        padding: 10px;
+
+        .bed-info {
+          border: 1px solid @task-pois-theme-color;
+          background: #fff;
+
+          .name, .operator {
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+          }
+
+          .name {
+            border-bottom: 1px solid @task-pois-theme-color;
+          }
+          .operator {
+            border-top: 1px solid @task-pois-theme-color;
+
+            a {
+              text-decoration: none;
+              color: @button-warn-color;
+              cursor: pointer;
+              &:hover {
+                color: @button-warn-hover-color;
+              }
+
+            }
+            &.disabled {
+              a {
+                color: #999;
+                cursor: none;
+
+              }
+              &:hover a{
+                color: #999;
+              }
+            }
+          }
+
+          .set-area {
+            .set-label {
+              padding: 0px;
+              text-align: center;
+              .set-row {
+                background: @task-pois-theme-color;
+                color: #fff;
+              }
+            }
+            .set-row {
+              height: 33px;
+              line-height: 33px;
+
+              border-bottom: 1px solid @task-pois-theme-color;
+
+              &.no-border {
+                border-bottom: none;
+              }
+
+              &.sicker-name {
+                &.has {
+                  background: @task-pois-theme-light-color;
+                }
+                span {
+                  padding-left: 15px;
+                }
+              }
+            }
+            .no-padding {
+              padding: 0;
+            }
+
+            .set-row {
+              height: 34px !important;
+              .z-select-box {
+                padding-top: 0px;
+                padding-bottom: 0px;
+                border: none;
+                img {
+                  display: none;
+                }
+              }
+              &.selected {
+                .z-select-box {
+                  .selected {
+                    color: @task-pois-theme-color-filter-background;
+                  }
+                }
+              }
+              label {
+                margin: 0;
+                padding: 0;
+                height: 33px;
+
+                background: @task-pois-theme-color;
+                color: #fff;
+                line-height: 33px;
+                text-align: center;
+              }
+            }
+
+            .z-select-panel .z-select-ul li {
+              padding: 0 15px;
+              &:hover {
+                color: #fff;
+                background: @task-pois-theme-color-hover;
+              }
+            }
+
+          }
+        }
+      }
+
+    }
+  }
+}
+
+@media (max-width: 568px) {
+  .meal-setting-page-view {
+    width: 100%;
+    .search-bar {
+      .selects {
+        .time {
+          width: 100%;
+        }
+        .status {
+          width: 50%;
+        }
+        .discount {
+          width: 50%;
+        }
+
+        .search-item {
+
+          width: 100%;
+        }
+      }
+
+    }
+    .bed-list {
+      .bed-framework {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
+  }
+}
+
+
+
+

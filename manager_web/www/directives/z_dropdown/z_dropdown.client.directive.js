@@ -67,6 +67,9 @@ angular.module('EWeb').directive('zDropdown',
                         if (event) {
                             event.stopPropagation();
                         }
+                        if(option.disabled){
+                            return;
+                        }
                         scope.zDropdownModel = option;
                         $timeout(function () {
                             if (scope.zDropdownChange) {

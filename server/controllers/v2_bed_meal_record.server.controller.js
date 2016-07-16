@@ -55,15 +55,14 @@ exports.batchSaveBedMealRecords = function (req, res, next) {
       });
     },
     getMealTypeDic: function (autoCallback) {
-      mealTypeLogic.queryMealTypes(function (err, mealTypes) {
+      mealTypeLogic.queryMealTypes({}, function (err, mealTypes) {
         if (err) {
           return next(err);
         }
 
-
         var mealTypeDic = {};
         mealTypes.forEach(function (item) {
-          mealTypeDic[item.name] = item;
+          mealTypeDic[item._id.toString()] = item;
         });
 
         return autoCallback(null, mealTypeDic);
@@ -74,8 +73,9 @@ exports.batchSaveBedMealRecords = function (req, res, next) {
         results.getHospitalizedInfoDic,
         results.getMealTypeDic,
         req.building, req.floor,
+        mealSetDate,
         bedMealRecordInfos,
-        mealSetDate, function (err, result) {
+         function (err, result) {
           if (err) {
             return autoCallback(err);
           }
@@ -110,7 +110,7 @@ exports.getBedMealRecords = function (req, res, next) {
     }
 
     req.data = {
-      meal_bed_records: mealBedRecords
+      bed_meal_records: mealBedRecords
     };
     return next();
   });

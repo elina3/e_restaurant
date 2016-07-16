@@ -57,8 +57,15 @@ var BedMealRecordV2Schema = new Schema({
   meal_tag: {//breakfast, lunch, dinner
     type: String
   },
+  meal_type_id: {
+    type: String,
+    ref: 'MealType'
+  },
   meal_type_name: {//healthy_normal,liquid_diets,semi_liquid_diets,diabetic_diets,low_fat_low_salt_diets
     type: String
+  },
+  meal_type_price: {
+    type: Number
   },
   need_choose_package_meal: {
     type: String,

@@ -1,0 +1,114 @@
+<z-header></z-header>
+<div class="meal-setting-page-view">
+    <div class="ee-banner">
+        <div class="ee-wrapper">
+            <div class="row ee-title">
+                <div class="col-xs-6">
+                    <span class="ee-banner-back"  ng-hide="user.role==='nurse'"   ng-click="goBack()">< </span>
+                    <span class="ee-banner-content">营养餐设置</span>
+                </div>
+                <div class="col-xs-6">
+                    <div class="handle-button" ng-click="goBill()">
+                        <span>账单查询</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="meal-setting-page-body">
+        <div class="search-bar">
+            <div class="row selects">
+                <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentBuilding"
+                                z-dropdown-options="filter.buildings"
+                                z-dropdown-label="选择楼"
+                                z-dropdown-change="filter.changeBuilding()"
+                                z-dropdown-disabled="filter.buildings.length<=1"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item discount col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentFloor"
+                                z-dropdown-options="filter.floors"
+                                z-dropdown-label="选择楼层"
+                                z-dropdown-disabled="filter.floors.length===0"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item time  col-xs-2">
+                    <input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"
+                           ng-model="filter.timePanel.createTimeRange"
+                           min="filter.timePanel.createTimeMinTime"
+                           options="filter.timePanel.dateOptions"
+
+                           placeholder="点击选择时间"
+                            />
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="search" ng-click="search()">筛选</div>
+                </div>
+                <div class="filter-item search-item col-xs-2">
+                    <div class="bill" ng-class="{'disabled': timeout}" ng-click="saveMealSet()">生成账单</div>
+                </div>
+            </div>
+        </div>
+        <div class="bed-list row">
+            <div class="bed-framework col col-lg-2 col-md-4 col-sm-6 col-xs-12" ng-repeat="bed in filter.beds">
+                <div class="bed-info">
+                    <div class="name"><strong>{{bed.name}}</strong></div>
+                    <div class="set-area row">
+                        <div class="set-label col-xs-2">
+                            <div class="set-row no-padding">
+                                <label>病人</label>
+                            </div>
+                            <div class="set-row no-padding">
+                                <label>早</label>
+                            </div>
+                            <div class="set-row no-padding">
+                                <label>中</label>
+                            </div>
+                            <div class="set-row no-padding">
+                                <label>晚</label>
+                            </div>
+                        </div>
+                        <div class="set-item no-padding" ng-class="{'col-xs-10': bed.hospitalized_infos.length === 1, 'col-xs-5': bed.hospitalized_infos.length > 1}"
+                             ng-repeat="hospitalizedInfo in bed.hospitalized_infos">
+                            <div class="set-row sicker-name" ng-class="{'has': hospitalizedInfo.nickname}">
+                                <span>{{hospitalizedInfo.nickname || '无'}}</span>
+                            </div>
+                            <div class="set-row">
+                                <z-dropdown z-dropdown-model="hospitalizedInfo.breakfast"
+                                            z-dropdown-options="hospitalizedInfo.breakfastOptions"
+                                            z-dropdown-label="无"
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                </z-dropdown>
+                            </div>
+                            <div class="set-row">
+                                <z-dropdown z-dropdown-model="hospitalizedInfo.lunch"
+                                            z-dropdown-options="hospitalizedInfo.lunchOptions"
+                                            z-dropdown-label="无"
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                </z-dropdown>
+                            </div>
+                            <div class="set-row no-border">
+                                <z-dropdown z-dropdown-model="hospitalizedInfo.dinner"
+                                            z-dropdown-options="hospitalizedInfo.dinnerOptions"
+                                            z-dropdown-label="无"
+                                            z-dropdown-disabled = "timeout || !bed.hasSicker">
+                                </z-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="operator" ng-class="{'disabled': timeout || !bed.hasSicker}">
+                        <a>更换床位</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="ee-footer">
+    <span>技术支持：茼蒿科技</span>
+</div>

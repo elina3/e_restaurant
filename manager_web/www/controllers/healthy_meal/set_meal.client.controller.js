@@ -1,9 +1,6 @@
 /**
  * Created by elinaguo on 16/6/12.
  */
-/**
- * Created by elinaguo on 16/5/2.
- */
 'use strict';
 angular.module('EWeb').controller('SetMealController',
   ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedService', 'BedMealRecordService', 'HospitalizedInfoService', 'BedMealBillService', 'MealTypeConstant',

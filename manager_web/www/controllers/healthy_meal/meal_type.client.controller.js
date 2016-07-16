@@ -214,7 +214,7 @@ angular.module('EWeb').controller('MealTypeController',
         $scope.$emit(GlobalEvent.onShowLoading, true);
         MealTypeService.getMealTypes(function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if (err) {
+          if (err || !data || !data.meal_types) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
 

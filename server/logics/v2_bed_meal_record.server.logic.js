@@ -25,21 +25,23 @@ function formatBedMealRecordInfos(hospitalizedInfoDic, mealTypeDic, bedMealRecor
   }
 
   bedMealRecordInfo.mealBills = [];
-  if(!bedMealRecordInfo.mealTypeName){//如果选择无，或没有选择，mealBills变为空
+  if(!bedMealRecordInfo.mealTypeId){//如果选择无，或没有选择，mealBills变为空
     return callback();
   }
 
-  var mealType = mealTypeDic[bedMealRecordInfo.mealTypeName];
+  var mealType = mealTypeDic[bedMealRecordInfo.mealTypeId];
   if(!mealType){//如果选择了，餐种类型不存在出错
     return callback({err: bedMealRecordError.not_all_meal_type_exist});
   }
+  bedMealRecordInfo.mealType = mealType;
 
+  var mealPrice = publicLib.amountParse(mealType[bedMealRecordInfo.mealTag + '_price']);
+  bedMealRecordInfo.mealPrice = mealPrice;
   if(!mealType.need_choose_package_meal){//不是普通则待选
-    var mealPrice = publicLib.amountParse(mealType[bedMealRecordInfo.mealTag + '_price']);
     if(mealPrice < 0){
       return callback({err: bedMealRecordError.not_all_meal_type_has_price});
     }
-    bedMealRecordInfo.push(new PackageMealInfo({
+    bedMealRecordInfo.mealBills.push(new PackageMealInfo({
       name: mealType.name,
       price: mealPrice
     }));
@@ -82,7 +84,11 @@ function validMealRecordInfos(hospitalizedInfoDic, mealTypeDic, building, floor,
   });
 }
 
-exports.batchSaveBedMealRecord = function(user, hospitalizedInfoDic, mealTypeDic, building, floor, mealSetDate, bedMealRecordInfos, callback){
+exports.batchSaveBedMealRecord = function(user, hospitalizedInfoDic,
+                                          mealTypeDic,
+                                          building, floor,
+                                          mealSetDate, bedMealRecordInfos,
+                                          callback){
 
   validMealRecordInfos(hospitalizedInfoDic, mealTypeDic, building, floor, bedMealRecordInfos, mealSetDate, function(err){
     if(err){
@@ -97,7 +103,7 @@ exports.batchSaveBedMealRecord = function(user, hospitalizedInfoDic, mealTypeDic
         hospitalized_info: bedMealRecordInfo.hospitalizedInfo._id,  //同一个入住病人
         building: building._id,
         floor: floor._id,
-        bed: bed._id,                                               //同一个床位
+        bed: bedMealRecordInfo.bed_id,                                               //同一个床位
         meal_tag: bedMealRecordInfo.mealTag,                        //同一个饭点
         deleted_status: false
       };
@@ -113,12 +119,13 @@ exports.batchSaveBedMealRecord = function(user, hospitalizedInfoDic, mealTypeDic
           isNew = true;
         }
 
-        bedMealRecord.meal_type_name = bedMealRecordInfo.mealTypeName;
         bedMealRecord.need_choose_package_meal = bedMealRecordInfo.needChoosePackageMeal;
         bedMealRecord.meal_bills = bedMealRecordInfo.mealBills;
-        bedMealRecord.id_number = bedMealRecordInfo.hospitalized_info.id_number;
-        bedMealRecord.nickname = bedMealRecordInfo.hospitalized_info.nickname;
-        bedMealRecord.meal_type_name = bedMealRecordInfo.mealTypeName;
+        bedMealRecord.id_number = bedMealRecordInfo.hospitalizedInfo.id_number;
+        bedMealRecord.nickname = bedMealRecordInfo.hospitalizedInfo.nickname;
+        bedMealRecord.meal_type_id = bedMealRecordInfo.mealTypeId;
+        bedMealRecord.meal_type_name = bedMealRecordInfo.mealType.name;
+        bedMealRecord.meal_type_price = bedMealRecordInfo.mealPrice;
 
         bedMealRecord.save(function(err, newBedMealRecord){
           if(err || !newBedMealRecord){
@@ -134,7 +141,12 @@ exports.batchSaveBedMealRecord = function(user, hospitalizedInfoDic, mealTypeDic
         });
       });
     }, function(err){
-      return callback(err, {
+      if(err){
+        return callback(err);
+      }
+
+
+      return callback(null, {
         successCount: existCount + newCount,
         newCount: newCount,
         existCount: existCount

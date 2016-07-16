@@ -11,7 +11,10 @@ var authFilter = require('../filters/auth'),
 
 module.exports = function (app) {
   //营养餐设置页面保存
-  app.route('/v2/bed_meal_records/batch_save').post(authFilter.requireUser, bedFilter.requireBuilding,bedFilter.requireFloor,bedMealRecordController.batchSaveBedMealRecords);
+  app.route('/v2/bed_meal_records/batch_save').post(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
+    bedMealRecordController.batchSaveBedMealRecords);
 
 
   //根据条件获取订餐表内容 or //营养餐设置页面搜索结果
