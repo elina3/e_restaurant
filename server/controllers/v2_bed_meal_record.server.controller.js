@@ -184,7 +184,7 @@ exports.getBedMealRecordsByClient = function (req, res, next) {
   var dateTag = req.query.date_tag || 'today';//today,tomorrow
 
   var todayMealTimeSet = publicLib.parseToDate(new Date());
-  if (dateTag === 'today') {
+  if (dateTag === 'tomorrow') {
     todayMealTimeSet.setDate(todayMealTimeSet.getDate() + 1);
   }
   bedMealRecordLogic.getMealRecordsByClientBuildingFloors(req.building, req.floor, todayMealTimeSet, mealTag, function(err, bedMealRecords){
