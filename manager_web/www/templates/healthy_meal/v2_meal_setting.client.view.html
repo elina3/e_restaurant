@@ -99,7 +99,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="operator" ng-class="{'disabled': timeout || !bed.hasSicker}">
+                    <div class="operator" ng-class="{'disabled': timeout || !bed.hasSicker || hospitalizedInfo.is_checkout}">
                         <a>更换床位</a>
                     </div>
                 </div>
