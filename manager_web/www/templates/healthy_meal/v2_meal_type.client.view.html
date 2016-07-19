@@ -14,24 +14,6 @@
         <div class="search-bar">
             <div class="ee-wrapper">
                 <div class="row">
-                    <!--<div class="filter-item col-xs-3">-->
-                        <!--<input type="text" date-range-picker class="e-date-picker info-input date-picker dropdown"-->
-                               <!--ng-model="pageShow.createTimeRange"-->
-                               <!--min="pageShow.createTimeMinTime"-->
-                               <!--options="pageShow.dateOptions"-->
-
-                               <!--placeholder="点击选择时间"-->
-                                <!--/>-->
-                    <!--</div>-->
-                    <!--<div class="filter-item col-xs-3">-->
-                        <!--<z-dropdown z-dropdown-model="pageData.action"-->
-                                    <!--z-dropdown-options="pageData.actions"-->
-                                    <!--z-dropdown-label="请选择类型">-->
-                        <!--</z-dropdown>-->
-                    <!--</div>-->
-                    <!--<div class="filter-item col-xs-3">-->
-                        <!--<input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword"/>-->
-                    <!--</div>-->
                     <div class="filter-item col-xs-2">
                         <div class="search" ng-click="create()">添加</div>
                     </div>
@@ -140,15 +122,35 @@
                             <div class="info-item" ng-show="editPanel.currentMealType.need_choose_package_meal.id">
                                 <p class="info-title">套餐设置</p>
                                 <div class="row selects" ng-repeat="package in editPanel.currentMealType.package_meals">
-                                    <div class="filter-item col-xs-1"><label>{{$index + 1}}</label></div>
-                                    <div class="filter-item col-xs-5">
+                                    <div class="filter-item col-xs-1
+                                    "><label>{{$index + 1}}</label></div>
+                                    <div class="filter-item col-xs-3">
                                         <input class="input-text" type="text"  placeholder="请输入套餐名"
                                                ng-model="package.name"/>
                                     </div>
-                                    <div class="filter-item col-xs-4">
-                                        <input class="input-text" type="number" placeholder="请输入套餐价格（元）"
+                                    <div class="filter-item col-xs-3">
+                                        <input class="input-text" type="number" placeholder="输入价格（元）"
                                                ng-model="package.price"/>
                                     </div>
+                                    <!--<div class="filter-item col-xs-2 ee-photo-box">-->
+                                        <!--<div class="photo" ng-repeat="(k,v) in package.display_photos">-->
+                                            <!--<div class="closed" ng-click="abort(k,package.display_photos)"></div>-->
+                                            <!--<div class="image-container">-->
+                                                <!--<div class="image-item" ng-style="generateStyle(v.photo_key)"></div>-->
+                                            <!--</div>-->
+                                            <!--<ol ng-show="v.progress && v.progress.p!==100">-->
+                                                <!--<li>-->
+                                                    <!--正在上传......{{v.progress.p}}%-->
+                                                <!--</li>-->
+                                            <!--</ol>-->
+                                        <!--</div>-->
+                                        <!--<div class="photo_select"-->
+                                             <!--e-file-select="onFileSelect($files,package.display_photos)"-->
+                                             <!--data-multiple="true"-->
+                                             <!--title="添加图片">-->
+                                            <!--<p>点击添加图片</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
                                     <div class="filter-item col-sx-1">
                                         <a class="delete" ng-click="editPanel.currentMealType.deletePackage($index)">删除</a>
                                     </div>

@@ -4,8 +4,8 @@
 'use strict';
 
 angular.module('EWeb').controller('MealTypeController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'MealTypeService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, MealTypeService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'MealTypeService', 'Config', 'QiNiuService',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, MealTypeService, Config, QiNiuService) {
 
       $scope.mealTypes = [];
       $scope.goBack = function () {
@@ -226,4 +226,59 @@ angular.module('EWeb').controller('MealTypeController',
       }
 
       init();
+
+
+
+      //
+      ////<editor-fold desc="图片上传相关">
+      //function generalImgUrl(imgName) {
+      //  return Config.qiniuServerAddress + imgName;
+      //}
+      //
+      //function start(index, target) {
+      //  target[index].upload = QiNiuService.upload({
+      //    file: target[index].file,
+      //    token: $scope.pageConfig.qiniuToken
+      //  });
+      //  target[index].upload.then(function (response) {
+      //    target[index].img = generalImgUrl(response.key);
+      //    target[index].photo_key = response.key;
+      //  }, function (response) {
+      //  }, function (evt) {
+      //  });
+      //}
+      //
+      //$scope.onFileSelect = function ($files, target) {
+      //  if(!target){
+      //    target = [];
+      //  }
+      //  var offsetx = target.length;
+      //  for (var i = 0; i < $files.length; i++) {
+      //    target[i + offsetx] = {
+      //      file: $files[i]
+      //    };
+      //    start(i + offsetx, target);
+      //  }
+      //};
+      //
+      //$scope.abort = function (index, target) {
+      //  if (target[index].upload) {
+      //    //待修改的，非上传图片属性不会有这个属性
+      //    target[index].upload.abort();
+      //  }
+      //  target.splice(index, 1);
+      //};
+      ////</editor-fold>
+      //
+      //function generateUrl(src) {
+      //  return Config.qiniuServerAddress + src;
+      //}
+      //
+      //$scope.generateStyle = function (src) {
+      //  return {
+      //    'background': 'url(' + generateUrl(src) + ') no-repeat center top',
+      //    'background-size': 'cover'
+      //  };
+      //};
+
     }]);
