@@ -214,15 +214,15 @@ angular.module('EWeb').controller('MealBillController',
           meal_tag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
           status: $scope.filter.currentBillStatus ? $scope.filter.currentBillStatus.id : '',
           time_range: getTimeRangeString()
-        }, function (err, data) {
-          if (err || !data || !data.bed_meal_bills) {
+        }, function (err, result) {
+          if (err || !result || !result.bed_meal_bills) {
             return $scope.$emit(GlobalEvent.onShowAlert, err || '查询失败');
           }
 
-          var mealBills = data.bed_meal_bills.map(function (item) {
+          var mealBills = result.bed_meal_bills.map(function (item) {
             var billString = '';
             item.meal_bills.forEach(function(bill){
-              billString += (bill.name +'*'+ bill.count+',')
+              billString += (bill.name +'*'+ bill.count+',');
             });
             return {
               time_tag: new Date(item.meal_set_date).Format('yyyy-MM-dd') + ' ' + translateMealTag(item.meal_tag),

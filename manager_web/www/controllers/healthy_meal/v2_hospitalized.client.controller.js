@@ -127,12 +127,6 @@ angular.module('EWeb').controller('HospitalizedController',
       $scope.filter = {
         currentIdNumber: '',
         search: function () {
-          if (!this.currentIdNumber) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请输入身份证号');
-          }
-          if (!validIdNumber(this.currentIdNumber)) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请输入有效身份证号');
-          }
 
           $scope.$emit(GlobalEvent.onShowLoading, true);
           HospitalizedInfoService.searchHospitalizedInfoByIdNumber({
@@ -152,6 +146,7 @@ angular.module('EWeb').controller('HospitalizedController',
                   building: item.building,
                   floor: item.floor,
                   bed: item.bed,
+                  id_number: item.id_number,
                   nickname: item.nickname,
                   sex: item.sex,
                   phone: item.phone,
@@ -161,13 +156,6 @@ angular.module('EWeb').controller('HospitalizedController',
                   leave_hospital_time: item.leave_hospital_time
                 };
               });
-              if ($scope.hospitalized_infos.length > 0) {
-                $scope.id_number_info.hospitalized_info_id = $scope.hospitalized_infos[0]._id;
-                $scope.id_number_info.nickname = $scope.hospitalized_infos[0].nickname;
-                $scope.id_number_info.sex = $scope.hospitalized_infos[0].sex;
-                $scope.id_number_info.phone = $scope.hospitalized_infos[0].phone;
-              }
-
             }
 
             currentHospitalized = null;
@@ -176,33 +164,27 @@ angular.module('EWeb').controller('HospitalizedController',
         currentHospitalizedInfo: null
       };
       $scope.hospitalized_infos = [];
-      $scope.id_number_info = {
-        nickname: '',
-        sex: '',
-        phone: '',
-        transformSex: function (sexString) {
-          var result = '';
-          switch (sexString) {
-            case 'female':
-              result = '女';
-              break;
-            case 'male':
-              result = '男';
-              break;
-            case 'unknown':
-              result = '未知';
-              break;
-          }
-
-          return result;
-
-        }
-      };
       $scope.current_bills = [];
       $scope.current_bill_money = {
         paidAmount: 0,
         unPaidAmount: 0,
         prepareToPayAmount: 0
+      };
+      $scope.transformSex = function(sexString) {
+        var result = '';
+        switch (sexString) {
+          case 'female':
+            result = '女';
+            break;
+          case 'male':
+            result = '男';
+            break;
+          case 'unknown':
+            result = '未知';
+            break;
+        }
+
+        return result;
       };
 
       function getFloorsByBuilding(building, callback) {
@@ -308,7 +290,6 @@ angular.module('EWeb').controller('HospitalizedController',
       };
 
       function updateBills(data) {
-        var now = new Date();
         $scope.current_bill_money.paidAmount = 0;
         $scope.current_bill_money.unPaidAmount = 0;
 
@@ -355,6 +336,7 @@ angular.module('EWeb').controller('HospitalizedController',
 
         info.selected = true;
         $scope.pageConfig.currentHospitalizedInfo = info;
+
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
         MealRecordService.getHospitalizedBills({
