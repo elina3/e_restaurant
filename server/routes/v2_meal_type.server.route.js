@@ -4,8 +4,7 @@
 'use strict';
 var mealTypeController = require('../controllers/v2_meal_type');
 var authFilter = require('../filters/auth'),
-  mealTypeFilter = require('../filters/v2_meal_Type'),
-  bedFilter = require('../filters/bed');
+  mealTypeFilter = require('../filters/v2_meal_Type');
 
 module.exports = function (app) {
   //添加营养餐种类
