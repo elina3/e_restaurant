@@ -100,11 +100,12 @@ angular.module('EClientWeb').controller('HealthyMealController',
         }
       };
 
-      $scope.generatePhotoSrc = function (packageMeal) {
-        if (packageMeal && packageMeal.display_photos && packageMeal.display_photos.length > 0) {
-          return ResourcesService.getImageUrl(packageMeal.display_photos[0]);
+      $scope.generatePhotoSrc = function (displayPhoto) {
+        if(!displayPhoto){
+          return '';
         }
-        return '';
+
+        return ResourcesService.getImageUrl(displayPhoto);
       };
 
       $scope.goToView = function (viewPage, param) {

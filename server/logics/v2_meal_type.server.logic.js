@@ -51,14 +51,18 @@ function formatMealTypeInfo(mealTypeInfo, callback) {
     var invalidMeals = mealTypeInfo.package_meals.filter(function (item) {
       if (!item.name) {
         return true;
+      }
+
+      if(!item.display_photo){
+        return true;
+      }
+
+      item.name = item.name.Trim();
+      var price = publicLib.amountParse(item.price);
+      if (price >= 0) {
+        item.price = price;
       } else {
-        item.name = item.name.Trim();
-        var price = publicLib.amountParse(item.price);
-        if (price >= 0) {
-          item.price = price;
-        } else {
-          return true;
-        }
+        return true;
       }
     });
 
@@ -81,7 +85,8 @@ function formatMealTypeInfo(mealTypeInfo, callback) {
     var packageMealInfos = mealTypeInfo.package_meals.map(function (item) {
       return new PackageMealInfo({
         name: item.name,
-        price: item.price
+        price: item.price,
+        display_photo: item.display_photo
       });
     });
 

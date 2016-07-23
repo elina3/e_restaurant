@@ -53,12 +53,13 @@ angular.module('EWeb').controller('MealTypeController',
             this.currentMealType.dinner_price = mealType.dinner_price / 100;
             this.currentMealType.need_choose_package_meal = this.getNeedChoosePackageMeal(mealType);
             if(!mealType.need_choose_package_meal){
-              this.currentMealType.package_meals = [{name: '', price: ''}];
+              this.currentMealType.package_meals = [{name: '', price: '', display_photo: ''}];
             }else{
               this.currentMealType.package_meals = mealType.package_meals.map(function (item) {
                 return {
                   name: item.name,
-                  price: item.price / 100
+                  price: item.price / 100,
+                  display_photo: item.display_photo
                 };
               });
             }
@@ -108,6 +109,10 @@ angular.module('EWeb').controller('MealTypeController',
 
                 if (!item.name) {
                   message = '请输入第' + (i + 1) + '个套餐名称。';
+                }
+
+                if(!item.display_photo){
+                  message = '请选择第' + (i+1)+'个套餐的图片';
                 }
               }
               if (names.indexOf(item.name) === -1) {
@@ -229,56 +234,58 @@ angular.module('EWeb').controller('MealTypeController',
 
 
 
-      //
-      ////<editor-fold desc="图片上传相关">
-      //function generalImgUrl(imgName) {
-      //  return Config.qiniuServerAddress + imgName;
-      //}
-      //
-      //function start(index, target) {
-      //  target[index].upload = QiNiuService.upload({
-      //    file: target[index].file,
-      //    token: $scope.pageConfig.qiniuToken
-      //  });
-      //  target[index].upload.then(function (response) {
-      //    target[index].img = generalImgUrl(response.key);
-      //    target[index].photo_key = response.key;
-      //  }, function (response) {
-      //  }, function (evt) {
-      //  });
-      //}
-      //
-      //$scope.onFileSelect = function ($files, target) {
-      //  if(!target){
-      //    target = [];
-      //  }
-      //  var offsetx = target.length;
-      //  for (var i = 0; i < $files.length; i++) {
-      //    target[i + offsetx] = {
-      //      file: $files[i]
-      //    };
-      //    start(i + offsetx, target);
-      //  }
-      //};
-      //
-      //$scope.abort = function (index, target) {
-      //  if (target[index].upload) {
-      //    //待修改的，非上传图片属性不会有这个属性
-      //    target[index].upload.abort();
-      //  }
-      //  target.splice(index, 1);
-      //};
-      ////</editor-fold>
-      //
-      //function generateUrl(src) {
-      //  return Config.qiniuServerAddress + src;
-      //}
-      //
-      //$scope.generateStyle = function (src) {
-      //  return {
-      //    'background': 'url(' + generateUrl(src) + ') no-repeat center top',
-      //    'background-size': 'cover'
-      //  };
-      //};
+
+      //<editor-fold desc="图片上传相关">
+
+      var qiniuToken = '';
+      function getQiniuToken(callback){
+       if(qiniuToken){
+         return callback(null, qiniuToken);
+       }
+
+        QiNiuService.qiNiuKey(function(err, data){
+          if(err){
+            console.log(err);
+            return callback('无法获取图片上传凭证');
+          }
+
+          qiniuToken = data.token;
+          return callback(null, qiniuToken);
+        });
+
+      }
+
+      $scope.deleteDisplayPhoto = function(packageMeal){
+        packageMeal.display_photo = '';
+      };
+
+      $scope.onFileSelect = function (files, packageMeal) {
+        files = files || [];
+        if(files.length === 0){
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择图片');
+        }
+
+        getQiniuToken(function(err, token){
+          if(err){
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          QiNiuService.upload({
+            file: files[0],
+            token: token
+          }).then(function(response){
+            packageMeal.display_photo = response.key;
+          });
+        });
+      };
+
+      $scope.generateStyle = function (key) {
+        return {
+          'background': 'url(' + Config.qiniuServerAddress + key + ') no-repeat center top',
+          'background-size': 'cover'
+        };
+      };
+
+      //</editor-fold>
 
     }]);

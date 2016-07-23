@@ -23,6 +23,9 @@ var PackageMealInfoSchema = new Schema({
   },
   price: {
     type: Number//分
+  },
+  display_photo: {
+    type: String
   }
 });
 appDb.model('PackageMealInfo', PackageMealInfoSchema);

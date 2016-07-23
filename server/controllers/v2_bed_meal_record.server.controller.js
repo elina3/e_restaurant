@@ -258,10 +258,6 @@ exports.saveBedMealRecord = function (req, res, next) {
     return next({err: bedMealRecordError.invalid_package_meals});
   }
 
-  if (packageMeals.length !== req.meal_type.package_meals.length) {
-    return next({err: bedMealRecordError.wrong_package_meal_count});
-  }
-
   var selectedPackageMeals = [];
   packageMeals.forEach(function (item) {
     if (item.selected) {
