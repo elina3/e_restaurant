@@ -15,17 +15,17 @@ angular.module('EWeb').controller('MealSettingController',
 
       function updateTimeout(timeStamp) {
         var today = getNowTimeStamp();
-        if (today > timeStamp) {
-          $scope.disableChange = true;
-          $scope.timeout = true;
-        } else {
-          if(today < timeStamp){
-            $scope.disableChange = true;
-          }else{
-            $scope.disableChange = false;
-          }
-          $scope.timeout = false;
-        }
+        //if (today > timeStamp) {
+        //  $scope.disableChange = true;
+        //  $scope.timeout = true;
+        //} else {
+        //  if(today < timeStamp){
+        //    $scope.disableChange = true;
+        //  }else{
+        $scope.disableChange = false;
+        //  }
+        $scope.timeout = false;
+        //}
       }
 
       //</editor-fold>
@@ -108,7 +108,7 @@ angular.module('EWeb').controller('MealSettingController',
         currentHospitalizedInfo: null,
         messageTip: '',
         show: function (bed, hospitalizedInfo) {
-          if($scope.disableChange){
+          if ($scope.disableChange) {
             return;
           }
 
@@ -190,8 +190,8 @@ angular.module('EWeb').controller('MealSettingController',
             });
           }
         },
-        changeFloor: function(){
-          if(this.newBedInfo.building && this.newBedInfo.floor){
+        changeFloor: function () {
+          if (this.newBedInfo.building && this.newBedInfo.floor) {
             var that = this;
             BedService.getBedsByFloorId(this.newBedInfo.floor.id, function (err, data) {
               if (err || !data || !data.beds) {
@@ -329,9 +329,15 @@ angular.module('EWeb').controller('MealSettingController',
               }
 
               var mealType = {
-                id: record.meal_type_id,
-                text: (record.meal_type_name + '(' + (record.meal_type_price / 100) + ')')
+                id: '',
+                text: '无'
               };
+              if(record.meal_type_id){
+                mealType = {
+                  id: record.meal_type_id,
+                  text: (record.meal_type_name + '(' + (record.meal_type_price / 100) + ')')
+                };
+              }
               var currentHospitalizedInfo = bed.hospitalized_infos[index];
               currentHospitalizedInfo.is_checkout = record.is_checkout;
               currentHospitalizedInfo[record.meal_tag] = mealType;
@@ -489,7 +495,7 @@ angular.module('EWeb').controller('MealSettingController',
         $window.history.back();
       };
 
-      $scope.goBill = function(){
+      $scope.goBill = function () {
         $state.go('meal_bill');
       };
 
@@ -537,5 +543,6 @@ angular.module('EWeb').controller('MealSettingController',
           }
         });
       }
+
       init();
     }]);
