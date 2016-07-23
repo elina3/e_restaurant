@@ -26,14 +26,7 @@ exports.addNewHospitalizedInfo = function (req, res, next) {
 
 
 exports.queryHospitalizedInfoByIdNumber = function (req, res, next) {
-  var idNumber = req.query.id_number || '';
-  var nickname = req.query.nickname || '';
-
-  if (!idNumber && !nickname) {
-    return next({err: systemError.param_null_error});
-  }
-
-  hospitalizedLogic.queryHospitalizedInfoByIdNumber({idNumber: idNumber, nickname: nickname}, function (err, hospitalizedInfos) {
+  hospitalizedLogic.queryHospitalizedInfoByIdNumber({idNumber: req.query.id_number || ''}, function (err, hospitalizedInfos) {
     if (err) {
       return next(err);
     }

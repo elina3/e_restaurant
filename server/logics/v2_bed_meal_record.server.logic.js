@@ -238,6 +238,42 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
   });
 };
 
+exports.getMealBills = function(filter, callback) {
+  var query = {
+    deleted_status: false
+  };
+
+  filter = filter || {};
+
+  if (filter.startTime && filter.endTime) {
+    query.$and = [{meal_set_date: {$gte: filter.startTime}}, {meal_set_date: {$lte: filter.endTime}}];
+  }
+
+  if (filter.mealTag) {
+    query.meal_tag = filter.mealTag;
+  }
+
+  if (filter.mealTypeId && mongoLib.isObjectId(filter.mealTypeId)) {
+    query.meal_type_id = mongoLib.generateNewObjectId(filter.mealTypeId);
+  }
+
+  if (filter.idNumber) {
+    query.id_number = {$regex: filter.idNumber, $options: '$i'};
+  }
+
+  BedMealRecord.find(query)
+    .sort({floor: -1})
+    .populate('building floor bed')
+    .exec(function (err, bedMealRecords) {
+      if (err || !bedMealRecords) {
+        return callback({err: systemError.database_query_error});
+      }
+
+
+      return callback(null, bedMealRecords);
+    });
+};
+
 exports.getMealBillByHospitalizedId = function (filter, pagination, callback) {
 
 
@@ -418,115 +454,34 @@ exports.getBedMealRecordsById = function (id, callback) {
   });
 };
 
-exports.generateNewRecordsByOneBedMealRecord = function (mealSetDate, oldHospitalizedInfoId, building, floor, bed, newHospitalizedInfo, callback) {
 
-  BedMealRecord.find({
-    meal_set_date: mealSetDate,
-    hospitalized_info: oldHospitalizedInfoId,
-    building: building._id,
-    floor: floor._id,
-    bed: bed._id,
-    is_checkout: false,
+exports.modifyMealRecordBed = function(user, mealSetDate, hospitalizedInfoId, newBedInfo, callback){
+  var query = {
+    meal_set_date: {$gte: mealSetDate},
+    hospitalized_info: hospitalizedInfoId,
     deleted_status: false
-  }).exec(function (err, bedMealRecords) {
-    if (err) {
+  };
+
+  BedMealRecord.find(query).exec(function(err, bedMealRecords){
+    if(err || !bedMealRecords){
       return callback({err: systemError.database_query_error});
     }
 
-    var newRecords = [];
-    async.each(bedMealRecords, function (oldBedMealRecord, eachCallback) {
-      //todo 验证新的记录有没有存在
-      var bedMealRecord = new BedMealRecord({
-        meal_set_date: oldBedMealRecord.meal_set_date,              //同一天
-        hospitalized_info: newHospitalizedInfo._id,                 //同一个入住病人
-        building: bed.building_id,
-        floor: bed.floor_id,
-        bed: bed._id,                                               //同一个床位
-        meal_tag: oldBedMealRecord.mealTag,                        //同一个饭点
-        deleted_status: false
-      });
-      bedMealRecord.save(function (err, newBedMealRecord) {
-        if (err || !newBedMealRecord) {
+    var count = 0;
+    async.each(bedMealRecords, function(bedMealRecord, eachCallback){
+      bedMealRecord.building = newBedInfo.building_id;
+      bedMealRecord.floor = newBedInfo.floor_id;
+      bedMealRecord.bed = newBedInfo._id;
+      bedMealRecord.change_user = user._id;
+      bedMealRecord.save(function(err, newBedMealRecord){
+        if(err || !newBedMealRecord){
           return eachCallback({err: systemError.database_save_error});
         }
-
-        oldBedMealRecord.deleted_status = false;
-        oldBedMealRecord.save(function (err, saved) {
-          if (err || !saved) {
-            return eachCallback({err: systemError.database_save_error});
-          }
-
-          newRecords.push(newBedMealRecord);
-          return eachCallback();
-        });
+        count++;
+        return eachCallback();
       });
-    }, function (err) {
-      if (err) {
-
-        return callback(err);
-      }
-
-      return callback(null, newRecords);
+    }, function(err){
+      return callback(err, count);
     });
-  });
-
-};
-
-exports.swapBedMealRecordsByOneBedMealRecord = function (mealSetDate, hospitalizedInfo, distHospitalizedInfo, callback) {
-  async.auto({
-    updateSelfBedMealRecords: function (autoCallback) {
-      BedMealRecord.find({
-        meal_set_date: {$glt: mealSetDate},
-        hospitalized_info: hospitalizedInfo._id,
-        deleted_status: false
-      }).exec(function (err, bedMealRecords) {
-        if (err) {
-          return autoCallback({err: systemError.database_query_error});
-        }
-
-        async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
-          bedMealRecord.building = distHospitalizedInfo.building;
-          bedMealRecord.floor = distHospitalizedInfo.floor;
-          bedMealRecord.bed = distHospitalizedInfo.bed;
-          bedMealRecord.save(function (err, newBedMealRecord) {
-            if (err || !newBedMealRecord) {
-              return eachCallback({err: systemError.database_save_error});
-            }
-
-            return eachCallback(null, newBedMealRecord);
-          });
-        }, function (err) {
-          return autoCallback(err);
-        });
-      });
-    },
-    updateDistBedMealRecords: function (autoCallback) {
-      BedMealRecord.find({
-        meal_set_date: {$glt: mealSetDate},
-        hospitalized_info: distHospitalizedInfo._id,
-        deleted_status: false
-      }).exec(function (err, bedMealRecords) {
-        if (err) {
-          return autoCallback({err: systemError.database_query_error});
-        }
-
-        async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
-          bedMealRecord.building = hospitalizedInfo.building;
-          bedMealRecord.floor = hospitalizedInfo.floor;
-          bedMealRecord.bed = hospitalizedInfo.bed;
-          bedMealRecord.save(function (err, newBedMealRecord) {
-            if (err || !newBedMealRecord) {
-              return eachCallback({err: systemError.database_save_error});
-            }
-
-            return eachCallback(null, newBedMealRecord);
-          });
-        }, function (err) {
-          return autoCallback(err);
-        });
-      });
-    }
-  }, function (err) {
-    return callback(err);
   });
 };

@@ -70,6 +70,9 @@
                             <div class="set-row no-padding">
                                 <label>晚</label>
                             </div>
+                            <div class="set-row no-padding" ng-class="{'red': !timeout && bed.hasSicker && !hospitalizedInfo.is_checkout, 'gray': timeout || !bed.hasSicker || hospitalizedInfo.is_checkout || disableChange}">
+                                <label>操作</label>
+                            </div>
                         </div>
                         <div class="set-item no-padding" ng-class="{'col-xs-10': bed.hospitalized_infos.length === 1, 'col-xs-5': bed.hospitalized_infos.length > 1}"
                              ng-repeat="hospitalizedInfo in bed.hospitalized_infos">
@@ -90,22 +93,86 @@
                                             z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
-                            <div class="set-row no-border">
+                            <div class="set-row">
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.dinner"
                                             z-dropdown-options="hospitalizedInfo.dinnerOptions"
                                             z-dropdown-label="无"
                                             z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
+                            <div class="set-row operator no-border" ng-class="{'disabled': timeout || !bed.hasSicker || hospitalizedInfo.is_checkout || disableChange}">
+                                <a ng-click="changeBedPanel.show(bed, hospitalizedInfo)">更换床位</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="operator" ng-class="{'disabled': timeout || !bed.hasSicker || hospitalizedInfo.is_checkout}">
-                        <a>更换床位</a>
                     </div>
                 </div>
             </div>
 
 
+        </div>
+    </div>
+
+    <div class="ee-pop-mask" ng-show="changeBedPanel.isShow">
+        <div class="ee-pop-wrapper">
+            <div class="ee-pop-panel" ng-show="changeBedPanel.isShow">
+                <div class="ee-pop-header">
+                    <div class="ee-pop-title">
+                        <span>更换床位</span>
+
+                        <div class="close" ng-click="changeBedPanel.hide()"></div>
+                    </div>
+                </div>
+                <div class="ee-pop-body">
+                    <div class="change-bed-panel">
+                        <div class="info-item">
+                            <p class="info-title">当前病人信息</p>
+                            <div class="row">
+                                <div class="filter-item col-xs-2"><span>{{changeBedPanel.currentHospitalizedInfo.nickname}}</span></div>
+                                <div class="filter-item col-xs-4"><span>{{changeBedPanel.currentHospitalizedInfo.id_number}}</span></div>
+                                <div class="filter-item col-xs-2"><span>{{filter.currentFloor.text}},{{changeBedPanel.currentBedInfo.name}}</span></div>
+                            </div>
+                        </div>
+                        <div class="info-item bed-info">
+                            <p class="info-title">更换床位到</p>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="changeBedPanel.newBedInfo.building"
+                                            z-dropdown-options="changeBedPanel.buildings"
+                                            z-dropdown-label="选择楼"
+                                            z-dropdown-change="changeBedPanel.changeBuilding()"
+                                            z-dropdown-disabled="changeBedPanel.buildings.length<=1"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="changeBedPanel.newBedInfo.floor"
+                                            z-dropdown-options="changeBedPanel.floors"
+                                            z-dropdown-label="选择楼层"
+                                            z-dropdown-change="changeBedPanel.changeFloor()"
+                                            z-dropdown-disabled="changeBedPanel.floors.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                            <div class="info-detail">
+                                <z-dropdown z-dropdown-model="changeBedPanel.newBedInfo.bed"
+                                            z-dropdown-options="changeBedPanel.beds"
+                                            z-dropdown-label="选择床位"
+                                            z-dropdown-disabled="changeBedPanel.beds.length===0"
+                                        >
+                                </z-dropdown>
+                            </div>
+                        </div>
+                        <form>
+                            <div class="handle">
+                                <strong>{{changeBedPanel.messageTip}}</strong>
+                                <button class="save" ng-click="changeBedPanel.save()">保存</button>
+                                <button class="reset" ng-click="changeBedPanel.reset()">重置</button>
+                                <button class="submit-button" ng-click="changeBedPanel.save()" type="submit">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>

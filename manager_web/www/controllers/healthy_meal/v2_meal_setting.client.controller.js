@@ -7,6 +7,7 @@ angular.module('EWeb').controller('MealSettingController',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedService, MealRecordService, HospitalizedInfoService, MealTypeService) {
       //<editor-fold desc="更新当前时间">
       $scope.timeout = true;
+      $scope.disableChange = false;
       function getNowTimeStamp() {
         var timeDate = new Date(new Date().toLocaleDateString() + ' 23:59:59');
         return new Date(timeDate).getTime();
@@ -15,8 +16,14 @@ angular.module('EWeb').controller('MealSettingController',
       function updateTimeout(timeStamp) {
         var today = getNowTimeStamp();
         if (today > timeStamp) {
+          $scope.disableChange = true;
           $scope.timeout = true;
         } else {
+          if(today < timeStamp){
+            $scope.disableChange = true;
+          }else{
+            $scope.disableChange = false;
+          }
           $scope.timeout = false;
         }
       }
@@ -31,6 +38,7 @@ angular.module('EWeb').controller('MealSettingController',
         dinner: [defaultOption]
       };
 
+      var defaultBuilding = null;
       $scope.filter = {
         currentBuilding: null,
         currentFloor: null,
@@ -84,6 +92,123 @@ angular.module('EWeb').controller('MealSettingController',
           }
         }
       };
+
+
+      $scope.changeBedPanel = {
+        isShow: false,
+        buildings: [],
+        floors: [],
+        beds: [],
+        newBedInfo: {
+          building: null,
+          floor: null,
+          bed: null
+        },
+        currentBedInfo: null,
+        currentHospitalizedInfo: null,
+        messageTip: '',
+        show: function (bed, hospitalizedInfo) {
+          if($scope.disableChange){
+            return;
+          }
+
+          this.isShow = true;
+          this.currentBedInfo = bed;
+          this.currentHospitalizedInfo = hospitalizedInfo;
+
+          this.newBedInfo.building = defaultBuilding;
+        },
+        hide: function () {
+          this.isShow = false;
+          this.reset();
+        },
+        saveValid: function () {
+          this.messageTip = '';
+          if (!this.newBedInfo.floor) {
+            this.messageTip = '请选择楼';
+            return false;
+          }
+          if (!this.newBedInfo.bed) {
+            this.messageTip = '请选择床位';
+            return false;
+          }
+          return true;
+        },
+        reset: function () {
+          this.beds = [];
+          this.newBedInfo.building = defaultBuilding;
+          this.newBedInfo.floor = null;
+          this.newBedInfo.bed = null;
+          this.messageTip = '';
+        },
+        save: function () {
+          var isSuccess = this.saveValid();
+          if (!isSuccess) {
+            return;
+          }
+
+          var timeStamp = $scope.filter.getTimeStamp();
+          if (!timeStamp) {
+            return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
+          }
+
+          var that = this;
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          MealRecordService.changeBed({
+            bed_id: this.newBedInfo.bed.id,
+            hospitalized_info_id: this.currentHospitalizedInfo._id,
+            meal_set_time_stamp: timeStamp
+          }, function (err, data) {
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            if (err) {
+              $scope.$emit(GlobalEvent.onShowAlert, err || '保存失败');
+              return;
+            }
+
+            if (data.success) {
+              $scope.$emit(GlobalEvent.onShowAlert, '保存成功');
+              that.reset();
+              that.hide();
+              $scope.search();
+            }
+          });
+        },
+        changeBuilding: function () {
+          if (this.currentBuilding) {
+            var that = this;
+            BedService.getFloorsByBuildingId(that.currentBuilding.id, function (err, data) {
+              if (data && data.floors) {
+                that.floors = [];
+
+                data.floors.forEach(function (floor) {
+                  that.floors.push({
+                    id: floor._id,
+                    text: floor.name
+                  });
+                });
+              }
+            });
+          }
+        },
+        changeFloor: function(){
+          if(this.newBedInfo.building && this.newBedInfo.floor){
+            var that = this;
+            BedService.getBedsByFloorId(this.newBedInfo.floor.id, function (err, data) {
+              if (err || !data || !data.beds) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '获取床位信息失败');
+              }
+
+              that.beds = data.beds.map(function (item) {
+                return {
+                  id: item._id,
+                  text: item.name
+                };
+              });
+            });
+          }
+        }
+      };
+
       function getBedByInfoBedId(bedId) {
         return $scope.filter.beds.filter(function (item) {
           return item.id === bedId;
@@ -374,10 +499,15 @@ angular.module('EWeb').controller('MealSettingController',
             $scope.filter.buildings = [];
             data.buildings.forEach(function (building) {
               $scope.filter.buildings.push({id: building._id, text: building.name});
+              $scope.changeBedPanel.buildings.push({id: building._id, text: building.name});
             });
 
-            $scope.filter.currentBuilding = $scope.filter.buildings[0];
+            defaultBuilding = $scope.filter.buildings[0];
+            $scope.filter.currentBuilding = defaultBuilding;
+            $scope.changeBedPanel.currentBuilding = defaultBuilding;
+
             $scope.filter.changeBuilding();
+            $scope.changeBedPanel.changeBuilding();
           }
         });
         MealTypeService.getMealTypes(function (err, data) {
@@ -407,6 +537,5 @@ angular.module('EWeb').controller('MealSettingController',
           }
         });
       }
-
       init();
     }]);

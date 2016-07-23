@@ -118,11 +118,11 @@ angular.module('EWeb').controller('HospitalizedInfoController',
       $scope.filter = {
         currentIdNumber: '',
         search: function () {
-          if (!this.currentIdNumber) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请输入身份证号');
-          }
-          if (!validIdNumber(this.currentIdNumber)) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请输入有效身份证号');
+          //if (!this.currentIdNumber) {
+          //  return $scope.$emit(GlobalEvent.onShowAlert, '请输入身份证号');
+          //}
+          if (this.currentIdNumber && !validIdNumber(this.currentIdNumber)) {
+            return $scope.$emit(GlobalEvent.onShowAlert, '请输入有效身份证号');
           }
 
           $scope.$emit(GlobalEvent.onShowLoading, true);

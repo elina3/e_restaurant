@@ -144,6 +144,30 @@ exports.getBedMealRecordsByPagination = function (req, res, next) {
   });
 };
 
+exports.getMealBills = function(req, res, next){
+  var timeRange = JSON.parse(req.query.time_range) || {};
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  bedMealRecordLogic.getMealBills({
+    mealTag: req.query.meal_tag || '',
+    mealTypeId: req.query.meal_type_id || '',
+    idNumber: req.query.id_number || '',
+    startTime: publicLib.parseToDate(startTime),
+    endTime: publicLib.parseToDate(endTime)
+  }, function (err, bedMealRecords) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      bed_meal_bills: bedMealRecords
+    };
+    return next();
+  });
+};
+
 //获取病人账单
 exports.getMealBillByHospitalizedId = function (req, res, next) {
 
@@ -269,55 +293,15 @@ exports.saveBedMealRecord = function (req, res, next) {
   });
 };
 
-//换到新的床位
-exports.changeToNewBed = function (req, res, next) {
-  if (req.dist_hospitalized_info) {
-    return next({err: bedMealRecordError.the_bed_has_been_hospitalized});
-  }
-
-  var dateTimeStamp = req.body.meal_set_time_stamp;
-  var time = new Date();
-  if (dateTimeStamp) {
-    time = new Date(parseInt(dateTimeStamp));
-  }
-  var mealSetDate = publicLib.parseToDate(time);
-
-  async.auto({
-    newHospitalizedInfo: function (autoCallback) {
-      hospitalizedInfoLogic.changeToNewBed(req.hospitalized_info, req.bed, function (err, newHospitalizedInfo) {
-        if (err) {
-          return autoCallback(err);
-        }
-
-        return autoCallback(null, newHospitalizedInfo);
-      });
-    },
-    generateNewBedMealRecords: ['newHospitalizedInfo', function (autoCallback, results) {
-      bedMealRecordLogic.generateNewRecordsByOneBedMealRecord(mealSetDate, req.hospitalized_info._id, req.building, req.floor, req.bed, results.newHospitalizedInfo, function (err, newBedMealRecord) {
-        if (err) {
-          return autoCallback(err);
-        }
-
-        return autoCallback(null, newBedMealRecord);
-      });
-    }]
-  }, function (err, results) {
-    if (err) {
-      return next(err);
-    }
-
-    req.data = {
-      new_bed_meal_records: results.generateNewBedMealRecords
-    };
-    return next();
-  });
+exports.validNewBedInfo = function(req, res, next){
+  req.data = {
+    hospitalized_info: req.hospitalized_info
+  };
+  return next();
 };
 
 //交换床位
-exports.swapBed = function (req, res, next) {
-  if (!req.dist_hospitalized_info) {
-    return next({err: bedMealRecordError.the_bed_has_no_sicker});
-  }
+exports.changeBed = function(req, res, next){
   var dateTimeStamp = req.body.meal_set_time_stamp;
   var time = new Date();
   if (dateTimeStamp) {
@@ -325,37 +309,70 @@ exports.swapBed = function (req, res, next) {
   }
   var mealSetDate = publicLib.parseToDate(time);
 
-  async.auto({
-    swapBedMealRecords: ['newHospitalizedInfo', function (autoCallback, results) {
-      bedMealRecordLogic.swapBedMealRecordsByOneBedMealRecord(
-        mealSetDate,
-        req.hospitalized_info,
-        req.dist_hospitalized_info, function (err) {
-          if (err) {
-            return autoCallback(err);
-          }
+  var currentBedInfo = {
+    _id: req.hospitalized_info.bed,
+    floor_id: req.hospitalized_info.floor,
+    building_id: req.hospitalized_info.building
+  };
+  var newBedInfo = {
+    _id: req.bed._id,
+    floor_id: req.bed.floor_id,
+    building_id: req.bed.building_id
+  };
 
-          return autoCallback();
-        });
+  async.auto({
+    modifyCurrentRecordInfo: function(autoCallback, results){
+      //修改旧床位该时间段之后的记录
+      bedMealRecordLogic.modifyMealRecordBed(req.user, mealSetDate, req.hospitalized_info._id, newBedInfo, function(err, count){
+        return autoCallback(err, count);
+      });
+    },
+    modifyCurrentHospitalizedInfo: ['modifyCurrentRecordInfo',function(autoCallback){
+      hospitalizedInfoLogic.modifyHospitalizedInfoBed(req.user, req.hospitalized_info, newBedInfo, function(err, newHospitalizedInfo){
+        return autoCallback(err, newHospitalizedInfo);
+      });
     }],
-    swapHospitalizedBed: ['swapBedMealRecords', function (autoCallback) {
-      hospitalizedInfoLogic.swapBed(req.hospitalized_info, req.dist_hospitalized_info, function (err, result) {
-        if (err) {
+    distHospitalizedInfo: function(autoCallback){
+      var bedId = req.body.bed_id;
+      hospitalizedInfoLogic.getHospitalizedInfoByBedId(bedId, function(err, hospitalizedInfo){
+        if(err){
           return autoCallback(err);
         }
 
-        return autoCallback(null, result);
+        return autoCallback(null, hospitalizedInfo);
+      });
+    },
+    modifyNewRecordInfo: ['distHospitalizedInfo',function(autoCallback, results){
+      if(!results.distHospitalizedInfo){
+        return autoCallback();
+      }
+
+      bedMealRecordLogic.modifyMealRecordBed(req.user, mealSetDate, results.distHospitalizedInfo._id, currentBedInfo, function(err, count){
+        return autoCallback(err, count);
       });
     }],
-  }, function (err, results) {
-    if (err) {
-      return next(err);
+    modifyNewHospitalizedInfo: ['distHospitalizedInfo', 'modifyNewRecordInfo', function(autoCallback, results){
+      if(!results.distHospitalizedInfo){
+        return autoCallback();
+      }
+
+      hospitalizedInfoLogic.modifyHospitalizedInfoBed(req.user, results.distHospitalizedInfo, currentBedInfo, function(err, newHospitalizedInfo){
+        return autoCallback(err, newHospitalizedInfo);
+      });
+    }]
+  }, function(err){
+    if(err){
+      return next();
     }
 
     req.data = {
       success: true
     };
-    return next();
+    return  next();
   });
 };
 
+
+exports.exportBedBill = function(req, res, next){
+
+};

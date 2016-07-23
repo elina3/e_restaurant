@@ -126,37 +126,11 @@
           border: 1px solid @task-pois-theme-color;
           background: #fff;
 
-          .name, .operator {
+          .name{
             height: 30px;
             line-height: 30px;
             text-align: center;
-          }
-
-          .name {
             border-bottom: 1px solid @task-pois-theme-color;
-          }
-          .operator {
-            border-top: 1px solid @task-pois-theme-color;
-
-            a {
-              text-decoration: none;
-              color: @button-warn-color;
-              cursor: pointer;
-              &:hover {
-                color: @button-warn-hover-color;
-              }
-
-            }
-            &.disabled {
-              a {
-                color: #999;
-                cursor: none;
-
-              }
-              &:hover a{
-                color: #999;
-              }
-            }
           }
 
           .set-area {
@@ -166,6 +140,22 @@
               .set-row {
                 background: @task-pois-theme-color;
                 color: #fff;
+                &.red{
+                  border: 0;
+                  background: @button-warn-color;
+                  label{
+                    background: @button-warn-color;
+                  }
+                }
+                &.gray {
+                  border: 0;
+                  background: #f2f2f2;
+
+                  label{
+                    background: #f2f2f2;
+                    color: #5B6A7D;
+                  }
+                }
               }
             }
             .set-row {
@@ -184,6 +174,32 @@
                 }
                 span {
                   padding-left: 15px;
+                }
+              }
+            }
+
+            .operator {
+
+              height: 33px;
+              line-height: 33px;
+              text-align: center;
+              a {
+                text-decoration: none;
+                color: @button-warn-color;
+                cursor: pointer;
+                &:hover {
+                  color: @button-warn-hover-color;
+                }
+
+              }
+              &.disabled {
+                a {
+                  color: #999;
+                  cursor: none;
+
+                }
+                &:hover a{
+                  color: #999;
                 }
               }
             }
@@ -232,6 +248,107 @@
         }
       }
 
+    }
+  }
+
+
+  .ee-pop-mask .ee-pop-wrapper .ee-pop-panel .ee-pop-header{
+    background: @task-list-theme-color !important;
+  }
+
+  .change-bed-panel{
+    padding: 0 20px;
+    .search-bar{
+      width: 100%;
+      margin: 0;
+      padding:0;
+
+      .filter-item{
+        margin: 0 0 10px 0;
+      }
+    }
+    .info-item{
+      margin-top: 20px;
+      &.bed-info{
+        height: 60px;
+      }
+      .row{
+        padding: 0;
+        cursor: pointer;
+      }
+      .info-title{
+        display: block;
+        height: 20px;
+        line-height: 20px;
+        font-size: 16px;
+      }
+      .info-detail{
+        display: inline-block;
+        float: left;
+
+        width: 25%;
+        margin-right: 5%;
+        height: 40px;
+        line-heigth: 40px;
+
+        label{
+          font-weight: normal;
+          color: #666;
+          font-size: 14px;
+        }
+        input{
+          margin-left: 5px;
+        }
+        .z-select-panel{
+          z-index: 2001;
+        }
+      }
+    }
+
+    .handle{
+      overflow: hidden;
+      margin: 10px auto;
+
+      strong{
+        color: @button-warn-color;
+        line-height: 40px;
+      }
+
+      button{
+        display: inline-block;
+        overflow: hidden;
+        float: right;
+
+        width: 150px;
+        height: 40px;
+        line-height: 40px;
+
+        font-size: 14px;
+        outline: none;
+        border: none;
+        text-align: center;
+        &.save{
+          color: #fff;
+          background: @task-list-theme-color;
+          :hover{
+            background: @task-list-theme-color-hover;
+          }
+        }
+        &.reset{
+          border: none;
+
+          background: #fff;
+          width: 80px;
+          color: #999;
+          margin-left: 0;
+          &:hover{
+            color: #666;
+          }
+        }
+        &.submit-button{
+          display: none;
+        }
+      }
     }
   }
 }

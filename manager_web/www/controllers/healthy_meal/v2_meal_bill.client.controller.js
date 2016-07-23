@@ -15,7 +15,10 @@ angular.module('EWeb').controller('MealBillController',
           {id: 'lunch', text: '午餐'},
           {id: 'dinner', text: '晚餐'}],
         mealTypes: mealTypes,
-        billStatuses: [{id: '', text: '所有类型'},{id: 'un_paid', text: '未付款'},{id: 'paid', text: '已付款'},{id: 'prepare_to_pay', text: '未出账单'},{id: 'canceled', text: '已取消'}],
+        billStatuses: [{id: '', text: '所有类型'}, {id: 'un_paid', text: '未付款'}, {
+          id: 'paid',
+          text: '已付款'
+        }, {id: 'prepare_to_pay', text: '未出账单'}, {id: 'canceled', text: '已取消'}],
         pagination: {
           currentPage: 1,
           limit: 20,
@@ -65,10 +68,10 @@ angular.module('EWeb').controller('MealBillController',
       }
 
       function translateMealTag(mealTag) {
-        var filterResult = $scope.pageData.mealTags.filter(function(item){
+        var filterResult = $scope.pageData.mealTags.filter(function (item) {
           return item.id === mealTag;
         });
-        if(filterResult.length === 0){
+        if (filterResult.length === 0) {
           return '';
         }
 
@@ -80,7 +83,7 @@ angular.module('EWeb').controller('MealBillController',
         record.meal_bills.forEach(function (item) {
           str += '(' + (item.name) + ':' + (item.price / 100) + '*' + item.count + '),';
         });
-        if(str.substr(str.length -1, 1) === ','){
+        if (str.substr(str.length - 1, 1) === ',') {
           str = str.substring(0, str.length - 1);
         }
         return str;
@@ -91,7 +94,7 @@ angular.module('EWeb').controller('MealBillController',
           id_number: $scope.filter.currentIdNumber,
           meal_type_id: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
           meal_tag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
-          status: $scope.filter.currentBillStatus ? $scope.filter.currentBillStatus.id: '',
+          status: $scope.filter.currentBillStatus ? $scope.filter.currentBillStatus.id : '',
           time_range: getTimeRangeString(),
           current_page: $scope.pageData.pagination.currentPage,
           limit: $scope.pageData.pagination.limit,
@@ -111,7 +114,7 @@ angular.module('EWeb').controller('MealBillController',
               meal_type_name: translateMealType(item),
               id_number: item.id_number,
               nickname: item.nickname,
-              goods_bills: item.goods_bills,
+              goods_bills: item.meal_bills,
               amount_paid: item.amount_paid,
               is_checkout: item.is_checkout
             };
@@ -124,7 +127,6 @@ angular.module('EWeb').controller('MealBillController',
 
         });
       }
-
 
       $scope.filter = {
         currentIdNumber: '',
@@ -168,4 +170,103 @@ angular.module('EWeb').controller('MealBillController',
       }
 
       init();
+
+
+
+
+      //<editor-fold desc="导出相关">
+      var exportSheet = {A1: '日期', B1: '床位信息', C1: '姓名', D1: '身份证', E1: '营养餐', F1: '金额'};
+      function generateExportData(row) {
+        var result = [];
+        result.push(row.time_tag);
+        result.push(row.bed_info);
+        result.push(row.nickname);
+        result.push(row.id_number);
+        result.push(row.meal_name);
+        result.push(row.amount);
+        return result;
+      }
+      function generateExcelDataArray(formattedStatisticInfos) {
+        var datas = [];
+        var header = [];
+        for(var prop in exportSheet){
+          header.push(exportSheet[prop]);
+        }
+        datas.push(header);
+        for (var i = 0; i < formattedStatisticInfos.length; i++) {
+          datas.push(generateExportData(formattedStatisticInfos[i]));
+        }
+        return datas;
+      }
+      function isIE() {
+        var myNav = navigator.userAgent.toLowerCase();
+        return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
+      }
+
+      $scope.exportMealBills = function(){
+        if (!$scope.pageData.datePicker.createTimeRange) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间');
+        }
+
+        MealRecordService.exportMealBills({
+          id_number: $scope.filter.currentIdNumber,
+          meal_type_id: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
+          meal_tag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
+          status: $scope.filter.currentBillStatus ? $scope.filter.currentBillStatus.id : '',
+          time_range: getTimeRangeString()
+        }, function (err, data) {
+          if (err || !data || !data.bed_meal_bills) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err || '查询失败');
+          }
+
+          var mealBills = data.bed_meal_bills.map(function (item) {
+            var billString = '';
+            item.meal_bills.forEach(function(bill){
+              billString += (bill.name +'*'+ bill.count+',')
+            });
+            return {
+              time_tag: new Date(item.meal_set_date).Format('yyyy-MM-dd') + ' ' + translateMealTag(item.meal_tag),
+              bed_info: item.building.name + item.floor.name + item.bed.name,
+              nickname: item.nickname,
+              id_number: item.id_number,
+              meal_name: translateMealType(item),
+              amount: item.amount_paid / 100
+            };
+          });
+
+          if(mealBills.length === 0){
+            return $scope.$emit(GlobalEvent.onShowAlert, '数据为空');
+          }
+
+          var data = generateExcelDataArray(mealBills);
+          var workSheetName = 'Sheet1';
+          if (isIE()) {
+            var excel = new ActiveXObject('Excel.Application');
+            var excel_book = excel.Workbooks.Add;
+            var excel_sheet = excel_book.Worksheets(1);
+            for (var i = 0; i < data.length; i++) {
+              for (var j = 0; j < data[i].length; j++) {
+                excel_sheet.Cells(i+1,j+1).Value = data[i][j];
+              }
+            }
+            excel.Visible = true;
+            excel.UserControl = true;
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+          else {
+            var wookBook = new Workbook();
+            var wookSheet = sheet_from_array_of_arrays(data);
+
+            /* add worksheet to workbook */
+            wookBook.SheetNames.push(workSheetName);
+            wookBook.Sheets[workSheetName] = wookSheet;
+
+            var wbout = XLSX.write(wookBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+            saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), '营养餐订单.xls');
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+
+        });
+      };
+      //</editor-fold>
     }]);

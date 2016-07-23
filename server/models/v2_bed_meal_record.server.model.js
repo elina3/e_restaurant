@@ -110,6 +110,9 @@ var BedMealRecordV2Schema = new Schema({
   deleted_status: {
     type: Boolean,
     default: false
+  },
+  change_user: {
+    type: Schema.Types.ObjectId
   }
 });
 

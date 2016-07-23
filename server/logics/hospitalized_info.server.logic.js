@@ -82,46 +82,59 @@ exports.createNewHospitalizedInfo = function (user, building, floor, bed, sicker
 
 //查询入住信息
 exports.queryHospitalizedInfoByIdNumber = function (filter, callback) {
-  if (!validIdNumber(filter.idNumber)) {
+  if (filter.idNumber && !validIdNumber(filter.idNumber)) {
     return callback({err: hospitalizedInfoError.invalid_id_number});
   }
 
   var query = {
     deleted_status: false,
-    id_number: filter.idNumber,
-    is_hospitalized: true,
-    is_leave_hospital: false
   };
-  HospitalizedInfo.findOne(query)
+
+  if(filter.idNumber){
+    query.id_number = filter.idNumber;
+  }
+
+  HospitalizedInfo.find(query)
     .populate('building floor bed')
-    .exec(function (err, hospitalizedInfo) {
-      if (err) {
+    .sort({create_time: -1})
+    .exec(function (err, hospitalizedInfos) {
+      if (err || !hospitalizedInfos) {
         return callback({err: systemError.database_query_error})
       }
 
-      if (hospitalizedInfo) {
-        return callback(null, [hospitalizedInfo]);
-      }
-
-      delete query.is_hospitalized;
-      delete query.is_leave_hospital;
-      HospitalizedInfo.find(query)
-        .populate('building floor bed')
-        .exec(function (err, hospitalizedInfos) {
-          if (err || !hospitalizedInfos) {
-            return callback({err: systemError.database_query_error})
-          }
-
-          return callback(null, hospitalizedInfos);
-        });
+      return callback(null, hospitalizedInfos);
     });
+
+  //HospitalizedInfo.findOne(query)
+  //  .populate('building floor bed')
+  //  .exec(function (err, hospitalizedInfo) {
+  //    if (err) {
+  //      return callback({err: systemError.database_query_error})
+  //    }
+  //
+  //    if (hospitalizedInfo) {
+  //      return callback(null, [hospitalizedInfo]);
+  //    }
+  //
+  //    delete query.is_hospitalized;
+  //    delete query.is_leave_hospital;
+  //    HospitalizedInfo.find(query)
+  //      .populate('building floor bed')
+  //      .exec(function (err, hospitalizedInfos) {
+  //        if (err || !hospitalizedInfos) {
+  //          return callback({err: systemError.database_query_error})
+  //        }
+  //
+  //        return callback(null, hospitalizedInfos);
+  //      });
+  //  });
 };
 
 exports.queryHospitalizedInfoByFilter = function (building, floor, callback) {
   var query = {
     deleted_status: false,
-    building: building._id,
-    floor: floor._id,
+    building: building._id.toString(),
+    floor: floor._id.toString(),
     is_hospitalized: true,
     is_leave_hospital: false
   };
@@ -278,36 +291,16 @@ exports.changeToNewBed = function (oldHospitalizedInfo, bed, callback) {
   });
 };
 
-exports.swapBed = function(hospitalizedInfo, distHospitalizedInfo, callback){
-  var distBedInfo = {
-    building: distHospitalizedInfo.building,
-    floor: distHospitalizedInfo.floor,
-    bed: distHospitalizedInfo.bed
-  };
-
-  distHospitalizedInfo.building = hospitalizedInfo.building;
-  distHospitalizedInfo.floor = hospitalizedInfo.floor;
-  distHospitalizedInfo.bed = hospitalizedInfo.bed;
-
-  hospitalizedInfo.building = distBedInfo.building;
-  hospitalizedInfo.floor = distBedInfo.floor;
-  hospitalizedInfo.bed = distBedInfo.bed;
-
-  distHospitalizedInfo.save(function(err, newDistHospitalizedInfo){
-    if(err || !newDistHospitalizedInfo){
+exports.modifyHospitalizedInfoBed = function(user, hospitalizedInfo, newBedInfo, callback){
+  hospitalizedInfo.building = newBedInfo.building_id;
+  hospitalizedInfo.floor = newBedInfo.floor_id;
+  hospitalizedInfo.bed = newBedInfo._id;
+  hospitalizedInfo.change_user = user._id;
+  hospitalizedInfo.save(function(err, newHospitalizedInfo){
+    if(err || !newHospitalizedInfo){
       return callback({err: systemError.database_save_error});
     }
 
-    hospitalizedInfo.save(function(err, newHospitalizedInfo){
-      if(err || !newHospitalizedInfo){
-        return callback({err: systemError.database_save_error});
-      }
-
-      return callback(null, {
-        newHospitalizedInfo: newHospitalizedInfo,
-        newDistHospitalizedInfo: newDistHospitalizedInfo
-      });
-    });
+    return callback(null, newHospitalizedInfo);
   });
-
 };

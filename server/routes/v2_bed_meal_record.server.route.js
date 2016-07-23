@@ -30,6 +30,10 @@ module.exports = function (app) {
     paginationFilter.requirePagination,
     bedMealRecordController.getBedMealRecordsByPagination);
 
+  //根据条件导出订单内容
+  app.route('/v2/bed_meal_bills/exports').get(authFilter.requireUser,
+    bedMealRecordController.getMealBills);
+
   //获取病人账单
   app.route('/v2/hospitalized_bills').get(authFilter.requireUser,
     paginationFilter.requirePagination,
@@ -53,19 +57,10 @@ module.exports = function (app) {
     mealTypeFilter.requireMealType,
     bedMealRecordController.saveBedMealRecord);
 
-  //更换到新床位
-  app.route('/v2/bed_meal_records/change_to_new_bed').post(authFilter.requireUser,
-    hospitalizedInfoFilter.requireHospitalizedInfo,
-    hospitalizedInfoFilter.requireDistHospitalizedInfoByBed,
-    bedFilter.requireBuilding,
-    bedFilter.requireFloor,
-    bedFilter.requireBed,
-    bedMealRecordController.changeToNewBed);
-
   //互换床位
-  app.route('/v2/bed_meal_records/swap_bed').post(
+  app.route('/v2/change_bed').post(
     authFilter.requireUser,
     hospitalizedInfoFilter.requireHospitalizedInfo,
-    hospitalizedInfoFilter.requireDistHospitalizedInfoByBed,
-    bedMealRecordController.swapBed);
+    bedFilter.requireBed,
+    bedMealRecordController.changeBed);
 };
