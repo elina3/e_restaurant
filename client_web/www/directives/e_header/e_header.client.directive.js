@@ -33,7 +33,7 @@ angular.module('EClientWeb').directive('eHeader', [
                     },
                     {
                         label: '营养餐',
-                        state: 'healthy_normal',
+                        state: 'healthy_meal',
                         title: '营养餐'
                     },
                     {
