@@ -336,7 +336,7 @@ exports.checkoutByHospitalizedInfo = function (user, hospitalizedInfo, callback)
     var checkoutAmount = 0;
     async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
       bedMealRecord.is_checkout = true;
-      bedMealRecord.checkout_time = new Date();
+      bedMealRecord.checkout_time = checkoutTime;
       bedMealRecord.checkout_create_id = user._id;
       bedMealRecord.checkout_creator_info = {
         username: user.username,
