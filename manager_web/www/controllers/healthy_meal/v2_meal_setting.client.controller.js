@@ -319,7 +319,8 @@ angular.module('EWeb').controller('MealSettingController',
                 if (!bed.hasSicker) {
                   index = 0;
                 } else {
-                  index = bed.hospitalized_infos.length - 1;
+                  index = bed.hospitalized_infos.length;
+                  bed.hospitalized_infos[index] = {};
                 }
                 bed.hospitalized_infos[index]._id = record.hospitalized_info;
                 bed.hospitalized_infos[index].id_number = record.id_number;
@@ -421,7 +422,7 @@ angular.module('EWeb').controller('MealSettingController',
         var hospitalizedIds = [];
         validBedSettings.forEach(function (bedItem) {
           bedItem.hospitalized_infos.forEach(function (subItem) {
-            if (subItem._id) {
+            if (subItem._id && !subItem.is_checkout) {
               if (hospitalizedIds.indexOf(subItem._id) === -1) {
                 hospitalizedIds.push(subItem._id);
               }
