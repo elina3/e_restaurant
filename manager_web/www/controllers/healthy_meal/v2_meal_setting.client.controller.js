@@ -15,17 +15,17 @@ angular.module('EWeb').controller('MealSettingController',
 
       function updateTimeout(timeStamp) {
         var today = getNowTimeStamp();
-        //if (today > timeStamp) {
-        //  $scope.disableChange = true;
-        //  $scope.timeout = true;
-        //} else {
-        //  if(today < timeStamp){
-        //    $scope.disableChange = true;
-        //  }else{
-        $scope.disableChange = false;
-        //  }
-        $scope.timeout = false;
-        //}
+        if (today > timeStamp) {
+          $scope.disableChange = true;
+          $scope.timeout = true;
+        } else {
+          if(today < timeStamp){
+            $scope.disableChange = true;
+          }else{
+            $scope.disableChange = false;
+          }
+            $scope.timeout = false;
+        }
       }
 
       //</editor-fold>
@@ -382,6 +382,7 @@ angular.module('EWeb').controller('MealSettingController',
       }
 
       $scope.search = function () {
+
         if (!$scope.filter.currentFloor) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择楼层信息');
         }
@@ -497,6 +498,10 @@ angular.module('EWeb').controller('MealSettingController',
 
       $scope.goBill = function () {
         $state.go('meal_bill');
+      };
+
+      $scope.goMealType = function(){
+        $state.go('meal_type');
       };
 
       function init() {

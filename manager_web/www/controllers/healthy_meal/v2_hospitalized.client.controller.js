@@ -124,10 +124,12 @@ angular.module('EWeb').controller('HospitalizedController',
           });
         }
       };
+      $scope.pageConfig = {
+        currentHospitalizedInfo: null
+      };
       $scope.filter = {
         currentIdNumber: '',
         search: function () {
-
           $scope.$emit(GlobalEvent.onShowLoading, true);
           HospitalizedInfoService.searchHospitalizedInfoByIdNumber({
             idNumber: this.currentIdNumber
@@ -159,9 +161,11 @@ angular.module('EWeb').controller('HospitalizedController',
             }
 
             currentHospitalized = null;
+            $scope.pageConfig.currentHospitalizedInfo = null;
+            $scope.current_bills = [];
+            $scope.noResultTip = '';
           });
-        },
-        currentHospitalizedInfo: null
+        }
       };
       $scope.hospitalized_infos = [];
       $scope.current_bills = [];
@@ -310,6 +314,7 @@ angular.module('EWeb').controller('HospitalizedController',
               meal_bills: item.meal_bills,
               amount_paid: item.amount_paid,
               is_checkout: item.is_checkout,
+              checkout_time: item.checkout_time,
               status:item.is_checkout ? '已付款' :'未付款'
             };
           });

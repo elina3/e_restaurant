@@ -322,6 +322,7 @@ exports.getMealBillByHospitalizedId = function (filter, pagination, callback) {
 };
 
 exports.checkoutByHospitalizedInfo = function (user, hospitalizedInfo, callback) {
+  var checkoutTime = new Date();
   BedMealRecord.find({
     hospitalized_info: hospitalizedInfo._id,
     deleted_status: false,
@@ -335,6 +336,7 @@ exports.checkoutByHospitalizedInfo = function (user, hospitalizedInfo, callback)
     var checkoutAmount = 0;
     async.each(bedMealRecords, function (bedMealRecord, eachCallback) {
       bedMealRecord.is_checkout = true;
+      bedMealRecord.checkout_time = new Date();
       bedMealRecord.checkout_create_id = user._id;
       bedMealRecord.checkout_creator_info = {
         username: user.username,

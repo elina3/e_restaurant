@@ -101,6 +101,9 @@ var BedMealRecordV2Schema = new Schema({
     type: Boolean,
     default: false
   },
+  checkout_time: {
+    type: Date
+  },
   checkout_creator_info: {
     type: Schema.Types.Mixed
   },

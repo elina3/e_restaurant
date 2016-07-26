@@ -40,9 +40,9 @@ angular.module('EWeb').controller('UserSignInController',
             case 'delivery':
               return $state.go('goods_order');
             case 'nurse':
-              return $state.go('set_meal');
+              return $state.go('meal_setting');
             case 'registrar':
-              return $state.go('hospitalized_info');
+              return $state.go('hospitalized');
             default:
               return $state.go('user_index');
           }

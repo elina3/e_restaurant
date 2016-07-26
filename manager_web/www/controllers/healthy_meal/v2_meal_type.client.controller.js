@@ -9,7 +9,7 @@ angular.module('EWeb').controller('MealTypeController',
 
       $scope.mealTypes = [];
       $scope.goBack = function () {
-        $window.history.back();
+        $state.go('meal_setting');
       };
 
 

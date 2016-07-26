@@ -151,7 +151,7 @@ angular.module('EWeb').controller('MealBillController',
       };
 
       $scope.goBack = function () {
-        $window.history.back();
+        $state.go('meal_setting');
       };
 
       function init() {

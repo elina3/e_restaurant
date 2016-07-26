@@ -382,6 +382,6 @@ angular.module('EWeb').controller('GoodsManagerController',
         $state.go('goods_order');
       };
       $scope.goToHealthyMeal =function(){
-        $state.go('set_meal');
+        $state.go('meal_setting');
       };
     }]);
