@@ -363,7 +363,7 @@ angular.module('EWeb').controller('HospitalizedController',
           {
             title: '确认操作', content: '您确定要办理出院手续吗？', callback: function () {
             $scope.$emit(GlobalEvent.onShowLoading, true);
-            HospitalizedInfoService.leaveHospital({
+            HospitalizedInfoService.leaveHospitalV2({
               hospitalizedInfoId: info._id
             }, function (err, data) {
 

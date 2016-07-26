@@ -28,5 +28,9 @@ module.exports = function (app) {
     hospitalizedInfoFilter.requireHospitalizedInfo,
     hospitalizedInfoController.leaveHospital);
 
+  app.route('/v2/hospitalized_info/leaveHospital').post(authFilter.requireUser,
+    hospitalizedInfoFilter.requireHospitalizedInfo,
+    hospitalizedInfoController.leaveHospitalV2);
+
   app.route('/hospitalized_info/add_description').post(authFilter.requireUser, hospitalizedInfoFilter.requireHospitalizedInfo, hospitalizedInfoController.addLeaveDescription);
 };

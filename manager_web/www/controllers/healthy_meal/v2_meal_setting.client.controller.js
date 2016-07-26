@@ -14,18 +14,20 @@ angular.module('EWeb').controller('MealSettingController',
       }
 
       function updateTimeout(timeStamp) {
-        var today = getNowTimeStamp();
-        if (today > timeStamp) {
-          $scope.disableChange = true;
-          $scope.timeout = true;
-        } else {
-          if(today < timeStamp){
-            $scope.disableChange = true;
-          }else{
-            $scope.disableChange = false;
-          }
-            $scope.timeout = false;
-        }
+        $scope.disableChange = false;
+        $scope.timeout = false;
+        //var today = getNowTimeStamp();
+        //if (today > timeStamp) {
+        //  $scope.disableChange = true;
+        //  $scope.timeout = true;
+        //} else {
+        //  if(today < timeStamp){
+        //    $scope.disableChange = true;
+        //  }else{
+        //    $scope.disableChange = false;
+        //  }
+        //    $scope.timeout = false;
+        //}
       }
 
       //</editor-fold>

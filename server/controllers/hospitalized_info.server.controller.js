@@ -8,7 +8,8 @@ var systemError = require('../errors/system'),
   hospitalizedInfoError = require('../errors/hospitalized_info');
 
 var hospitalizedLogic = require('../logics/hospitalized_info'),
-  bedMealBillLogic = require('../logics/bed_meal_bill');
+  bedMealBillLogic = require('../logics/bed_meal_bill'),
+  bedMealRecordLogic = require('../logics/v2_bed_meal_record');
 
 exports.addNewHospitalizedInfo = function (req, res, next) {
   var sickerInfo = req.body.sicker_info;
@@ -96,5 +97,29 @@ exports.addLeaveDescription = function(req, res, next){
       success: true
     };
     return next();
+  });
+};
+
+
+exports.leaveHospitalV2 = function(req, res, next){
+  bedMealRecordLogic.getTotalAmountByHospitalizedInfoId(req.hospitalized_info._id, function(err, totalAmoumnt){
+    if(err){
+      return next(err);
+    }
+
+    if(totalAmoumnt > 0){
+      return next({err: hospitalizedInfoError.bill_not_checkout});
+    }
+
+    hospitalizedLogic.leaveHospital(req.user, req.hospitalized_info, req.body.description, function(err, hospitalizedInfo){
+      if(err){
+        return next(err);
+      }
+
+      req.data = {
+        success: true
+      };
+      return next();
+    });
   });
 };

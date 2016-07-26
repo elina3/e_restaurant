@@ -212,7 +212,7 @@ angular.module('EWeb').controller('GoodsOrderController',
         $state.go('order_statistic');
       };
       $scope.goHealthyBill = function(){
-        $state.go('bed_meal_bill');
+        $state.go('meal_bill');
       };
 
       $scope.loadMore = function () {

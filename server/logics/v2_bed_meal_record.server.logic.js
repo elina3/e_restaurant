@@ -487,3 +487,30 @@ exports.modifyMealRecordBed = function(user, mealSetDate, hospitalizedInfoId, ne
     });
   });
 };
+
+exports.getTotalAmountByHospitalizedInfoId = function(hospitalizedInfoId, callback){
+  var match = {
+    deleted_status: false,
+    is_checkout: false,
+    hospitalized_info: hospitalizedInfoId
+  };
+
+  BedMealRecord.aggregate([{
+    $match: match
+  }, {
+    $group: {
+      _id: '$object',
+      total_amount: {$sum: '$amount_paid'}
+    }
+  }], function (err, result) {
+    if (err || !result) {
+      return callback({err: systemError.database_query_error});
+    }
+
+    if (result.length === 0) {
+      return callback(null, 0);
+    }
+
+    return callback(null, result[0].total_amount);
+  });
+};
