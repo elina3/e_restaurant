@@ -278,6 +278,36 @@ exports.getCardByIDNumberWithoutDeleted = function (idNumber, callback) {
     });
 };
 
+exports.findEnabledCardByIdNumber = function(idNumber, callback){
+  var query = {
+    deleted_status: false,
+    id_number: idNumber
+  };
+
+  Card.find(query, function (err, cards) {
+    if (err) {
+      return callback({err: systemError.database_query_error});
+    }
+
+    if (!cards || cards.length === 0) {
+      return callback({err: cardError.card_not_exist});
+    }
+
+    var enabledCard = null;
+    cards.forEach(function (card) {
+      if (card.status === 'enabled') {
+        enabledCard = card;
+      }
+    });
+
+    if (!enabledCard) {
+      return callback({err: cardError.card_disabled});
+    }
+
+    return callback(null, enabledCard);
+  });
+};
+
 exports.findEnabledCardByCardNumberOrIdNumber = function (cardKeyword, callback) {
   var query = {
     deleted_status: false,
@@ -320,7 +350,7 @@ exports.updateCardInfo = function (user, card, cardInfo, callback) {
   }
 
   var addAmount = publicLib.parseFloatNumber(cardInfo.amount);
-  if (addAmount === 0) {
+  if (addAmount === null) {
     return callback({err: cardError.wrong_amount});
   }
 
@@ -986,5 +1016,27 @@ exports.getStatisticByHistory = function (action, callback) {
       return callback({err: systemError.database_query_error});
     }
     return callback(null, result);
+  });
+};
+
+exports.setCardPassword = function(user, card, password, callback){
+
+  if(!password){
+    return callback({err: cardError.card_password_null});
+  }
+
+  if(!publicLib.isString(password) || password.length < 6){
+    return callback({err: cardError.invalid_card_password});
+  }
+
+  card.password = card.hashPassword(password);
+  card.change_password_user = user._id;
+  card.self_change_password = false;
+  card.save(function(err, newCard){
+    if(err ||!newCard){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newCard);
   });
 };

@@ -266,6 +266,9 @@
                                         <div class="handle text" ng-click="replaceCard(card)">
                                             <span>补卡</span>
                                         </div>
+                                        <div class="handle text" ng-click="cardPasswordConfig.show(card)">
+                                            <span>改密</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -618,7 +621,7 @@
                     <div class="info-item" ng-show="pageConfig.scanType==='edit'">
                         <span class="info-name">添加金额: </span>
                         <div class="info-value">
-                            <input placeholder="请添加金额（单位：元）" type="text" ng-model="pageConfig.plat_card_panel.add_money"/>
+                            <input placeholder="请添加金额（单位：元）" type="number" ng-model="pageConfig.plat_card_panel.add_money"/>
                         </div>
                     </div>
 
@@ -655,7 +658,7 @@
                     <div class="info-item">
                         <span class="info-name">充值金额: </span>
                         <div class="info-value">
-                            <input placeholder="请充值金额（单位：元）" type="text" ng-model="pageConfig.plat_card_panel.batchRechargeCardAmount"/>
+                            <input placeholder="请充值金额（单位：元）" type="number" ng-model="pageConfig.plat_card_panel.batchRechargeCardAmount"/>
                         </div>
                     </div>
 
@@ -663,6 +666,56 @@
 
                     <div class="handle">
                         <div class="sure" ng-click="batchRechargeCard()">批量充值</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ee-pop-panel" ng-show="cardPasswordConfig.isShow">
+            <div class="ee-pop-header">
+                <div class="ee-pop-title">
+                    <span>重置密码</span>
+                    <div class="close" ng-click="cardPasswordConfig.hide()"></div>
+                </div>
+            </div>
+
+            <div class="ee-pop-body">
+                <div class="ee-user-manager-view-new-user">
+                    <div class="info-item">
+                        <span class="info-name">卡号: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.card_number}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">证件号: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.id_number}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">昵称: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.nickname}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">状态: </span>
+                        <div class="info-value">
+                            <span>{{cardPasswordConfig.currentCard.nickname}}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-name">新密码: </span>
+                        <div class="info-value">
+                            <input placeholder="请输入密码（至少六位有效字符）" type="password" ng-model="cardPasswordConfig.currentPassword"/>
+                        </div>
+                    </div>
+
+                    <div class="message-result" ng-class="{'error': cardPasswordConfig.errorMessage}" ng-show="cardPasswordConfig.errorMessage">{{cardPasswordConfig.errorMessage}}</div>
+
+                    <div class="handle">
+                        <div class="sure" ng-click="cardPasswordConfig.sure()">保存</div>
                     </div>
                 </div>
             </div>

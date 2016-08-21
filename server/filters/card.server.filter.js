@@ -45,3 +45,34 @@ exports.requireCardByIDNumberOrCardNumber = function(req, res, next){
     next();
   });
 };
+
+
+exports.validCardWithPassword = function(req, res, next){
+  var idNumber = req.body.id_number || req.query.id_number || '';
+  var password = req.body.password || req.query.password || '';
+
+  if(!idNumber){
+    return next({err: cardError.id_number_null});
+  }
+
+  if(!password){
+    return next({err: cardError.param_password_null});
+  }
+
+  cardLogic.findEnabledCardByIdNumber(idNumber, function(err, card){
+    if(err){
+      return next(err);
+    }
+
+    if(!card.password){
+      return next({err: cardError.card_password_null});
+    }
+
+    if(!card.authenticate(password)){
+      return next({err: cardError.card_password_error});
+    }
+
+    req.card = card;
+    next();
+  });
+};

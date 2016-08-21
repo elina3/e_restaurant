@@ -15,6 +15,8 @@ module.exports = function (app) {
   app.route('/client/list').get(authFilter.requireAdmin, clientController.getClients);
 
 
+  app.route('/client/personal_sign_in').post(clientController.personalSignIn);
+
   app.route('/client/sign_in').post(clientController.signIn);
   app.route('/client/cart/add').post(authFilter.requireClient, goodsFilter.requireGoods, clientController.addGoodsToCart);
   app.route('/client/cart/update').post(authFilter.requireClient, goodsFilter.requireGoods, clientController.updateGoodsToCart);

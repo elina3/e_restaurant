@@ -87,6 +87,7 @@
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.breakfast"
                                             z-dropdown-options="hospitalizedInfo.breakfastOptions"
                                             z-dropdown-label="无"
+                                            z-dropdown-change="selectChangeByHospitalizedInfo(hospitalizedInfo)"
                                             z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
@@ -94,6 +95,7 @@
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.lunch"
                                             z-dropdown-options="hospitalizedInfo.lunchOptions"
                                             z-dropdown-label="无"
+                                            z-dropdown-change="selectChangeByHospitalizedInfo(hospitalizedInfo)"
                                             z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>
@@ -101,6 +103,7 @@
                                 <z-dropdown z-dropdown-model="hospitalizedInfo.dinner"
                                             z-dropdown-options="hospitalizedInfo.dinnerOptions"
                                             z-dropdown-label="无"
+                                            z-dropdown-change="selectChangeByHospitalizedInfo(hospitalizedInfo)"
                                             z-dropdown-disabled = "timeout || !bed.hasSicker || hospitalizedInfo.is_checkout">
                                 </z-dropdown>
                             </div>

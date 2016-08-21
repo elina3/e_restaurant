@@ -1,18 +1,18 @@
 <div class="e-footer">
-    <div class="tab-bar">
+    <div class="tab-bar" ng-class="{'three-item': authRole === 'normal', 'five-item': authRole !== 'normal'}">
         <div class="tab-item home" ng-class="{'current': navState==='/'}">
             <a ng-click="goState('/')">
                 首页
             </a>
         </div>
 
-        <div class="tab-item free-meal " ng-class="{'current': navState==='free_meal'}">
+        <div class="tab-item free-meal " ng-show="authRole !== 'normal'" ng-class="{'current': navState==='free_meal'}">
             <a ng-click="goState('free_meal')">
                 自由餐
             </a>
         </div>
 
-        <div class="tab-item free-meal " ng-class="{'current': navState==='healthy_normal'}">
+        <div class="tab-item free-meal " ng-show="authRole !== 'normal'" ng-class="{'current': navState==='healthy_normal'}">
             <a ng-click="goState('healthy_meal')">
                 营养餐
             </a>

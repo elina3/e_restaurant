@@ -35,6 +35,8 @@ angular.module('EClientWeb').controller('PaymentController',
         return client;
       }
 
+      $scope.client = null;
+
       $scope.pageData = {
         headConfig: {
           title: '订单支付',
@@ -44,7 +46,8 @@ angular.module('EClientWeb').controller('PaymentController',
         order: null,
         paymentInfo:{
           method: 'card',
-          card_number: ''
+          card_number: '',
+          card_password: ''
         }
       };
 
@@ -67,6 +70,11 @@ angular.module('EClientWeb').controller('PaymentController',
       }
 
       function init() {
+        $scope.client = getClient();
+        if(!$scope.client){
+          return;
+        }
+
         var orderId = $stateParams.order_id;
 
         if (!orderId) {
@@ -78,22 +86,51 @@ angular.module('EClientWeb').controller('PaymentController',
       init();
 
       $scope.pay = function(){
-        getClient();
-        if(!$scope.pageData.paymentInfo.card_number){
-          return $scope.$emit(GlobalEvent.onShowAlert, '请输入卡号！');
+        $scope.client = getClient();
+        if(!$scope.client){
+          return;
         }
 
-        $scope.$emit(GlobalEvent.onShowLoading, true);
-        OrderService.pay($scope.pageData.order._id,
-          $scope.pageData.paymentInfo.card_number,
-          $scope.pageData.order.total_price ,function(err, data){
+        if($scope.client.role === 'normal'){
+          if(!$scope.pageData.paymentInfo.card_number){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请输入身份证号！');
+          }
 
-            $scope.$emit(GlobalEvent.onShowLoading, false);
-            if(err){
-              return $scope.$emit(GlobalEvent.onShowAlert, err);
-            }
+          if(!$scope.pageData.paymentInfo.card_password){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请输入密码！');
+          }
 
-          return $state.go('my_orders');
-        });
+          OrderService.payWithPassword({
+              order_id: $scope.pageData.order._id,
+              id_number: $scope.pageData.paymentInfo.card_number,
+              password: $scope.pageData.paymentInfo.card_password
+            },function(err, data){
+
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              return $state.go('my_orders');
+            });
+        }else{
+
+          if(!$scope.pageData.paymentInfo.card_number){
+            return $scope.$emit(GlobalEvent.onShowAlert, '请输入卡号！');
+          }
+
+          $scope.$emit(GlobalEvent.onShowLoading, true);
+          OrderService.pay($scope.pageData.order._id,
+            $scope.pageData.paymentInfo.card_number,
+            $scope.pageData.order.total_price ,function(err, data){
+
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if(err){
+                return $scope.$emit(GlobalEvent.onShowAlert, err);
+              }
+
+              return $state.go('my_orders');
+            });
+        }
       };
     }]);

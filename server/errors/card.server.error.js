@@ -9,6 +9,7 @@ var _ = require('lodash');
 
 module.exports = _.extend(exports, {
   card_param_null: {type: 'card_param_null', message: 'The card param is null!', zh_message: '该饭卡参数错误！'},
+  param_password_null: {type: 'param_password_null', message: 'The param of password is null!', zh_message: '请输入密码！'},
   id_number_null: {type: 'id_number_null', message: 'The card id number is null', zh_message: '证件号为空！'},
   card_number_null: {type: 'card_number_null', message: 'The card number is null', zh_message: '该饭卡卡号为空！'},
   card_id_null: {type: 'card_id_null', message: 'The card id is null', zh_message: '该饭卡id为空！'},
@@ -29,5 +30,9 @@ module.exports = _.extend(exports, {
   card_deleted: {type: 'card_deleted', message: 'This card has been deleted', zh_message: '该饭卡已删除！'},
   card_exist: {type: 'card_exist', message: 'The card is exist!', zh_message: '该饭卡已存在！'},
   new_card_exist: {type: 'new_card_exist', message: 'The new card is exist', zh_message: '新饭卡已使用'},
-  need_new_card_number: {type: 'need_new_card_number', message: 'The new card number is equal the old card number', zh_message:'该饭卡的卡号与新卡号重复'}
+  need_new_card_number: {type: 'need_new_card_number', message: 'The new card number is equal the old card number', zh_message:'该饭卡的卡号与新卡号重复'},
+
+  card_password_null: {type: 'card_password_null', message: 'The password can not be null', zh_message: '饭卡未设置密码'},
+  invalid_card_password: {type: 'invalid_card_password', message: 'The password info is invalid', zh_message: '设置密码格式不正确'},
+  card_password_error: {type: 'card_password_error', message: 'The password or card id number is not match', zh_message: '密码或证件号不匹配'}
 });

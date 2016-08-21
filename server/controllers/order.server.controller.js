@@ -139,6 +139,23 @@ exports.payOrder = function(req, res, next){
   });
 };
 
+exports.payOrderWithPassword = function(req, res, next){
+  var client = req.client;
+  var order = req.order;
+  var card = req.card;
+
+  paymentLogic.pay(client, order, 'card', card, order.total_price, function(err, payment){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      payment: payment
+    };
+    return next();
+  });
+};
+
 exports.payFreeMealOrder = function(req,res,next){
   var client = req.client;
   var order = req.order;

@@ -16,6 +16,7 @@ angular.module('EClientWeb').directive('eFooter', [
             link: function (scope, element, attributes) {
                 scope.searchName = '';
                 scope.shoppingCar = {};
+                scope.authRole = 'normal';
 
                 scope.goState = function (stateName) {
                     scope.navState = stateName;
@@ -27,6 +28,7 @@ angular.module('EClientWeb').directive('eFooter', [
                     var client =  Auth.getUser();
                     if(client){
                         scope.shoppingCar.count = client.cart ? client.cart.total_count : 0;
+                        scope.authRole = client.role;
                     }
                 }
 

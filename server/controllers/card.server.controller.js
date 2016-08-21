@@ -2,7 +2,7 @@
  * Created by elinaguo on 16/2/22.
  */
 'use strict';
-var systemError  = require('../errors/system');
+var systemError = require('../errors/system');
 var cardLogic = require('../logics/card');
 var publicLib = require('../libraries/public');
 //办卡
@@ -204,7 +204,7 @@ exports.getCardStatistics = function (req, res, next) {
   });
 };
 //卡余额
-exports.getCardBalance = function(req, res, next){
+exports.getCardBalance = function (req, res, next) {
   var keyword = req.query.keyword || '';
   var filter = {
     keyword: keyword
@@ -222,12 +222,12 @@ exports.getCardBalance = function(req, res, next){
 };
 
 //批量充值员工卡
-exports.batchRechargeCard = function(req, res, next){
-  if(req.user.role !== 'admin' && req.user.role === 'card-manager'){
-   return next({err: systemError.no_permission});
+exports.batchRechargeCard = function (req, res, next) {
+  if (req.user.role !== 'admin' && req.user.role === 'card-manager') {
+    return next({err: systemError.no_permission});
   }
-  cardLogic.batchRechargeCard(req.user, req.body.amount, function(err, result){
-    if(err){
+  cardLogic.batchRechargeCard(req.user, req.body.amount, function (err, result) {
+    if (err) {
       return next(err);
     }
     req.data = result;
@@ -235,11 +235,11 @@ exports.batchRechargeCard = function(req, res, next){
   });
 };
 //饭卡导入
-exports.importCards = function(req, res, next){
+exports.importCards = function (req, res, next) {
   var cardList = req.body.card_list || [];
   var user = req.user;
-  cardLogic.importStaffCards(user, cardList, function(err, result){
-    if(err){
+  cardLogic.importStaffCards(user, cardList, function (err, result) {
+    if (err) {
       return next(err);
     }
 
@@ -248,15 +248,15 @@ exports.importCards = function(req, res, next){
   });
 };
 //饭卡当日财务统计
-exports.exportCardStatistic = function(req, res, next){
+exports.exportCardStatistic = function (req, res, next) {
   var timeRange = JSON.parse(req.query.time_range) || {};
 
   var defaultStart = new Date('1970-1-1 00:00:00');
   var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
-  cardLogic.exportCardStatistic({startTime: startTime, endTime: endTime}, function(err, result){
-    if(err){
+  cardLogic.exportCardStatistic({startTime: startTime, endTime: endTime}, function (err, result) {
+    if (err) {
       return next(err);
     }
 
@@ -267,9 +267,9 @@ exports.exportCardStatistic = function(req, res, next){
   });
 };
 
-exports.getStatisticByHistory = function(req, res, next){
-  cardLogic.getStatisticByHistory(req.query.action, function(err, result){
-    if(err){
+exports.getStatisticByHistory = function (req, res, next) {
+  cardLogic.getStatisticByHistory(req.query.action, function (err, result) {
+    if (err) {
       return next(err);
     }
 
@@ -286,33 +286,45 @@ var mongooseLib = require('../libraries/mongoose');
 var appDb = mongooseLib.appDb;
 var CardHistory = appDb.model('CardHistory');
 
-exports.deleteCardPay = function(req, res, next){
+exports.deleteCardPay = function (req, res, next) {
   var cardHistoryId = req.body.card_history_id || '';
-  if(!cardHistoryId){
+  if (!cardHistoryId) {
     return next({err: {type: 'card_history_id_null', message: 'the card history id is null', zh_message: '卡记录id为空'}});
   }
 
   CardHistory.findOne({_id: cardHistoryId})
-    .exec(function(err, cardHistory){
-      if(err){
+    .exec(function (err, cardHistory) {
+      if (err) {
         return next(err);
       }
 
-      if(!cardHistory){
-        return next({err: {type: 'card_history_not_exist', message: 'the card history is not exist', zh_message: '卡记录不存在'}})
+      if (!cardHistory) {
+        return next({
+          err: {
+            type: 'card_history_not_exist',
+            message: 'the card history is not exist',
+            zh_message: '卡记录不存在'
+          }
+        })
       }
 
-      if(cardHistory.deleted_status){
+      if (cardHistory.deleted_status) {
         return next({err: {type: 'card_history_deleted', message: 'the card history is deleted', zh_message: '卡记录已删除'}})
       }
 
-      if(cardHistory.action !== 'pay'){
-        return next({err: {type: 'card_history_not_pay', message: 'the card history is not the paying ', zh_message: '卡记录不是消费记录'}});
+      if (cardHistory.action !== 'pay') {
+        return next({
+          err: {
+            type: 'card_history_not_pay',
+            message: 'the card history is not the paying ',
+            zh_message: '卡记录不是消费记录'
+          }
+        });
       }
 
       cardHistory.deleted_status = true;
-      cardHistory.save(function(err, newCardHistory){
-        if(err || !newCardHistory){
+      cardHistory.save(function (err, newCardHistory) {
+        if (err || !newCardHistory) {
           return next(err);
         }
 
@@ -322,4 +334,20 @@ exports.deleteCardPay = function(req, res, next){
         return next();
       });
     });
+};
+
+exports.changeCardPassword = function (req, res, next) {
+  var user = req.user;
+  var card = req.card;
+  var password = req.body.password || '';
+  cardLogic.setCardPassword(user, card, password, function (err, newCard) {
+    if (err) {
+      return next(err);
+    }
+
+    req.data = {
+      success: newCard ? true : false
+    };
+    return next();
+  });
 };

@@ -19,6 +19,7 @@
                     <div class="nav-list">
                         <div class="nav-item"
                              ng-repeat="nav in navList"
+                             ng-show="nav.show"
                              ng-class="{'active':navState===nav.state,'end':$index===navList.length-1}"
                              ng-click="goState(nav.state)">
                             <div><span>{{nav.label}}</span></div>

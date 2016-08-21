@@ -160,6 +160,24 @@ angular.module('EClientWeb').factory('OrderService',
             case 'complete':
               return '已完成';
           }
+        },
+        payWithPassword: function(param, callback){
+          RequestSupport.executePost('/client/order/pay_with_password', param).then(function (data) {
+              if (!callback) {
+                return data;
+              } else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+                callback(null, data);
+              }
+            },
+            function (err) {
+              if (!callback) {
+                return SystemError.network_error;
+              }
+              callback(SystemError.network_error);
+            });
         }
       };
     }]);

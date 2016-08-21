@@ -18,27 +18,32 @@ angular.module('EClientWeb').directive('eHeader', [
                 scope.navList = [
                     {
                         label: '首页',
-                        state: '/'
+                        state: '/',
+                        show: true
                     },
                     {
                         label: '自由餐',
                         state: 'free_meal',
-                        title: '自由餐'
+                        title: '自由餐',
+                        show: false
                     },
                     {
                         label: '购物车',
                         state: 'my_cart',
                         showTips: true,
-                        tipsNum: 0
+                        tipsNum: 0,
+                        show: true
                     },
                     {
                         label: '营养餐',
                         state: 'healthy_meal',
-                        title: '营养餐'
+                        title: '营养餐',
+                        show: false
                     },
                     {
                         label: '我的订单',
-                        state: 'my_orders'
+                        state: 'my_orders',
+                        show: true
                     }
                 ];
                 scope.pageConfig = {
@@ -58,7 +63,11 @@ angular.module('EClientWeb').directive('eHeader', [
 
                 scope.changeAccount = function(){
                     Auth.signOut();
-                    $state.go('sign_in');
+                    if(scope.pageConfig.clientInfo.role !== 'normal'){
+                        $state.go('sign_in');
+                    }else{
+                        $state.go('personal_sign_in');
+                    }
                 };
 
                 function init() {
@@ -66,6 +75,14 @@ angular.module('EClientWeb').directive('eHeader', [
                     scope.pageConfig.clientInfo =  Auth.getUser();
                     if(scope.pageConfig.clientInfo){
                         scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
+
+                        if(scope.pageConfig.clientInfo.role !== 'normal'){
+                            scope.navList[1].show = true;
+                            scope.navList[3].show = true;
+                        }else{
+                            scope.navList[1].show = false;
+                            scope.navList[3].show = false;
+                        }
                     }
                 }
 
@@ -74,6 +91,14 @@ angular.module('EClientWeb').directive('eHeader', [
                     scope.pageConfig.clientInfo =  newClient;
                     if(scope.pageConfig.clientInfo){
                         scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
+
+                        if(scope.pageConfig.clientInfo.role !== 'normal'){
+                            scope.navList[1].show = true;
+                            scope.navList[3].show = true;
+                        }else{
+                            scope.navList[1].show = false;
+                            scope.navList[3].show = false;
+                        }
                     }
                 });
 

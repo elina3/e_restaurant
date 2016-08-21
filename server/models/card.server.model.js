@@ -56,8 +56,34 @@ var CardSchema = new Schema({
   recent_modify_user: {
     type: Schema.Types.ObjectId,
     ref:'User'
+  },
+  self_change_password: {
+    type: Boolean,
+    default: false
+  },
+  change_password_user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
+  password: {
+    type: String
+  },
+  salt: {
+    type: String,
+    default: 'secret'
   }
 });
+
+CardSchema.methods.hashPassword = function (password) {
+  if (this.salt && password) {
+    return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
+  } else {
+    return password;
+  }
+};
+CardSchema.methods.authenticate = function (password) {
+  return this.password === this.hashPassword(password);
+};
 
 CardSchema.plugin(timestamps, {
   createdAt: 'create_time',

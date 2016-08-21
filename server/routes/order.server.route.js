@@ -13,6 +13,7 @@ module.exports = function (app) {
   app.route('/client/order').get(authFilter.requireClient, orderFilter.requireOrderDetail, orderController.getOrderDetail);
 
   app.route('/client/order/pay').post(authFilter.requireClient,  orderFilter.requireOrder, cardFilter.requireCardByIDNumberOrCardNumber, orderController.payOrder);
+  app.route('/client/order/pay_with_password').post(authFilter.requireClient,  orderFilter.requireOrder, cardFilter.validCardWithPassword, orderController.payOrderWithPassword);
 
   app.route('/client/order/free_meal_pay').post(authFilter.requireClient,  orderFilter.requireOrder, cardFilter.requireCardByIDNumberOrCardNumber, orderController.payFreeMealOrder);
   app.route('/client/my_orders').get(authFilter.requireClient, orderController.getMyOrders);

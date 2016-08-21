@@ -409,10 +409,14 @@ angular.module('EWeb').controller('MealSettingController',
         });
       };
 
+      $scope.selectChangeByHospitalizedInfo = function(hospitalizedInfo){
+        hospitalizedInfo.changed = true;
+      };
+
       function prepareParams() {
         var validBedSettings = $scope.filter.beds.filter(function (item) {
           var settings = item.hospitalized_infos.filter(function (subItem) {
-            return subItem._id && !subItem.is_checkout && ((subItem.breakfast && subItem.breakfast.id || (subItem.lunch && subItem.lunch.id) || (subItem.dinner && subItem.dinner.id)));
+            return subItem._id && !subItem.is_checkout && (subItem.changed || (subItem.breakfast && subItem.breakfast.id || (subItem.lunch && subItem.lunch.id) || (subItem.dinner && subItem.dinner.id)));
           });
 
           return item.hasSicker && settings.length > 0;

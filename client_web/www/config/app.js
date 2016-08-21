@@ -52,6 +52,11 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
       templateUrl: 'views/sign_in.client.view.html',
       controller: 'SignInController'
     })
+    .state('personal_sign_in', {
+      url: '/client/personal_sign_in',
+      templateUrl: 'views/v2_personal_sign_in.client.view.html',
+      controller: 'PersonalSignInController'
+    })
     .state('log', {
       url: '/log',
       templateUrl: 'views/log.client.view.html',

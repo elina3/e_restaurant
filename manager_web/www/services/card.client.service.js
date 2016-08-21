@@ -289,6 +289,24 @@ angular.module('EWeb').factory('CardService',
             default:
               return '现金';
           }
+        },
+        changeCardPassword: function(param, callback){
+          RequestSupport.executePost('/card/change_password', param)
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+              else {
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              }
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
         }
       };
     }]);

@@ -119,9 +119,9 @@ exports.batchSaveBedMealRecord = function (user, hospitalizedInfoDic, mealTypeDi
         bedMealRecord.meal_bills = bedMealRecordInfo.mealBills;
         bedMealRecord.id_number = bedMealRecordInfo.hospitalizedInfo.id_number;
         bedMealRecord.nickname = bedMealRecordInfo.hospitalizedInfo.nickname;
-        bedMealRecord.meal_type_id = bedMealRecordInfo.mealTypeId;
+        bedMealRecord.meal_type_id = bedMealRecordInfo.mealTypeId ? bedMealRecordInfo.mealTypeId : null;
         bedMealRecord.meal_type_name = bedMealRecordInfo.mealType ? bedMealRecordInfo.mealType.name : '';
-        bedMealRecord.meal_type_price = bedMealRecordInfo.mealPrice;
+        bedMealRecord.meal_type_price = bedMealRecordInfo.mealPrice || 0;
 
         bedMealRecord.save(function (err, newBedMealRecord) {
           if (err || !newBedMealRecord) {

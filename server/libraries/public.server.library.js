@@ -173,3 +173,12 @@ exports.parseToDate = function(time) {
   }
   return new Date(time.toDateString());
 };
+
+exports.validPhone = function (phone) {
+  var phoneReg = /\d{11}/;
+  if (!phoneReg.test(phone) || phone.length != 11) {
+    return false;
+  }
+
+  return true;
+};

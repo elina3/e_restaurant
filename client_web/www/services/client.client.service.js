@@ -89,6 +89,29 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           return callback(SystemError.network_error);
         });
     },
+    personalSignIn: function(username, callback){
+      RequestSupport.executePost('/client/personal_sign_in', {
+        phone: username
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.zh_message || data.err);
+            }
+
+            if(!data.client){
+              return callback({err: SystemError.sign_in_failed});
+            }
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
+    },
     getClients: function(param, callback){
       RequestSupport.executeGet('/client/list', {
         current_page: param.currentPage,

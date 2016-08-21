@@ -35,4 +35,6 @@ module.exports = function (app) {
 
   //删除脏数据
   app.route('/card/delete_pay').post(authFilter.requireUser, cardController.deleteCardPay);
+
+  app.route('/card/change_password').post(authFilter.requireUser, cardFilter.requireCard, cardController.changeCardPassword);
 };

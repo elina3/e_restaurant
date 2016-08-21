@@ -2,9 +2,41 @@
  * Created by elinaguo on 16/2/26.
  */
 'use strict';
-var cryptoLib = require('../libraries/crypto');
-var systemError = require('../errors/system');
+var async = require('async');
+var cryptoLib = require('../libraries/crypto'),
+  publicLib = require('../libraries/public');
+
+var systemError = require('../errors/system'),
+  clientError = require('../errors/client');
 var clientLogic = require('../logics/client');
+
+exports.personalSignIn = function(req, res, next){
+  var phone = req.body.phone || '';
+  if(!phone){
+    return next({err: clientError.phone_null});
+  }
+
+  if(!publicLib.validPhone(phone)){
+    return next({err: clientError.invalid_phone});
+  }
+
+  clientLogic.upsertPhoneUser(phone, function(err, client){
+    if(err){
+      return next(err);
+    }
+
+    var accessToken = cryptoLib.encrypToken({_id: client._id, time: new Date()}, 'secret1');
+    delete client._doc.password;
+    delete client._doc.salt;
+    delete client._doc._id;
+
+    req.data = {
+      client: client,
+      access_token: accessToken
+    };
+    return next();
+  });
+};
 
 exports.signIn = function(req, res, next){
   var username = req.body.username || req.query.username || '';

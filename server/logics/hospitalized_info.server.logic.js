@@ -82,16 +82,13 @@ exports.createNewHospitalizedInfo = function (user, building, floor, bed, sicker
 
 //查询入住信息
 exports.queryHospitalizedInfoByIdNumber = function (filter, callback) {
-  if (filter.idNumber && !validIdNumber(filter.idNumber)) {
-    return callback({err: hospitalizedInfoError.invalid_id_number});
-  }
 
   var query = {
-    deleted_status: false,
+    deleted_status: false
   };
 
   if(filter.idNumber){
-    query.id_number = filter.idNumber;
+    query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
   HospitalizedInfo.find(query)

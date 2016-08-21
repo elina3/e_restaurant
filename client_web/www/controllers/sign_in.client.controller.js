@@ -22,7 +22,7 @@ angular.module('EClientWeb').controller('SignInController',
               Auth) {
 
       $scope.pageData = {
-        title: '登录',
+        title: '工作人员登录',
         password: '',
         username: ''
       };
@@ -34,6 +34,10 @@ angular.module('EClientWeb').controller('SignInController',
 
       $scope.goToManager = function(){
         $window.location.href = Config.managerServerAddress;
+      };
+
+      $scope.goToPersonal = function(){
+        $state.go('personal_sign_in');
       };
 
       $scope.goToView = function(viewPage){

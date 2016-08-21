@@ -11,24 +11,24 @@
     </div>
     <div class="address">
         <div class="address-check-box">
-            <label>店内用餐</label><input disabled class="address-check-box" ng-model="pageData.orderDetail.in_store_deal" type="checkbox"/>
+            <label>店内用餐</label><input ng-disabled="client.role !== 'normal' || pageData.scan" class="address-check-box" ng-model="pageData.orderDetail.in_store_deal" type="checkbox"/>
         </div>
 
         <div class="address-info" ng-show="!pageData.orderDetail.in_store_deal">
             <div class="address-item">
-                <label>收货人</label><input class="name" ng-model="pageData.orderDetail.contact.name"/>
+                <label>收货人</label><input ng-disabled="pageData.scan" class="name" ng-model="pageData.orderDetail.contact.name"/>
             </div>
             <div class="address-item">
-                <label>电话</label><input class="phone" ng-model="pageData.orderDetail.contact.mobile_phone" />
+                <label>电话</label><input ng-disabled="pageData.scan" class="phone" ng-model="pageData.orderDetail.contact.mobile_phone" />
             </div>
             <div class="address-item">
-                <label>地址</label><input class="detail" ng-model="pageData.orderDetail.contact.address"/>
+                <label>地址</label><input ng-disabled="pageData.scan" class="detail" ng-model="pageData.orderDetail.contact.address"/>
             </div>
         </div>
         <div class="remark row">
             <span class="key">备注信息</span>
             <span class="value">
-                <input type="text" ng-model="pageData.orderDetail.description" />
+                <input type="text" ng-disabled="pageData.scan" ng-model="pageData.orderDetail.description" />
             </span>
         </div>
     </div>

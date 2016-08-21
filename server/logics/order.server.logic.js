@@ -35,7 +35,7 @@ function generateContact(orderInfo, callback){
   var contact = new Contact({
     name: orderInfo.contact.name,
     address: orderInfo.contact.address,
-    mobile: orderInfo.contact.mobile_phone,
+    mobile_phone: orderInfo.contact.mobile_phone,
     email: orderInfo.contact.email
   });
 

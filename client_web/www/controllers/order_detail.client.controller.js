@@ -25,6 +25,7 @@ angular.module('EClientWeb').controller('OrderDetailController',
               OrderService,
               GoodsService) {
 
+      $scope.client = null;
       function getClient() {
         var client = Auth.getUser();
         if (!client) {
@@ -141,6 +142,7 @@ angular.module('EClientWeb').controller('OrderDetailController',
       }
 
       function init() {
+        $scope.client = getClient();
         var goodsInfoString = $stateParams.goods_infos;
         var orderId = $stateParams.order_id;
         var goodsInfos;
@@ -173,19 +175,19 @@ angular.module('EClientWeb').controller('OrderDetailController',
       function isValidOrderInfo() {
         if (!$scope.pageData.orderDetail.in_store_deal) {
           if (!$scope.pageData.orderDetail.contact) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请填写收货信息！');
+            $scope.$emit(GlobalEvent.onShowAlert, '请输入联系人信息！');
             return false;
           }
           if (!$scope.pageData.orderDetail.contact.name) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请填写收货人！');
-            return false;
-          }
-          if (!$scope.pageData.orderDetail.contact.address) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请填写收货地址！');
+            $scope.$emit(GlobalEvent.onShowAlert, '请输入联系人姓名！');
             return false;
           }
           if (!$scope.pageData.orderDetail.contact.mobile_phone) {
-            $scope.$emit(GlobalEvent.onShowAlert, '请填写收货电话！');
+            $scope.$emit(GlobalEvent.onShowAlert, '请输入联系人手机号码！');
+            return false;
+          }
+          if (!$scope.pageData.orderDetail.contact.address) {
+            $scope.$emit(GlobalEvent.onShowAlert, '请输入联系人地址！');
             return false;
           }
         }
