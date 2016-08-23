@@ -150,8 +150,9 @@ angular.module('EWeb').controller('MealBillController',
         return MealRecordService.translateMealType(bill);
       };
 
+      $scope.user = Auth.getUser();
       $scope.goBack = function () {
-        $state.go('meal_setting');
+        $window.history.back();
       };
 
       function init() {
