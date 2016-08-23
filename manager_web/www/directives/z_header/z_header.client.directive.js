@@ -96,8 +96,12 @@ angular.module('EWeb').directive('zHeader',
                             return $state.go('sign_in');
                         }
 
-                        if(scope.user && scope.user.role === 'admin'){
+                        if(scope.user.role === 'admin'){
                             $state.go('user_index');
+                        }else if(scope.user.role === 'delivery'){
+                            $state.go('goods_order');
+                        }else if(scope.user.role === 'nurse'){
+                            $state.go('meal_setting');
                         }
                     };
                 }

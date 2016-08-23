@@ -544,7 +544,11 @@ angular.module('EWeb').controller('MealSettingController',
       };
 
       $scope.goBack = function () {
-        $window.history.back();
+        if($scope.user.role === 'delivery'){
+          $state.go('goods_order');
+        }else{
+          $window.history.back();
+        }
       };
 
       $scope.goBill = function () {
