@@ -108,6 +108,23 @@ angular.module('EWeb').factory('MealRecordService',
               return callback(SystemError.network_error);
             });
         },
+        copyPreviousSetting: function(params, callback){
+          RequestSupport.executePost('/v2/bed_meal_records/copy_previous_setting', params)
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.zh_message || data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
+        },
         changeBed: function(params, callback){
           RequestSupport.executePost('/v2/change_bed', params)
             .then(function (data) {

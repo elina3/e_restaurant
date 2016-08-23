@@ -18,6 +18,12 @@ module.exports = function (app) {
     bedFilter.requireFloor,
     bedMealRecordController.batchSaveBedMealRecords);
 
+  app.route('/v2/bed_meal_records/copy_previous_setting').post(authFilter.requireUser,
+    bedFilter.requireBuilding,
+    bedFilter.requireFloor,
+    bedMealRecordController.copyPreviousSetting
+  );
+
 
   //营养餐设置页面搜索结果
   app.route('/v2/bed_meal_records').get(authFilter.requireUser,

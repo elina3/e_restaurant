@@ -96,6 +96,55 @@ exports.batchSaveBedMealRecords = function (req, res, next) {
   });
 };
 
+exports.copyPreviousSetting = function(req, res, next){
+  var dateTimeStamp = req.body.meal_set_time_stamp;
+  var time = new Date();
+  if (dateTimeStamp) {
+    time = new Date(parseInt(dateTimeStamp));
+  }
+  var mealSetDate = publicLib.parseToDate(time);
+  async.auto({
+    getPreviousDinnerMealRecordings: function(autoCallback){
+      var previousDate = new Date(mealSetDate.getTime());//前一天
+      previousDate.setDate(previousDate.getDate() - 1);
+
+      bedMealRecordLogic.getMealBedRecordsByMealDateAndTag(req.building, req.floor, previousDate, 'dinner', function(err, bedMealRecords){
+        return autoCallback(err, bedMealRecords);
+      });
+    },
+    copy: ['getPreviousDinnerMealRecordings', function(autoCallback, results){
+      if(!results.getPreviousDinnerMealRecordings || results.getPreviousDinnerMealRecordings.length === 0){
+        return autoCallback();
+      }
+
+      async.each(results.getPreviousDinnerMealRecordings, function(mealRecord, eachCallback){
+        if(!mealRecord.hospitalized_info || mealRecord.hospitalized_info.is_leave_hospital){
+          return eachCallback();
+        }
+
+        if(!mealRecord.meal_type_id || mealRecord.meal_type_id.deleted_status){
+          return eachCallback();
+        }
+
+        bedMealRecordLogic.copyCreateByPreviousDinnerMealRecording(mealRecord, mealSetDate, function(err){
+          return eachCallback(err);
+        });
+      }, function(err){
+        return autoCallback(err);
+      });
+    }]
+  }, function(err, results){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};
+
 //营养餐设置页面搜索结果
 exports.getBedMealRecords = function (req, res, next) {
   var dateTimeStamp = req.query.meal_set_time_stamp;

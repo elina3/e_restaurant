@@ -93,7 +93,6 @@ angular.module('EWeb').controller('MealSettingController',
         }
       };
 
-
       $scope.changeBedPanel = {
         isShow: false,
         buildings: [],
@@ -382,6 +381,8 @@ angular.module('EWeb').controller('MealSettingController',
         });
       }
 
+      var currentTimeStamp = null;
+
       $scope.search = function () {
 
         if (!$scope.filter.currentFloor) {
@@ -406,6 +407,8 @@ angular.module('EWeb').controller('MealSettingController',
           } else {
             loadNormalRecords(timeStamp);
           }
+
+          currentTimeStamp = timeStamp;
         });
       };
 
@@ -474,6 +477,10 @@ angular.module('EWeb').controller('MealSettingController',
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
         }
 
+        if(timeStamp !== currentTimeStamp){
+          return $scope.$emit(GlobalEvent.onShowAlert, '您的时间已变更，请先筛选查看再来决定是否生成账单！');
+        }
+
         var bedMealRecordParams = prepareParams();
         if (bedMealRecordParams.bed_meal_record_infos.length === 0) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请至少设置一个床位的用餐信息！');
@@ -495,6 +502,45 @@ angular.module('EWeb').controller('MealSettingController',
           $scope.$emit(GlobalEvent.onShowAlert, '保存成功，成功保存' + data.success_count + '条记录，已存在记录' + data.exist_count);
           $scope.search();
         });
+      };
+
+      $scope.copyPrevious = function(){
+
+
+        var timeStamp = $scope.filter.getTimeStamp();
+        if (!timeStamp) {
+          return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间！');
+        }
+
+        if(timeStamp !== currentTimeStamp){
+          return $scope.$emit(GlobalEvent.onShowAlert, '您的时间已变更，请先筛选查看再来决定是否顺延前一天的设置！');
+        }
+
+        if ($scope.timeout) {
+          return;
+        }
+
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {
+            title: '确认操作', content: '顺延前一天，当天的设置将被替换，您确定要顺延吗？',
+            callback: function () {
+            $scope.$emit(GlobalEvent.onShowLoading, true);
+            MealRecordService.copyPreviousSetting({
+              meal_set_time_stamp: timeStamp,
+              building_id: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+              floor_id: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : ''
+            }, function (err, data) {
+              $scope.$emit(GlobalEvent.onShowLoading, false);
+              if (err || !data) {
+                return $scope.$emit(GlobalEvent.onShowAlert, err || '顺延失败失败');
+              }
+
+              $scope.$emit(GlobalEvent.onShowAlert, '顺延成功！');
+              $scope.search();
+            });
+          }
+          });
+
       };
 
       $scope.goBack = function () {
