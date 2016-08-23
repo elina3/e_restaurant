@@ -54,7 +54,7 @@
                 <div class="filter-item search-item col-xs-2">
                     <div class="bill" ng-class="{'disabled': timeout}" ng-click="saveMealSet()">生成账单</div>
                 </div>
-                <div class="filter-item search-item col-xs-2" ng-show="!timeout">
+                <div class="filter-item search-item col-xs-2" ng-show="(user.role === 'delivery' || user.role === 'admin' )&& !timeout">
                     <div class="bill" ng-class="{'disabled': timeout}" ng-click="copyPrevious()">顺延前一天</div>
                 </div>
 

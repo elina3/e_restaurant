@@ -211,8 +211,8 @@ angular.module('EWeb').controller('GoodsOrderController',
       $scope.goOrderStatistic = function(){
         $state.go('order_statistic');
       };
-      $scope.goHealthyBill = function(){
-        $state.go('meal_bill');
+      $scope.goHealthySetting = function(){
+        $state.go('meal_setting');
       };
 
       $scope.loadMore = function () {
