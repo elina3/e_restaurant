@@ -104,14 +104,23 @@ exports.copyPreviousSetting = function(req, res, next){
   }
   var mealSetDate = publicLib.parseToDate(time);
   async.auto({
-    getPreviousDinnerMealRecordings: function(autoCallback){
+    getBeds: function(autoCallback){
+      hospitalizedInfoLogic.getBedsWithSickInBuildingFloor(req.building._id, req.floor._id, function(err, beds){
+        return autoCallback(err, beds);
+      });
+    },
+    getPreviousDinnerMealRecordings: ['getBeds', function(autoCallback, results){
+      if(!results.getBeds || results.getBeds.length === 0){
+        return autoCallback(null, []);
+      }
+
       var previousDate = new Date(mealSetDate.getTime());//前一天
       previousDate.setDate(previousDate.getDate() - 1);
 
-      bedMealRecordLogic.getMealBedRecordsByMealDateAndTag(req.building, req.floor, previousDate, 'dinner', function(err, bedMealRecords){
+      bedMealRecordLogic.getMealBedRecordsByMealDateAndTag(req.building, req.floor, results.getBeds, previousDate, 'dinner', function(err, bedMealRecords){
         return autoCallback(err, bedMealRecords);
       });
-    },
+    }],
     copy: ['getPreviousDinnerMealRecordings', function(autoCallback, results){
       if(!results.getPreviousDinnerMealRecordings || results.getPreviousDinnerMealRecordings.length === 0){
         return autoCallback();

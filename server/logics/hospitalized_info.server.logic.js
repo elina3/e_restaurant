@@ -301,3 +301,21 @@ exports.modifyHospitalizedInfoBed = function(user, hospitalizedInfo, newBedInfo,
     return callback(null, newHospitalizedInfo);
   });
 };
+
+exports.getBedsWithSickInBuildingFloor = function(buildingId, floorId, callback){
+  HospitalizedInfo.find({
+    building: buildingId,
+    floor: floorId,
+    is_hospitalized: true,
+    is_leave_hospital: false,
+    deleted_status: false
+  }).exec(function(err, hospitalizedInfos){
+    if(err || !hospitalizedInfos){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, hospitalizedInfos.map(function(item){
+      return item.bed;
+    }));
+  });
+};

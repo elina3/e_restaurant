@@ -175,12 +175,13 @@ exports.getMealBedRecordsByMealDate = function (building, floor, mealSetDate, ca
   });
 };
 
-exports.getMealBedRecordsByMealDateAndTag = function (building, floor, mealSetDate, mealTag, callback) {
+exports.getMealBedRecordsByMealDateAndTag = function (building, floor, beds, mealSetDate, mealTag, callback) {
   queryMealBedRecords({
     meal_set_date: mealSetDate,
     meal_tag: mealTag,
     building: building._id,
     floor: floor._id,
+    bed: {$in: beds},
     deleted_status: false
   }, 'hospitalized_info meal_type_id', function (err, bedMealRecords) {
     return callback(null, bedMealRecords);
