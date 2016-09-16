@@ -27,6 +27,23 @@
                             />
                 </div>
                 <div class="filter-item status col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentBuilding"
+                                z-dropdown-options="filter.buildings"
+                                z-dropdown-label="选择楼"
+                                z-dropdown-change="filter.changeBuilding()"
+                                z-dropdown-disabled="filter.buildings.length<=1"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item discount col-xs-2">
+                    <z-dropdown z-dropdown-model="filter.currentFloor"
+                                z-dropdown-options="filter.floors"
+                                z-dropdown-label="所有楼层"
+                                z-dropdown-disabled="filter.floors.length===0"
+                            >
+                    </z-dropdown>
+                </div>
+                <div class="filter-item status col-xs-2">
                     <z-dropdown z-dropdown-model="filter.currentMealType"
                                 z-dropdown-options="pageData.mealTypes"
                                 z-dropdown-label="营养餐类型"
@@ -61,7 +78,7 @@
                 <div class="content">
                     <div class="row list-header">
                         <div class="col-xs-2"><span>就餐日期</span></div>
-                        <div class="col-xs-2"><span>床位信息</span></div>
+                        <div class="col-xs-1"><span>床位信息</span></div>
                         <div class="col-xs-3"><span>身份证</span></div>
                         <div class="col-xs-1"><span>姓名</span></div>
                         <div class="col-xs-2"><span>营养餐</span></div>
@@ -72,7 +89,7 @@
                         <div class="col-xs-2">
                             <span>{{info.meal_set_date | date: 'yyyy-MM-dd'}} {{info.meal_tag}}</span>
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col-xs-1">
                             <span>{{info.building.name}}{{info.floor.name}}{{info.bed.name}}</span>
                         </div>
                         <div class="col-xs-3">
@@ -89,6 +106,7 @@
                         <div class="col-xs-1">
                             <span>{{info.is_checkout ? '已结账' : '未结账'}}</span>
                         </div>
+                        <div class="col-xs-1 error" style="cursor: pointer"><span ng-click="delete(info._id)">删除</span></div>
                     </div>
                 </div>
                 <z-pagination config="pageData.pagination"></z-pagination>

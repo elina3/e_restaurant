@@ -303,6 +303,14 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
+  if(filter.buildingId){
+    query.building = mongoLib.generateNewObjectId(filter.buildingId);
+  }
+
+  if(filter.floorId){
+    query.floor = mongoLib.generateNewObjectId(filter.floorId);
+  }
+
   BedMealRecord.aggregate([{
     $match: query
   }, {
@@ -375,8 +383,15 @@ exports.getMealBills = function (filter, callback) {
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
+  if(filter.buildingId){
+    query.building = filter.buildingId;
+  }
+  if(filter.floorId){
+    query.floor = filter.floorId;
+  }
+
   BedMealRecord.find(query)
-    .sort({floor: -1})
+    .sort({floor: 1, bed: 1, time_tag: 1})
     .populate('building floor bed')
     .exec(function (err, bedMealRecords) {
       if (err || !bedMealRecords) {
@@ -626,5 +641,24 @@ exports.getTotalAmountByHospitalizedInfoId = function (hospitalizedInfoId, callb
     }
 
     return callback(null, result[0].total_amount);
+  });
+};
+
+exports.deleteBedMealRecord = function(bedMealRecord, callback){
+  if(bedMealRecord.deleted_status){
+    return callback({err: bedMealRecordError.bed_meal_record_deleted});
+  }
+
+  if(bedMealRecord.is_checkout){
+    return callback({err: bedMealRecordError.bed_meal_record_checkout});
+  }
+
+  bedMealRecord.deleted_status = true;
+  bedMealRecord.save(function(err, newBedMealRecord){
+    if(err){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback(null, newBedMealRecord);
   });
 };

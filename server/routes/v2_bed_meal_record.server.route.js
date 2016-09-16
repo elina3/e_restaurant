@@ -69,4 +69,6 @@ module.exports = function (app) {
     hospitalizedInfoFilter.requireHospitalizedInfo,
     bedFilter.requireBed,
     bedMealRecordController.changeBed);
+
+  app.route('/v2/bed_meal_record/delete').post(authFilter.requireUser, bedMealRecordFilter.requireBedMealRecord, bedMealRecordController.deleteBedMealRecord);
 };

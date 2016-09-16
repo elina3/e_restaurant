@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('EWeb').controller('MealBillController',
-  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedMealRecordService', 'MealRecordService', 'GoodsService', 'MealTypeService',
-    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedMealRecordService, MealRecordService, GoodsService, MealTypeService) {
+  ['$scope', '$window', '$stateParams', '$rootScope', 'GlobalEvent', '$state', 'Auth', 'BedMealRecordService', 'MealRecordService', 'GoodsService', 'MealTypeService', 'BedService',
+    function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, Auth, BedMealRecordService, MealRecordService, GoodsService, MealTypeService, BedService) {
 
 
       var defaultMealType = {id: '', text: '所有类型'};
@@ -91,6 +91,8 @@ angular.module('EWeb').controller('MealBillController',
 
       function loadBills() {
         MealRecordService.getMealBills({
+          building_id: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+          floor_id: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
           id_number: $scope.filter.currentIdNumber,
           meal_type_id: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
           meal_tag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
@@ -106,6 +108,7 @@ angular.module('EWeb').controller('MealBillController',
 
           $scope.pageData.bills = data.bed_meal_bills.map(function (item) {
             return {
+              _id: item._id,
               building: item.building,
               floor: item.floor,
               bed: item.bed,
@@ -129,6 +132,10 @@ angular.module('EWeb').controller('MealBillController',
       }
 
       $scope.filter = {
+        buildings: [],
+        floors: [],
+        currentBuilding: null,
+        currentFloor: null,
         currentIdNumber: '',
         currentMealTag: null,
         currentMealType: null,
@@ -142,6 +149,24 @@ angular.module('EWeb').controller('MealBillController',
           }
 
           loadBills();
+        },
+        changeBuilding: function () {
+          if (this.currentBuilding) {
+            var that = this;
+            BedService.getFloorsByBuildingId(that.currentBuilding.id, function (err, data) {
+              if (data && data.floors) {
+                that.floors = [];
+
+                that.floors.push({id: '', text: '所有楼层'});
+                data.floors.forEach(function (floor) {
+                  that.floors.push({
+                    id: floor._id,
+                    text: floor.name
+                  });
+                });
+              }
+            });
+          }
         }
       };
 
@@ -154,8 +179,49 @@ angular.module('EWeb').controller('MealBillController',
       $scope.goBack = function () {
         $window.history.back();
       };
+      $scope.delete = function(bedMealRecordId){
+        if(!bedMealRecordId){
+          return $scope.$emit(GlobalEvent.onShowAlert, '参数错误');
+        }
+
+        $scope.$emit(GlobalEvent.onShowAlertConfirm,
+          {
+            title: '确认操作', content: '您确定要删除该订单吗？',
+            callback: function () {
+              $scope.$emit(GlobalEvent.onShowLoading, true);
+              MealRecordService.deleteBedMealRecord({
+                bed_meal_record_id: bedMealRecordId
+              }, function (err, data) {
+                $scope.$emit(GlobalEvent.onShowLoading, false);
+                if (err || !data || !data.success) {
+                  return $scope.$emit(GlobalEvent.onShowAlert, err || '删除失败');
+                }
+
+                $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
+                $scope.filter.search();
+              });
+            }
+          });
+
+      };
+
+      function loadBuildings() {
+        BedService.getBuildings(function (err, data) {
+          if (data && data.buildings) {
+            $scope.filter.buildings = [];
+            $scope.filter.buildings = data.buildings.map(function (building) {
+              return {
+                id: building._id, text: building.name
+              };
+            });
+            $scope.filter.currentBuilding = $scope.filter.buildings[0];
+            $scope.filter.changeBuilding();
+          }
+        });
+      }
 
       function init() {
+        loadBuildings();
         MealTypeService.getMealTypes(function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err || !data || !data.meal_types) {
@@ -173,10 +239,9 @@ angular.module('EWeb').controller('MealBillController',
       init();
 
 
-
-
       //<editor-fold desc="导出相关">
       var exportSheet = {A1: '日期', B1: '床位信息', C1: '姓名', D1: '身份证', E1: '营养餐', F1: '金额'};
+
       function generateExportData(row) {
         var result = [];
         result.push(row.time_tag);
@@ -187,10 +252,11 @@ angular.module('EWeb').controller('MealBillController',
         result.push(row.amount);
         return result;
       }
+
       function generateExcelDataArray(formattedStatisticInfos) {
         var datas = [];
         var header = [];
-        for(var prop in exportSheet){
+        for (var prop in exportSheet) {
           header.push(exportSheet[prop]);
         }
         datas.push(header);
@@ -199,17 +265,20 @@ angular.module('EWeb').controller('MealBillController',
         }
         return datas;
       }
+
       function isIE() {
         var myNav = navigator.userAgent.toLowerCase();
         return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
       }
 
-      $scope.exportMealBills = function(){
+      $scope.exportMealBills = function () {
         if (!$scope.pageData.datePicker.createTimeRange) {
           return $scope.$emit(GlobalEvent.onShowAlert, '请选择时间');
         }
 
         MealRecordService.exportMealBills({
+          building_id: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
+          floor_id: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
           id_number: $scope.filter.currentIdNumber,
           meal_type_id: $scope.filter.currentMealType ? $scope.filter.currentMealType.id : '',
           meal_tag: $scope.filter.currentMealTag ? $scope.filter.currentMealTag.id : '',
@@ -222,8 +291,8 @@ angular.module('EWeb').controller('MealBillController',
 
           var mealBills = result.bed_meal_bills.map(function (item) {
             var billString = '';
-            item.meal_bills.forEach(function(bill){
-              billString += (bill.name +'*'+ bill.count+',');
+            item.meal_bills.forEach(function (bill) {
+              billString += (bill.name + '*' + bill.count + ',');
             });
             return {
               time_tag: new Date(item.meal_set_date).Format('yyyy-MM-dd') + ' ' + translateMealTag(item.meal_tag),
@@ -235,7 +304,7 @@ angular.module('EWeb').controller('MealBillController',
             };
           });
 
-          if(mealBills.length === 0){
+          if (mealBills.length === 0) {
             return $scope.$emit(GlobalEvent.onShowAlert, '数据为空');
           }
 
@@ -247,7 +316,7 @@ angular.module('EWeb').controller('MealBillController',
             var excel_sheet = excel_book.Worksheets(1);
             for (var i = 0; i < data.length; i++) {
               for (var j = 0; j < data[i].length; j++) {
-                excel_sheet.Cells(i+1,j+1).Value = data[i][j];
+                excel_sheet.Cells(i + 1, j + 1).Value = data[i][j];
               }
             }
             excel.Visible = true;

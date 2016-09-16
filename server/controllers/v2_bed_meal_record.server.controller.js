@@ -182,6 +182,8 @@ exports.getBedMealRecordsByPagination = function (req, res, next) {
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   bedMealRecordLogic.getMealBillByFilter({
+    buildingId: req.query.building_id || '',
+    floorId: req.query.floor_id || '',
     mealTag: req.query.meal_tag || '',
     mealTypeId: req.query.meal_type_id || '',
     idNumber: req.query.id_number || '',
@@ -209,6 +211,8 @@ exports.getMealBills = function(req, res, next){
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
   bedMealRecordLogic.getMealBills({
+    buildingId: req.query.building_id || '',
+    floorId: req.query.floor_id || '',
     mealTag: req.query.meal_tag || '',
     mealTypeId: req.query.meal_type_id || '',
     idNumber: req.query.id_number || '',
@@ -427,6 +431,15 @@ exports.changeBed = function(req, res, next){
 };
 
 
-exports.exportBedBill = function(req, res, next){
+exports.deleteBedMealRecord = function(req, res, next){
+  bedMealRecordLogic.deleteBedMealRecord(req.bed_meal_record, function(err){
+    if(err){
+      return next(err);
+    }
 
+    req.data = {
+      success: true
+    };
+    return next();
+  });
 };
