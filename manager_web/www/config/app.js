@@ -107,6 +107,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       url: '/healthy_meal/meal_bill',
       templateUrl: 'templates/healthy_meal/v2_meal_bill.client.view.html',
       controller: 'MealBillController'
+    })
+    .state('meal_statistic', {
+      url: '/healthy_meal/v2_meal_statistic',
+      templateUrl: 'templates/healthy_meal/v2_meal_statistic.client.view.html',
+      controller: 'MealStatisticController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');

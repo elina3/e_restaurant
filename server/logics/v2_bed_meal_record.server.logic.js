@@ -199,7 +199,7 @@ function queryOneBedMealRecord(filter, callback) {
     });
 }
 
-function createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, mealTag, callback){
+function createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, mealTag, callback) {
   queryOneBedMealRecord({
     meal_set_date: mealSetDate,
     meal_tag: mealTag,
@@ -248,8 +248,8 @@ function createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, mealT
       mealBedRecord.meal_type_price = 0;
     }
     mealBedRecord.need_choose_package_meal = previousBedMealRecord.meal_type_id.need_choose_package_meal;
-    mealBedRecord.save(function(err, newMealBedRecord){
-      if(err || !newMealBedRecord){
+    mealBedRecord.save(function (err, newMealBedRecord) {
+      if (err || !newMealBedRecord) {
         return callback({err: systemError.database_save_error});
       }
 
@@ -260,22 +260,22 @@ function createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, mealT
 
 exports.copyCreateByPreviousDinnerMealRecording = function (previousBedMealRecord, mealSetDate, callback) {
   async.auto({
-    createBreakfast: function(autoCallback){
-      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'breakfast', function(err){
+    createBreakfast: function (autoCallback) {
+      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'breakfast', function (err) {
         return autoCallback(err);
       });
     },
-    createLunch: function(autoCallback){
-      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'lunch', function(err){
+    createLunch: function (autoCallback) {
+      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'lunch', function (err) {
         return autoCallback(err);
       });
     },
-    createDinner: function(autoCallback){
-      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'dinner', function(err){
+    createDinner: function (autoCallback) {
+      createMealTagByPreviousRecord(previousBedMealRecord, mealSetDate, 'dinner', function (err) {
         return autoCallback(err);
       });
     },
-  }, function(err){
+  }, function (err) {
     return callback(err);
   });
 };
@@ -303,11 +303,11 @@ exports.getMealBillByFilter = function (filter, pagination, callback) {
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
-  if(filter.buildingId){
+  if (filter.buildingId) {
     query.building = mongoLib.generateNewObjectId(filter.buildingId);
   }
 
-  if(filter.floorId){
+  if (filter.floorId) {
     query.floor = mongoLib.generateNewObjectId(filter.floorId);
   }
 
@@ -383,10 +383,10 @@ exports.getMealBills = function (filter, callback) {
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
   }
 
-  if(filter.buildingId){
+  if (filter.buildingId) {
     query.building = filter.buildingId;
   }
-  if(filter.floorId){
+  if (filter.floorId) {
     query.floor = filter.floorId;
   }
 
@@ -644,21 +644,135 @@ exports.getTotalAmountByHospitalizedInfoId = function (hospitalizedInfoId, callb
   });
 };
 
-exports.deleteBedMealRecord = function(bedMealRecord, callback){
-  if(bedMealRecord.deleted_status){
+exports.deleteBedMealRecord = function (bedMealRecord, callback) {
+  if (bedMealRecord.deleted_status) {
     return callback({err: bedMealRecordError.bed_meal_record_deleted});
   }
 
-  if(bedMealRecord.is_checkout){
+  if (bedMealRecord.is_checkout) {
     return callback({err: bedMealRecordError.bed_meal_record_checkout});
   }
 
   bedMealRecord.deleted_status = true;
-  bedMealRecord.save(function(err, newBedMealRecord){
-    if(err){
+  bedMealRecord.save(function (err, newBedMealRecord) {
+    if (err) {
       return callback({err: systemError.database_save_error});
     }
 
     return callback(null, newBedMealRecord);
+  });
+};
+
+exports.getMealStatistics = function (filter, pagination, callback) {
+  var match = {
+    deleted_status: false,
+    building: filter.building._id
+  };
+
+  if (filter.floor) {
+    match.floor = filter.floor._id;
+  }
+
+  if (filter.startTime && filter.endTime) {
+    match.$and = [{meal_set_date: {$gte: filter.startTime}}, {meal_set_date: {$lte: filter.endTime}}];
+  }
+
+  if (filter.idNumber) {
+    match.id_number = {$regex: filter.idNumber, $options: '$i'};
+  }
+
+  BedMealRecord.aggregate([{$match:match},{
+    $group: {
+      _id: '$hospitalized_info'
+    }
+  }], function(err, infoResult){
+    if(err){
+      return callback(err);
+    }
+
+    var totalCount = infoResult.length;
+
+    if (pagination.limit === -1) {
+      pagination.limit = 10;
+    }
+
+    if (pagination.skip_count === -1) {
+      pagination.skip_count = pagination.limit * (pagination.current_page - 1);
+    }
+
+    BedMealRecord.aggregate([{
+      $match: match
+    }, {
+      $group: {
+        _id: {
+          hospitalized_info: '$hospitalized_info',
+          meal_set_date: '$meal_set_date',
+          meal_tag: '$meal_tag',
+          meal_type_price: '$meal_type_price'
+        },
+        hospitalized_info: {$first: '$hospitalized_info'},
+        meal_set_date: {$first: '$meal_set_date'},
+        meal_tag: {$first: '$meal_tag'},
+        meal_type_price: {$first: '$meal_type_price'},
+        id_number: {$first: '$id_number'},
+        nickname: {$first: '$nickname'},
+        building: {$first: '$building'},
+        floor: {$first: '$floor'},
+        bed: {$first: '$bed'}
+      }
+    }, {
+      $group: {
+        _id: {
+          hospitalized_info: '$hospitalized_info',
+          meal_set_date: '$meal_set_date'
+        },
+        id_number: {$first: '$id_number'},
+        hospitalized_info: {$first: '$hospitalized_info'},
+        meal_set_date: {$first: '$meal_set_date'},
+        nickname: {$first: '$nickname'},
+        building: {$first: '$building'},
+        floor: {$first: '$floor'},
+        bed: {$first: '$bed'},
+        prices: {
+          $push: {
+            meal_tag: '$meal_tag',
+            meal_type_price: '$meal_type_price'
+          }
+        }
+      }
+    }, {
+      $group: {
+        _id: '$hospitalized_info',
+        id_number: {$first: '$id_number'},
+        nickname: {$first: '$nickname'},
+        building: {$first: '$building'},
+        floor: {$first: '$floor'},
+        bed: {$first: '$bed'},
+        hospitalized_info: {$first: '$hospitalized_info'},
+        meal_set_date: {$first: '$meal_set_date'},
+        day_count: {$sum: 1},
+        statistics: {
+          $push: {
+            meal_set_date: '$meal_set_date',
+            prices: '$prices'
+          }
+        }
+      }
+    }, {
+      $skip: pagination.skip_count
+    }, {
+      $limit: pagination.limit
+    }], function (err, result) {
+      if (err) {
+        return callback(err);
+      }
+
+      return callback(null, {
+        totalCount: totalCount,
+        limit: pagination.limit,
+        currentPage: pagination.current_page,
+        mealStatistic: result
+      });
+    });
   });
 };

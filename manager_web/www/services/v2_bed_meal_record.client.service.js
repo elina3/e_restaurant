@@ -158,6 +158,23 @@ angular.module('EWeb').factory('MealRecordService',
             function (err) {
               return callback(SystemError.network_error);
             });
+        },
+        getMealStatistics: function(params, callback){
+          RequestSupport.executeGet('/v2/bed_meal_record/statistics', params)
+            .then(function (data) {
+              if (!callback) {
+                return data;
+              }
+
+              if (data.err) {
+                return callback(data.zh_message || data.err);
+              }
+
+              callback(null, data);
+            },
+            function (err) {
+              return callback(SystemError.network_error);
+            });
         }
       };
     }]);

@@ -233,3 +233,25 @@ exports.getBedById = function(bedId, callback){
       return callback(null,  bed);
     });
 };
+
+exports.getFloorsByIds = function(ids, callback){
+  Floor.find({_id: {$in: ids}})
+    .exec(function(err, floors){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null,  floors);
+    });
+};
+
+exports.getBedsByIds = function(ids, callback){
+  Bed.find({_id: {$in: ids}})
+    .exec(function(err, beds){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+
+      return callback(null,  beds);
+    });
+};

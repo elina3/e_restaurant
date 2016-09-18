@@ -179,6 +179,11 @@ angular.module('EWeb').controller('MealBillController',
       $scope.goBack = function () {
         $window.history.back();
       };
+
+      $scope.goMealStatistic = function(){
+        $state.go('meal_statistic');
+      };
+
       $scope.delete = function(bedMealRecordId){
         if(!bedMealRecordId){
           return $scope.$emit(GlobalEvent.onShowAlert, '参数错误');
@@ -237,7 +242,6 @@ angular.module('EWeb').controller('MealBillController',
       }
 
       init();
-
 
       //<editor-fold desc="导出相关">
       var exportSheet = {A1: '日期', B1: '床位信息', C1: '姓名', D1: '身份证', E1: '营养餐', F1: '金额'};

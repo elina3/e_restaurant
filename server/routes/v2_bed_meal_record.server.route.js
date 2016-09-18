@@ -71,4 +71,5 @@ module.exports = function (app) {
     bedMealRecordController.changeBed);
 
   app.route('/v2/bed_meal_record/delete').post(authFilter.requireUser, bedMealRecordFilter.requireBedMealRecord, bedMealRecordController.deleteBedMealRecord);
+  app.route('/v2/bed_meal_record/statistics').get(bedFilter.requireBuilding, paginationFilter.requirePagination, bedMealRecordController.getMealStatistics);
 };

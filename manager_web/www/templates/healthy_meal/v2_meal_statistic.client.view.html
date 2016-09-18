@@ -5,12 +5,12 @@
             <div class="row ee-title">
                 <div class="col-xs-6">
                     <span class="ee-banner-back" ng-click="goBack()">< </span>
-                    <span class="ee-banner-content">营养餐账单管理</span>
+                    <span class="ee-banner-content">营养餐账单统计</span>
                 </div>
                 <div class="col-xs-6">
-                    <div class="handle-button" ng-click="goMealStatistic()">
-                        <span>统计查询</span>
-                    </div>
+                    <!--<div class="handle-button" ng-click="goOrderStatistic()">-->
+                    <!--<span>统计查询</span>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                            placeholder="点击选择时间"
                             />
                 </div>
-                <div class="filter-item status col-xs-2">
+                <div class="filter-item status col-xs-2" ng-show="false">
                     <z-dropdown z-dropdown-model="filter.currentBuilding"
                                 z-dropdown-options="filter.buildings"
                                 z-dropdown-label="选择楼"
@@ -43,20 +43,6 @@
                             >
                     </z-dropdown>
                 </div>
-                <div class="filter-item status col-xs-2">
-                    <z-dropdown z-dropdown-model="filter.currentMealType"
-                                z-dropdown-options="pageData.mealTypes"
-                                z-dropdown-label="营养餐类型"
-                            >
-                    </z-dropdown>
-                </div>
-                <div class="filter-item status col-xs-2">
-                    <z-dropdown z-dropdown-model="filter.currentMealTag"
-                                z-dropdown-options="pageData.mealTags"
-                                z-dropdown-label="就餐类型"
-                            >
-                    </z-dropdown>
-                </div>
                 <form>
                     <div class="filter-item id-number col-xs-2">
                         <input type="text" maxlength="18" class="input-text" ng-model="filter.currentIdNumber"
@@ -67,13 +53,11 @@
                         <input class="submit-button" type="submit" ng-click="filter.search()">
                     </div>
                 </form>
-                <div class="filter-item search-item col-xs-2">
-                    <div class="exports" ng-click="exportMealBills()">导出</div>
-                </div>
             </div>
         </div>
         <div class="search-content">
-            <div class="search-total-amount"><span>总金额（元）：</span><strong>{{pageData.totalAmount / 100 | number : 2}}</strong><span style="margin-left:20px;font-size:12px;color:#666;">共{{pageData.pagination.totalCount}}条</span></div>
+            <div class="search-total-amount"><span>住院总天数：</span><strong>{{pageData.totalDay}}</strong></div>
+            <div class="search-total-amount"><span>用餐总天数：</span><strong>{{pageData.mealDayCount}}</strong></div>
             <div class="ee-table-list">
                 <div class="content">
                     <div class="row list-header">
@@ -81,32 +65,30 @@
                         <div class="col-xs-1"><span>床位信息</span></div>
                         <div class="col-xs-3"><span>身份证</span></div>
                         <div class="col-xs-1"><span>姓名</span></div>
-                        <div class="col-xs-2"><span>营养餐</span></div>
-                        <div class="col-xs-1"><span>金额(元)</span></div>
+                        <div class="col-xs-2"><span>住院天数</span></div>
+                        <div class="col-xs-1"><span>用餐天数</span></div>
                         <div class="col-xs-1"><span>状态</span></div>
                     </div>
                     <div class="row list-info" ng-repeat="info in pageData.bills">
                         <div class="col-xs-2">
-                            <span>{{info.meal_set_date | date: 'yyyy-MM-dd'}} {{info.meal_tag}}</span>
+                            <span>{{info.meal_set_date | date: 'yyyy-MM-dd'}}</span>
                         </div>
                         <div class="col-xs-1">
-                            <span>{{info.building.name}}{{info.floor.name}}{{info.bed.name}}</span>
+                            <span>{{info.bed_info}}</span>
                         </div>
                         <div class="col-xs-3">
                             <span>{{info.id_number}}</span>
                         </div>
                         <div class="col-xs-1"><span>{{info.nickname}}</span></div>
                         <div class="col-xs-2">
-                            <span>{{info.meal_type_name}}</span>
-                            <span ng-repeat="bill in info.meal_bills">{{bill.name}}({{ bill.count}})</span>
+                            <span>{{info.day_count}}</span>
                         </div>
                         <div class="col-xs-1">
-                            <span>{{info.amount_paid / 100}}</span>
+                            <span>{{info.meal_day_count}}</span>
                         </div>
                         <div class="col-xs-1">
-                            <span>{{info.is_checkout ? '已结账' : '未结账'}}</span>
+                            <span>{{info.is_leave_hospital ? '已出院' : '未出院'}}</span>
                         </div>
-                        <div ng-show="false" class="col-xs-1 error" style="cursor: pointer"><span ng-click="delete(info._id)">删除</span></div>
                     </div>
                 </div>
                 <z-pagination config="pageData.pagination"></z-pagination>
