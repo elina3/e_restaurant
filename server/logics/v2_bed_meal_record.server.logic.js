@@ -693,7 +693,7 @@ exports.getMealStatistics = function (filter, pagination, callback) {
     var totalCount = infoResult.length;
 
     if (pagination.limit === -1) {
-      pagination.limit = 10;
+      pagination.limit = totalCount;
     }
 
     if (pagination.skip_count === -1) {
