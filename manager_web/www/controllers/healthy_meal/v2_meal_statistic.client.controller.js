@@ -21,7 +21,7 @@ angular.module('EWeb').controller('MealStatisticController',
         }, {id: 'prepare_to_pay', text: '未出账单'}, {id: 'canceled', text: '已取消'}],
         pagination: {
           currentPage: 1,
-          limit: 20,
+          limit: 10,
           totalCount: 0,
           skipCount: 0,
           onCurrentPageChanged: function (callback) {
@@ -99,7 +99,7 @@ angular.module('EWeb').controller('MealStatisticController',
 
           $scope.pageData.totalDay = data.total_day;
           $scope.pageData.mealDayCount = data.meal_day_count;
-          $scope.pageData.pagination.totalCount = data.totalCount;
+          $scope.pageData.pagination.totalCount = data.total_count;
           $scope.pageData.pagination.limit = data.limit;
           $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
 

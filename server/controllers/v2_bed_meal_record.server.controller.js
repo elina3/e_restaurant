@@ -603,7 +603,8 @@ exports.getMealStatistics = function (req, res, next) {
       total_day: results.generateStatistic.total_day,
       meal_day_count: results.generateStatistic.meal_day_count,
       limit: results.generateStatistic.limit,
-      meal_statistics: results.generateStatistic.mealStatistic
+      meal_statistics: results.generateStatistic.mealStatistic,
+      total_count: results.generateStatistic.totalCount
     };
     return next();
   });
