@@ -21,7 +21,7 @@ angular.module('EWeb').controller('MealStatisticController',
         }, {id: 'prepare_to_pay', text: '未出账单'}, {id: 'canceled', text: '已取消'}],
         pagination: {
           currentPage: 1,
-          limit: 10,
+          limit: 50,
           totalCount: 0,
           skipCount: 0,
           onCurrentPageChanged: function (callback) {
