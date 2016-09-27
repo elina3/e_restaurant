@@ -54,7 +54,7 @@ angular.module('EWeb').controller('MealStatisticController',
         totalAmount: 0
       };
 
-      function getTimeRangeString() {
+      function getTimeRange() {
         var timeRange = {};
         if ($scope.pageData.datePicker.createTimeRange) {
           if ($scope.pageData.datePicker.createTimeRange.startDate && $scope.pageData.datePicker.createTimeRange.startDate._d) {
@@ -64,18 +64,28 @@ angular.module('EWeb').controller('MealStatisticController',
             timeRange.endTime = moment($scope.pageData.datePicker.createTimeRange.endDate).toISOString();
           }
         }
-        return JSON.stringify(timeRange);
+        return timeRange;
+      }
+
+      function invalidTime(timeRange){
+          return (new Date(timeRange.endTime) - new Date(timeRange.startTime)) <= 90*24*60*60*1000;
       }
 
       function loadStatistics() {
+        var timeRange = getTimeRange();
+        var isInvalid = invalidTime(timeRange);
+        if(!isInvalid){
+          return $scope.$emit(GlobalEvent.onShowAlert, '最多选择90天的时间段');
+        }
+
         MealRecordService.getMealStatistics({
           building_id: $scope.filter.currentBuilding ? $scope.filter.currentBuilding.id : '',
           floor_id: $scope.filter.currentFloor ? $scope.filter.currentFloor.id : '',
           id_number: $scope.filter.currentIdNumber,
-          time_range: getTimeRangeString(),
-          current_page: $scope.pageData.pagination.currentPage,
-          limit: $scope.pageData.pagination.limit,
-          skip_count: $scope.pageData.pagination.skipCount
+          time_range: JSON.stringify(timeRange),
+          //current_page: $scope.pageData.pagination.currentPage,
+          //limit: $scope.pageData.pagination.limit,
+          //skip_count: $scope.pageData.pagination.skipCount
         }, function (err, data) {
           if (err || !data || !data.meal_statistics) {
             return $scope.$emit(GlobalEvent.onShowAlert, err || '查询失败');
@@ -99,9 +109,9 @@ angular.module('EWeb').controller('MealStatisticController',
 
           $scope.pageData.totalDay = data.total_day;
           $scope.pageData.mealDayCount = data.meal_day_count;
-          $scope.pageData.pagination.totalCount = data.total_count;
-          $scope.pageData.pagination.limit = data.limit;
-          $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
+          //$scope.pageData.pagination.totalCount = data.total_count;
+          //$scope.pageData.pagination.limit = data.limit;
+          //$scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
 
         });
       }
