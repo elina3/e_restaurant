@@ -182,3 +182,13 @@ exports.validPhone = function (phone) {
 
   return true;
 };
+
+exports.getStackError = function (err) {
+  console.log(new Date().Format('yyyy-MM-dd hh:mm:ss'));
+  if (err && err.stack) {
+    console.log(err.stack);
+  }
+  console.trace();
+
+  return err;
+};

@@ -112,6 +112,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       url: '/healthy_meal/v2_meal_statistic',
       templateUrl: 'templates/healthy_meal/v2_meal_statistic.client.view.html',
       controller: 'MealStatisticController'
+    })
+    .state('supermarket_order', {
+      url: '/supermarket_new/supermarket_order',
+      templateUrl: 'templates/supermarket_new/supermarket_order.client.view.html',
+      controller: 'SupermarketOrderController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');

@@ -5,6 +5,7 @@ var _ = require('lodash');
 module.exports = _.extend(exports, {
   internal_system_error: {type: 'internal_system_error', message: 'internal system error', zh_message: '系统内部错误'},
   database_query_error: {type: 'database_query_error', message: 'Database query failed', zh_message: '数据库查询出错'},
+  database_update_error: {type: 'database_update_error', message: 'Database update failed', zh_message: '数据库更新出错'},
   network_error: {type: 'network_error', message: 'The network is error', zh_message: '网络出错'},
   account_not_match: {type: 'account_not_match', message: 'this account does not match', zh_message: '账户密码不匹配'},
   account_not_exist: {type: 'account_not_exist', message: 'this account does not exist', zh_message: '账户不存在'},

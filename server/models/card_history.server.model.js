@@ -55,6 +55,10 @@ var CardHistorySchema = new Schema({
   create_client: {
     type: Schema.Types.ObjectId,
     ref: 'Client'
+  },
+  supermarket_order: {
+    type: Schema.Types.Object,
+    ref: 'SupermarketOrder'
   }
 });
 

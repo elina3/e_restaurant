@@ -58,7 +58,7 @@ function floatAdd(arg1, arg2) {
   return parseFloat((arg1 * m + arg2 * m) / m);
 }
 
-function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback, client) {
+function addHistory(user, oldCard, newCard, actionName, amount, newAmount, description, callback, client, supermarketOrder) {
   var cardHistory = new CardHistory({
     create_client: client ? client._id : null,
     create_user: user ? user._id : null,
@@ -74,6 +74,9 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
   if (newCard) {
     cardHistory.new_card = newCard._id;
     cardHistory.new_card_number = newCard.card_number;
+  }
+  if(supermarketOrder){
+    cardHistory.supermarket_order = supermarketOrder._id;
   }
   cardHistory.save(function (err, newCardHistory) {
     if (err || !newCardHistory) {
@@ -1038,5 +1041,33 @@ exports.setCardPassword = function(user, card, password, callback){
     }
 
     return callback(null, newCard);
+  });
+};
+
+exports.paySupermarketOrder = function (client, card, supermarketOrder, actualAmount, callback) {
+  if (card.deleted_status) {
+    return callback({err: cardError.card_deleted});
+  }
+
+  if (card.status !== 'enabled') {
+    return callback({err: cardError['card_' + card.status]});
+  }
+
+  var oldAmount = card.amount;
+  var newAmount = floatMinus(oldAmount, actualAmount);
+  card.amount = newAmount;
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
+      return callback({err: systemError.database_save_error});
+    }
+
+    addHistory(null, newCard, null, 'supermarket_pay', oldAmount, newCard.amount, '超市消费', function (err, history) {
+      if (err) {
+        err.zh_message += '添加超市消费历史记录失败！';
+        return callback({err: systemError.database_save_error, info: publicLib.getStackError(err)});
+      }
+
+      return callback(null, newCard);
+    }, client);
   });
 };

@@ -9,7 +9,7 @@ var appDb = mongoLib.appDb;
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   timestamps = require('mongoose-timestamp');
-
+//虚拟充值，现金充值，删卡，退卡统计记录
 var CardStatisticSchema = new Schema({
   object:{
     type:String,

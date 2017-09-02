@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   timestamps = require('mongoose-timestamp'),
   crypto = require('crypto');
-
+//只有餐厅的有Payment，超市的不在这里
 var PaymentSchema = new Schema({
   object:{
     type:String,

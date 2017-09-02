@@ -1,0 +1,62 @@
+<e-header></e-header>
+<e-head-nav config="pageData.headConfig"></e-head-nav>
+<div class="free-meal-page-view">
+    <div class="goods-box">
+        <div class='row goods-info'>
+            <div class="row">
+                <div class="col-xs-5 photo">
+                    <div class="top">
+                        <e-image image-key=""></e-image>
+                        <!--<img err-src="images/global/default_goods.png"   ng-src="{{generatePhotoSrc(pageData.goods.display_photos[0])}}"/>-->
+                    </div>
+                    <div class="photo-nav">
+
+                    </div>
+                </div>
+                <div class="col-xs-7 info">
+                    <div class="goods-name">
+                        <span>{{pageData.headConfig.title}}</span>
+                    </div>
+                    <div class="add-car-button">
+                        <div class="button-item"><label>消费金额</label><input id="priceInput" ng-keyup="priceInputKeyup($event)" class="input-box" ng-model="pageData.price"/></div>
+                        <div class="button-item"><label>输入卡号/证件号</label><input id="cardInput" class="input-box" ng-model="pageData.card_number"
+                                                                               ng-keyup="cardInputKeyup($event)"/></div>
+                        <input class="buy-now" type="button" value="确认购买" ng-click="pay()"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="good-detail" ng-show="pageData.goods.description">
+            <div class="description-text">
+                <p class="title">图文详情</p>
+                <pre class="content">
+{{pageData.goods.description}}
+                </pre>
+
+            </div>
+            <div class="description-photo">
+                <img err-src="images/global/default_goods.png" ng-repeat="photoKey in pageData.goods.description_photos"
+                     ng-src="{{generatePhotoSrc(photoKey)}}"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="mask" ng-show="alertMessage.show">
+    <div class="zz-alert full-window">
+        <div class="zz-alert-title"><span>消息提示</span><strong class="close" ng-keyup="myKeyup($event)" ng-click="closeAlertMessage()"></strong></div>
+        <div class="zz-alert-content-2" style="font-size:18px;padding:20px 20px 0px 20px;">
+            <p class="red" ng-if="!alertMessage.content2 && !alertMessage.content3">{{alertMessage.content}}</p>
+            <p ng-if="alertMessage.content">总金额：<strong>{{alertMessage.content}}</strong>元</p>
+            <p ng-if="alertMessage.content2">实付金额：<strong>{{alertMessage.content2}}</strong>元</p>
+            <p ng-if="alertMessage.content3">本月超市余额：<strong>{{alertMessage.content3}}</strong>元</p>
+            <p ng-if="alertMessage.content4">卡内余额：<strong>{{alertMessage.content4}}</strong>元</p>
+        </div>
+        <!--<div class="zz-alert-handle">-->
+        <!--<input type="submit" ng-keyup="myKeyup($event)" class="zz-btn-primary zz-alert-btn e-btn" ng-click="closeAlertMessage()" value="确定"></div>-->
+        <!--</div>-->
+    </div>
+</div>
+
+<e-footer></e-footer>
+

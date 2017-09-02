@@ -142,6 +142,9 @@ module.exports = function () {
     async.auto({
       RecordError: function (callback) {
         if (req.err) {
+          if(req.info){
+            console.log(req.info);
+          }
           return callback(req.err);
         }
         else {
