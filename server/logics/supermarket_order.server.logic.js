@@ -103,27 +103,70 @@ exports.getSupermarketOrdersByPagination = function(filter, pagination, callback
     query.$and = [{pay_time: {$gte: filter.start_time}},{pay_time:{$lte: filter.end_time}}];
   }
 
-  SupermarketOrder.count(query, function(err, totalCount){
-    if(err){
-      return callback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
-    }
+  if(filter.has_discount !== null){
+    query.has_discount = filter.has_discount;
+  }
 
-    pagination.limit = pagination.limit === -1 ? 10 : pagination.limit;
-    pagination.skip_count = pagination.skip_count === -1 ? (pagination.current_page - 1) * pagination.limit : pagination.skip_count;
-    SupermarketOrder.find(query)
-      .skip(pagination.skip_count)
-      .limit(pagination.limit)
-      .sort({pay_time: -1})
-      .exec(function(err, supermarketOrders){
+  async.auto({
+    getSupermarketOrderResult: function(autoCallback){
+      SupermarketOrder.count(query, function(err, totalCount){
         if(err){
-          return callback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
+          return autoCallback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
         }
-        return callback(null, {
-          totalCount: totalCount,
-          limit: pagination.limit,
-          currentPage: pagination.current_page,
-          supermarketOrders: supermarketOrders
+
+        pagination.limit = pagination.limit === -1 ? 10 : pagination.limit;
+        pagination.skip_count = pagination.skip_count === -1 ? (pagination.current_page - 1) * pagination.limit : pagination.skip_count;
+        SupermarketOrder.find(query)
+          .skip(pagination.skip_count)
+          .limit(pagination.limit)
+          .sort({pay_time: -1})
+          .populate('card')
+          .exec(function(err, supermarketOrders){
+            if(err){
+              return autoCallback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
+            }
+            return autoCallback(null, {
+              totalCount: totalCount,
+              limit: pagination.limit,
+              currentPage: pagination.current_page,
+              supermarketOrders: supermarketOrders
+            });
+          });
+      });
+    },
+    getSupermarketOrderStatistics: function(autoCallback){
+      SupermarketOrder.aggregate([
+        {$match: query},
+        {$group: {
+          _id: '$object',
+          amount: {$sum: '$amount'},
+          actual_amount: {$sum: '$actual_amount'}
+        }}
+      ], function(err, result){
+        if(err){
+          return autoCallback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
+        }
+
+        if(result.length === 0){
+          return autoCallback(null, {
+            amount: 0,
+            actual_amount: 0
+          });
+        }
+
+        return autoCallback(null, {
+          amount: result[0].amount,
+          actual_amount: result[0].actual_amount
         });
       });
+    }
+  }, function(err, results){
+    if(err){
+      return callback(err);
+    }
+
+    results.getSupermarketOrderResult.statistics = results.getSupermarketOrderStatistics;
+
+    return callback(null, results.getSupermarketOrderResult);
   });
 };

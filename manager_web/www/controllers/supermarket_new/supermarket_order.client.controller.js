@@ -60,7 +60,7 @@ angular.module('EWeb').controller('SupermarketOrderController',
         $scope.$emit(GlobalEvent.onShowLoading, true);
         SupermarketOrderService.getSupermarketOrders($scope.pagination, filter, timeRangeString, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err || !data.orders){
+          if(err || !data.supermarket_orders){
             $scope.$emit(GlobalEvent.onShowAlert, err);
           }
           $scope.supermarket_orders = $scope.supermarket_orders.concat(data.supermarket_orders);
@@ -69,6 +69,8 @@ angular.module('EWeb').controller('SupermarketOrderController',
           $scope.pagination.totalCount = data.total_count;
           $scope.pagination.limit = data.limit;
           $scope.pagination.pageCount = Math.ceil($scope.pagination.totalCount / $scope.pagination.limit);
+          $scope.statistic.totalAmount = data.statistics.amount / 100;
+          $scope.statistic.totalActualAmount = data.statistics.actual_amount / 100;
         });
       }
 

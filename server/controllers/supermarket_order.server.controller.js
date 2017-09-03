@@ -106,7 +106,8 @@ exports.getSupermarketOrdersByPagination = function(req, res, next){
     start_time: startTime,
     end_time: endTime,
     card_id_number: req.query.card_id_number,
-    card_number: req.query.card_number
+    card_number: req.query.card_number,
+    has_discount: publicLib.booleanParse(req.query.has_discount)
   };
   supermarketOrderLogic.getSupermarketOrdersByPagination(filter, req.pagination, function(err, result){
     if(err){
@@ -116,7 +117,8 @@ exports.getSupermarketOrdersByPagination = function(req, res, next){
     req.data = {
       total_count: result.totalCount,
       limit: result.limit,
-      supermarket_orders: result.supermarketOrders
+      supermarket_orders: result.supermarketOrders,
+      statistics: result.statistics
     };
     return next();
   });

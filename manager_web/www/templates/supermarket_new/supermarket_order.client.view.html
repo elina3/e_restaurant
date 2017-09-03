@@ -23,8 +23,13 @@
             <div class="filter-item col-xs-4">
                 <input class="input-text"  ng-model="filter.card_id_number" placeholder="请输入证件号"/>
             </div>
-            <div class="filter-item col-xs-4">
-                <input class="input-text"  ng-model="filter.client_username" placeholder="请输入创建人账号"/>
+
+            <div class="filter-item discount col-xs-4">
+                <z-dropdown z-dropdown-model="filter.order_type"
+                            z-dropdown-options="orderTypes"
+                            z-dropdown-label="所有折扣"
+                >
+                </z-dropdown>
             </div>
         </div>
         <div class="row selects">
@@ -36,13 +41,6 @@
 
                        placeholder="点击选择时间"
                 />
-            </div>
-            <div class="filter-item discount col-xs-4">
-                <z-dropdown z-dropdown-model="filter.order_type"
-                            z-dropdown-options="orderTypes"
-                            z-dropdown-label="所有折扣"
-                >
-                </z-dropdown>
             </div>
             <div class="filter-item search-item col-xs-4">
                 <div class="search" ng-click="search()">筛选</div>
@@ -57,53 +55,67 @@
             </div>
         </div>
         <div class="row">
-            <div class="statistic"><label>订单数：</label><strong>{{pagination.totalCount}}</strong> 条</div>
+            <div class="statistic"><label>订单总数数：</label><strong>{{pagination.totalCount}}</strong> 条</div>
             <div class="statistic"><label>订单应收总销售额：</label><strong >{{statistic.totalAmount | number : 3}}</strong> 元</div>
             <div class="statistic"><label>订单实际总销售额：</label><strong style="color: #666;">{{statistic.totalActualAmount | number : 3}}</strong> 元</div>
-
             <div class="statistic"><label>差额：</label><strong style="color: #666;">{{(statistic.totalAmount - statistic.totalActualAmount) | number : 3}}</strong> 元</div>
         </div>
     </div>
-    <div class="supermarket-order-list">
-        <div class="order-item" ng-repeat="order in supermarket_orders">
-            <div class="goods-orders">
 
-                <div class="discount-icon" ng-show="order.has_discount">折扣</div>
-                <div class="order">
-                    <div class="order-title row">
-                        <div class="order-number col-xs-6"><span>订单号：{{order.order_number}}</span></div>
-                        <div class="order-status col-xs-6"><span class="status">{{translateOrderStatus(order.status)}}</span></div>
-                    </div>
-                    <div class="order-user-info">
-                        <div class="order-contact" ng-show="order.in_store_deal">
-                            <div class="contact-item">
-                                <span>店内用餐</span>
-                            </div>
-                        </div>
-                        <div class="order-contact" ng-show="!order.in_store_deal">
-                            <div class="contact-item">
-                                <label>卡号:</label><span>{{order.card_number}}</span>
-                            </div>
-                            <div class="contact-item">
-                                <label>身份证号:</label><span>{{order.card_id_number}}</span>
-                            </div>
-                            <div class="contact-item">
-                                <label>收银员:</label><span>{{order.client_info.nickname}}</span>
-                            </div>
-                            <div class="contact-item">
-                                <label>应付金额:</label><span>{{order.amount / 100}}</span>
-                            </div>
-                            <div class="contact-item">
-                                <label>实付金额:</label><span>{{order.actual_amount / 100}}</span>
-                            </div>
-                            <div class="contact-item" ng-if="order.paid" >
-                                <label>应付金额:</label><span>成交于：{{order.pay_time | date: 'yyyy-MM-dd HH:mm:ss'}}</span>
-                            </div>
-                            <div class="contact-item" ng-if="!order.paid">
-                                <label>状态:</label><span>未支付</span>
-                            </div>
-                        </div>
-                    </div>
+    <div class="ee-table-list">
+        <div class="content">
+            <div class="row list-header">
+                <div class="col-xs-2">
+                    <span>订单号</span>
+                </div>
+                <div class="col-xs-1">
+                    <span>收银员</span>
+                </div>
+                <div class="col-xs-2">
+                    <span>身份证号</span>
+                </div>
+
+                <div class="col-xs-2">
+                    <span>卡号</span>
+                </div>
+
+                <div class="col-xs-1">
+                    <span>卡类型</span>
+                </div>
+                <div class="col-xs-1">
+                    <span>实际金额</span>
+                </div>
+                <div class="col-xs-1">
+                    <span>扣卡金额</span>
+                </div>
+                <div class="col-xs-2">
+                    <span>支付时间</span>
+                </div>
+            </div>
+            <div class="row list-info" ng-repeat="order in supermarket_orders">
+                <div class="col-xs-2" title="{{order.order_number}}">
+                    <span>{{order.order_number}}</span>
+                </div>
+                <div class="col-xs-1" title="{{order.client_info.nickname}}">
+                    <span>{{order.client_info.nickname}}</span>
+                </div>
+                <div class="col-xs-2">
+                    <span class="type">{{order.card_id_number}}</span>
+                </div>
+                <div class="col-xs-2">
+                    <span class="type">{{order.card_number}}</span>
+                </div>
+                <div class="col-xs-1">
+                    <span class="type">{{order.card.type === 'staff' ? '员工' : order.card.type === 'normal' ? '普通' :'专家'}}</span>
+                </div>
+                <div class="col-xs-1">
+                    <span class="type">{{order.amount / 100}}</span>
+                </div>
+                <div class="col-xs-1">
+                     <span class="type">{{order.actual_amount / 100}}</span>
+                </div>
+                <div class="col-xs-2">
+                     <span class="type">{{order.pay_time | date: 'yy-MM-dd HH:mm'}}</span>
                 </div>
             </div>
         </div>
