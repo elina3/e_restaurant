@@ -28,8 +28,7 @@ var UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'card_manager', 'cooker', 'delivery', 'nurse', 'registrar'],//管理员，饭卡管理员, 餐厅服务员，超市收银员，,护士, 登记员
-    default: 'waiter'
+    enum: ['admin', 'card_manager', 'cooker', 'delivery', 'nurse', 'registrar', 'supermarket_manager']//管理员，饭卡管理员, 厨师，配送员，,护士, 登记员,超市管理员
   },
   nickname: {
     type: String

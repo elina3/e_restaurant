@@ -43,6 +43,8 @@ angular.module('EWeb').controller('UserSignInController',
               return $state.go('meal_setting');
             case 'registrar':
               return $state.go('hospitalized');
+            case 'supermarket_manager':
+              return $state.go('supermarket_order');
             default:
               return $state.go('user_index');
           }

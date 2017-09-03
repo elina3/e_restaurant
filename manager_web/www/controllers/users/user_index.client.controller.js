@@ -5,7 +5,8 @@
 angular.module('EWeb').controller('UserIndexController',
   ['$window', '$rootScope', '$scope', 'GlobalEvent', '$state', 'UserService', 'Auth',
     function ($window, $rootScope, $scope, GlobalEvent, $state, UserService, Auth) {
-      if(!Auth.getUser()){
+      var user = Auth.getUser();
+      if (!user) {
         $state.go('user_sign_in');
         return;
       }
@@ -18,35 +19,37 @@ angular.module('EWeb').controller('UserIndexController',
       };
 
 
-      $scope.goState  = function(state){
-        if(!state){
+      $scope.goState = function (state) {
+        if (!state) {
           return;
         }
         $state.go(state);
       };
-      $scope.goToView = function(state){
-        if(!state){
+      $scope.goToView = function (state) {
+        if (!state) {
           return;
         }
 
-        switch(state){
+        switch (state) {
           case 'user_manager':
             return $state.go('user_manager');
           case 'restaurant':
             $state.go('goods_manager', {goods_type: 'dish'});
             return;
           case 'supermarket':
-            $state.go('supermarket_order');
+            if (user.role === 'admin' || user.role === 'supermarket_manager') {
+              $state.go('supermarket_order');
+            }
             return;
           default:
             return;
         }
       };
 
-      function init(){
+      function init() {
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        UserService.getGroups({currentPage: 1,limit: -1, skipCount: 0}, function (err, data) {
+        UserService.getGroups({currentPage: 1, limit: -1, skipCount: 0}, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);

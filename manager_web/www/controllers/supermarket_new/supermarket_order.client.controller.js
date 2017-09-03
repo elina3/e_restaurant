@@ -4,7 +4,7 @@ angular.module('EWeb').controller('SupermarketOrderController',
     function ($scope, $window, $stateParams, $rootScope, GlobalEvent, $state, QiNiuService, Config, SupermarketOrderService, Auth) {
 
       var user = Auth.getUser();
-      $scope.isShowBack = user.role === 'cooker' || user.role === 'delivery' ? false : true;
+      $scope.isShowBack = user.role === 'admin' ? true : false;
       $scope.supermarket_orders = [];
       $scope.currentStatus = {id: '', text: '所有状态'};
       $scope.orderTypes = [
@@ -107,7 +107,11 @@ angular.module('EWeb').controller('SupermarketOrderController',
       };
 
       $scope.goBack = function () {
-        $state.go('user_index');
+        if(user.role === 'admin'){
+          $state.go('user_index');
+        }else{
+          $state.go('sign_in');
+        }
       };
 
       function generateUrl(src) {

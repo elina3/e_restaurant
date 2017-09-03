@@ -18,7 +18,7 @@ angular.module('EWeb').controller('UserManagerController',
         roles: [{id: 'card_manager', text: '饭卡管理员'}, {id: 'delivery', text: '配送员'}, {
           id: 'cooker',
           text: '厨师'
-        }, {id: 'nurse', text: '护士'}, {id: 'registrar', text: '登记员'}],
+        }, {id: 'nurse', text: '护士'}, {id: 'registrar', text: '登记员'}, {id: 'supermarket_manager', text: '超市管理员'}],
         cardTypes: [{id: 'normal', text: '普通'}, {id: 'staff', text: '员工'}, {id: 'expert', text: '专家'}],
         rechargeTypes: [{id: 'cash', text: '现金'}, {id: 'virtual', text: '虚拟'}],
         groups: [],
@@ -684,7 +684,7 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       $scope.cardPasswordConfig = {
-        isShow: true,
+        isShow: false,
         currentCard: null,
         currentPassword: '',
         errorMessage: '',
