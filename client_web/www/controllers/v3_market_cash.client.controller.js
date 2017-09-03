@@ -145,7 +145,10 @@ angular.module('EClientWeb').controller('MarketCashController',
             }
 
             $('#cardInput').focus();
-            showAlertMessage(data.amount / 100, data.actual_amount / 100, data.supermarket_current_balance / 100, data.card_balance);
+            var balance = data.supermarket_current_balance === -1 ? -1 :( data.supermarket_current_balance/100);
+            showAlertMessage(data.amount / 100, data.actual_amount / 100,
+              balance,
+              data.card_balance);
             $scope.pageData.price = '';
             $scope.pageData.card_number = '';
           });

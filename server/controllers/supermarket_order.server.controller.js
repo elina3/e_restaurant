@@ -10,7 +10,7 @@ var publicLib = require('../libraries/public'),
 
 
 var supermarketAmountLimit = 100 * 100, //默认100元（单位：分）
-  supermarketDiscount = 0.25;
+  supermarketDiscountForStaff = 0.25;
 
 function getError(err, value){
   var newError = JSON.parse(JSON.stringify(err));
@@ -27,17 +27,22 @@ exports.generateOrder = function(req, res, next){
     return next({err: supermarketOrderError.amount_invalid});
   }
 
-  var actualAmount = publicLib.parseIntNumber(amount * supermarketDiscount);
-  if(actualAmount === null || actualAmount < 0){
-    return next({err: supermarketOrderError.amount_invalid});
-  }
-
-  if(card.type !== 'staff'){
-    return next({err: supermarketOrderError.card_not_support_pay});
-  }
-
+  var actualAmount = amount;
   async.auto({
     getCurrentConsumptionAmount: function(autoCallback){
+      if(card.amount * 100 < amount){
+        return autoCallback({err: getError(supermarketOrderError.card_amount_not_enough, card.amount)});
+      }
+
+      if(card.type !== 'staff'){
+        return autoCallback();
+      }
+
+      actualAmount = publicLib.parseIntNumber(amount * supermarketDiscountForStaff);
+      if(actualAmount === null || actualAmount < 0){
+        return next({err: supermarketOrderError.amount_invalid});
+      }
+
       supermarketOrderLogic.getCurrentConsumptionAmount(card, function(err, currentConsumptionAmount){
         if(err){
           return autoCallback(err);
@@ -45,10 +50,6 @@ exports.generateOrder = function(req, res, next){
 
         if(currentConsumptionAmount + amount > supermarketAmountLimit){
           return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentConsumptionAmount)/100)});
-        }
-
-        if(card.amount * 100 < amount){
-          return autoCallback({err: getError(supermarketOrderError.card_amount_not_enough, card.amount)});
         }
 
         return autoCallback(null, currentConsumptionAmount);
@@ -83,9 +84,10 @@ exports.generateOrder = function(req, res, next){
 
     req.data = {
       success: true,
+      card_type: card.type,
       amount: amount,
       actual_amount: actualAmount,
-      supermarket_current_balance: supermarketAmountLimit - (results.getCurrentConsumptionAmount + amount),
+      supermarket_current_balance: card.type === 'staff' ? supermarketAmountLimit - (results.getCurrentConsumptionAmount + amount) : -1,
       card_balance: results.payByCard.amount,
       order: results.createSupermarketOrder
     };
