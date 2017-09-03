@@ -47,10 +47,10 @@
         <div class="zz-alert-title"><span>消息提示</span><strong class="close" ng-keyup="myKeyup($event)" ng-click="closeAlertMessage()"></strong></div>
         <div class="zz-alert-content-2" style="font-size:18px;padding:20px 20px 0px 20px;">
             <p class="red" ng-if="!alertMessage.content2 && !alertMessage.content3">{{alertMessage.content}}</p>
-            <p ng-if="alertMessage.content">总金额：<strong>{{alertMessage.content}}</strong>元</p>
-            <p ng-if="alertMessage.content2">实付金额：<strong>{{alertMessage.content2}}</strong>元</p>
-            <p ng-if="alertMessage.content3 !== -1">本月超市余额：<strong>{{alertMessage.content3}}</strong>元</p>
-            <p ng-if="alertMessage.content3 === -1">本月超市消费：<strong>不限</strong></p>
+            <p ng-if="alertMessage.content2">总金额：<strong>{{alertMessage.content}}</strong>元</p>
+            <p ng-if="alertMessage.content2 && alertMessage.content2">实付金额：<strong>{{alertMessage.content2}}</strong>元</p>
+            <p ng-if="alertMessage.content2 && alertMessage.content3 !== -1">本月超市余额：<strong>{{alertMessage.content3}}</strong>元</p>
+            <p ng-if="alertMessage.content2 && alertMessage.content3 === -1">本月超市消费：<strong>不限</strong></p>
             <p ng-if="alertMessage.content4">卡内余额：<strong>{{alertMessage.content4}}</strong>元</p>
         </div>
         <!--<div class="zz-alert-handle">-->
