@@ -97,12 +97,20 @@ angular.module('EClientWeb').directive('eHeader', [
                     if(scope.pageConfig.clientInfo){
                         scope.navList[2].tipsNum = scope.pageConfig.clientInfo.cart ? scope.pageConfig.clientInfo.cart.total_count : 0;
 
-                        if(scope.pageConfig.clientInfo.role !== 'normal'){
+                        if(scope.pageConfig.clientInfo.role === 'cashier'){
+                          scope.navList[1].show = false;
+                          scope.navList[3].show = false;
+                          scope.navList[2].show = false;
+                          scope.navList[5].show = false;
+
+                        }else{
+                          if(scope.pageConfig.clientInfo.role !== 'normal'){
                             scope.navList[1].show = true;
                             scope.navList[3].show = true;
-                        }else{
+                          }else{
                             scope.navList[1].show = false;
                             scope.navList[3].show = false;
+                          }
                         }
                     }
                 });
