@@ -82,17 +82,12 @@ angular.module('EClientWeb').controller('SignInController',
 
           Auth.setUser(data.client);
           Auth.setToken(data.access_token);
-          console.log('client');
-          console.log(data.client);
 
           if(data.client.role === 'cashier'){
             $state.go('market_cash');
           }else{
             $state.go('/');
           }
-          //todo 看生产环境是否要处理服务员的跳转
-
-
         });
 
       };

@@ -30,11 +30,10 @@ exports.generateOrder = function(req, res, next){
   var actualAmount = amount;
   async.auto({
     getCurrentConsumptionAmount: function(autoCallback){
-      if(card.amount * 100 < amount){
-        return autoCallback({err: getError(supermarketOrderError.card_amount_not_enough, card.amount)});
-      }
-
       if(card.type !== 'staff'){
+        if(card.amount * 100 < amount){
+          return autoCallback({err: getError(supermarketOrderError.card_amount_not_enough, card.amount)});
+        }
         return autoCallback();
       }
 
