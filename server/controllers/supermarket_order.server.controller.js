@@ -39,7 +39,7 @@ exports.generateOrder = function(req, res, next){
 
       actualAmount = publicLib.parseIntNumber(amount * supermarketDiscountForStaff);
       if(actualAmount === null || actualAmount < 0){
-        return next({err: supermarketOrderError.amount_invalid});
+        return autoCallback({err: supermarketOrderError.amount_invalid});
       }
 
       supermarketOrderLogic.getCurrentConsumptionAmount(card, function(err, currentConsumptionAmount){
@@ -49,6 +49,10 @@ exports.generateOrder = function(req, res, next){
 
         if(currentConsumptionAmount + amount > supermarketAmountLimit){
           return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentConsumptionAmount)/100)});
+        }
+
+        if(actualAmount > card.amount * 100){
+          return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_card_amount_not_enough, card.amount)});
         }
 
         return autoCallback(null, currentConsumptionAmount);

@@ -1055,6 +1055,9 @@ exports.paySupermarketOrder = function (client, card, supermarketOrder, actualAm
 
   var oldAmount = card.amount;
   var newAmount = floatMinus(oldAmount, actualAmount);
+  if(newAmount < 0){
+    return callback({err: cardError.insufficient_balance});
+  }
   card.amount = newAmount;
   card.save(function (err, newCard) {
     if (err || !newCard) {
