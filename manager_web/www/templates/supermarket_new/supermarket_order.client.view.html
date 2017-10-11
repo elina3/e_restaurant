@@ -50,16 +50,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="statistic"><label>订单总数数：</label><strong>{{pagination.totalCount}}</strong> 条</div>
-            <div class="statistic"><label>订单应收总销售额：</label><strong >{{statistic.totalAmount | number : 3}}</strong> 元</div>
-            <div class="statistic"><label>订单实际总销售额：</label><strong style="color: #666;">{{statistic.totalActualAmount | number : 3}}</strong> 元</div>
-            <div class="statistic"><label>差额：</label><strong style="color: #666;">{{(statistic.totalAmount - statistic.totalActualAmount) | number : 3}}</strong> 元</div>
+            <div class="statistic"><label>订单总数：</label><strong>{{pagination.totalCount}}</strong> 条</div>
+            <div class="statistic"><label>订单应收总销售额：</label><strong >{{statistic.totalAmount | number : 2}}</strong> 元</div>
+            <div class="statistic"><label>订单实际总销售额：</label><strong style="color: #666;">{{statistic.totalActualAmount | number : 2}}</strong> 元</div>
+            <div class="statistic"><label>差额：</label><strong style="color: #666;">{{(statistic.totalAmount - statistic.totalActualAmount) | number : 2}}</strong> 元</div>
         </div>
     </div>
 
     <div class="ee-table-list">
         <div class="content">
             <div class="row list-header">
+                <div class="col-xs-1">
+                    <span>订单号</span>
+                </div>
                 <div class="col-xs-2">
                     <span>订单号</span>
                 </div>
@@ -70,7 +73,7 @@
                     <span>身份证号</span>
                 </div>
 
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <span>卡号</span>
                 </div>
 
@@ -88,6 +91,9 @@
                 </div>
             </div>
             <div class="row list-info" ng-repeat="order in supermarket_orders">
+                <div class="col-xs-1">
+                    <span>{{$index + 1}}</span>
+                </div>
                 <div class="col-xs-2" title="{{order.order_number}}">
                     <span>{{order.order_number}}</span>
                 </div>
@@ -97,7 +103,7 @@
                 <div class="col-xs-2">
                     <span class="type">{{order.card_id_number}}</span>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <span class="type">{{order.card_number}}</span>
                 </div>
                 <div class="col-xs-1">

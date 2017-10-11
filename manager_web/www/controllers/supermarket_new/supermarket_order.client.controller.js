@@ -28,7 +28,7 @@ angular.module('EWeb').controller('SupermarketOrderController',
 
       $scope.pagination = {
         currentPage: 1,
-        limit: 10,
+        limit: 50,
         totalCount: 0,
         skipCount: 0,
         onCurrentPageChanged: function (callback) {
@@ -85,7 +85,7 @@ angular.module('EWeb').controller('SupermarketOrderController',
 
       $scope.pageShow = {
         createTimeRange: '',
-        createTimeMinTime: moment().format('YY/MM/DD HH:mm'),
+        // createTimeMinTime: moment().format('YY/MM/DD HH:mm'),
         dateOptions: {
           locale: {
             fromLabel: '起始时间',
