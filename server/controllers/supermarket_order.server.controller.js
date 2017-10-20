@@ -30,16 +30,21 @@ exports.generateOrder = function(req, res, next){
   var actualAmount = amount;
   async.auto({
     getCurrentConsumptionAmount: function(autoCallback){
-      if(card.type !== 'staff'){
+      if(card.type !== 'staff'){//只有普通员工和专家没有折扣，可以先判断卡内余额是否充足
         if(card.amount * 100 < amount){
           return autoCallback({err: getError(supermarketOrderError.card_amount_not_enough, card.amount)});
         }
+      }
+
+      if(card.type === 'normal'){//普通员工没有月消费限制
         return autoCallback();
       }
 
-      actualAmount = publicLib.parseIntNumber(amount * supermarketDiscountForStaff);
-      if(actualAmount === null || actualAmount < 0){
-        return autoCallback({err: supermarketOrderError.amount_invalid});
+      if(card.type === 'staff'){//只有员工有折扣，专家按照原价
+        actualAmount = publicLib.parseIntNumber(amount * supermarketDiscountForStaff);
+        if(actualAmount === null || actualAmount < 0){
+          return autoCallback({err: supermarketOrderError.amount_invalid});
+        }
       }
 
       supermarketOrderLogic.getCurrentConsumptionAmount(card, function(err, currentConsumptionAmount){
