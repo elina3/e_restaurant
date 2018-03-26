@@ -9,6 +9,8 @@ module.exports = _.extend(exports, {
   supermarket_consumption_card_amount_not_enough: {type: 'supermarket_consumption_card_amount_not_enough', message: 'The card amount is not enough for supermarket consumption!Only {{value1}} yuan in the card！', zh_message: '卡内消费余额不足，卡内仅剩{{value1}}元'},
   card_amount_not_enough: {type: 'card_amount_not_enough', message: 'The amount is not enough in card!Only {{value1}} yuan！', zh_message: '卡内余额不足，仅剩{{value1}}元'},
   card_not_support_pay: {type: 'card_not_support_pay', message: 'The card type is support to pay！', zh_message: '该卡类型不支持使用'},
+  expert_not_support: {type: 'expert_not_support', message: 'The card of expert is not support to pay！', zh_message: '专家卡不支持消费'},
+
 
 
 });

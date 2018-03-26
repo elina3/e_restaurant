@@ -22,6 +22,10 @@ function getError(err, value){
 exports.generateOrder = function(req, res, next){
   var client = req.client;
   var card = req.card;
+  if(card.type === 'expert'){
+    return next({err: supermarketOrderError.expert_not_support});//专家卡不支持消费  （改过的需求）
+  }
+
   var amount = publicLib.parseIntNumber(req.body.amount);//单位：分
   if(amount === null || amount <= 0){
     return next({err: supermarketOrderError.amount_invalid});
