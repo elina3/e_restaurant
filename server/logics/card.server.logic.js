@@ -416,7 +416,7 @@ exports.deleteCard = function (user, card, callback) {
   });
 };
 
-exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNumber, callback) {
+exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNumber, nickname, callback) {
   var query = {
     deleted_status: false
   };
@@ -425,6 +425,10 @@ exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNum
 
   if (idNumber)
     query.id_number = {$regex: idNumber, $options: '$i'};
+
+  if(nickname){
+    query.nickname = {$regex: nickname, $options: '$i'};
+  }
 
   Card.count(query, function (err, totalCount) {
     if (err) {
@@ -658,6 +662,7 @@ exports.getCardHistories = function (currentPage, limit, skipCount, filter, call
       .sort({create_time: -1})
       .skip(skipCount)
       .limit(limit)
+      .populate('create_user create_client')
       .exec(function (err, cardHistories) {
         if (err) {
           return callback({err: systemError.internal_system_error});

@@ -13,7 +13,8 @@ angular.module('EWeb').factory('CardService',
             limit: param.limit,
             skip_count: param.skipCount,
             card_number: keyword.card_number,
-            id_number: keyword.registration_id
+            id_number: keyword.registration_id,
+            nickname: keyword.nickname
           })
             .then(function (data) {
               if (!callback) {

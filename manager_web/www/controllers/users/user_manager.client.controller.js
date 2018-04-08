@@ -54,7 +54,8 @@ angular.module('EWeb').controller('UserManagerController',
           totalCardBalance: 0,
           keyword: {
             card_number: '',
-            registration_id: ''
+            registration_id: '',
+            nickname: ''
           },
           show_plat: false,
           cards: [],

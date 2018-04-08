@@ -179,14 +179,15 @@
                     </div>
                     <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'">
                         <div class="ee-search-bar row">
-                            <div class="left-panel col-xs-4">
+                            <div class="left-panel col-xs-6">
                                 <div class='pull-left'>
                                     <label class="info-name">查询:</label>
                                     <input placeholder="请输入证件号" type="text"   ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-change="searchCards()" />
                                     <input placeholder="请输入卡号" type="text" ng-keyup="myKeyup($event)" ng-model="pageConfig.plat_card_panel.keyword.card_number" ng-blur="searchCards()" />
+                                    <input placeholder="请输入昵称" type="text" ng-keyup="myKeyup($event)" ng-model="pageConfig.plat_card_panel.keyword.nickname" ng-blur="searchCards()" />
                                 </div>
                             </div>
-                            <div class="right-panel col-xs-8">
+                            <div class="right-panel col-xs-6">
                                 <div class="card-balance">
                                     <label>总余额：</label>
                                     <span>{{pageConfig.plat_card_panel.totalCardBalance.toFixed(3)}}元</span>
