@@ -10,6 +10,7 @@ module.exports = _.extend(exports, {
   card_amount_not_enough: {type: 'card_amount_not_enough', message: 'The amount is not enough in card!Only {{value1}} yuan！', zh_message: '卡内余额不足，仅剩{{value1}}元'},
   card_not_support_pay: {type: 'card_not_support_pay', message: 'The card type is support to pay！', zh_message: '该卡类型不支持使用'},
   expert_not_support: {type: 'expert_not_support', message: 'The card of expert is not support to pay！', zh_message: '专家卡不支持消费'},
+  normal_not_support: {type: 'normal_not_support', message: 'The card of normal is not support to pay！', zh_message: '普通卡不支持消费'},
 
 
 

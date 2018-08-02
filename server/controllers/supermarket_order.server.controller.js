@@ -19,11 +19,18 @@ function getError(err, value){
   return newError;
 }
 
+//超市消费：
+//专家卡：月消费限制100（实际金额），无折扣
+//员工卡：月消费限制100（实际金额），2.5折
+//普通卡：不能消费
 exports.generateOrder = function(req, res, next){
   var client = req.client;
   var card = req.card;
-  if(card.type === 'expert'){
-    return next({err: supermarketOrderError.expert_not_support});//专家卡不支持消费  （改过的需求）
+  // if(card.type === 'expert'){
+  //   return next({err: supermarketOrderError.expert_not_support});//专家卡不支持消费  （改过的需求）(去掉的需求：2018-8-2 20：55)
+  // }
+  if(card.type === 'normal'){
+    return next({err: supermarketOrderError.normal_not_support});//普通卡不支持消费  （改过的需求:2018-8-2 20:55）
   }
 
   var amount = publicLib.parseIntNumber(req.body.amount);//单位：分
@@ -99,7 +106,8 @@ exports.generateOrder = function(req, res, next){
       card_type: card.type,
       amount: amount,
       actual_amount: actualAmount,
-      supermarket_current_balance: card.type === 'staff' ? supermarketAmountLimit - (results.getCurrentConsumptionAmount + amount) : -1,
+      //卡内余额（员工和专家会显示当月余额）
+      supermarket_current_balance: (card.type === 'staff' || card.type === 'expert') ? supermarketAmountLimit - (results.getCurrentConsumptionAmount + amount) : -1,
       card_balance: results.payByCard.amount,
       order: results.createSupermarketOrder
     };
