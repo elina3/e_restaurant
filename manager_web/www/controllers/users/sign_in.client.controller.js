@@ -34,7 +34,11 @@ angular.module('EWeb').controller('UserSignInController',
           switch(user.role){
             case 'admin':
               return $state.go('user_index');
-            case 'card_manager':
+            case 'card_manager'://饭卡管理员（包括所有的卡）
+              return $state.go('user_manager', {panel_type: 'card-user'});
+            case 'normal_card_manager'://普通饭卡管理员
+              return $state.go('user_manager', {panel_type: 'card-user'});
+            case 'staff_card_manager'://员工专家饭卡管理员
               return $state.go('user_manager', {panel_type: 'card-user'});
             case 'cooker':
             case 'delivery':

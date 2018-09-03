@@ -121,6 +121,10 @@ angular.module('EWeb').factory('UserService',
               return '收银员';
             case 'card_manager':
               return '饭卡管理员';
+            case 'normal_card_manager':
+              return '普通饭卡管理员';
+            case 'staff_card_manager':
+              return '员工专家饭卡管理员';
             case 'delivery':
               return '配送员';
             case 'cooker':

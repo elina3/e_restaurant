@@ -21,7 +21,7 @@
                 <ul class="ee-tag-header">
                     <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'platform-user'}" ng-click="changeTag('platform-user')">平台用户</li>
                     <li ng-show="user.role==='admin'" ng-class="{'current': pageConfig.currentTag === 'client-user'}" ng-click="changeTag('client-user')">客户端用户</li>
-                    <li ng-show="user.role==='admin' || user.role === 'card_manager'" class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
+                    <li ng-show="user.role==='admin' || user.role === 'card_manager'|| user.role === 'normal_card_manager'|| user.role === 'staff_card_manager'" class="last" ng-class="{'current': pageConfig.currentTag === 'card-user'}" ng-click="changeTag('card-user')">饭卡</li>
                 </ul>
                 <div class="ee-tag-body">
                     <div class="ee-tag-view" ng-show="user.role==='admin'" ng-class="pageConfig.currentTag === 'client-user' || pageConfig.currentTag === 'card-user' ? 'move-left' : ''">
@@ -177,7 +177,7 @@
                             <z-pagination config="pageConfig.plat_client_panel.pagination"></z-pagination>
                         </div>
                     </div>
-                    <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'">
+                    <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'|| user.role === 'normal_card_manager'|| user.role === 'staff_card_manager'">
                         <div class="ee-search-bar row">
                             <div class="left-panel col-xs-6">
                                 <div class='pull-left'>

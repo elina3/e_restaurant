@@ -70,7 +70,7 @@ exports.getCardList = function (req, res, next) {
   var idNumber = req.query.id_number || req.body.id_number || '';
   var nickname = req.query.nickname || req.body.nickname || '';
 
-  cardLogic.getCardList(currentPage, limit, skipCount, cardNumber, idNumber, nickname, function (err, result) {
+  cardLogic.getCardList(req.user, currentPage, limit, skipCount, cardNumber, idNumber, nickname, function (err, result) {
     if (err) {
       req.err = err;
       return next();

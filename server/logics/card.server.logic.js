@@ -416,7 +416,7 @@ exports.deleteCard = function (user, card, callback) {
   });
 };
 
-exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNumber, nickname, callback) {
+exports.getCardList = function (user, currentPage, limit, skipCount, cardNumber, idNumber, nickname, callback) {
   var query = {
     deleted_status: false
   };
@@ -428,6 +428,15 @@ exports.getCardList = function (currentPage, limit, skipCount, cardNumber, idNum
 
   if(nickname){
     query.nickname = {$regex: nickname, $options: '$i'};
+  }
+
+  //普通饭卡管理员只能看到普通卡
+  if(user.role === 'normal_card_manager'){
+    query.type = 'normal';
+  }
+  //员工专家饭卡管理员可以看到员工卡，专家卡
+  if(user.role === 'staff_card_manager'){
+    query.type = {$in: ['staff', 'expert']};
   }
 
   Card.count(query, function (err, totalCount) {

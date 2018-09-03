@@ -15,10 +15,15 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.pageConfig = {
         clientScanType: '',
         clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'}, {id: 'cashier', text: '收银员'},],
-        roles: [{id: 'card_manager', text: '饭卡管理员'}, {id: 'delivery', text: '配送员'}, {
-          id: 'cooker',
-          text: '厨师'
-        }, {id: 'nurse', text: '护士'}, {id: 'registrar', text: '登记员'}, {id: 'supermarket_manager', text: '超市管理员'}],
+        roles: [
+          {id: 'card_manager', text: '饭卡管理员'},
+          {id: 'normal_card_manager', text: '普通饭卡管理员'},
+          {id: 'staff_card_manager', text: '员工专家饭卡管理员'},
+          {id: 'delivery', text: '配送员'},
+          {id: 'cooker', text: '厨师'},
+          {id: 'nurse', text: '护士'},
+          {id: 'registrar', text: '登记员'},
+          {id: 'supermarket_manager', text: '超市管理员'}],
         cardTypes: [{id: 'normal', text: '普通'}, {id: 'staff', text: '员工'}, {id: 'expert', text: '专家'}],
         rechargeTypes: [{id: 'cash', text: '现金'}, {id: 'virtual', text: '虚拟'}],
         groups: [],
@@ -157,6 +162,7 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.clientScanType = 'scan';
         $scope.pageConfig.plat_client_panel.currentEditClient = client;
       };
+
       function getNewClientObj() {
         return {
           username: '',
@@ -197,6 +203,7 @@ angular.module('EWeb').controller('UserManagerController',
           }
           });
       };
+
       function validClientInfo(client) {
         var isPassed = true;
         if (!client.username) {
@@ -303,6 +310,7 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.clientScanType = '';
         clearClientError();
       };
+
       function loadClients() {
         $scope.pageConfig.plat_client_panel.client_users = [];
         ClientService.getClients($scope.pageConfig.plat_client_panel.pagination, function (err, data) {
@@ -340,6 +348,7 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.scanType = 'scan';
         $scope.pageConfig.plat_user_panel.currentEditUser = user;
       };
+
       function getNewUserObj() {
         return {
           username: '',
@@ -382,6 +391,7 @@ angular.module('EWeb').controller('UserManagerController',
           }
           });
       };
+
       function validUserInfo(user) {
         var isPassed = true;
         if (!user.username) {
@@ -493,6 +503,7 @@ angular.module('EWeb').controller('UserManagerController',
         $scope.pageConfig.scanType = '';
         clearError();
       };
+
       function loadUsers() {
         $scope.pageConfig.plat_user_panel.users = [];
         $scope.$emit(GlobalEvent.onShowLoading, true);
