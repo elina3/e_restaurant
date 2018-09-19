@@ -198,7 +198,7 @@
                                 <div class="card-history" ng-click="goState('card_history')">
                                     <span>查看历史</span>
                                 </div>
-                                <div class="card-history" ng-click="showBatchRechargePanel()">
+                                <div class="card-history" ng-hide="user.role === 'normal_card_manager'" ng-click="showBatchRechargePanel()">
                                     批量充值
                                 </div>
                                 <div class="add-user" ng-click="editCard()">

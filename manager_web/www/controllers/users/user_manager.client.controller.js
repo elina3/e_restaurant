@@ -865,12 +865,16 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       function getNewCardObj() {
+        var currentType = $scope.user.role === 'staff_card_manager'
+          ? {id: 'staff', text: CardService.translateCardType('staff')} :
+          {id: 'normal', text: CardService.translateCardType('normal')};
+
         return {
           card_number: '',
           id_number: '',
           amount: 0,
           recharge_type: [{id: 'cash', text: '现金'}, {id: 'virtual', text: '虚拟'}],
-          type: {id: 'normal', text: CardService.translateCardType('normal')},
+          type: currentType,
           nickname: ''
         };
       }
@@ -913,6 +917,12 @@ angular.module('EWeb').controller('UserManagerController',
           $scope.pageConfig.currentTag = 'platform-user';
         } else {
           $scope.pageConfig.currentTag = 'card-user';
+        }
+
+        if ($scope.user.role === 'normal_card_manager') {
+          $scope.pageConfig.cardTypes = [{id: 'normal', text: '普通'}];
+        } else if ($scope.user.role === 'staff_card_manager') {
+          $scope.pageConfig.cardTypes = [{id: 'staff', text: '员工'}, {id: 'expert', text: '专家'}];
         }
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
