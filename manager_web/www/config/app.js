@@ -117,6 +117,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       url: '/supermarket_new/supermarket_order',
       templateUrl: 'templates/supermarket_new/supermarket_order.client.view.html',
       controller: 'SupermarketOrderController'
+    })
+    .state('card_order_statistic', {
+      url: '/user/card_order/statistics:filter',
+      templateUrl: 'templates/user/card_order_statistic.client.view.html',//饭卡模块查询饭卡订单消费情况
+      controller: 'CardOrderStatisticController'
     });
 
   $urlRouterProvider.otherwise('/user/sign_in');

@@ -865,9 +865,10 @@ angular.module('EWeb').controller('UserManagerController',
       };
 
       function getNewCardObj() {
-        var currentType = $scope.user.role === 'staff_card_manager'
-          ? {id: 'staff', text: CardService.translateCardType('staff')} :
-          {id: 'normal', text: CardService.translateCardType('normal')};
+        var currentType = $scope.user.role === 'staff_card_manager' ? {
+          id: 'staff',
+          text: CardService.translateCardType('staff')
+        } : {id: 'normal', text: CardService.translateCardType('normal')};
 
         return {
           card_number: '',

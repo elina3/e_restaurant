@@ -152,6 +152,27 @@ angular.module('EWeb').factory('OrderService', ['RequestSupport', 'SystemError',
           return callback(SystemError.network_error);
         });
     },
+    //获取用户饭卡消费情况:普通饭卡管理员只能看普通饭卡的订单消费情况，员工专家饭卡管理员能看员工饭卡和专家饭卡的订单消费情况
+    getCardOrderStatisticByUserRole: function(timeRangeString, callback){
+      RequestSupport.executeGet('/user/order/card_order_statistic', {
+        time_range: timeRangeString
+      })
+        .then(function (data) {
+          if (!callback) {
+            return data;
+          }
+          else {
+            if (data.err) {
+              return callback(data.zh_message || data.err);
+            }
+
+            callback(null, data);
+          }
+        },
+        function (err) {
+          return callback(SystemError.network_error);
+        });
+    },
     translateOrderStatus: function(status){
       switch(status){
         case 'unpaid':
