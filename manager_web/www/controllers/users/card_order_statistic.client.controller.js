@@ -97,29 +97,32 @@ angular.module('EWeb').controller('CardOrderStatisticController',
               summary.order_count = 0;
               summary.order_total_price = 0;
               summary.order_actual_amount = 0;
+
+              console.log('order result:');
+              console.log(data.order_statistic);
+
               data.order_statistic.forEach(function(group){
                 if(group._id === 'normal'){
                   normalCard.order_count = group.order_count;
                   normalCard.order_total_price = group.order_total_price.toFixed(3);
                   normalCard.order_actual_amount = group.order_actual_amount.toFixed(3);
+                  sum(summary, group);
                 }
 
                 if(group._id === 'staff'){
                   staffCard.order_count = group.order_count;
                   staffCard.order_total_price = group.order_total_price.toFixed(3);
                   staffCard.order_actual_amount = group.order_actual_amount.toFixed(3);
+                  sum(summary, group);
                 }
 
                 if(group._id === 'expert'){
                   expertCard.order_count = group.order_count;
                   expertCard.order_total_price = group.order_total_price.toFixed(3);
                   expertCard.order_actual_amount = group.order_actual_amount.toFixed(3);
+
+                  sum(summary, group);
                 }
-
-                summary.order_count += group.order_count;
-                summary.order_total_price += parseFloat(group.order_total_price);
-                summary.order_actual_amount += parseFloat(group.order_actual_amount);
-
               });
 
               summary.order_total_price = summary.order_total_price.toFixed(3);
@@ -141,7 +144,6 @@ angular.module('EWeb').controller('CardOrderStatisticController',
           $scope.formattedStatisticInfos.push(summary);
 
           $scope.$emit(GlobalEvent.onShowLoading, false);
-            console.log(data);
           });
       }
 
@@ -152,10 +154,15 @@ angular.module('EWeb').controller('CardOrderStatisticController',
         $window.history.back();
       };
 
+      function sum(summary, group){
+        summary.order_count += group.order_count;
+        summary.order_total_price += parseFloat(group.order_total_price);
+        summary.order_actual_amount += parseFloat(group.order_actual_amount);
+      }
 
 
       //<editor-fold desc="导出相关">
-      var exportSheet = {A1: '时间段', B1: '订单数', C1: '销售额', D1: '扣卡金额', E1: '日期'};
+      var exportSheet = {A1: '卡类型', B1: '订单数', C1: '销售额', D1: '扣卡金额', E1: '日期'};
       function generateExportData(row) {
         var result = [];
         result.push(row.time_tag);
@@ -212,7 +219,7 @@ angular.module('EWeb').controller('CardOrderStatisticController',
           wookBook.Sheets[workSheetName] = wookSheet;
 
           var wbout = XLSX.write(wookBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
-          saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), '订单统计报表.xls');
+          saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), '订单消费统计报表.xls');
           $scope.$emit(GlobalEvent.onShowLoading, false);
         }
       };
