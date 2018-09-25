@@ -448,15 +448,14 @@ exports.getCardOrderStatisticByUser = function(req, res, next){
 
 //todo 测试 之后删除  更新订单中card_type数据
 exports.updateOrderCardType = function(req, res, next){
-  orderLogic.updateOrderCardType(req.user, {
-    type: req.query.type || ''
-  }, function(err, result){
+  orderLogic.updateOrderCardType(req.body.type || '', function(err, totalCount){
     if(err){
       return next(err);
     }
 
     req.data = {
-      success: true
+      success: true,
+      totalCount: totalCount
     };
     return next();
   });

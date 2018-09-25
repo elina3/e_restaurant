@@ -507,16 +507,17 @@ exports.getCardOrderStatisticByCardType = function (user, filter, callback) {
 var Card = appDb.model('Card');
 
 
-function updateOrderCardType(type, skipCount, limit, callback) {
+function updateOrderCardType(type, limit, callback) {
+
+
   var query = {
-    $or: [{is_update: null}, {is_update: false}]
+    $or: [{is_updated: null}, {is_updated: false}]
   };
   if (type) {
     query.type = type;
   }
   Card.find(query)
     .select('card_number type nickname')
-    .skip(skipCount)
     .limit(limit)
     .exec(function (err, cards) {
       if (err) {
@@ -534,7 +535,7 @@ function updateOrderCardType(type, skipCount, limit, callback) {
           console.log('card:', card.card_number, card.nickname);
           console.log('update info:', info);
 
-          Card.update({_id: card._id}, {$set: {is_update: true}}, function (err) {
+          Card.update({_id: card._id}, {$set: {is_updated: true}}, function (err) {
             if (err) {
               return eachCallback(err);
             }
@@ -552,30 +553,31 @@ function updateOrderCardType(type, skipCount, limit, callback) {
     });
 }
 
-function beginToUpdateOrder(type, totalCount, skipCount, limit,callback){
-  console.log('skipCount:', skipCount, ',limit:', limit);
+function beginToUpdateOrder(type, sumCount, limit,callback){
 
-  updateOrderCardType(type, skipCount, limit, function(err, result){
+  updateOrderCardType(type, limit, function(err, result){
     if(err){
       console.log('has error:', err);
       return callback(err);
     }
 
-    console.log('update count:', result.count);
 
-    skipCount +=result.count;
-    if(skipCount >= totalCount){
+    sumCount +=result.count;
+
+    console.log('sumCount:',sumCount);
+
+    if(result.count === 0){
       console.log('update complete!!!');
       return callback();
     }
 
-    updateOrderCardType((type, skipCount, limit, callback));
+    beginToUpdateOrder(type, sumCount, limit, callback);
   });
 }
 
 exports.updateOrderCardType = function (type, callback) {
   var query = {
-    $or: [{is_update: null}, {is_update: false}]
+    $or: [{is_updated: null}, {is_updated: false}]
   };
   if (type) {
     query.type = type;
@@ -587,12 +589,11 @@ exports.updateOrderCardType = function (type, callback) {
 
     if (totalCount === 0) {
       console.log('has no ' + type + ' card need to update!');
-      return callback();
+      return callback(null, totalCount);
     }
 
-    beginToUpdateOrder(type, 0, 10, function(err){
-      console.log(err);
-      return callback();
+    beginToUpdateOrder(type, 0, 3, function(err){
+      return callback(err, totalCount);
     });
   });
 };
