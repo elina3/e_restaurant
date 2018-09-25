@@ -465,3 +465,37 @@ exports.getOrderStatisticByTimeTagGroup = function(filter, callback){
     return callback(null, result);
   });
 };
+
+//获取用户饭卡消费情况:普通饭卡管理员只能看普通饭卡的订单消费情况，员工专家饭卡管理员能看员工饭卡和专家饭卡的订单消费情况，饭卡管理员能看到所有类型卡
+exports.getCardOrderStatisticByCardType = function(user, filter, callback){
+  var query = {
+    deleted_status: false,
+    paid: true
+  };
+
+  if(filter.startTime && filter.endTime){
+    query.$and = [{create_time: {$gte: filter.startTime}},{create_time:{$lte: filter.endTime}}];
+  }
+
+  if(user.role === 'normal_card_manager'){
+
+  }else if(user.role === 'staff_card_manager'){
+
+  }
+
+  Order.aggregate([
+    {$match: query},
+    {$group: {
+      _id: '$time_tag',
+      order_count: {$sum: 1},
+      order_total_price: {$sum: '$total_price'},
+      order_actual_amount: {$sum: '$actual_amount'}
+    }}
+  ], function(err, result){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, result);
+  });
+};

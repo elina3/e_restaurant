@@ -417,3 +417,31 @@ exports.getOrderStatisticByTimeTagGroup = function(req, res, next){
     return next();
   });
 };
+
+//获取用户饭卡消费情况:普通饭卡管理员只能看普通饭卡的订单消费情况，员工专家饭卡管理员能看员工饭卡和专家饭卡的订单消费情况
+exports.getCardOrderStatisticByUser = function(req, res, next){
+  var timeRange = {};
+  try{
+    timeRange = JSON.parse(req.query.time_range || '') || {};
+  }catch(e){}
+
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  orderLogic.getCardOrderStatisticByCardType(req.user, {
+    startTime: startTime,
+    endTime: endTime
+  }, function(err, result){
+      if(err){
+        return next(err);
+      }
+
+    req.data = {
+      order_statistic: result,
+      begin_time: startTime,
+      end_time: endTime
+    };
+    return next();
+  });
+};

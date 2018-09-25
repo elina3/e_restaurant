@@ -37,4 +37,7 @@ module.exports = function (app) {
 
   //app.route('/user/update_time_tag').post(orderController.updateTimeTag);
   app.route('/user/order/time_tag_statistic').get(orderController.getOrderStatisticByTimeTagGroup);
+
+  //获取用户饭卡消费情况:普通饭卡管理员只能看普通饭卡的订单消费情况，员工饭卡管理员只能看员工饭卡订单消费情况
+  app.route('/user/order/card_order_statistic').get(authFilter.requireUser, orderController.getCardOrderStatisticByUser);
 };
