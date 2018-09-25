@@ -71,6 +71,9 @@ var CardSchema = new Schema({
   salt: {
     type: String,
     default: 'secret'
+  },
+  is_updated: {//用于更新card_type作为标识
+    type: Boolean
   }
 });
 

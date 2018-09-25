@@ -133,6 +133,7 @@ exports.pay = function (client, order, method, card, amount, callback) {
         order.has_discount = hasDiscount;
         order.card_id_number = payResult.card.id_number;
         order.card_number = payResult.card.card_number;
+        order.card_type = payResult.card.type;//todo 新增加订单卡类型用于分卡类型统计
         order.save(function (err, newOrder) {
           if (err || !newOrder) {
             return callback({err: systemError.database_save_error});

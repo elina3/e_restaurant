@@ -68,18 +68,18 @@ angular.module('EWeb').controller('CardOrderStatisticController',
             var endTime = new Date(data.end_time).Format('yyyy-MM-dd');
 
             console.log(data);
-          var dinner = {
+          var normalCard = {
             time_tag: '普通卡',
             order_count: '',
             order_total_price: '',
             order_actual_amount: ''
-          }, lunch={
+          }, staffCard={
             time_tag: '员工卡',
             order_count: '',
             order_total_price: '',
             order_actual_amount: '',
             date: ''
-          }, breakfast={
+          }, expertCard={
             time_tag: '专家卡',
             order_count: '',
             order_total_price: '',
@@ -98,22 +98,22 @@ angular.module('EWeb').controller('CardOrderStatisticController',
               summary.order_total_price = 0;
               summary.order_actual_amount = 0;
               data.order_statistic.forEach(function(group){
-                if(group._id === '晚餐'){
-                  dinner.order_count = group.order_count;
-                  dinner.order_total_price = group.order_total_price.toFixed(3);
-                  dinner.order_actual_amount = group.order_actual_amount.toFixed(3);
+                if(group._id === 'normal'){
+                  normalCard.order_count = group.order_count;
+                  normalCard.order_total_price = group.order_total_price.toFixed(3);
+                  normalCard.order_actual_amount = group.order_actual_amount.toFixed(3);
                 }
 
-                if(group._id === '午餐'){
-                  lunch.order_count = group.order_count;
-                  lunch.order_total_price = group.order_total_price.toFixed(3);
-                  lunch.order_actual_amount = group.order_actual_amount.toFixed(3);
+                if(group._id === 'staff'){
+                  staffCard.order_count = group.order_count;
+                  staffCard.order_total_price = group.order_total_price.toFixed(3);
+                  staffCard.order_actual_amount = group.order_actual_amount.toFixed(3);
                 }
 
-                if(group._id === '早餐'){
-                  breakfast.order_count = group.order_count;
-                  breakfast.order_total_price = group.order_total_price.toFixed(3);
-                  breakfast.order_actual_amount = group.order_actual_amount.toFixed(3);
+                if(group._id === 'expert'){
+                  expertCard.order_count = group.order_count;
+                  expertCard.order_total_price = group.order_total_price.toFixed(3);
+                  expertCard.order_actual_amount = group.order_actual_amount.toFixed(3);
                 }
 
                 summary.order_count += group.order_count;
@@ -127,12 +127,18 @@ angular.module('EWeb').controller('CardOrderStatisticController',
             }
 
 
-          $scope.formattedStatisticInfos.push(breakfast);
-          $scope.formattedStatisticInfos.push(lunch);
-          $scope.formattedStatisticInfos.push(dinner);
+          if($scope.user.role === 'normal_card_manager'){
+            $scope.formattedStatisticInfos.push(normalCard);
+          }else if($scope.user.role === 'staff_card_manager'){
+            $scope.formattedStatisticInfos.push(expertCard);
+            $scope.formattedStatisticInfos.push(staffCard);
+          }else{
+            $scope.formattedStatisticInfos.push(normalCard);
+            $scope.formattedStatisticInfos.push(expertCard);
+            $scope.formattedStatisticInfos.push(staffCard);
+          }
+
           $scope.formattedStatisticInfos.push(summary);
-
-
 
           $scope.$emit(GlobalEvent.onShowLoading, false);
             console.log(data);

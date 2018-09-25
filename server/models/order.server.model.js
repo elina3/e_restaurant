@@ -122,6 +122,10 @@ var OrderSchema = new Schema({
   card_id_number: {
     type: String
   },
+  card_type: {//普通，员工，专家
+    // enum: ['normal', 'staff', 'expert'],
+    type: String
+  },
   time_tag: {//时间标签。早餐，午餐，晚餐
     type: String
   }
