@@ -41,5 +41,5 @@ module.exports = function (app) {
   //获取用户饭卡消费情况:普通饭卡管理员只能看普通饭卡的订单消费情况，员工饭卡管理员只能看员工饭卡订单消费情况
   app.route('/user/order/card_order_statistic').get(authFilter.requireUser, orderController.getCardOrderStatisticByUser);
   //todo 之后删除 临时 更新订单表中card_type数据
-  app.route('/user/order/test/update_order_type').post( orderController.updateOrderCardType);
+  //app.route('/user/order/test/update_order_type').post( orderController.updateOrderCardType);
 };
