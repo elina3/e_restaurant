@@ -592,7 +592,7 @@ exports.updateOrderCardType = function (type, callback) {
       return callback(null, totalCount);
     }
 
-    beginToUpdateOrder(type, 0, 3, function(err){
+    beginToUpdateOrder(type, 0, 10, function(err){
       return callback(err, totalCount);
     });
   });
