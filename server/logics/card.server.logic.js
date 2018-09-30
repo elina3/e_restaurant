@@ -743,21 +743,48 @@ exports.getCardStatistics = function (filter, callback) {
   });
 };
 
-exports.getTotalCardBalance = function (filter, callback) {
+exports.getTotalCardBalance = function (user, filter, callback) {
   var query = {
     deleted_status: false,
     status: {$in: ['enabled', 'frozen']}
   };
+
   if (filter.keyword) {
     query.$or = [{card_number: filter.keyword},
       {id_number: filter.keyword}];
   }
 
+  if (filter.cardNumber)
+    query.card_number = {$regex: filter.cardNumber, $options: '$i'};
+
+  if (filter.idNumber)
+    query.id_number = {$regex: filter.idNumber, $options: '$i'};
+
+  if(filter.nickname){
+    query.nickname = {$regex: filter.nickname, $options: '$i'};
+  }
+
+
+  //普通饭卡管理员只能看到普通卡
+  if(user.role === 'normal_card_manager'){
+    query.type = 'normal';
+  }
+  //员工专家饭卡管理员可以看到员工卡，专家卡
+  if(user.role === 'staff_card_manager'){
+    query.type = {$in: ['staff', 'expert']};
+  }
+
+  //管理员可筛选
+  if(!query.type && filter.type){
+    query.type = filter.type;
+  }
+
+
   Card.aggregate([{
     $match: query
   }, {
     $group: {
-      _id: '$status',
+      _id: '$object',
       totalAmount: {$sum: '$amount'}
     }
   }], function (err, result) {
@@ -769,11 +796,7 @@ exports.getTotalCardBalance = function (filter, callback) {
       return callback(null, 0);
     }
 
-    var totalBalance = 0;
-    result.forEach(function (item) {
-      totalBalance += item.totalAmount;
-    });
-    return callback(null, totalBalance);
+    return callback(null, result[0].totalAmount || 0);
   });
 };
 

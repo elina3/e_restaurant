@@ -207,11 +207,24 @@ exports.getCardStatistics = function (req, res, next) {
 };
 //卡余额
 exports.getCardBalance = function (req, res, next) {
-  var keyword = req.query.keyword || '';
+  // var keyword = req.query.keyword || '';
+  // var filter = {
+  //   keyword: keyword
+  // };
+
+  var cardNumber = req.query.card_number || req.body.card_number || '';
+  var idNumber = req.query.id_number || req.body.id_number || '';
+  var nickname = req.query.nickname || req.body.nickname || '';
+  var type = req.query.type || req.body.type || '';
   var filter = {
-    keyword: keyword
+    cardNumber: cardNumber,
+    nickname:  nickname,
+    idNumber: idNumber,
+    type: type
   };
-  cardLogic.getTotalCardBalance(filter, function (err, totalCardBalance) {
+
+
+  cardLogic.getTotalCardBalance(req.user, filter, function (err, totalCardBalance) {
     if (err) {
       return next(err);
     }

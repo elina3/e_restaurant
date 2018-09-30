@@ -855,6 +855,7 @@ angular.module('EWeb').controller('UserManagerController',
 
       $scope.searchCards = function () {
         loadCards();
+        loadCardBalance();
       };
 
       $scope.myKeyup = function (e) {
