@@ -69,8 +69,9 @@ exports.getCardList = function (req, res, next) {
   var cardNumber = req.query.card_number || req.body.card_number || '';
   var idNumber = req.query.id_number || req.body.id_number || '';
   var nickname = req.query.nickname || req.body.nickname || '';
+  var type = req.query.type || req.body.type || '';
 
-  cardLogic.getCardList(req.user, currentPage, limit, skipCount, cardNumber, idNumber, nickname, function (err, result) {
+  cardLogic.getCardList(req.user, currentPage, limit, skipCount, cardNumber, idNumber, nickname, type, function (err, result) {
     if (err) {
       req.err = err;
       return next();

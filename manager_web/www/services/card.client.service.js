@@ -14,7 +14,8 @@ angular.module('EWeb').factory('CardService',
             skip_count: param.skipCount,
             card_number: keyword.card_number,
             id_number: keyword.registration_id,
-            nickname: keyword.nickname
+            nickname: keyword.nickname,
+            type: keyword.type
           })
             .then(function (data) {
               if (!callback) {
@@ -234,9 +235,12 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
-        getCardBalance: function(filter, callback){
+        getCardBalance: function(keyword, callback){
           RequestSupport.executeGet('/card/balance', {
-            keyword: filter.keyword
+            card_number: keyword.card_number,
+            id_number: keyword.registration_id,
+            nickname: keyword.nickname,
+            type: keyword.type
           })
             .then(function (data) {
               if (!callback) {

@@ -539,7 +539,7 @@ angular.module('EWeb').controller('UserManagerController',
 
       //<editor-fold desc="饭卡相关">
       function loadCardBalance() {
-        CardService.getCardBalance({}, function (err, data) {
+        CardService.getCardBalance($scope.pageConfig.plat_card_panel.keyword, function (err, data) {
           $scope.$emit(GlobalEvent.onShowLoading, false);
           if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
