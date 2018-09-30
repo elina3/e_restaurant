@@ -217,7 +217,7 @@
                                         <span>证件号</span>
                                     </div>
                                     <div class="col-xs-3">
-                                        <span>卡号</span>
+                                        <span>卡类型：卡号</span>
                                     </div>
                                     <div class="col-xs-1"><span>昵称</span></div>
                                     <div class="col-xs-1">
@@ -229,7 +229,6 @@
                                     <div class="col-xs-1">
                                         <span>生成时间</span>
                                     </div>
-
                                     <div class="col-xs-3">
                                         <span>操作</span>
                                     </div>
@@ -239,7 +238,7 @@
                                         <span>{{card.id_number}}</span>
                                     </div>
                                     <div class="col-xs-3" title="{{card.card_number}}">
-                                        <span>{{card.card_number}}</span>
+                                        <span>{{card.type.text}}：{{card.card_number}}</span>
                                     </div>
                                     <div class="col-xs-1">{{card.nickname || '--'}}</div>
                                     <div class="col-xs-1">
