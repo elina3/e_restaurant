@@ -32,7 +32,7 @@ angular.module('EWeb').controller('CardOrderStatisticController',
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
               '十月', '十一月', '十二月']
           },
-          timePicker: false,
+          timePicker: true,
           timePicker12Hour: false,
           timePickerIncrement: 1,
           separator: ' ~ ',
@@ -54,8 +54,7 @@ angular.module('EWeb').controller('CardOrderStatisticController',
           }
         }
         var timeRangeString = JSON.stringify(timeRange);
-
-        //OrderService.getOrderStatisticByTimeTagGroup(timeRangeString, function (err, data) {
+        console.log('tieRangeString:',timeRangeString);
         OrderService.getCardOrderStatisticByUserRole(timeRangeString, function (err, data) {
             if (err || !data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
@@ -64,6 +63,8 @@ angular.module('EWeb').controller('CardOrderStatisticController',
 
             $scope.formattedStatisticInfos = [];
 
+            console.log('begin_time:', data.begin_time);
+            console.log('end_time:', data.end_time);
             var beginTime = data.begin_time ? new Date(data.begin_time).Format('yyyy-MM-dd') : '-- ';
             var endTime = new Date(data.end_time).Format('yyyy-MM-dd');
 
