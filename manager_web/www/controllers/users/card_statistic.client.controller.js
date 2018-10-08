@@ -31,7 +31,7 @@ angular.module('EWeb').controller('CardStatisticController',
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月',
               '十月', '十一月', '十二月']
           },
-          timePicker: false,
+          timePicker: true,
           timePicker12Hour: false,
           timePickerIncrement: 1,
           separator: ' ~ ',
