@@ -32,6 +32,27 @@ angular.module('EWeb').factory('CardService',
               return callback(SystemError.network_error);
             });
         },
+        exportCardsByFilter: function(keyword, callback){
+          RequestSupport.executeGet('/cards_list/export_all_by_filter', {
+            card_number: keyword.card_number,
+            id_number: keyword.registration_id,
+            nickname: keyword.nickname,
+            type: keyword.type
+          }).then(function (data) {
+                if (!callback) {
+                  return data;
+                }
+
+                if (data.err) {
+                  return callback(data.zh_message || data.err);
+                }
+
+                callback(null, data);
+              },
+              function (err) {
+                return callback(SystemError.network_error);
+              });
+        },
         addCard: function (param, callback) {
           RequestSupport.executePost('/card', {
             card_info: param

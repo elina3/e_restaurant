@@ -182,7 +182,7 @@
                     </div>
                     <div class="ee-tag-view" ng-show="user.role==='admin' || user.role === 'card_manager'|| user.role === 'normal_card_manager'|| user.role === 'staff_card_manager'">
                         <div class="ee-search-bar row">
-                            <div class="left-panel col-xs-6">
+                            <div class="left-panel col-xs-9">
                                 <div class='pull-left'>
                                     <label class="info-name">查询:</label>
                                     <input placeholder="请输入证件号" type="text"   ng-model="pageConfig.plat_card_panel.keyword.registration_id" ng-change="searchCards()" />
@@ -191,23 +191,43 @@
                                     <select ng-change="searchCards()" ng-if="user.role==='admin' || user.role === 'card_manager'" ng-model="pageConfig.plat_card_panel.keyword.type"><option value="">全部（卡类型）</option><option value="normal">普通</option><option value="staff">员工</option><option value="expert">专家</option></select>
                                 </div>
                             </div>
-                            <div class="right-panel col-xs-6">
-                                <div class="card-balance">
-                                    <label title="包含已开通和已冻结卡的余额">总余额：</label>
-                                    <span>{{pageConfig.plat_card_panel.totalCardBalance.toFixed(3)}}元</span>
-                                </div>
+                            <div class="right-panel col-xs-3">
+                                <!--<div class="card-balance">-->
+                                    <!--<label title="包含已开通和已冻结卡的余额">总余额：</label>-->
+                                    <!--<span>{{pageConfig.plat_card_panel.totalCardBalance.toFixed(3)}}元</span>-->
+                                <!--</div>-->
                                 <div class="card-history" ng-click="goState('card_statistic')">
                                     <span>查看统计</span>
                                 </div>
                                 <div class="card-history" ng-click="goState('card_history')">
                                     <span>查看历史</span>
                                 </div>
-                                <div class="card-history" ng-hide="user.role === 'normal_card_manager'" ng-click="showBatchRechargePanel()">
+                                <!--<div class="card-history" ng-click="exportCardsByFilter()">-->
+                                    <!--导出饭卡-->
+                                <!--</div>-->
+                                <!--<div class="card-history" ng-hide="user.role === 'normal_card_manager'" ng-click="showBatchRechargePanel()">-->
+                                    <!--批量充值-->
+                                <!--</div>-->
+                                <!--<div class="add-user" ng-click="editCard()">-->
+                                    <!--<img src="images/user_manager/single_add.png"/>-->
+                                    <!--<span>添加饭卡</span>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div class="search-result-bar row">
+                            <div class="row-panel col-xs-6">
+                                <div class="card-balance">
+                                    <label title="包含已开通和已冻结卡的余额">总余额：</label>
+                                    <span>{{pageConfig.plat_card_panel.totalCardBalance.toFixed(3)}}元</span>
+                                </div>
+                                <div class="normal" ng-click="exportCardsToExcel()">
+                                    导出饭卡
+                                </div>
+                                <div class="normal" ng-hide="user.role === 'normal_card_manager'" ng-click="showBatchRechargePanel()">
                                     批量充值
                                 </div>
-                                <div class="add-user" ng-click="editCard()">
-                                    <img src="images/user_manager/single_add.png"/>
-                                    <span>添加饭卡</span>
+                                <div class="normal" ng-click="editCard()">
+                                    添加饭卡
                                 </div>
                             </div>
                         </div>

@@ -475,6 +475,47 @@ exports.getCardList = function (user, currentPage, limit, skipCount, cardNumber,
       });
   });
 };
+//获取所有卡信息：根据条件和用户角色
+exports.exportCardsByFilter = function (user, cardNumber, idNumber, nickname, type, callback) {
+  var query = {
+    deleted_status: false
+  };
+  if (cardNumber)
+    query.card_number = {$regex: cardNumber, $options: '$i'};
+
+  if (idNumber)
+    query.id_number = {$regex: idNumber, $options: '$i'};
+
+  if(nickname){
+    query.nickname = {$regex: nickname, $options: '$i'};
+  }
+
+  //普通饭卡管理员只能看到普通卡
+  if(user.role === 'normal_card_manager'){
+    query.type = 'normal';
+  }
+  //员工专家饭卡管理员可以看到员工卡，专家卡
+  if(user.role === 'staff_card_manager'){
+    query.type = {$in: ['staff', 'expert']};
+  }
+
+  //管理员可筛选
+  if(!query.type && type){
+    query.type = type;
+  }
+
+  Card.find(query)
+    .sort({update_time: -1})
+    .exec(function (err, cardList) {
+      if (err) {
+        return callback({err: systemError.internal_system_error});
+      }
+
+      return callback(null, {
+        cardList: cardList
+      });
+    });
+};
 
 
 function getActualAmount(card, amount, paymentStatisticThisMonth) {

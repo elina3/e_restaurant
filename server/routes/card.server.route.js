@@ -19,6 +19,10 @@ module.exports = function (app) {
   app.route('/card/replace').post(authFilter.requireUser, cardFilter.requireCard, cardController.replaceCard);
 
   app.route('/cards_list').get(authFilter.requireUser, cardController.getCardList);
+
+  //新增饭卡信息导出功能：根据条件筛选和用户角色所有饭卡结果
+  app.route('/cards_list/export_all_by_filter').get(authFilter.requireUser, cardController.exportAllCardsByFilter);
+
   app.route('/client/card').get(cardFilter.requireCardByIDNumberOrCardNumber, cardController.getCardDetail);
 
   app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);

@@ -581,6 +581,76 @@ angular.module('EWeb').controller('UserManagerController',
         });
       }
 
+
+      //<editor-fold desc="导出相关">
+      var exportSheet = {A1: '证件号', B1: '卡类型', C1: '卡号', D1: '昵称', E1: '状态', F1: '余额'};
+      function generateExportData(row) {
+        var result = [];
+        result.push(row.id_number );
+        result.push(CardService.translateCardType(row.type));
+        result.push(row.card_number);
+        result.push(row.nickname);
+        result.push(CardService.translateCardStatus(row.status));
+        result.push(row.amount);
+        return result;
+      }
+      function generateExcelDataArray(formattedStatisticInfos) {
+        var datas = [];
+        var header = [];
+        for(var prop in exportSheet){
+          header.push(exportSheet[prop]);
+        }
+        datas.push(header);
+        for (var i = 0; i < formattedStatisticInfos.length; i++) {
+          datas.push(generateExportData(formattedStatisticInfos[i]));
+        }
+        return datas;
+      }
+      function isIE() {
+        var myNav = navigator.userAgent.toLowerCase();
+        return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
+      }
+      function exportCardsByFilter() {
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+        CardService.exportCardsByFilter($scope.pageConfig.plat_card_panel.keyword, function (err, result) {
+          if (err) {
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          var data = generateExcelDataArray(result.card_list);
+          var workSheetName = 'Sheet1';
+          if (isIE()) {
+            var excel = new ActiveXObject('Excel.Application');
+            var excel_book = excel.Workbooks.Add;
+            var excel_sheet = excel_book.Worksheets(1);
+            for (var i = 0; i < data.length; i++) {
+              for (var j = 0; j < data[i].length; j++) {
+                excel_sheet.Cells(i+1,j+1).Value = data[i][j];
+              }
+            }
+            excel.Visible = true;
+            excel.UserControl = true;
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+          else {
+            var wookBook = new Workbook();
+            var wookSheet = sheet_from_array_of_arrays(data);
+
+            /* add worksheet to workbook */
+            wookBook.SheetNames.push(workSheetName);
+            wookBook.Sheets[workSheetName] = wookSheet;
+
+            var wbout = XLSX.write(wookBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+            saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), '饭卡信息.xls');
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+
+        });
+      }
+      $scope.exportCardsToExcel = exportCardsByFilter;
+
+      //</editor-fold>
+
       $scope.showBatchRechargePanel = function () {
         $scope.pageConfig.popMaskShow = true;
         $scope.batchRechargeShow = true;

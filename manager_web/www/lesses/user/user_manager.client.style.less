@@ -37,14 +37,15 @@
     }
     .ee-search-bar{
       width: 100%;
-      height: 60px;
+      height: 50px;
 
-      .left-panel, .right-panel{
+      .left-panel, .right-panel, .row-panel{
         display: inline-block;
         overflow: hidden;
         float: left;
 
         &.right-panel{
+          overflow: hidden;
 
           .card-balance{
             display: inline-block;
@@ -128,6 +129,98 @@
               line-height:30px;
               margin-top: 10px;
             }
+          }
+        }
+        &.row-panel{
+           *{
+
+             display: inline-block;
+             overflow: hidden;
+             float: left;
+
+
+             cursor: pointer;
+
+             height: 40px;
+             line-height: 40px;
+           }
+          .card-balance{
+
+            width: 210px;
+
+            cursor: default;
+            span{
+              color: @font-color-red;
+            }
+          }
+
+          .add-user{
+            width: 100px;
+
+            height: 40px;
+
+            &:hover{
+              color: @background-normal-color
+            }
+
+            img, span{
+              display: inline-block;
+              overflow: hidden;
+              float: left;
+
+              height: 40px;
+              line-height: 40px;
+              text-align: center;
+            }
+
+            img{
+              margin-left: 5px;
+              margin-top: 12px;
+              margin-right: 5px;
+            }
+          }
+
+          .normal{
+            width: 80px;
+            &:hover{
+              color: @background-normal-color
+            }
+          }
+        }
+      }
+    }
+    .search-result-bar{
+      width: 100%;
+      height: 40px;
+
+      .row-panel{
+        display: inline-block;
+        overflow: hidden;
+        float: left;
+        *{
+
+          display: inline-block;
+          overflow: hidden;
+          float: left;
+
+          cursor: pointer;
+
+          height: 40px;
+          line-height: 40px;
+        }
+        .card-balance{
+
+          width: 210px;
+
+          cursor: default;
+          span{
+            color: @font-color-red;
+          }
+        }
+        .normal{
+          width: 80px;
+          &:hover{
+            color: @background-normal-color
           }
         }
       }
