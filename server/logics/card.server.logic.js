@@ -743,6 +743,7 @@ exports.getCardStatistics = function (filter, callback) {
   if (filter.startTime && filter.endTime) {
     query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
   }
+  console.log('query:',query);
 
   CardStatistic.aggregate([{
     $match: query

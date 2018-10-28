@@ -116,6 +116,14 @@ angular.module('EWeb').controller('CardHistoryController',
             $scope.pageData.pagination.totalCount = data.total_count;
             $scope.pageData.pagination.limit = data.limit;
             $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
+
+
+            if(timeRange.startTime){
+              filter.startTimeStamp = new Date(timeRange.startTime).getTime();
+            }
+            if(timeRange.endTime){
+              filter.endTimeStamp = new Date(timeRange.endTime).getTime();
+            }
             CardService.getStatistics(filter, function (err, data) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               if (err || !data) {
