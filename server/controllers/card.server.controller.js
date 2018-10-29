@@ -385,3 +385,17 @@ exports.changeCardPassword = function (req, res, next) {
     return next();
   });
 };
+
+//todo 可删除 更新卡历史和卡统计的卡昵称
+exports.updateCardHistoryAndStatisticsCardNickname = function(req, res, next){
+  cardLogic.updateCardHistoryAndStatisticsCardNickname(function(err, data){
+    if(err){
+      return next(err);
+    }
+
+    req.data = {
+      success: true
+    };
+    return next();
+  });
+};

@@ -41,4 +41,9 @@ module.exports = function (app) {
   app.route('/card/delete_pay').post(authFilter.requireUser, cardController.deleteCardPay);
 
   app.route('/card/change_password').post(authFilter.requireUser, cardFilter.requireCard, cardController.changeCardPassword);
+
+
+  //todo 可以删除 2018／10／29
+//更新卡历史和卡统计的卡昵称
+  app.route('/card/test_update_nickname').post(cardController.updateCardHistoryAndStatisticsCardNickname);
 };

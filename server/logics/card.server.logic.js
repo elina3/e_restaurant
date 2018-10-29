@@ -1189,3 +1189,57 @@ exports.paySupermarketOrder = function (client, card, supermarketOrder, actualAm
     }, client);
   });
 };
+
+//todo 可删除
+function updateCardHistoryCardNickname(card,callback){
+  CardHistory.update({card_number: card.card_number}, {$set: {card_nickname: card.nickname}}, {multi: true})
+    .exec(function(err){
+      if(err){
+        return callback({err: systemError.database_update_error});
+      }
+
+      CardHistory.update({new_card_number: card.card_number}, {$set: {new_card_nickname: card.nickname}},{multi: true})
+        .exec(function(err){
+          if(err){
+            return callback({err: systemError.database_update_error});
+          }
+
+          return callback();
+        });
+    });
+}
+function updateCardStatisticsCardNickname(card, callback){
+  CardStatistic.update({card_number: card.card_number}, {$set: {card_nickname: card.nickname}}, {multi:true})
+    .exec(function(err){
+      if(err){
+        return callback({err: systemError.database_update_error});
+      }
+
+      return callback();
+    });
+}
+exports.updateCardHistoryAndStatisticsCardNickname = function(callback){
+  Card.find({})
+    .select('nickname card_number')
+    .exec(function(err, cardList){
+      if(err){
+        return callback({err: systemError.database_query_error});
+      }
+      console.log('cardList:', cardList.length);
+
+      async.eachSeries(cardList, function(card, eachCallback){
+        updateCardHistoryCardNickname(card, function(err){
+          if(err){
+            return eachCallback(err);
+          }
+          updateCardStatisticsCardNickname(card, function(err){
+            if(err){
+              return eachCallback(err);
+            }
+            console.log('update card:', card.card_number, card.nickname);
+            return eachCallback();
+          });
+        });
+      }, callback);
+    })
+};
