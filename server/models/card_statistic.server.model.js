@@ -39,6 +39,9 @@ var CardStatisticSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  card_nickname: {
+    type: String
+  }
 });
 
 CardStatisticSchema.plugin(timestamps, {

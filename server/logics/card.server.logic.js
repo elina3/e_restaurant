@@ -688,9 +688,18 @@ exports.getCardHistories = function (currentPage, limit, skipCount, filter, call
   var query = {
     deleted_status: false
   };
-  if (filter.keyword)
-    query.$or = [{card_number: filter.keyword},
-      {id_number: filter.keyword}];
+  if (filter.keyword){
+    //
+    // query.$or = [{card_number: filter.keyword},
+    //   {id_number: filter.keyword}];
+
+    var regexObj = {$regex: filter.keyword, $options: '$i'};
+    query.$or = [
+      {card_number: regexObj},
+      {id_number: regexObj},
+      {card_nickname: regexObj}
+    ];
+  }
 
 
   if (filter.startTime && filter.endTime) {
@@ -736,8 +745,18 @@ exports.getCardHistories = function (currentPage, limit, skipCount, filter, call
 exports.getCardStatistics = function (filter, callback) {
   var query = {};
   if (filter.keyword) {
-    query.$or = [{card_number: filter.keyword},
-      {id_number: filter.keyword}];
+    // query.$or = [
+    //   {card_number: filter.keyword},
+    //   {id_number: filter.keyword},
+    //   {card_nickname: filter.keyword}
+    //   ];
+
+    var regexObj = {$regex: filter.keyword, $options: '$i'};
+    query.$or = [
+      {card_number: regexObj},
+      {id_number: regexObj},
+      {card_nickname: regexObj}
+    ];
   }
 
   if (filter.startTime && filter.endTime) {
