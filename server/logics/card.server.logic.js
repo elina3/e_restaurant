@@ -66,6 +66,7 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     card_type: oldCard.type,
     id_number: oldCard.id_number,
     card_number: oldCard.card_number,
+    card_nickname: oldCard.nickname,
     action: actionName,
     amount: amount,
     new_amount: newAmount,
@@ -74,6 +75,7 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
   if (newCard) {
     cardHistory.new_card = newCard._id;
     cardHistory.new_card_number = newCard.card_number;
+    cardHistory.new_card_nickname = newCard.nickname;
   }
   if(supermarketOrder){
     cardHistory.supermarket_order = supermarketOrder._id;
@@ -93,6 +95,7 @@ function addCardStatistic(user, card, action, amount, description, callback) {
     card: card._id,
     id_number: card.id_number,
     card_type: card.type,
+    card_nickname: card.nickname,
     card_number: card.card_number,
     action: action,
     amount: amount,

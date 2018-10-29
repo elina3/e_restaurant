@@ -33,7 +33,7 @@
                         </z-dropdown>
                     </div>
                     <div class="filter-item col-xs-3">
-                        <input class="search-box" placeholder="请输入卡号／证件号" type="text" ng-model="pageData.keyword" />
+                        <input class="search-box" placeholder="请输入卡号／证件号／昵称" type="text" ng-model="pageData.keyword" />
                     </div>
                     <div class="filter-item col-xs-3">
                         <div class="search" ng-click="searchKey()">筛选</div>
@@ -50,8 +50,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="statistic"><label>充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount.toFixed(3) || 0}}</strong> 元</div>
-                    <div class="statistic"><label>退卡总金额：</label><strong>{{pageData.statistics.total_close_amount.toFixed(3) || 0}}</strong> 元</div>
+                    <div class="statistic"><label>现金充值总金额：</label><strong>{{pageData.statistics.total_recharge_amount.toFixed(3) || 0}}</strong> 元</div>
+                    <div class="statistic"><label>现金退卡总金额：</label><strong>{{pageData.statistics.total_close_amount.toFixed(3) || 0}}</strong> 元</div>
                     <div class="statistic"><label>删除卡总余额：</label><strong>{{pageData.statistics.total_delete_amount.toFixed(3) || 0}}</strong> 元</div>
                 </div>
             </div>

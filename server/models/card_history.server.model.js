@@ -10,9 +10,9 @@ var mongoose = require('mongoose'),
   timestamps = require('mongoose-timestamp');
 
 var CardHistorySchema = new Schema({
-  object:{
-    type:String,
-    default:'CardHistory'
+  object: {
+    type: String,
+    default: 'CardHistory'
   },
   card: {
     type: Schema.Types.ObjectId,
@@ -29,7 +29,13 @@ var CardHistorySchema = new Schema({
   card_number: {
     type: String
   },
+  card_nickname: {
+    type: String
+  },
   new_card_number: {//补卡时才有
+    type: String
+  },
+  new_card_nickname: {
     type: String
   },
   action: {
