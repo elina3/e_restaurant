@@ -6,16 +6,20 @@
 angular.module('EWeb').controller('CardStatisticController',
   ['$rootScope', '$scope', 'GlobalEvent', '$state', 'CardStatisticService', 'Config', '$window', 'CardService', 'Auth', 'ExcelReadSupport',
     function ($rootScope, $scope, GlobalEvent, $state, CardStatisticService, Config, $window, CardService, Auth, ExcelReadSupport) {
-      if (!Auth.getUser()) {
+  console.log('card statistics');
+      $scope.user= Auth.getUser();
+      if (!$scope.user) {
         $state.go('user_sign_in');
         return;
       }
+
       $scope.pageData = {
         keyword: '',
         action: {id: '', text: '不限'},
         formattedStatisticInfos: []
       };
 
+      $scope.formattedStatisticInfos= [];
       $scope.pageShow = {
         createTimeRange: '',
         createTimeMinTime: moment().format('YY/MM/DD HH:mm'),
@@ -193,9 +197,21 @@ angular.module('EWeb').controller('CardStatisticController',
       function generateExportData(row) {
         var result = [];
         result.push(row.name );
-        result.push(row.staff);
-        result.push(row.expert);
-        result.push(row.normal);
+
+
+        if($scope.user.role === 'staff_card_manager'){//员工饭卡管理员 可看到员工和专家卡信息
+          result.push(row.staff);
+          result.push(row.expert);
+          result.push('--');
+        }else if($scope.user.role === 'normal_card_manager'){//普通饭卡管理员只能看到普通卡信息
+          result.push('--');
+          result.push('--');
+          result.push(row.normal);
+        }else{
+          result.push(row.staff);
+          result.push(row.expert);
+          result.push(row.normal);
+        }
         result.push(row.sum);
         result.push(row.time);
         return result;

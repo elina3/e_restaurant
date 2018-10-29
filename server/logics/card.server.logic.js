@@ -897,10 +897,18 @@ exports.batchRechargeCard = function (user, amount, callback) {
 };
 
 
-exports.exportCardStatistic = function (filter, callback) {
+exports.exportCardStatistic = function (user, filter, callback) {
   var query = {};
   if (filter.startTime && filter.endTime) {
     query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
+  }
+
+  //新增 2018／10／29
+  //如果是员工饭卡管理员只能看到 员工和专家
+  if(user.role === 'staff_card_manager'){
+    query.card_type = {$in: ['staff', 'expert']};
+  }else if(user.role === 'normal_card_manager'){//如果是普通饭卡管理员只能看到 普通卡
+    query.card_type = 'normal';
   }
 
   CardStatistic.aggregate([{

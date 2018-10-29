@@ -289,7 +289,7 @@ exports.exportCardStatistic = function (req, res, next) {
   var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
   var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
 
-  cardLogic.exportCardStatistic({startTime: startTime, endTime: endTime}, function (err, result) {
+  cardLogic.exportCardStatistic(req.user, {startTime: startTime, endTime: endTime}, function (err, result) {
     if (err) {
       return next(err);
     }
