@@ -9,7 +9,8 @@ var businessEnum = require('../enums/business');
 var appDb = mongooseLib.appDb;
 var CardHistory = appDb.model('CardHistory'),
   Card = appDb.model('Card'),
-  CardStatistic = appDb.model('CardStatistic');
+  CardStatistic = appDb.model('CardStatistic'),
+  AutoCardRechargeHistory = appDb.model('AutoCardRechargeHistory');
 
 var systemError = require('../errors/system');
 var cardError = require('../errors/card');
@@ -30,6 +31,7 @@ function floatMinus(arg1, arg2) {
   n = (r1 >= r2) ? r1 : r2;
   return parseFloat(((arg1 * m - arg2 * m) / m).toFixed(n));
 }
+
 function floatMul(arg1, arg2) {
   var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
   try {
@@ -42,6 +44,7 @@ function floatMul(arg1, arg2) {
   }
   return parseFloat(Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m));
 }
+
 function floatAdd(arg1, arg2) {
   var r1, r2, m;
   try {
@@ -63,7 +66,7 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     create_client: client ? client._id : null,
     create_user: user ? user._id : null,
     card: oldCard._id,
-    card_type: oldCard.type,
+    card_type: oldCard.type,//2021/04/30 增加卡类型荣誉
     id_number: oldCard.id_number,
     card_number: oldCard.card_number,
     card_nickname: oldCard.nickname,
@@ -77,7 +80,7 @@ function addHistory(user, oldCard, newCard, actionName, amount, newAmount, descr
     cardHistory.new_card_number = newCard.card_number;
     cardHistory.new_card_nickname = newCard.nickname;
   }
-  if(supermarketOrder){
+  if (supermarketOrder) {
     cardHistory.supermarket_order = supermarketOrder._id;
   }
   cardHistory.save(function (err, newCardHistory) {
@@ -149,7 +152,7 @@ exports.addCard = function (user, cardInfo, callback) {
 
           card.nickname = cardInfo.nickname;
           card.type = !cardInfo.type ? 'normal' : cardInfo.type;
-          card.discount = card.type === 'staff' ? 0.25 : 1;
+          card.discount = card.type === 'staff' ? 1 : 1; //员工没有折扣从0.25改为1（2021／4／30）
           card.status = 'enabled';
           card.deleted_status = false;
           card.recent_modify_user = user._id;
@@ -214,7 +217,7 @@ exports.importStaffCards = function (user, cardList, callback) {
                   create_user: user._id,
                   amount: 0,
                   type: 'staff',
-                  discount: 0.25
+                  discount: 1 //员工折扣改为1（2021／4／30）
                 });
               }
 
@@ -284,7 +287,7 @@ exports.getCardByIDNumberWithoutDeleted = function (idNumber, callback) {
     });
 };
 
-exports.findEnabledCardByIdNumber = function(idNumber, callback){
+exports.findEnabledCardByIdNumber = function (idNumber, callback) {
   var query = {
     deleted_status: false,
     id_number: idNumber
@@ -350,6 +353,8 @@ exports.getCardById = function (cardId, callback) {
   });
 };
 
+const STAFFBALANCELIMIT = 1000;
+const EXPERTBALANCELIMIT = 500;
 exports.updateCardInfo = function (user, card, cardInfo, callback) {
   if (!cardInfo.card_number) {
     return callback({err: cardError.card_number_null});
@@ -362,6 +367,14 @@ exports.updateCardInfo = function (user, card, cardInfo, callback) {
 
   var oldAmount = card.amount;
   var newAmount = floatAdd(parseFloat(oldAmount.toFixed(3)), parseFloat(addAmount.toFixed(3)));
+
+  //充值时增加限制：员工卡余额不得超过1000，专家卡余额不得超过500（2021／4／30）
+  if(card.type === 'staff' && newAmount > STAFFBALANCELIMIT){//单个充值，员工卡余额不得超过1000
+    return callback({err: cardError.staff_card_over_balance_limit_1000});
+  }
+  if(card.type === 'expert' && newAmount > EXPERTBALANCELIMIT){//单个充值，专家卡余额不得超过500
+    return callback({err: cardError.expert_card_over_balance_limit_500});
+  }
 
   card.nickname = cardInfo.nickname;
   card.recent_recharge_type = cardInfo.recharge_type || 'cash';
@@ -429,22 +442,22 @@ exports.getCardList = function (user, currentPage, limit, skipCount, cardNumber,
   if (idNumber)
     query.id_number = {$regex: idNumber, $options: '$i'};
 
-  if(nickname){
+  if (nickname) {
     query.nickname = {$regex: nickname, $options: '$i'};
   }
 
 
   //普通饭卡管理员只能看到普通卡
-  if(user.role === 'normal_card_manager'){
+  if (user.role === 'normal_card_manager') {
     query.type = 'normal';
   }
   //员工专家饭卡管理员可以看到员工卡，专家卡
-  if(user.role === 'staff_card_manager'){
+  if (user.role === 'staff_card_manager') {
     query.type = {$in: ['staff', 'expert']};
   }
 
   //管理员可筛选
-  if(!query.type && type){
+  if (!query.type && type) {
     query.type = type;
   }
 
@@ -489,21 +502,21 @@ exports.exportCardsByFilter = function (user, cardNumber, idNumber, nickname, ty
   if (idNumber)
     query.id_number = {$regex: idNumber, $options: '$i'};
 
-  if(nickname){
+  if (nickname) {
     query.nickname = {$regex: nickname, $options: '$i'};
   }
 
   //普通饭卡管理员只能看到普通卡
-  if(user.role === 'normal_card_manager'){
+  if (user.role === 'normal_card_manager') {
     query.type = 'normal';
   }
   //员工专家饭卡管理员可以看到员工卡，专家卡
-  if(user.role === 'staff_card_manager'){
+  if (user.role === 'staff_card_manager') {
     query.type = {$in: ['staff', 'expert']};
   }
 
   //管理员可筛选
-  if(!query.type && type){
+  if (!query.type && type) {
     query.type = type;
   }
 
@@ -522,11 +535,11 @@ exports.exportCardsByFilter = function (user, cardNumber, idNumber, nickname, ty
 
 
 function getActualAmount(card, amount, paymentStatisticThisMonth) {
-  if (card.type === 'normal') {
+  if (card.type === 'normal') {//普通卡无折扣，直接返回正常金额
     return amount;
   }
 
-  if (paymentStatisticThisMonth.totalAmount >= 300) {
+  if (paymentStatisticThisMonth.totalAmount >= 300) {//如果当月消费满300，则无折扣，直接返回正常金额
     return amount;
   }
 
@@ -691,7 +704,7 @@ exports.getCardHistories = function (currentPage, limit, skipCount, filter, call
   var query = {
     deleted_status: false
   };
-  if (filter.keyword){
+  if (filter.keyword) {
     //
     // query.$or = [{card_number: filter.keyword},
     //   {id_number: filter.keyword}];
@@ -765,7 +778,7 @@ exports.getCardStatistics = function (filter, callback) {
   if (filter.startTime && filter.endTime) {
     query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
   }
-  console.log('query:',query);
+  console.log('query:', query);
 
   CardStatistic.aggregate([{
     $match: query
@@ -824,22 +837,22 @@ exports.getTotalCardBalance = function (user, filter, callback) {
   if (filter.idNumber)
     query.id_number = {$regex: filter.idNumber, $options: '$i'};
 
-  if(filter.nickname){
+  if (filter.nickname) {
     query.nickname = {$regex: filter.nickname, $options: '$i'};
   }
 
 
   //普通饭卡管理员只能看到普通卡
-  if(user.role === 'normal_card_manager'){
+  if (user.role === 'normal_card_manager') {
     query.type = 'normal';
   }
   //员工专家饭卡管理员可以看到员工卡，专家卡
-  if(user.role === 'staff_card_manager'){
+  if (user.role === 'staff_card_manager') {
     query.type = {$in: ['staff', 'expert']};
   }
 
   //管理员可筛选
-  if(!query.type && filter.type){
+  if (!query.type && filter.type) {
     query.type = filter.type;
   }
 
@@ -865,6 +878,9 @@ exports.getTotalCardBalance = function (user, filter, callback) {
 };
 
 exports.batchRechargeCard = function (user, amount, callback) {
+
+  return callback({err: cardError.auto_recharge_instead_of});//暂时替换！！！
+
   var amount = publicLib.parseFloatNumber(amount);
   if (!amount) {
     return callback({err: cardError.wrong_amount});
@@ -927,9 +943,9 @@ exports.exportCardStatistic = function (user, filter, callback) {
 
   //新增 2018／10／29
   //如果是员工饭卡管理员只能看到 员工和专家
-  if(user.role === 'staff_card_manager'){
+  if (user.role === 'staff_card_manager') {
     query.card_type = {$in: ['staff', 'expert']};
-  }else if(user.role === 'normal_card_manager'){//如果是普通饭卡管理员只能看到 普通卡
+  } else if (user.role === 'normal_card_manager') {//如果是普通饭卡管理员只能看到 普通卡
     query.card_type = 'normal';
   }
 
@@ -1056,6 +1072,7 @@ function updateCardStatisticCardType(callback) {
       });
     })
 }
+
 function updateCardHistoryCardType(callback) {
   CardHistory.find({action: 'recharge'})
     .populate('card')
@@ -1089,6 +1106,7 @@ function updateCardHistoryCardType(callback) {
       });
     })
 }
+
 //updateCardStatisticCardType(function(err, result){
 //  if(err){
 //    console.error('update statistic error:');
@@ -1137,21 +1155,21 @@ exports.getStatisticByHistory = function (action, callback) {
   });
 };
 
-exports.setCardPassword = function(user, card, password, callback){
+exports.setCardPassword = function (user, card, password, callback) {
 
-  if(!password){
+  if (!password) {
     return callback({err: cardError.card_password_null});
   }
 
-  if(!publicLib.isString(password) || password.length < 6){
+  if (!publicLib.isString(password) || password.length < 6) {
     return callback({err: cardError.invalid_card_password});
   }
 
   card.password = card.hashPassword(password);
   card.change_password_user = user._id;
   card.self_change_password = false;
-  card.save(function(err, newCard){
-    if(err ||!newCard){
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
       return callback({err: systemError.database_save_error});
     }
 
@@ -1170,7 +1188,7 @@ exports.paySupermarketOrder = function (client, card, supermarketOrder, actualAm
 
   var oldAmount = card.amount;
   var newAmount = floatMinus(oldAmount, actualAmount);
-  if(newAmount < 0){
+  if (newAmount < 0) {
     return callback({err: cardError.insufficient_balance});
   }
   card.amount = newAmount;
@@ -1191,16 +1209,16 @@ exports.paySupermarketOrder = function (client, card, supermarketOrder, actualAm
 };
 
 //todo 可删除
-function updateCardHistoryCardNickname(card,callback){
+function updateCardHistoryCardNickname(card, callback) {
   CardHistory.update({card_number: card.card_number}, {$set: {card_nickname: card.nickname}}, {multi: true})
-    .exec(function(err){
-      if(err){
+    .exec(function (err) {
+      if (err) {
         return callback({err: systemError.database_update_error});
       }
 
-      CardHistory.update({new_card_number: card.card_number}, {$set: {new_card_nickname: card.nickname}},{multi: true})
-        .exec(function(err){
-          if(err){
+      CardHistory.update({new_card_number: card.card_number}, {$set: {new_card_nickname: card.nickname}}, {multi: true})
+        .exec(function (err) {
+          if (err) {
             return callback({err: systemError.database_update_error});
           }
 
@@ -1208,32 +1226,34 @@ function updateCardHistoryCardNickname(card,callback){
         });
     });
 }
-function updateCardStatisticsCardNickname(card, callback){
-  CardStatistic.update({card_number: card.card_number}, {$set: {card_nickname: card.nickname}}, {multi:true})
-    .exec(function(err){
-      if(err){
+
+function updateCardStatisticsCardNickname(card, callback) {
+  CardStatistic.update({card_number: card.card_number}, {$set: {card_nickname: card.nickname}}, {multi: true})
+    .exec(function (err) {
+      if (err) {
         return callback({err: systemError.database_update_error});
       }
 
       return callback();
     });
 }
-exports.updateCardHistoryAndStatisticsCardNickname = function(callback){
+
+exports.updateCardHistoryAndStatisticsCardNickname = function (callback) {
   Card.find({})
     .select('nickname card_number')
-    .exec(function(err, cardList){
-      if(err){
+    .exec(function (err, cardList) {
+      if (err) {
         return callback({err: systemError.database_query_error});
       }
       console.log('cardList:', cardList.length);
 
-      async.eachSeries(cardList, function(card, eachCallback){
-        updateCardHistoryCardNickname(card, function(err){
-          if(err){
+      async.eachSeries(cardList, function (card, eachCallback) {
+        updateCardHistoryCardNickname(card, function (err) {
+          if (err) {
             return eachCallback(err);
           }
-          updateCardStatisticsCardNickname(card, function(err){
-            if(err){
+          updateCardStatisticsCardNickname(card, function (err) {
+            if (err) {
               return eachCallback(err);
             }
             console.log('update card:', card.card_number, card.nickname);
@@ -1242,4 +1262,96 @@ exports.updateCardHistoryAndStatisticsCardNickname = function(callback){
         });
       }, callback);
     })
+};
+
+exports.getCardsByType = function (type, callback) {
+  var query = {
+    deleted_status: false,
+    type: type
+  };
+  Card.find(query, function (err, cards) {
+    if (err || !cards) {
+      return callback({err: systemError.database_query_error});
+    }
+    return callback(null, cards);
+  });
+};
+
+//***虚拟充值---普通卡不支持***，每月充值1次。专家卡每月充值500，余额上限不可超过500；员工卡每月充值500，余额上限不可超过1000。
+function getRealRechargeVirtualAmount(card) {
+  var balance = card.amount;
+  var amountForMonth = 500;
+  var amountLimit = 0;
+  if (card.type === 'expert') {
+    amountLimit = EXPERTBALANCELIMIT;
+  } else if (card.type === 'staff') {
+    amountLimit = STAFFBALANCELIMIT;
+  }
+
+  var minusAmount = floatMinus(amountLimit, balance);//可充值范围
+  if (minusAmount >= amountForMonth) {
+    return amountForMonth;
+  } else if (minusAmount > 0 && minusAmount < amountForMonth) {
+    return minusAmount;
+  } else {
+    return 0;//余额超限制不需要充值
+  }
+}
+
+//按照医院规则虚拟充值一张卡
+exports.rechargeVirtualAmountToCardByRules = function (user, card, callback) {
+  if (card.type === 'normal') { //普通卡不支持虚拟充值
+    return callback();
+  }
+
+  var amount = getRealRechargeVirtualAmount(card); //专家卡每月充值500，余额上限不可超过500;员工卡每月充值500，余额上限不可超过1000;
+  if (amount <= 0) {
+    return callback();
+  }
+
+  var oldAmount = card.amount;
+  var newAmount = floatAdd(parseFloat(oldAmount.toFixed(3)), amount);
+  card.amount = newAmount;
+  card.recent_recharge_type = 'virtual';
+  card.save(function (err, newCard) {
+    if (err || !newCard) {
+      return callback({err: systemError.database_save_error});
+    }
+
+    addHistory(user, newCard, null, 'recharge_virtual', oldAmount, card.amount, '虚拟充值', function (err, history) {
+      if (err) {
+        err.zh_message += '添加充值历史记录失败！';
+        return callback({err: err});
+      }
+
+      addCardStatistic(user, newCard, 'recharge_virtual', amount, '虚拟充值', function (err, result) {
+        if (err) {
+          err.zh_message += '添加充值统计信息失败';
+          return callback(err);
+        }
+
+        return callback(null ,newCard);
+      });
+    });
+  });
+};
+
+//自动充值历史
+exports.addAutoCardRechargeHistory = function(monthString, cardType, rechargeInfo, callback){
+  var autoCardRechargeHistory = new AutoCardRechargeHistory({
+    month_string: monthString,
+    card_type: cardType,
+    total_count: rechargeInfo.cardCount,
+    success_count: rechargeInfo.success_count,
+    failed_count: rechargeInfo.failed_count,
+    success_cards: rechargeInfo.success_cards,
+    failed_cards: rechargeInfo.failed_cards
+  });
+  autoCardRechargeHistory.save(function(err){
+    if(err){
+      return callback({err: systemError.database_save_error});
+    }
+
+    return callback();
+  });
 };

@@ -9,8 +9,8 @@ var publicLib = require('../libraries/public'),
   supermarketOrderError = require('../errors/v3_supermaket_order');
 
 
-var supermarketAmountLimit = 100 * 100, //默认100元（单位：分）
-  supermarketDiscountForStaff = 0.25;
+var supermarketAmountLimit = 200 * 100, //默认100元（单位：分）//需求更新：超市限制200。（2021／4／29）
+  supermarketDiscountForStaff = 1; //超市员工折扣取消（2021／4／29）
 
 function getError(err, value){
   var newError = JSON.parse(JSON.stringify(err));
@@ -21,7 +21,7 @@ function getError(err, value){
 
 //超市消费：
 //专家卡：月消费限制100（实际金额），无折扣
-//员工卡：月消费限制100（实际金额），2.5折
+//员工卡：月消费限制200（实际金额），无折扣
 //普通卡：不能消费
 exports.generateOrder = function(req, res, next){
   var client = req.client;

@@ -5,6 +5,7 @@
 var systemError = require('../errors/system');
 var cardLogic = require('../logics/card');
 var publicLib = require('../libraries/public');
+var async = require('async');
 //办卡
 exports.addNewCard = function (req, res, next) {
   var user = req.user;
@@ -237,7 +238,7 @@ exports.getCardBalance = function (req, res, next) {
   var type = req.query.type || req.body.type || '';
   var filter = {
     cardNumber: cardNumber,
-    nickname:  nickname,
+    nickname: nickname,
     idNumber: idNumber,
     type: type
   };
@@ -260,6 +261,7 @@ exports.batchRechargeCard = function (req, res, next) {
   if (req.user.role !== 'admin' && req.user.role === 'card-manager') {
     return next({err: systemError.no_permission});
   }
+
   cardLogic.batchRechargeCard(req.user, req.body.amount, function (err, result) {
     if (err) {
       return next(err);
@@ -387,9 +389,9 @@ exports.changeCardPassword = function (req, res, next) {
 };
 
 //todo 可删除 更新卡历史和卡统计的卡昵称
-exports.updateCardHistoryAndStatisticsCardNickname = function(req, res, next){
-  cardLogic.updateCardHistoryAndStatisticsCardNickname(function(err, data){
-    if(err){
+exports.updateCardHistoryAndStatisticsCardNickname = function (req, res, next) {
+  cardLogic.updateCardHistoryAndStatisticsCardNickname(function (err, data) {
+    if (err) {
       return next(err);
     }
 
@@ -397,5 +399,111 @@ exports.updateCardHistoryAndStatisticsCardNickname = function(req, res, next){
       success: true
     };
     return next();
+  });
+};
+
+//充值所有员工卡500元，余额上限不可超过1000 2021-04-30 新需求
+exports.rechargeAllStaffCard = function (req, res, next) {
+  console.log('begin to recharge all staff card!!!');
+  cardLogic.getCardsByType('staff', function (err, cards) {
+    if (err) {
+      return next(err);
+    }
+
+    console.log('query staff cards count:' + cards.length);
+    var successCount = 0;
+    var successCards = [];
+    var failedCount = 0;
+    var failedCards = [];
+    async.each(cards, function (card, eachCallback) {
+      var oldAmount = card.amount;
+      cardLogic.rechargeVirtualAmountToCardByRules(null, card, function (err, newCard) {
+        if (err) {
+          return eachCallback(err);
+        }
+
+        if(!newCard){//没有充值成功！！！
+          console.log('recharge staff card failed!!card nickname:' + card.nickname);
+          failedCount++;
+          failedCards.push(card);
+          console.log('failed count:', failedCount);
+        }else{
+          console.log('recharge staff card success!!card nickname:' + card.nickname);
+          successCount++;
+          successCards.push({_id: card._id, card_type: card.type, card_number: card.card_number, id_number: card.id_number, nickname: card.nickname, old_amount: oldAmount, new_amount: newCard.amount});
+          console.log('success count:', successCount);
+        }
+
+        return eachCallback();
+      });
+    }, function (err) {
+      if (err) {
+        return next(err);
+      }
+
+      var resultObj = {
+        success_count: successCount,
+        success_cards: successCards,
+        cardCount: cards.length,
+        failed_count: failedCount,
+        failed_cards: failedCards
+      };
+      cardLogic.addAutoCardRechargeHistory(new Date().Format('yyyy/MM'), 'staff', resultObj, function(){});
+
+      req.data = resultObj;
+      return next();
+    });
+  });
+};
+//充值所有专家卡500元，余额上限不可超过500 2021-04-30 新需求
+exports.rechargeAllExpertCard = function (req, res, next) {
+  cardLogic.getCardsByType('expert', function (err, cards) {
+    if (err) {
+      return next(err);
+    }
+
+    console.log('query staff cards count:' + cards.length);
+    var successCount = 0;
+    var successCards = [];
+    var failedCount = 0;
+    var failedCards = [];
+    async.each(cards, function (card, eachCallback) {
+      var oldAmount = card.amount;
+      cardLogic.rechargeVirtualAmountToCardByRules(null, card, function (err, newCard) {
+        if (err) {
+          return eachCallback(err);
+        }
+
+        if(!newCard){//没有充值成功！！！
+          console.log('recharge staff card failed!!card nickname:' + card.nickname);
+          failedCount++;
+          failedCards.push(card);
+          console.log('failed count:', failedCount);
+        }else{
+          console.log('recharge staff card success!!card nickname:' + card.nickname);
+          successCount++;
+          successCards.push({_id: card._id, card_type: card.type, card_number: card.card_number, id_number: card.id_number, nickname: card.nickname, old_amount: oldAmount, new_amount: newCard.amount});
+          console.log('success count:', successCount);
+        }
+
+        return eachCallback();
+      });
+    }, function (err) {
+      if (err) {
+        return next(err);
+      }
+
+      var resultObj = {
+        success_count: successCount,
+        success_cards: successCards,
+        cardCount: cards.length,
+        failed_count: failedCount,
+        failed_cards: failedCards
+      };
+      cardLogic.addAutoCardRechargeHistory(new Date().Format('yyyy/MM'), 'expert', resultObj, function(){});
+
+      req.data = resultObj;
+      return next();
+    });
   });
 };

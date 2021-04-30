@@ -46,4 +46,9 @@ module.exports = function (app) {
   //todo 可以删除 2018／10／29
 //更新卡历史和卡统计的卡昵称
   app.route('/card/test_update_nickname').post(cardController.updateCardHistoryAndStatisticsCardNickname);
+
+  //每月自动充值员工卡 接口调用 2021／04／30
+  app.route('/card/staff/recharge/auto_month').post(cardController.rechargeAllStaffCard);
+  //每月自动充值专家卡 接口调用 2021／04／30
+  app.route('/card/expert/recharge/auto_month').post(cardController.rechargeAllExpertCard);
 };

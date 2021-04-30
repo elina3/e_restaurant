@@ -34,5 +34,10 @@ module.exports = _.extend(exports, {
 
   card_password_null: {type: 'card_password_null', message: 'The password can not be null', zh_message: '饭卡未设置密码'},
   invalid_card_password: {type: 'invalid_card_password', message: 'The password info is invalid', zh_message: '设置密码格式不正确'},
-  card_password_error: {type: 'card_password_error', message: 'The password or card id number is not match', zh_message: '密码或证件号不匹配'}
+  card_password_error: {type: 'card_password_error', message: 'The password or card id number is not match', zh_message: '密码或证件号不匹配'},
+
+
+  auto_recharge_instead_of: {type: 'auto_recharge_instead_of', message: 'Auto Recharging is instead of batch recharge', zh_message: '批量充值员工卡由每月自动充值接管！！'},
+  staff_card_over_balance_limit_1000: {type: 'staff_card_over_balance_limit_1000', message: 'The staff card\'s balance is over 1000Y', zh_message: '员工卡余额超过最大限制1000元'},
+  expert_card_over_balance_limit_500: {type: 'expert_card_over_balance_limit_500', message: 'The expert card\'s balance is over 500Y', zh_message: '专家卡余额超过最大限制500元'}
 });

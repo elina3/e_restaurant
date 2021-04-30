@@ -29,6 +29,9 @@ var CardHistorySchema = new Schema({
   card_number: {
     type: String
   },
+  card_type: {//2021/04/30
+    type: String
+  },
   card_nickname: {
     type: String
   },
