@@ -353,8 +353,8 @@ exports.getCardById = function (cardId, callback) {
   });
 };
 
-const STAFFBALANCELIMIT = 1000;
-const EXPERTBALANCELIMIT = 500;
+var STAFFBALANCELIMIT = 1000;
+var EXPERTBALANCELIMIT = 500;
 exports.updateCardInfo = function (user, card, cardInfo, callback) {
   if (!cardInfo.card_number) {
     return callback({err: cardError.card_number_null});
