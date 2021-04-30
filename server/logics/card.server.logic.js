@@ -1355,3 +1355,13 @@ exports.addAutoCardRechargeHistory = function(monthString, cardType, rechargeInf
     return callback();
   });
 };
+
+exports.isAutoRecharged = function(monthString, cardType,callback){
+  AutoCardRechargeHistory.find({month_string: monthString, card_type: cardType}, function(err, histories){
+    if(err){
+      return callback({err: systemError.database_query_error});
+    }
+
+    return callback(null, histories.length > 0);
+  });
+};
