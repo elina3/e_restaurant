@@ -1267,6 +1267,7 @@ exports.updateCardHistoryAndStatisticsCardNickname = function (callback) {
 exports.getCardsByType = function (type, callback) {
   var query = {
     deleted_status: false,
+    status: 'enabled',//只是获取已启用的未删除的卡
     type: type
   };
   Card.find(query, function (err, cards) {
