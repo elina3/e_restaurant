@@ -100,7 +100,8 @@ exports.exportAllCardsByFilter = function (req, res, next) {
     }
 
     req.data = {
-      card_list: result.cardList
+      card_list: result.cardList,
+      file_name: '饭卡信息' + new Date().Format('yyyyMMddhhmm') + '.xls'
     };
     return next();
   });

@@ -618,6 +618,7 @@ angular.module('EWeb').controller('UserManagerController',
           }
 
           var data = generateExcelDataArray(result.card_list);
+          var filename = result.file_name || '饭卡信息.xls';
           var workSheetName = 'Sheet1';
           if (isIE()) {
             var excel = new ActiveXObject('Excel.Application');
@@ -641,7 +642,7 @@ angular.module('EWeb').controller('UserManagerController',
             wookBook.Sheets[workSheetName] = wookSheet;
 
             var wbout = XLSX.write(wookBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
-            saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), '饭卡信息.xls');
+            saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), filename);
             $scope.$emit(GlobalEvent.onShowLoading, false);
           }
 
