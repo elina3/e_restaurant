@@ -65,25 +65,27 @@ angular.module('EWeb').controller('CardHistoryController',
       $scope.goBack = function () {
         $window.history.back();
       };
-      $scope.goToStatistic = function(){
+      $scope.goToStatistic = function () {
         $state.go('card_statistic');
       };
 
-      $scope.deleteCardPay = function(cardHistory){
+      $scope.deleteCardPay = function (cardHistory) {
 
         $scope.$emit(GlobalEvent.onShowAlertConfirm,
-          {title: '确认操作', content: '您确定要删除该消费记录吗？', callback: function () {
+          {
+            title: '确认操作', content: '您确定要删除该消费记录吗？', callback: function () {
             $scope.$emit(GlobalEvent.onShowLoading, true);
-            CardHistoryService.deleteCardPay(cardHistory._id, function(err, result){
+            CardHistoryService.deleteCardPay(cardHistory._id, function (err, result) {
               $scope.$emit(GlobalEvent.onShowLoading, false);
               loadCardHistories();
-              if(err || !result){
+              if (err || !result) {
                 return $scope.$emit(GlobalEvent.onShowAlert, err || '删除出错');
               }
 
               $scope.$emit(GlobalEvent.onShowAlert, '删除成功！');
             });
-          }});
+          }
+          });
       };
 
       function loadCardHistories() {
@@ -96,11 +98,11 @@ angular.module('EWeb').controller('CardHistoryController',
 
 
         var timeRange = {};
-        if($scope.pageShow.createTimeRange){
-          if($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d){
+        if ($scope.pageShow.createTimeRange) {
+          if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
             timeRange.startTime = moment($scope.pageShow.createTimeRange.startDate).toISOString();
           }
-          if($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d){
+          if ($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d) {
             timeRange.endTime = moment($scope.pageShow.createTimeRange.endDate).toISOString();
           }
         }
@@ -118,10 +120,10 @@ angular.module('EWeb').controller('CardHistoryController',
             $scope.pageData.pagination.pageCount = Math.ceil($scope.pageData.pagination.totalCount / $scope.pageData.pagination.limit);
 
 
-            if(timeRange.startTime){
+            if (timeRange.startTime) {
               filter.startTimeStamp = new Date(timeRange.startTime).getTime();
             }
-            if(timeRange.endTime){
+            if (timeRange.endTime) {
               filter.endTimeStamp = new Date(timeRange.endTime).getTime();
             }
             CardService.getStatistics(filter, function (err, data) {
@@ -249,9 +251,9 @@ angular.module('EWeb').controller('CardHistoryController',
       };
 
 
-
       var importCards = [];
       var existCards = [];
+
       function uploadCardInfos(cardInfos, param, i, callback) {
         CardService.batchImportCards(param, function (err, data) {
 
@@ -310,16 +312,146 @@ angular.module('EWeb').controller('CardHistoryController',
         existCards = [];
 
         $scope.$emit(GlobalEvent.onShowLoading, true);
-        batchUploadPOI(function(err){
+        batchUploadPOI(function (err) {
 
           $scope.$emit(GlobalEvent.onShowLoading, false);
-          if(err){
+          if (err) {
             return $scope.$emit(GlobalEvent.onShowAlert, err);
           }
 
-          return $scope.$emit(GlobalEvent.onShowAlert, '成功导入'+importCards.length+'个饭卡!已存在'+ existCards.length+'个');
+          return $scope.$emit(GlobalEvent.onShowAlert, '成功导入' + importCards.length + '个饭卡!已存在' + existCards.length + '个');
         });
       };
+      //</editor-fold>
+
+      //<editor-fold desc="导出相关">
+
+      var exportSheet = {A1: '证件号', B1: '旧卡', C1: '描述', D1: '金额更换', E1: '变更金额', F1: '新卡', G1: '经办人／消费者', H1: '时间', I1: '卡类型'};
+
+      function getBalanceString(newAmount, oldAmount){
+        var str = '--';
+        if((newAmount || newAmount === 0) && (oldAmount || oldAmount === 0)){
+          str = newAmount - oldAmount;
+        }
+        return str;
+      }
+      function getAmountChangeString(oldAmount, newAmount){
+        var str = '--';
+        if(oldAmount || oldAmount === 0){
+          str = oldAmount + '-';
+        }
+        if(newAmount || newAmount === 0){
+          str += newAmount;
+        }
+        return str;
+      }
+      function generateExportData(row) {
+        var result = [];
+        result.push(row.id_number );
+        result.push(row.card_number);
+        result.push(row.description);
+        result.push(getAmountChangeString(row.amount, row.new_amount));
+        result.push(getBalanceString(row.new_amount, row.amount));
+        result.push(row.new_card_number || '--');
+        result.push((row.create_user && row.create_user.nickname) || (row.create_client && row.create_client.nickname) || '--');
+        result.push(row.create_time && new Date(row.create_time).Format('yyyy/MM/dd hh:mm:ss') || '--');
+        result.push(CardService.translateCardType(row.card_type));
+        return result;
+      }
+      function generateExcelDataArray(formattedStatisticInfos) {
+        var datas = [];
+        var header = [];
+        for(var prop in exportSheet){
+          header.push(exportSheet[prop]);
+        }
+        datas.push(header);
+        for (var i = 0; i < formattedStatisticInfos.length; i++) {
+          datas.push(generateExportData(formattedStatisticInfos[i]));
+        }
+        return datas;
+      }
+      function isIE() {
+        var myNav = navigator.userAgent.toLowerCase();
+        return (myNav.indexOf('msie') !== -1) ? parseInt(myNav.split('msie')[1]) : false;
+      }
+
+      function exportCardHistoriesByFilter() {
+        $scope.$emit(GlobalEvent.onShowLoading, true);
+
+        var filter = {
+          keyword: $scope.pageData.keyword,
+          action: $scope.pageData.action.id
+        };
+
+        //解析时间段
+        var start, end;
+        if ($scope.pageShow.createTimeRange) {
+          if ($scope.pageShow.createTimeRange.startDate && $scope.pageShow.createTimeRange.startDate._d) {
+            start = moment($scope.pageShow.createTimeRange.startDate);
+          }
+          if ($scope.pageShow.createTimeRange.endDate && $scope.pageShow.createTimeRange.endDate._d) {
+            end = moment($scope.pageShow.createTimeRange.endDate);
+          }
+        }
+
+        //检查是否选择开始时间和结束时间
+        var limitDays = 90;//90天
+        if (!start || !end) {
+          $scope.$emit(GlobalEvent.onShowAlert, '请先筛选时间段，不能超过' + limitDays + '天！！');
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          return;
+        }
+
+        //时间段不等超过90天
+        var seconds = end.diff(start, 'seconds');
+        if (seconds > limitDays * 24 * 60 * 60) {
+          $scope.$emit(GlobalEvent.onShowAlert, '时间筛选不能超过' + limitDays + '天！！');
+          $scope.$emit(GlobalEvent.onShowLoading, false);
+          return;
+        }
+
+        var timeRange = {startTime: start.toISOString(), endTime: end.toISOString()};
+        var timeRangeString = JSON.stringify(timeRange);
+        CardHistoryService.exportCardHistoriesByFilter(filter, timeRangeString, function (err, result) {
+          if (err || !result) {
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+            return $scope.$emit(GlobalEvent.onShowAlert, err);
+          }
+
+          var data = generateExcelDataArray(result.card_history_list);
+          var filename = result.file_name || '饭卡历史记录.xls';
+          var workSheetName = 'Sheet1';
+          if (isIE()) {
+            var excel = new ActiveXObject('Excel.Application');
+            var excel_book = excel.Workbooks.Add;
+            var excel_sheet = excel_book.Worksheets(1);
+            for (var i = 0; i < data.length; i++) {
+              for (var j = 0; j < data[i].length; j++) {
+                excel_sheet.Cells(i+1,j+1).Value = data[i][j];
+              }
+            }
+            excel.Visible = true;
+            excel.UserControl = true;
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+          else {
+            var wookBook = new Workbook();
+            var wookSheet = sheet_from_array_of_arrays(data);
+
+            /* add worksheet to workbook */
+            wookBook.SheetNames.push(workSheetName);
+            wookBook.Sheets[workSheetName] = wookSheet;
+
+            var wbout = XLSX.write(wookBook, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+            saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), filename);
+            $scope.$emit(GlobalEvent.onShowLoading, false);
+          }
+
+
+        });
+      }
+
+      $scope.exportCardHistoriesToExcel = exportCardHistoriesByFilter;
       //</editor-fold>
 
 

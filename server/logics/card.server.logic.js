@@ -757,6 +757,40 @@ exports.getCardHistories = function (currentPage, limit, skipCount, filter, call
       });
   });
 };
+//导出饭卡历史记录 2021／05／13
+exports.exportCardHistoriesByFilter = function (filter, callback) {
+  var query = {
+    deleted_status: false
+  };
+  if (filter.keyword) {
+    var regexObj = {$regex: filter.keyword, $options: '$i'};
+    query.$or = [
+      {card_number: regexObj},
+      {id_number: regexObj},
+      {card_nickname: regexObj}
+    ];
+  }
+
+  if (filter.startTime && filter.endTime) {
+    query.$and = [{create_time: {$gte: filter.startTime}}, {create_time: {$lte: filter.endTime}}];
+  }
+
+  if (filter.action) {
+    query.action = filter.action;
+  }
+  CardHistory.find(query)
+    .sort({create_time: -1})
+    .populate('create_user create_client')
+    .exec(function (err, cardHistories) {
+      if (err) {
+        return callback({err: systemError.internal_system_error});
+      }
+
+      return callback(null, {
+        cardHistories: cardHistories
+      });
+    });
+};
 
 exports.getCardStatistics = function (filter, callback) {
   var query = {};

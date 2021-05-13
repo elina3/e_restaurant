@@ -26,6 +26,8 @@ module.exports = function (app) {
   app.route('/client/card').get(cardFilter.requireCardByIDNumberOrCardNumber, cardController.getCardDetail);
 
   app.route('/cards_history_list').get(authFilter.requireUser, cardController.getCardHistories);
+  //新增饭卡历史记录导出功能：根据条件筛选和用户角色导出记录 2021／05／13
+  app.route('/cards_history_list/export_by_filter').get(authFilter.requireUser, cardController.exportCardHistoriesByFilter);
   app.route('/card/statistics').get(authFilter.requireUser, cardController.getCardStatistics);
   //饭卡金额数量财务统计
   app.route('/card/amount_count_statistics').get(authFilter.requireUser, cardController.exportCardStatistic);

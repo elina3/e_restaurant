@@ -203,6 +203,35 @@ exports.getCardHistories = function (req, res, next) {
     return next();
   });
 };
+//卡历史导出 2021／05／13
+exports.exportCardHistoriesByFilter = function (req, res, next) {
+  var timeRange = JSON.parse(req.query.time_range) || {};
+
+  var defaultStart = new Date('1970-1-1 00:00:00');
+  var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
+  var endTime = !timeRange.endTime ? new Date() : (new Date(timeRange.endTime) || new Date());
+
+  var keyword = req.query.keyword || '';
+  var action = req.query.action || '';
+  var filter = {
+    startTime: startTime,
+    endTime: endTime,
+    keyword: keyword,
+    action: action
+  };
+  cardLogic.exportCardHistoriesByFilter(filter, function (err, result) {
+    if (err) {
+      req.err = err;
+      return next();
+    }
+
+    req.data = {
+      card_history_list: result.cardHistories,
+      file_name: '饭卡历史记录' + new Date().Format('yyyyMMddhhmmss') + '.xls',
+    };
+    return next();
+  });
+};
 //卡统计
 exports.getCardStatistics = function (req, res, next) {
   var startTimeStamp = parseInt(req.query.start_time_stamp) || -1;

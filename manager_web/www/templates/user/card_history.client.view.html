@@ -35,8 +35,12 @@
                     <div class="filter-item col-xs-3">
                         <input class="search-box" placeholder="请输入卡号／证件号／昵称" type="text" ng-model="pageData.keyword" />
                     </div>
-                    <div class="filter-item col-xs-3">
+                    <div class="filter-item col-xs-2">
                         <div class="search" ng-click="searchKey()">筛选</div>
+                    </div>
+
+                    <div class="filter-item col-xs-1">
+                        <div class="export" ng-click="exportCardHistoriesToExcel()">导出</div>
                     </div>
                 </div>
             </div>
