@@ -73,7 +73,7 @@ angular.module('EWeb').controller('UserManagerController',
           },
           pagination: {
             currentPage: 1,
-            limit: 10,
+            limit: 8,
             totalCount: 0,
             isShowTotalInfo: true,
             onCurrentPageChanged: function (callback) {
