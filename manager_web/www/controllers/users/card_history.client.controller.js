@@ -329,7 +329,7 @@ angular.module('EWeb').controller('CardHistoryController',
       var exportSheet = {A1: '证件号', B1: '旧卡', C1: '描述', D1: '金额更换', E1: '变更金额', F1: '新卡', G1: '经办人／消费者', H1: '时间', I1: '卡类型'};
 
       function getBalanceString(newAmount, oldAmount){
-        var str = '--';
+        var str = 0;
         if((newAmount || newAmount === 0) && (oldAmount || oldAmount === 0)){
           str = newAmount - oldAmount;
         }
