@@ -1,10 +1,10 @@
 'use strict';
-angular.module('EClientWeb').factory('SupermarketOrderService',
+angular.module('EClientWeb').factory('MilkOrderService',
   ['RequestSupport', 'SystemError',
     function (RequestSupport, SystemError) {
       return {
         createMilkOrder: function (params, callback) {
-          RequestSupport.executePost('/client/supermarket_order/create_and_pay', params)
+          RequestSupport.executePost('/client/milk_order/create_and_pay', params)
             .then(function (data) {
                 if (!callback) {
                   return data;
@@ -23,7 +23,7 @@ angular.module('EClientWeb').factory('SupermarketOrderService',
               });
         },
         rePay: function (params, callback) {
-          RequestSupport.executeGet('/client/supermarket_order/re_pay', params)
+          RequestSupport.executeGet('/client/milk_order/re_pay', params)
             .then(function (data) {
                 if (!callback) {
                   return data;

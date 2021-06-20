@@ -1,5 +1,5 @@
 'use strict';
-angular.module('EClientWeb').controller('MarketCashController',
+angular.module('EClientWeb').controller('MilkCashController',
   [
     '$rootScope',
     '$scope',
@@ -12,7 +12,7 @@ angular.module('EClientWeb').controller('MarketCashController',
     'ClientService',
     'Auth',
     'OrderService',
-    'SupermarketOrderService',
+    'MilkOrderService',
     function ($rootScope,
               $scope,
               $state,
@@ -24,15 +24,16 @@ angular.module('EClientWeb').controller('MarketCashController',
               ClientService,
               Auth,
               OrderService,
-              SupermarketOrderService) {
+              MilkOrderService) {
 
       $scope.pageData = {
-        title: '超市收银页面',
+        title: '牛奶棚收银页面',
         headConfig: {
-          title: '超市收银页面',
+          title: '牛奶棚收银页面',
           backView: '/',
           backShow: true
         },
+        headMenuList: [],
         card_number: '',
         price: 0,
         goods: null,
@@ -132,7 +133,7 @@ angular.module('EClientWeb').controller('MarketCashController',
             return showAlertMessage(err);
           }
 
-          SupermarketOrderService.createMilkOrder({
+          MilkOrderService.createMilkOrder({
             amount: price * 100,
             description: '',
             card_id: data.card._id

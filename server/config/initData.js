@@ -45,56 +45,74 @@ exports.createDefaultGroup = function(){
         }
 
         console.log('create superMarket group success!!!!');
-        console.log(JSON.stringify(restaurantGroup));
+        console.log(JSON.stringify(superMarketGroup));
 
-        var userInfo = {
-          username : 'mh-rjgb@rjhgb.com',
-          password : '123456',
-          nickname : '管理员',
-          role : 'admin',
+        userLogic.createGroup({
+          name: '牛奶棚',
+          address: '2号楼',
           hospital_id: hospital._id.toString(),
-          group_id: restaurantGroup._id.toString(),//默认餐厅管理员
-          sex : 'female',
-          mobile_phone : '18321740710',
-          head_photo : '',
-          description : ''
-        };
-        userLogic.signUpAdmin(userInfo, function(err, admin){
+          wechat_app_info: {
+            app_id: '',
+            secret: ''
+          }
+        }, function(err, milkGroup){
           if(err){
-            if(err.type !== 'admin_exist'){
-              console.log('create admin failed');
-              console.log(err);
-            }else{
-              return;
-            }
+            console.log('create milk group:', err);
+            return;
           }
 
-          console.log('create default admin success!!!!');
-          console.log(JSON.stringify(admin));
+          console.log('create milk group success!!!!');
+          console.log(JSON.stringify(milkGroup));
 
-          userLogic.createHospital({name: '瑞金医院古北分院', address: '上海市长宁区红宝石路398号', groups: [restaurantGroup._id.toString(), superMarketGroup._id.toString()], hospital: hospital._id.toString()}, function(err, hospital) {
-            if (err) {
-              console.log('create default hospital failed');
-              return;
+          var userInfo = {
+            username : 'mh-rjgb@rjhgb.com',
+            password : '123456',
+            nickname : '管理员',
+            role : 'admin',
+            hospital_id: hospital._id.toString(),
+            group_id: restaurantGroup._id.toString(),//默认餐厅管理员
+            sex : 'female',
+            mobile_phone : '18321740710',
+            head_photo : '',
+            description : ''
+          };
+          userLogic.signUpAdmin(userInfo, function(err, admin){
+            if(err){
+              if(err.type !== 'admin_exist'){
+                console.log('create admin failed');
+                console.log(err);
+              }else{
+                return;
+              }
             }
 
-            bedLogic.createBuilding(hospital._id, {name: 'B楼'}, function(err, building){
+            console.log('create default admin success!!!!');
+            console.log(JSON.stringify(admin));
+
+            userLogic.createHospital({name: '瑞金医院古北分院', address: '上海市长宁区红宝石路398号', groups: [restaurantGroup._id.toString(), superMarketGroup._id.toString()], hospital: hospital._id.toString()}, function(err, hospital) {
               if (err) {
-                console.log('create default building failed');
+                console.log('create default hospital failed');
                 return;
               }
 
-
-              console.log('create default building success');
-
-              var floors = [{name: '5楼', beds_count: 38},{name: '6楼', beds_count: 38},{name: '7楼', beds_count: 38},{name: '8楼', beds_count: 38},{name: '9楼', beds_count: 38},{name: '10楼', beds_count: 38},{name: '11楼', beds_count: 38}];
-              bedLogic.createFloorBedsByBuilding(building, floors, function(err, building){
+              bedLogic.createBuilding(hospital._id, {name: 'B楼'}, function(err, building){
                 if (err) {
-                  console.log('create default floor failed');
+                  console.log('create default building failed');
                   return;
                 }
 
-                console.log('create default floor and beds success');
+
+                console.log('create default building success');
+
+                var floors = [{name: '5楼', beds_count: 38},{name: '6楼', beds_count: 38},{name: '7楼', beds_count: 38},{name: '8楼', beds_count: 38},{name: '9楼', beds_count: 38},{name: '10楼', beds_count: 38},{name: '11楼', beds_count: 38}];
+                bedLogic.createFloorBedsByBuilding(building, floors, function(err, building){
+                  if (err) {
+                    console.log('create default floor failed');
+                    return;
+                  }
+
+                  console.log('create default floor and beds success');
+                });
               });
             });
           });

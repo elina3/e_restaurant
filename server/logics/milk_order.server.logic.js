@@ -1,13 +1,13 @@
 'use strict';
 var async = require('async');
 var systemError = require('../errors/system');
-var supermarketOrderError = require('../errors/v3_supermaket_order');
+var milkOrderError = require('../errors/v3_milk_order');
 
 var mongooseLib = require('../libraries/mongoose'),
   publicLib = require('../libraries/public');
 
 var appDb = mongooseLib.appDb;
-var SupermarketOrder = appDb.model('SupermarketOrder');
+var MilkOrder = appDb.model('MilkOrder');
 
 function generateOrderNumber(client, order){
   var nowString = new Date().Format('yyyyMMdd');
@@ -26,7 +26,7 @@ exports.getCurrentConsumptionAmount = function(card, callback){
     card: card._id,
     $and: [{pay_time: {$gte: getFirstDateOfCurrentMonth(now)}}, {pay_time: {$lte: now}}]
   };
-  SupermarketOrder.aggregate([{
+  MilkOrder.aggregate([{
     $match: query
   }, {
     $group: {
@@ -46,13 +46,13 @@ exports.getCurrentConsumptionAmount = function(card, callback){
   });
 };
 
-exports.createMilkOrder = function(supermarketOrderInfo, client, card, callback){
-  if(!supermarketOrderInfo){
+exports.createMilkOrder = function(milkOrderInfo, client, card, callback){
+  if(!milkOrderInfo){
     return callback({err: systemError.param_null_error});
   }
 
-  var supermarketOrder = new SupermarketOrder({
-    description : supermarketOrderInfo.description,
+  var milkOrder = new MilkOrder({
+    description : milkOrderInfo.description,
     client: client._id,
     client_info: {
       nickname: client.nickname,
@@ -62,12 +62,12 @@ exports.createMilkOrder = function(supermarketOrderInfo, client, card, callback)
     card: card._id,
     card_number: card.card_number,
     card_id_number: card.id_number,
-    amount: supermarketOrderInfo.amount,
-    actual_amount: supermarketOrderInfo.actual_amount
+    amount: milkOrderInfo.amount,
+    actual_amount: milkOrderInfo.actual_amount
   });
 
-  supermarketOrder.order_number = generateOrderNumber(client, supermarketOrder);
-  supermarketOrder.save(function(err, newOrder){
+  milkOrder.order_number = generateOrderNumber(client, milkOrder);
+  milkOrder.save(function(err, newOrder){
     if(err || !newOrder){
       return callback({err: systemError.database_save_error});
     }
@@ -76,8 +76,8 @@ exports.createMilkOrder = function(supermarketOrderInfo, client, card, callback)
   });
 };
 
-exports.updateMilkOrderPaid = function(supermarketOrderId, payTime, callback){
-  SupermarketOrder.update({_id: supermarketOrderId, paid: false}, {$set: {paid: true, pay_time: payTime}}, function(err, info){
+exports.updateMilkOrderPaid = function(milkOrderId, payTime, callback){
+  MilkOrder.update({_id: milkOrderId, paid: false}, {$set: {paid: true, pay_time: payTime}}, function(err, info){
     if(err){
       return callback({err: systemError.database_update_error, info: publicLib.getStackError(err)});
     }
@@ -87,7 +87,7 @@ exports.updateMilkOrderPaid = function(supermarketOrderId, payTime, callback){
   });
 };
 
-exports.getSupermarketOrdersByPagination = function(filter, pagination, callback){
+exports.getMilkOrdersByPagination = function(filter, pagination, callback){
   var query = {
   };
 
@@ -109,19 +109,19 @@ exports.getSupermarketOrdersByPagination = function(filter, pagination, callback
 
   async.auto({
     getMilkOrderResult: function(autoCallback){
-      SupermarketOrder.count(query, function(err, totalCount){
+      MilkOrder.count(query, function(err, totalCount){
         if(err){
           return autoCallback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
         }
 
         pagination.limit = pagination.limit === -1 ? 10 : pagination.limit;
         pagination.skip_count = pagination.skip_count === -1 ? (pagination.current_page - 1) * pagination.limit : pagination.skip_count;
-        SupermarketOrder.find(query)
+        MilkOrder.find(query)
           .skip(pagination.skip_count)
           .limit(pagination.limit)
           .sort({pay_time: -1})
           .populate('card')
-          .exec(function(err, supermarketOrders){
+          .exec(function(err, milkOrders){
             if(err){
               return autoCallback({err: systemError.database_query_error, info: publicLib.getStackError(err)});
             }
@@ -129,13 +129,13 @@ exports.getSupermarketOrdersByPagination = function(filter, pagination, callback
               totalCount: totalCount,
               limit: pagination.limit,
               currentPage: pagination.current_page,
-              supermarketOrders: supermarketOrders
+              milkOrders: milkOrders
             });
           });
       });
     },
     getMilkOrderStatistics: function(autoCallback){
-      SupermarketOrder.aggregate([
+      MilkOrder.aggregate([
         {$match: query},
         {$group: {
           _id: '$object',

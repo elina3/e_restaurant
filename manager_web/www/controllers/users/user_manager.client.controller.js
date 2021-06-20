@@ -14,7 +14,7 @@ angular.module('EWeb').controller('UserManagerController',
       $scope.batchRechargeShow = false;
       $scope.pageConfig = {
         clientScanType: '',
-        clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'}, {id: 'cashier', text: '收银员'},],
+        clientRoles: [{id: 'normal', text: '普通用户'}, {id: 'waiter', text: '服务员'}, {id: 'cashier', text: '收银员'}, {id: 'milk_cashier', text: '牛奶棚收银员'}],
         roles: [
           {id: 'card_manager', text: '饭卡管理员'},
           {id: 'normal_card_manager', text: '普通饭卡管理员'},
@@ -23,7 +23,8 @@ angular.module('EWeb').controller('UserManagerController',
           {id: 'cooker', text: '厨师'},
           {id: 'nurse', text: '护士'},
           {id: 'registrar', text: '登记员'},
-          {id: 'supermarket_manager', text: '超市管理员'}],
+          {id: 'supermarket_manager', text: '超市管理员'},
+          {id: 'milk_manager', text: '牛奶棚管理员'}],
         cardTypes: [{id: 'normal', text: '普通'}, {id: 'staff', text: '员工'}, {id: 'expert', text: '专家'}],
         rechargeTypes: [{id: 'cash', text: '现金'}, {id: 'virtual', text: '虚拟'}],
         groups: [],

@@ -73,6 +73,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       templateUrl: 'templates/supermarket/supermarket_manager.client.view.html',
       controller: 'SMarketManagerController'
     })
+    .state('milk_manager', {
+      url: '/milk/manager',
+      templateUrl: 'templates/milk/milk_manager.client.view.html',
+      controller: 'MilkManagerController'
+    })
     .state('set_meal', {
       url: '/healthy_meal/set_meal',
       templateUrl: 'templates/healthy_meal/set_meal.client.view.html',
@@ -117,6 +122,11 @@ eWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $
       url: '/supermarket_new/supermarket_order',
       templateUrl: 'templates/supermarket_new/supermarket_order.client.view.html',
       controller: 'SupermarketOrderController'
+    })
+    .state('milk_order', {
+      url: '/milk_new/milk_order',
+      templateUrl: 'templates/milk_new/milk_order.client.view.html',
+      controller: 'MilkOrderController'
     })
     .state('card_order_statistic', {
       url: '/user/card_order/statistics:filter',

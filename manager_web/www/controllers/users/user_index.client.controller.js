@@ -41,6 +41,11 @@ angular.module('EWeb').controller('UserIndexController',
               $state.go('supermarket_order');
             }
             return;
+          case 'milk':
+            if (user.role === 'admin' || user.role === 'milk_manager') {
+              $state.go('milk_order');
+            }
+            return;
           default:
             return;
         }

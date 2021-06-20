@@ -62,7 +62,7 @@ var ClientSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['normal', 'waiter', 'cashier'],
+    enum: ['normal', 'waiter', 'cashier', 'milk_cashier'],
     default: 'normal'
   },
   city: {

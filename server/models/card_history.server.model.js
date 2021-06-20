@@ -68,6 +68,10 @@ var CardHistorySchema = new Schema({
   supermarket_order: {
     type: Schema.Types.Object,
     ref: 'SupermarketOrder'
+  },
+  milk_order: {
+    type: Schema.Types.Object,
+    ref: 'MilktOrder'
   }
 });
 

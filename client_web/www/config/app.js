@@ -76,6 +76,11 @@ eClientWeb.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
       url: '/market_cash',
       templateUrl: 'views/v3_market_cash.client.view.html',
       controller: 'MarketCashController'
+    })
+    .state('milk_cash', {
+      url: '/milk_cash',
+      templateUrl: 'views/v3_milk_cash.client.view.html',
+      controller: 'MilkCashController'
     });
 
   $urlRouterProvider.otherwise('/');

@@ -85,6 +85,8 @@ angular.module('EClientWeb').controller('SignInController',
 
           if(data.client.role === 'cashier'){
             $state.go('market_cash');
+          }else if(data.client.role === 'milk_cashier'){
+            $state.go('milk_cash');
           }else{
             $state.go('/');
           }
