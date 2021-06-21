@@ -146,7 +146,7 @@ angular.module('EClientWeb').controller('MilkCashController',
             }
 
             $('#cardInput').focus();
-            var balance = data.supermarket_current_balance === -1 ? -1 :( data.supermarket_current_balance/100);
+            var balance = data.milk_current_balance === -1 ? -1 :( data.milk_current_balance/100);
             showAlertMessage(data.amount / 100, data.actual_amount / 100,
               balance,
               data.card_balance);

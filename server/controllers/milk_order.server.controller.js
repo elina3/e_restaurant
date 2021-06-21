@@ -2,6 +2,7 @@
 var async = require('async');
 
 var milkOrderLogic = require('../logics/milk_order'),
+  supermarketOrderLogic = require('../logics/supermarket_order'),
   clientLogic = require('../logics/client'),
   cardLogic = require('../logics/card');
 
@@ -9,10 +10,10 @@ var publicLib = require('../libraries/public'),
   milkOrderError = require('../errors/v3_milk_order');
 
 
-var supermarketAmountLimit = 200 * 100, //默认100元（单位：分）//需求更新：超市限制200。（2021／4／29）
+var supermarketAmountLimit = 200 * 100, //默认100元（单位：分）//需求更新：超市限制200。（2021／4／29）//需求更新：超市+牛奶棚贡献值200（2021／06／21）
   supermarketDiscountForStaff = 1; //超市员工折扣取消（2021／4／29）
 
-function getError(err, value){
+function getError(err, value) {
   var newError = JSON.parse(JSON.stringify(err));
   newError.zh_message = newError.zh_message.replace('{{value1}}', value);
   newError.message = newError.zh_message.replace('{{value1}}', value);
@@ -20,84 +21,92 @@ function getError(err, value){
 }
 
 //牛奶棚消费：
-//专家卡：月消费限制100（实际金额），无折扣
+//专家卡：月消费限制200（实际金额），无折扣
 //员工卡：月消费限制200（实际金额），无折扣
 //普通卡：不能消费
-exports.generateOrder = function(req, res, next){
+exports.generateOrder = function (req, res, next) {
   var client = req.client;
   var card = req.card;
   // if(card.type === 'expert'){
   //   return next({err: milkOrderError.expert_not_support});//专家卡不支持消费  （改过的需求）(去掉的需求：2018-8-2 20：55)
   // }
-  if(card.type === 'normal'){
+  if (card.type === 'normal') {
     return next({err: milkOrderError.normal_not_support});//普通卡不支持消费  （改过的需求:2018-8-2 20:55）
   }
 
   var amount = publicLib.parseIntNumber(req.body.amount);//单位：分
-  if(amount === null || amount <= 0){
+  if (amount === null || amount <= 0) {
     return next({err: milkOrderError.amount_invalid});
   }
 
   var actualAmount = amount;
   async.auto({
-    getCurrentConsumptionAmount: function(autoCallback){
-      if(card.type !== 'staff'){//只有普通员工和专家没有折扣，可以先判断卡内余额是否充足
-        if(card.amount * 100 < amount){
+    getCurrentConsumptionAmount: function (autoCallback) {
+      if (card.type !== 'staff') {//只有普通员工和专家没有折扣，可以先判断卡内余额是否充足
+        if (card.amount * 100 < amount) {
           return autoCallback({err: getError(milkOrderError.card_amount_not_enough, card.amount)});
         }
       }
 
-      if(card.type === 'normal'){//普通员工没有月消费限制
+      if (card.type === 'normal') {//普通员工没有月消费限制
         return autoCallback();
       }
 
-      if(card.type === 'staff'){//只有员工有折扣，专家按照原价
+      if (card.type === 'staff') {//只有员工有折扣，专家按照原价
         actualAmount = publicLib.parseIntNumber(amount * supermarketDiscountForStaff);
-        if(actualAmount === null || actualAmount < 0){
+        if (actualAmount === null || actualAmount < 0) {
           return autoCallback({err: milkOrderError.amount_invalid});
         }
       }
 
-      milkOrderLogic.getCurrentConsumptionAmount(card, function(err, currentConsumptionAmount){
-        if(err){
+      milkOrderLogic.getCurrentConsumptionAmount(card, function (err, currentConsumptionAmount) {
+        if (err) {
           return autoCallback(err);
         }
 
-        if(currentConsumptionAmount + amount > supermarketAmountLimit){
-          return autoCallback({err: getError(milkOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentConsumptionAmount)/100)});
-        }
+        supermarketOrderLogic.getCurrentConsumptionAmount(card, function (err, currentSupermarketAmount) {
+          if (err) {
+            return autoCallback(err);
+          }
 
-        if(actualAmount > card.amount * 100){
-          return autoCallback({err: getError(milkOrderError.supermarket_consumption_card_amount_not_enough, card.amount)});
-        }
+          //消费限制(牛奶棚+超市一共的消费金额)
+          var currentAmount = currentSupermarketAmount + currentConsumptionAmount;
+          if (currentAmount + amount > supermarketAmountLimit) {
+            return autoCallback({err: getError(milkOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentAmount) / 100)});
+          }
 
-        return autoCallback(null, currentConsumptionAmount);
+          if (actualAmount > card.amount * 100) {
+            return autoCallback({err: getError(milkOrderError.supermarket_consumption_card_amount_not_enough, card.amount)});
+          }
+
+          return autoCallback(null, currentAmount);
+        });
       });
     },
-    createMilkOrder: ['getCurrentConsumptionAmount', function(autoCallback){
+    createMilkOrder: ['getCurrentConsumptionAmount', function (autoCallback) {
       milkOrderLogic.createMilkOrder({
         description: req.body.description || '',
         amount: amount,
         actual_amount: actualAmount
-      }, client, card, function(err, newOrder){
+      }, client, card, function (err, newOrder) {
         return autoCallback(err, newOrder);
       });
     }],
-    payByCard: ['createMilkOrder', function(autoCallback, results){
-      cardLogic.payMilkOrder(client, card, results.createMilkOrder, actualAmount / 100, function(err, newCard){
+    payByCard: ['createMilkOrder', function (autoCallback, results) {
+      cardLogic.payMilkOrder(client, card, results.createMilkOrder, actualAmount / 100, function (err, newCard) {
         return autoCallback(err, newCard);
       });
     }],
-    updateMilkOrderPaid: ['createMilkOrder', 'payByCard', function(autoCallback, results){
+    updateMilkOrderPaid: ['createMilkOrder', 'payByCard', function (autoCallback, results) {
       var payTime = new Date();
       results.createMilkOrder._doc.paid = true;
       results.createMilkOrder._doc.pay_time = payTime;
-      milkOrderLogic.updateMilkOrderPaid(results.createMilkOrder._id, payTime, function(err){
+      milkOrderLogic.updateMilkOrderPaid(results.createMilkOrder._id, payTime, function (err) {
         return autoCallback(err);
       });
     }]
-  }, function(err, results){
-    if(err){
+  }, function (err, results) {
+    if (err) {
       return next(err);
     }
 
@@ -115,11 +124,12 @@ exports.generateOrder = function(req, res, next){
   });
 };
 
-exports.getMilkOrdersByPagination = function(req, res, next){
+exports.getMilkOrdersByPagination = function (req, res, next) {
   var timeRange = {};
-  try{
+  try {
     timeRange = JSON.parse(req.query.time_range || '') || {};
-  }catch(e){}
+  } catch (e) {
+  }
 
   var defaultStart = new Date('1970-1-1 00:00:00');
   var startTime = !timeRange.startTime ? defaultStart : (new Date(timeRange.startTime) || defaultStart);
@@ -131,8 +141,8 @@ exports.getMilkOrdersByPagination = function(req, res, next){
     card_number: req.query.card_number,
     has_discount: publicLib.booleanParse(req.query.has_discount)
   };
-  milkOrderLogic.getMilkOrdersByPagination(filter, req.pagination, function(err, result){
-    if(err){
+  milkOrderLogic.getMilkOrdersByPagination(filter, req.pagination, function (err, result) {
+    if (err) {
       return next(err);
     }
 

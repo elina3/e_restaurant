@@ -2,6 +2,7 @@
 var async = require('async');
 
 var supermarketOrderLogic = require('../logics/supermarket_order'),
+  milkOrderLogic = require('../logics/milk_order'),//牛奶棚的订单逻辑，用于获取用户在牛奶棚的消费
   clientLogic = require('../logics/client'),
   cardLogic = require('../logics/card');
 
@@ -9,7 +10,7 @@ var publicLib = require('../libraries/public'),
   supermarketOrderError = require('../errors/v3_supermaket_order');
 
 
-var supermarketAmountLimit = 200 * 100, //默认100元（单位：分）//需求更新：超市限制200。（2021／4／29）
+var supermarketAmountLimit = 200 * 100, //默认100元（单位：分）//需求更新：超市限制200。（2021／4／29） //超市和牛奶棚共同限制200（2021／06／21）
   supermarketDiscountForStaff = 1; //超市员工折扣取消（2021／4／29）
 
 function getError(err, value){
@@ -20,7 +21,7 @@ function getError(err, value){
 }
 
 //超市消费：
-//专家卡：月消费限制100（实际金额），无折扣
+//专家卡：月消费限制200（实际金额），无折扣，参考supermarketAmountLimit字段 超市和牛奶棚共同限制200
 //员工卡：月消费限制200（实际金额），无折扣
 //普通卡：不能消费
 exports.generateOrder = function(req, res, next){
@@ -63,19 +64,27 @@ exports.generateOrder = function(req, res, next){
           return autoCallback(err);
         }
 
-        if(currentConsumptionAmount + amount > supermarketAmountLimit){
-          return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentConsumptionAmount)/100)});
-        }
+        milkOrderLogic.getCurrentConsumptionAmount(card, function(err, currentMilkAmount){
+          if(err){
+            return autoCallback(err);
+          }
 
-        if(actualAmount > card.amount * 100){
-          return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_card_amount_not_enough, card.amount)});
-        }
+          //消费限制(牛奶棚+超市一共的消费金额)
+          var currentAmount = currentConsumptionAmount + currentMilkAmount;
+          if(currentAmount + amount > supermarketAmountLimit){
+            return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_amount_not_enough, (supermarketAmountLimit - currentAmount)/100)});
+          }
 
-        return autoCallback(null, currentConsumptionAmount);
+          if(actualAmount > card.amount * 100){
+            return autoCallback({err: getError(supermarketOrderError.supermarket_consumption_card_amount_not_enough, card.amount)});
+          }
+
+          return autoCallback(null, currentAmount);
+        });
       });
     },
-    createMilkOrder: ['getCurrentConsumptionAmount', function(autoCallback){
-      supermarketOrderLogic.createMilkOrder({
+    createSupermarketOrder: ['getCurrentConsumptionAmount', function(autoCallback){
+      supermarketOrderLogic.createSupermarketOrder({
         description: req.body.description || '',
         amount: amount,
         actual_amount: actualAmount
@@ -83,16 +92,16 @@ exports.generateOrder = function(req, res, next){
         return autoCallback(err, newOrder);
       });
     }],
-    payByCard: ['createMilkOrder', function(autoCallback, results){
-      cardLogic.paySupermarketOrder(client, card, results.createMilkOrder, actualAmount / 100, function(err, newCard){
+    payByCard: ['createSupermarketOrder', function(autoCallback, results){
+      cardLogic.paySupermarketOrder(client, card, results.createSupermarketOrder, actualAmount / 100, function(err, newCard){
         return autoCallback(err, newCard);
       });
     }],
-    updateMilkOrderPaid: ['createMilkOrder', 'payByCard', function(autoCallback, results){
+    updateSupermarketOrderPaid: ['createSupermarketOrder', 'payByCard', function(autoCallback, results){
       var payTime = new Date();
-      results.createMilkOrder._doc.paid = true;
-      results.createMilkOrder._doc.pay_time = payTime;
-      supermarketOrderLogic.updateMilkOrderPaid(results.createMilkOrder._id, payTime, function(err){
+      results.createSupermarketOrder._doc.paid = true;
+      results.createSupermarketOrder._doc.pay_time = payTime;
+      supermarketOrderLogic.updateSupermarketOrderPaid(results.createSupermarketOrder._id, payTime, function(err){
         return autoCallback(err);
       });
     }]
@@ -109,7 +118,7 @@ exports.generateOrder = function(req, res, next){
       //卡内余额（员工和专家会显示当月余额）
       supermarket_current_balance: (card.type === 'staff' || card.type === 'expert') ? supermarketAmountLimit - (results.getCurrentConsumptionAmount + amount) : -1,
       card_balance: results.payByCard.amount,
-      order: results.createMilkOrder
+      order: results.createSupermarketOrder
     };
     return next();
   });

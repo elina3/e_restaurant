@@ -46,7 +46,7 @@ exports.getCurrentConsumptionAmount = function(card, callback){
   });
 };
 
-exports.createMilkOrder = function(supermarketOrderInfo, client, card, callback){
+exports.createSupermarketOrder = function(supermarketOrderInfo, client, card, callback){
   if(!supermarketOrderInfo){
     return callback({err: systemError.param_null_error});
   }
@@ -76,7 +76,7 @@ exports.createMilkOrder = function(supermarketOrderInfo, client, card, callback)
   });
 };
 
-exports.updateMilkOrderPaid = function(supermarketOrderId, payTime, callback){
+exports.updateSupermarketOrderPaid = function(supermarketOrderId, payTime, callback){
   SupermarketOrder.update({_id: supermarketOrderId, paid: false}, {$set: {paid: true, pay_time: payTime}}, function(err, info){
     if(err){
       return callback({err: systemError.database_update_error, info: publicLib.getStackError(err)});
