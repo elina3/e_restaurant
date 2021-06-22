@@ -34,7 +34,7 @@ angular.module('EClientWeb').controller('MarketCashController',
           backShow: true
         },
         card_number: '',
-        price: 0,
+        price: null,
         goods: null,
         count: 1
       };

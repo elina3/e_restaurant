@@ -35,7 +35,7 @@ angular.module('EClientWeb').controller('MilkCashController',
         },
         headMenuList: [],
         card_number: '',
-        price: 0,
+        price: null,
         goods: null,
         count: 1
       };

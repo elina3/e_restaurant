@@ -135,6 +135,8 @@ angular.module('EWeb').factory('UserService',
               return '登记员';
             case 'supermarket_manager':
               return '超市管理员';
+            case 'milk_manager':
+              return '牛奶棚管理员';
             default:
               return '未知';
 
