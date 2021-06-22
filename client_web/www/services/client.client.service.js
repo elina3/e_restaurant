@@ -141,6 +141,8 @@ angular.module('EClientWeb').factory('ClientService', ['RequestSupport', 'System
           return '服务员';
         case 'cashier':
           return '收银员';
+        case 'milk_cashier':
+          return '牛奶棚收银员';
         default:
           return '未知';
 
